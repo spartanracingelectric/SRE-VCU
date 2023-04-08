@@ -63,9 +63,9 @@ BO_ 388 TqFrontLeftRecieve: 8 Vector__XXX
  SG_ DriverEnable : 10|1@1+ (1,0) [0|1] "" Vector__XXX
  SG_ ErrorReset : 11|1@1+ (1,0) [0|1] "" Vector__XXX
  SG_ ReservedIgnore2 : 12|4@1+ (1,0) [0|1] "" Vector__XXX
- SG_ TorqueSetpoint : 16|16@1+ (0.01,0) [0|30] "Nm" Vector__XXX
- SG_ TorqueLimitPos : 32|16@1+ (0.01,0) [0|30] "Nm" Vector__XXX
- SG_ TorqueLimitNeg : 48|16@1+ (0.01,0) [0|30] "Nm" Vector__XXX
+ SG_ TorqueSetpoint : 16|16@1- (0.1,0) [-3000|3000] "%Nm" Vector__XXX
+ SG_ TorqueLimitPos : 32|16@1- (0.1,0) [-3000|3000] "%Nm" Vector__XXX
+ SG_ TorqueLimitNeg : 48|16@1- (0.1,0) [-3000|3000] "%Nm" Vector__XXX
 
 BO_ 644 TqFrontRightSend: 8 Vector__XXX
  SG_ ReservedIgnore1 : 0|8@1+ (1,0) [0|1] "StatusWord" Vector__XXX
@@ -94,9 +94,9 @@ BO_ 389 TqFrontRightRecieve: 8 Vector__XXX
  SG_ DriverEnable : 10|1@1+ (1,0) [0|1] "" Vector__XXX
  SG_ ErrorReset : 11|1@1+ (1,0) [0|1] "" Vector__XXX
  SG_ ReservedIgnore2 : 12|4@1+ (1,0) [0|1] "" Vector__XXX
- SG_ TorqueSetpoint : 16|16@1+ (0.01,0) [0|30] "Nm" Vector__XXX
- SG_ TorqueLimitPos : 32|16@1+ (0.01,0) [0|30] "Nm" Vector__XXX
- SG_ TorqueLimitNeg : 48|16@1+ (0.01,0) [0|30] "Nm" Vector__XXX
+ SG_ TorqueSetpoint : 16|16@1- (0.1,0) [-3000|3000] "Nm" Vector__XXX
+ SG_ TorqueLimitPos : 32|16@1- (0.1,0) [-3000|3000] "Nm" Vector__XXX
+ SG_ TorqueLimitNeg : 48|16@1- (0.1,0) [-3000|3000] "Nm" Vector__XXX
 
 BO_ 647 TqRearLeftSend: 8 Vector__XXX
  SG_ ReservedIgnore1 : 0|8@1+ (1,0) [0|1] "StatusWord" Vector__XXX
@@ -125,9 +125,9 @@ BO_ 392 TqRearLeftRecieve: 8 Vector__XXX
  SG_ DriverEnable : 10|1@1+ (1,0) [0|1] "" Vector__XXX
  SG_ ErrorReset : 11|1@1+ (1,0) [0|1] "" Vector__XXX
  SG_ ReservedIgnore2 : 12|4@1+ (1,0) [0|1] "" Vector__XXX
- SG_ TorqueSetpoint : 16|16@1+ (0.01,0) [0|30] "Nm" Vector__XXX
- SG_ TorqueLimitPos : 32|16@1+ (0.01,0) [0|30] "Nm" Vector__XXX
- SG_ TorqueLimitNeg : 48|16@1+ (0.01,0) [0|30] "Nm" Vector__XXX
+ SG_ TorqueSetpoint : 16|16@1- (0.1,0) [-3000|3000] "Nm" Vector__XXX
+ SG_ TorqueLimitPos : 32|16@1- (0.1,0) [-3000|3000] "Nm" Vector__XXX
+ SG_ TorqueLimitNeg : 48|16@1- (0.1,0) [-3000|3000] "Nm" Vector__XXX
 
 BO_ 648 TqRearRightSend: 8 Vector__XXX
  SG_ ReservedIgnore1 : 0|8@1+ (1,0) [0|1] "StatusWord" Vector__XXX
@@ -156,9 +156,9 @@ BO_ 393 TqRearRightRecieve: 8 Vector__XXX
  SG_ DriverEnable : 10|1@1+ (1,0) [0|1] "" Vector__XXX
  SG_ ErrorReset : 11|1@1+ (1,0) [0|1] "" Vector__XXX
  SG_ ReservedIgnore2 : 12|4@1+ (1,0) [0|1] "" Vector__XXX
- SG_ TorqueSetpoint : 16|16@1+ (0.01,0) [0|30] "Nm" Vector__XXX
- SG_ TorqueLimitPos : 32|16@1+ (0.01,0) [0|30] "Nm" Vector__XXX
- SG_ TorqueLimitNeg : 48|16@1+ (0.01,0) [0|30] "Nm" Vector__XXX
+ SG_ TorqueSetpoint : 16|16@1- (0.1,0) [-3000|3000] "Nm" Vector__XXX
+ SG_ TorqueLimitPos : 32|16@1- (0.1,0) [-3000|3000] "Nm" Vector__XXX
+ SG_ TorqueLimitNeg : 48|16@1- (0.1,0) [-3000|3000] "Nm" Vector__XXX
 
 
 CM_ BO_ 643 "FreeCAN Torque Front Left MCM Send";
