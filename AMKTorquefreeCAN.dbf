@@ -26,7 +26,7 @@
 [START_SIGNALS] MotorTemp,16,1,0,I,5000,0,1,0,0.1,C,,
 [START_SIGNALS] InvertorTemp,16,3,0,I,5000,0,1,0,0.1,C,,
 [START_SIGNALS] DiagnosticNumber,16,5,0,U,20,0,1,0,1,,,
-[START_SIGNALS] TorqueFeedback,16,7,0,I,300,0,1,0,0.1,Nm,,
+[START_SIGNALS] TorqueFeedback,16,7,0,I,300,-300,1,0,0.1,Nm,,
 [END_MSG]
 
 [START_MSG] TqFrontLeftRecieve,388,8,9,1,S,
@@ -36,9 +36,9 @@
 [START_SIGNALS] DriverEnable,1,2,2,B,1,0,1,0,1,,,
 [START_SIGNALS] ErrorReset,1,2,3,B,1,0,1,0,1,,,
 [START_SIGNALS] ReservedIgnore2,4,2,4,U,1,0,1,0,1,,,
-[START_SIGNALS] TorqueSetpoint,16,3,0,I,30000,-30000,1,0,0.1,%Nm,,
-[START_SIGNALS] TorqueLimitPos,16,5,0,I,30000,-30000,1,0,0.1,%Nm,,
-[START_SIGNALS] TorqueLimitNeg,16,7,0,I,30000,-30000,1,0,0.1,%Nm,,
+[START_SIGNALS] TorqueSetpoint,16,3,0,I,30000,-30000,1,0,0.01,%Nm,,
+[START_SIGNALS] TorqueLimitPos,16,5,0,I,30000,-30000,1,0,0.01,%Nm,,
+[START_SIGNALS] TorqueLimitNeg,16,7,0,I,30000,-30000,1,0,0.01,%Nm,,
 [END_MSG]
 
 [START_MSG] TqFrontRightSend,644,8,12,1,S,
@@ -60,7 +60,7 @@
 [START_SIGNALS] MotorTemp,16,1,0,I,5000,0,1,0,0.1,C,,
 [START_SIGNALS] InvertorTemp,16,3,0,I,5000,0,1,0,0.1,C,,
 [START_SIGNALS] DiagnosticNumber,16,5,0,U,20,0,1,0,1,,,
-[START_SIGNALS] TorqueFeedback,16,7,0,I,300,0,1,0,0.1,Mn,,
+[START_SIGNALS] TorqueFeedback,16,7,0,I,300,-300,1,0,0.1,Nm,,
 [END_MSG]
 
 [START_MSG] TqFrontRightRecieve,389,8,9,1,S,
@@ -70,9 +70,9 @@
 [START_SIGNALS] DriverEnable,1,2,2,B,1,0,1,0,1,,,
 [START_SIGNALS] ErrorReset,1,2,3,B,1,0,1,0,1,,,
 [START_SIGNALS] ReservedIgnore2,4,2,4,U,1,0,1,0,1,,,
-[START_SIGNALS] TorqueSetpoint,16,3,0,I,30000,-30000,1,0,0.1,Nm,,
-[START_SIGNALS] TorqueLimitPos,16,5,0,I,30000,-30000,1,0,0.1,Nm,,
-[START_SIGNALS] TorqueLimitNeg,16,7,0,I,30000,-30000,1,0,0.1,Nm,,
+[START_SIGNALS] TorqueSetpoint,16,3,0,I,30000,-30000,1,0,0.01,%Nm,,
+[START_SIGNALS] TorqueLimitPos,16,5,0,I,30000,-30000,1,0,0.01,%Nm,,
+[START_SIGNALS] TorqueLimitNeg,16,7,0,I,30000,-30000,1,0,0.01,%Nm,,
 [END_MSG]
 
 [START_MSG] TqRearLeftSend,647,8,12,1,S,
@@ -94,7 +94,7 @@
 [START_SIGNALS] MotorTemp,16,1,0,I,5000,0,1,0,0.1,C,,
 [START_SIGNALS] InvertorTemp,16,3,0,I,5000,0,1,0,0.1,C,,
 [START_SIGNALS] DiagnosticNumber,16,5,0,U,20,0,1,0,1,,,
-[START_SIGNALS] TorqueFeedback,16,7,0,I,300,0,1,0,0.1,Mn,,
+[START_SIGNALS] TorqueFeedback,16,7,0,I,300,-300,1,0,0.1,Nm,,
 [END_MSG]
 
 [START_MSG] TqRearLeftRecieve,392,8,9,1,S,
@@ -104,9 +104,9 @@
 [START_SIGNALS] DriverEnable,1,2,2,B,1,0,1,0,1,,,
 [START_SIGNALS] ErrorReset,1,2,3,B,1,0,1,0,1,,,
 [START_SIGNALS] ReservedIgnore2,4,2,4,U,1,0,1,0,1,,,
-[START_SIGNALS] TorqueSetpoint,16,3,0,I,30000,-30000,1,0,0.1,Nm,,
-[START_SIGNALS] TorqueLimitPos,16,5,0,I,30000,-30000,1,0,0.1,Nm,,
-[START_SIGNALS] TorqueLimitNeg,16,7,0,I,30000,-30000,1,0,0.1,Nm,,
+[START_SIGNALS] TorqueSetpoint,16,3,0,I,30000,-30000,1,0,0.01,%Nm,,
+[START_SIGNALS] TorqueLimitPos,16,5,0,I,30000,-30000,1,0,0.01,%Nm,,
+[START_SIGNALS] TorqueLimitNeg,16,7,0,I,30000,-30000,1,0,0.01,%Nm,,
 [END_MSG]
 
 [START_MSG] TqRearRightSend,648,8,12,1,S,
@@ -128,7 +128,7 @@
 [START_SIGNALS] MotorTemp,16,1,0,I,5000,0,1,0,0.1,C,,
 [START_SIGNALS] InvertorTemp,16,3,0,I,5000,0,1,0,0.1,C,,
 [START_SIGNALS] DiagnosticNumber,16,5,0,U,20,0,1,0,1,,,
-[START_SIGNALS] TorqueFeedback,16,7,0,I,300,0,1,0,0.1,Mn,,
+[START_SIGNALS] TorqueFeedback,16,7,0,I,300,-300,1,0,0.1,Nm,,
 [END_MSG]
 
 [START_MSG] TqRearRightRecieve,393,8,9,1,S,
@@ -138,9 +138,9 @@
 [START_SIGNALS] DriverEnable,1,2,2,B,1,0,1,0,1,,,
 [START_SIGNALS] ErrorReset,1,2,3,B,1,0,1,0,1,,,
 [START_SIGNALS] ReservedIgnore2,4,2,4,U,1,0,1,0,1,,,
-[START_SIGNALS] TorqueSetpoint,16,3,0,I,30000,-30000,1,0,0.1,Nm,,
-[START_SIGNALS] TorqueLimitPos,16,5,0,I,30000,-30000,1,0,0.1,Nm,,
-[START_SIGNALS] TorqueLimitNeg,16,7,0,I,30000,-30000,1,0,0.1,Nm,,
+[START_SIGNALS] TorqueSetpoint,16,3,0,I,30000,-30000,1,0,0.01,%Nm,,
+[START_SIGNALS] TorqueLimitPos,16,5,0,I,30000,-30000,1,0,0.01,%Nm,,
+[START_SIGNALS] TorqueLimitNeg,16,7,0,I,30000,-30000,1,0,0.01,%Nm,,
 [END_MSG]
 
 [START_VALUE_TABLE]
