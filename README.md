@@ -5,7 +5,10 @@ SRE-7 Configuration & General AMK Configurations for DBC files and Aipex Pro Ver
 <br/>
 
 ## Dependencies
-TODO
+1. Aipex Pro
+2. Any CAN viewing & accepting DBC software
+3. PCAN Driver
+4. Winpap Ethernet Driver
 <br/>
 <br/>
 
