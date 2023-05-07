@@ -175,10 +175,10 @@ BO_ 1281 VCU_TPS1: 8 VCU
  SG_ TPS1CalibMax : 48|16@1+ (0.001,0) [0|65.535] "V" VCU
 
 BO_ 1282 VCU_BPS: 8 VCU
-SG_ BrakePercent0FF : 0|8@1+ (0.392156862746,0) [0|100.00000000023] "%" VCU
-SG_ BPS0Voltage : 16|16@1+ (0.001,0) [0|65.535] "V" VCU
-SG_ BPS0CalibMin : 32|16@1+ (0.001,0) [0|65.535] "V" VCU
-SG_ BPS0CalibMax : 48|16@1+ (0.001,0) [0|65.535] "V" VCU
+ SG_ BrakePercent0FF : 0|8@1+ (0.392156862746,0) [0|100.00000000023] "%" VCU
+ SG_ BPS0Voltage : 16|16@1+ (0.001,0) [0|65.535] "V" VCU
+ SG_ BPS0CalibMin : 32|16@1+ (0.001,0) [0|65.535] "V" VCU
+ SG_ BPS0CalibMax : 48|16@1+ (0.001,0) [0|65.535] "V" VCU
 
 BO_ 1286 VCU_Safety_Checker: 8 VCU
  SG_ VCU_FAULT_TPS_OutOfRange : 0|1@1+ (1,0) [0|1] "" VCU
