@@ -1,0 +1,194 @@
+Conversion Warnings Log
+
+
+MSG_ID: 419389056 	MSG_TYPE: X 	MSG_NAME: Feedback_Magnet_Value
+	SIG_NAME: Aceinna_SoftIron_Ratio, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_HardIronY_Bias, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_HardIronX_Bias, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Align_State, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Command, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 419387648 	MSG_TYPE: X 	MSG_NAME: Set_Unit_Behavior
+	SIG_NAME: Aceinna_New_Unit_Address, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Disable_NWU_Accel, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Reserved_in_Disable, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Disable_Autobaud_Mode, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Disable_Swap_Roll_Pitch, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Disable_Raw_Rate, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Disable_Dynamic_Motion, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Disable_RST_Overrange, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_NWU_Accel, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Reserved, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Autobaud_Mode, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Swap_Roll_Pitch, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Raw_Rate, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Dynamic_Motion, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_RST_Overrange, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Destination_Address, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 419387776 	MSG_TYPE: X 	MSG_NAME: Feedback_Unit_Behavior
+	SIG_NAME: Aceinna_NWU_Accel, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Reserved, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Autobaud_Mode, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Swap_Roll_Pitch, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Raw_Rate, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Dynamic_Motion, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_RST_Overrange, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Destination_Address, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 419387008 	MSG_TYPE: X 	MSG_NAME: Feedback_Data_Pcket_Type
+	SIG_NAME: Aceinna_New_Packet_Type, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Destination_Address, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 419387520 	MSG_TYPE: X 	MSG_NAME: Feedback_Orientation
+	SIG_NAME: Aceinna_New_Orientation_Type, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Destination_Address, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 419387264 	MSG_TYPE: X 	MSG_NAME: Feedback_Digital_Filter
+	SIG_NAME: Aceinna_New_Acc_Low_Pass, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_New_Gyro_Low_Pass, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Destination_Address, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 419386752 	MSG_TYPE: X 	MSG_NAME: Feedback_Packet_Rate_Divider
+	SIG_NAME: Aceinna_New_Pocket_Rate, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Destination_Address, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 419385600 	MSG_TYPE: X 	MSG_NAME: Set_Configuration_Save
+	SIG_NAME: Aceinna_Failure_Or_Success, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Saved_Address, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Request_Or_Response, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 419386240 	MSG_TYPE: X 	MSG_NAME: Feedback_Software_Bit
+	SIG_NAME: Aceinna_SW_Reserved1, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_SW_CalibrationCRC_Error, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_SW_Reserved0, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_SW_Over_Range, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_SW_Initialization_Error, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_SW_Data_Error, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_SW_Algorithm_Error, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_SW_Software_Error, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 419385984 	MSG_TYPE: X 	MSG_NAME: Feedback_Hardware_BIT
+	SIG_NAME: Aceinna_HW_Reserved0, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_HW_Accell_Error, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_HW_Rate_Error, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_HW_Sensor_Error, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_HW_Master_Fai, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 419284352 	MSG_TYPE: X 	MSG_NAME: Feedback_ECU_ID
+	SIG_NAME: J1939_Name_ID_Code, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: J1939_Name_Manufacture_Code, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: J1939_Name_ECU_Example, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: J1939_Name_Function_Example, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: J1939_Name_Function, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: J1939_Name_Reserved0, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: J1939_Name_Vehicle_System, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: J1939_Name_Vehicle_Example, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: J1939_Name_Industry_Group, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: J1939_Name_Arbitrary_Address, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 419355264 	MSG_TYPE: X 	MSG_NAME: Feedback_Firmware_Version
+	SIG_NAME: Aceinna_Firm_Version_Build, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Firm_Version_Stage, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Firm_Version_Patch, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Firm_Version_Minor, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Firm_Version_Major, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 419426560 	MSG_TYPE: X 	MSG_NAME: Set_Bank1_PS_Num
+	SIG_NAME: Aceinna_PS_Num_Orientation, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_PS_Num_Digital_Filter, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_PS_Num_Type, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_PS_Num_Packet_Rate, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 419426304 	MSG_TYPE: X 	MSG_NAME: Set_Bank0_PS_Num
+	SIG_NAME: Aceinna_PS_Num_Status, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_PS_Num_SW_Bit, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_PS_Num_HW_Bit, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_PS_Num_Algo_Rest, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 419387392 	MSG_TYPE: X 	MSG_NAME: Set_Orientation
+	SIG_NAME: Aceinna_New_Orientation_Type, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Destination_Address, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 419387136 	MSG_TYPE: X 	MSG_NAME: Set_Digital_Filter
+	SIG_NAME: Aceinna_New_Acc_Low_Pass, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_New_Gyro_Low_Pass, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Destination_Address, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 419386880 	MSG_TYPE: X 	MSG_NAME: Set_Data_Pcket_Type
+	SIG_NAME: Aceinna_New_Packet_Type, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Destination_Address, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 419386624 	MSG_TYPE: X 	MSG_NAME: Set_Packet_Rate_Divider
+	SIG_NAME: Aceinna_New_Pocket_Rate, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Destination_Address, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 419385344 	MSG_TYPE: X 	MSG_NAME: Set_Algorithm_Reset
+	SIG_NAME: Aceinna_Failure_Or_Success, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Saved_Address, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Request_Or_Response, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 419385728 	MSG_TYPE: X 	MSG_NAME: Feedback_Configuration_Save
+	SIG_NAME: Aceinna_Failure_Or_Success, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Saved_Address, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Request_Or_Response, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 419386496 	MSG_TYPE: X 	MSG_NAME: Feedback_Sensor_Status
+	SIG_NAME: Aceinna_Reserved1, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 418316160 	MSG_TYPE: X 	MSG_NAME: Aceinna_Address_Claiming
+	SIG_NAME: J1939_Name_ID_Code, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: J1939_Name_Manufacture_Code, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: J1939_Name_ECU_Example, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: J1939_Name_Function_Example, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: J1939_Name_Function, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: J1939_Name_Reserved0, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: J1939_Name_Vehicle_System, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: J1939_Name_Vehicle_Example, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: J1939_Name_Industry_Group, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: J1939_Name_Arbitrary_Address, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 419393664 	MSG_TYPE: X 	MSG_NAME: Aceinna_GPS_DOP
+	SIG_NAME: Aceinna_pDOP, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 419393408 	MSG_TYPE: X 	MSG_NAME: Aceinna_Fix
+	SIG_NAME: Aceinna_flags, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_valid, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 435683968 	MSG_TYPE: X 	MSG_NAME: Aceinna_Rapid_Course
+	SIG_NAME: Aceinna_SID_C, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_COG_Ref, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_C_Rsvd1, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_SOG, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_C_Rsvd2, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 435231104 	MSG_TYPE: X 	MSG_NAME: Aceinna_Rapid_Attitude
+	SIG_NAME: Aceinna_SID_A, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_ATT_Rsvd, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 217066112 	MSG_TYPE: X 	MSG_NAME: Aceinna_Rate
+	SIG_NAME: Aceinna_AngleRate_Latency, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_YawRate_Figure_OfMerit, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_RollRate_Figure_OfMerit, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_PitchRate_Figure_OfMerit, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 149958016 	MSG_TYPE: X 	MSG_NAME: Aceinna_Accel
+	SIG_NAME: Aceinna_Support_Rate_Acc, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_VerticAcc_FigureOfMerit, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_LongiAcc_FigureOfMerit, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_LateralAcc_FigureOfMerit, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+
+MSG_ID: 217065856 	MSG_TYPE: X 	MSG_NAME: Aceinna_Angles
+	SIG_NAME: Aceinna_PitchRoll_Latency, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Roll_Figure_OfMerit, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Roll_Compensation, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Pitch_Figure_OfMerit, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+	SIG_NAME: Aceinna_Pitch_Compensation, STATUS: Invalid Max or Min value., ACTION: Value Set to default
+OBJECT ID : SG_	PARAM_NAME :"GenSigStartValue"
+	Description: Invalid Data Ranges	 Action Taken : Reset to default value
+OBJECT ID : BU_	PARAM_NAME :"TpOwnSystemEcuNumber"
+	Description: Invalid Data Ranges	 Action Taken : Reset to default value
+OBJECT ID : BU_	PARAM_NAME :"TpNodeBaseAddress"
+	Description: Invalid Data Ranges	 Action Taken : Reset to default value
+OBJECT ID : BU_	PARAM_NAME :"NmStationAddress"
+	Description: Invalid Data Ranges	 Action Taken : Reset to default value
