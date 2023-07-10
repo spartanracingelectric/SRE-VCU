@@ -1,6 +1,6 @@
-# AMK Hub-Motors Motor controller & Software configurations
+# SRE-7 Systems Integration 
 
-SRE-7 System Integration
+AMK Hub-Motors Motor controller & Software configurations
 <br/>
 <br/>
 
