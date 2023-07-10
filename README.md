@@ -1,14 +1,12 @@
-# AMK Motor & MotorController Software 
+# AMK Hub-Motors Motor controller & Software configurations
 
-SRE-7 Configuration & General AMK Configurations for DBC files and Aipex Pro Versions
+SRE-7 System Integration
 <br/>
 <br/>
 
 ## Dependencies
-1. Aipex Pro
-2. Any CAN viewing & accepting DBC software
-3. PCAN Driver
-4. Winpap Ethernet Driver
+1. Aipex Pro (Winpap Ethernet Driver)
+2. Any CAN viewing & accepting DBC software (PCAN Driver)
 <br/>
 <br/>
 
@@ -19,8 +17,8 @@ SRE-7 Configuration & General AMK Configurations for DBC files and Aipex Pro Ver
 <br/>
 
 ## SRE-7 (AMK Integration) Contact
-_James Wong_, <br/>
-_Shinika Balasundar_, <br/>
+_Shinika Balasundar_, shinika.balasundar@yahoo.com || 925-997-0044 || 2024' Hub-Motors Lead || <br/> 
+_James Wong_, || 2023' Hub-Motors Lead ||<br/>
 <br/>
 
 ## Links
