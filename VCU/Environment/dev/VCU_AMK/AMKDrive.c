@@ -200,7 +200,7 @@ void DI_calculateInverterControl(_DriveInverter* me, Sensor *HVILTermSense, Torq
             me->AMK_bEnable = TRUE;
             me->AMK_TorqueLimitPositiv = 25 * 100; // 25Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
             me->AMK_TorqueLimitNegativ = 0;
-            if(me->AMK_bError == TRUE || /*Verify Voltage Range Here w/ PCB*/){
+            if(me->AMK_bError == TRUE /*|| Verify Voltage Range Here w/ PCB*/){
                 me->startUpStage = 1; //Create a temp case that will take this to torque setpoints 0 -> inverterOf -> and then to startupstage 1 // TODO: ADD FEATURE IN EACH STAGE FOR AMK ERROR TO GO BACK
             }
         break;
