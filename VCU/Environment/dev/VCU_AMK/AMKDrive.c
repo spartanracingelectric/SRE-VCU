@@ -94,7 +94,9 @@ void DI_calculateCommands(_DriveInverter* me, TorqueEncoder *tps, BrakePressureS
 
     // To send 25nm you need to send a torque setpoint of 2500
     torqueOutput = torqueOutput * 100;
-    
+    if(torqueOutput < 0 || torqueOutput > 25 * 100){
+        torqueOutput = 0;
+    }
     DI_commandTorque(me, torqueOutput);
     DI_getCommandedTorque(me);
 
@@ -158,7 +160,7 @@ void DI_calculateInverterControl(_DriveInverter* me, Sensor *HVILTermSense, Torq
             }
         break;
         case DRIVER_ENABLE: 
-            if(Sensor_RTDButton.sensorValue == TRUE && tps->calibrated == TRUE && tps->travelPercent < .05){
+            if(Sensor_RTDButton.sensorValue == TRUE && tps->calibrated == TRUE /*Uncomment in the future: && tps->travelPercent < .05*/){
                 me->AMK_bInverterOn = FALSE;
                 me->AMK_bDcOn = TRUE;
                 me->AMK_bEnable = TRUE;
