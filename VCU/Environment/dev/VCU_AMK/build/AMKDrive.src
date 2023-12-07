@@ -1,5 +1,5 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc12100a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2023 -DRTS_TTC_FLASH_DATE_MONTH=11 -DRTS_TTC_FLASH_DATE_DAY=29 -DRTS_TTC_FLASH_DATE_HOUR=16 -DRTS_TTC_FLASH_DATE_MINUTE=57 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\AMKDrive.src
+	; Options: -f cc22876a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2023 -DRTS_TTC_FLASH_DATE_MONTH=12 -DRTS_TTC_FLASH_DATE_DAY=6 -DRTS_TTC_FLASH_DATE_HOUR=16 -DRTS_TTC_FLASH_DATE_MINUTE=12 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\AMKDrive.src
 	; Module start
 	.source	'AMKDrive.c'
 code_AmkDriver_new	.section	code, cluster 'AmkDriver_new', new
@@ -643,7 +643,7 @@ _4:
 ; AMKDrive.c	   190              me->AMK_bDcOn = TRUE;
 ; AMKDrive.c	   191              me->AMK_bEnable = TRUE;
 ; AMKDrive.c	   192              me->AMK_TorqueSetpoint = 0;
-; AMKDrive.c	   193              me->AMK_TorqueLimitPositiv = 25 * 100; // 25Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
+; AMKDrive.c	   193              me->AMK_TorqueLimitPositiv = 30 * 100; // 25Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
 ; AMKDrive.c	   194              me->AMK_TorqueLimitNegativ = 0;
 ; AMKDrive.c	   195              if(me->AMK_bError == FALSE){
 ; AMKDrive.c	   196                  me->startUpStage = 6;
@@ -653,7 +653,7 @@ _4:
 ; AMKDrive.c	   200              me->AMK_bInverterOn = TRUE;
 ; AMKDrive.c	   201              me->AMK_bDcOn = TRUE;
 ; AMKDrive.c	   202              me->AMK_bEnable = TRUE;
-; AMKDrive.c	   203              me->AMK_TorqueLimitPositiv = 25 * 100; // 25Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
+; AMKDrive.c	   203              me->AMK_TorqueLimitPositiv = 30 * 100; // 25Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
 ; AMKDrive.c	   204              me->AMK_TorqueLimitNegativ = 0;
 ; AMKDrive.c	   205              if(me->AMK_bError == TRUE /*|| Verify Voltage Range Here w/ PCB*/){
 ; AMKDrive.c	   206                  me->startUpStage = 1; //Create a temp case that will take this to torque setpoints 0 -> inverterOf -> and then to startupstage 1 // TODO: ADD FEATURE IN EACH STAGE FOR AMK ERROR TO GO BACK
@@ -1270,7 +1270,7 @@ _1302:
 	addw	r11,#0xa
 	addcw	r12,#0x0
 _1303:
-	movw	r14,#0x9c4
+	movw	r14,#0xbb8
 _1304:
 	exts	r12,#0x1
 	movb	[r11],rh4
@@ -1328,7 +1328,7 @@ _1317:
 	addw	r11,#0x9
 	addcw	r12,#0x0
 _1318:
-	movw	r13,#0x9c4
+	movw	r13,#0xbb8
 _958:
 	exts	r12,#0x1
 	movb	[r11],rh4
