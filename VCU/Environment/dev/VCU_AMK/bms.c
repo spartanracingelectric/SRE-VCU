@@ -5,6 +5,7 @@
 #include "IO_Driver.h"
 #include "IO_RTC.h"
 #include "IO_DIO.h"
+#include "serial.h"
 #include "mathFunctions.h"
 
 /*********************************************************
@@ -18,7 +19,7 @@ struct _BatteryManagementSystem
 
     ubyte2 canMessageBaseId;
 
-    //SerialManager *sm;
+    SerialManager *sm;
 
     //BMS Member Variable format:
     //byte(s), scaling, add'l comments
@@ -72,7 +73,7 @@ struct _BatteryManagementSystem
     //ubyte2 reserved                           //1:0
 
     // BMS_CELL_VOLTAGE_SUMMARY //
-    ubyte2 highestCellVoltage;                  //7:6, V*1000
+    ubyte4 highestCellVoltage;                  //7:6, V*1000
     ubyte2 lowestCellVoltage;                   //5:4, V*1000
     ubyte2 highestCellVoltagePos;               //3:2, 1-N
     ubyte2 lowestCellVoltagePos;                //1:0, 1-N
@@ -137,13 +138,13 @@ struct _BatteryManagementSystem
     // signed = 2's complement: 0XfFF = -1, 0x00 = 0, 0x01 = 1
 };
 
-BatteryManagementSystem *BMS_new(ubyte2 canMessageBaseID)
+BatteryManagementSystem *BMS_new(SerialManager *serialMan, ubyte2 canMessageBaseID)
 {
 
     BatteryManagementSystem *me = (BatteryManagementSystem *)malloc(sizeof(struct _BatteryManagementSystem));
 
     me->canMessageBaseId = canMessageBaseID;
-    //me->sm = serialMan;
+    me->sm = serialMan;
     //me->maxTemp = 99;
 
     me->packCurrent = 0;
@@ -435,7 +436,7 @@ sbyte1 BMS_getAvgTemp(BatteryManagementSystem *me)
 }
 */
 
-ubyte2 BMS_getHighestCellVoltage_mV(BatteryManagementSystem *me)
+ubyte4 BMS_getHighestCellVoltage_mV(BatteryManagementSystem *me)
 {
     return (me->highestCellVoltage);
 }
@@ -443,6 +444,11 @@ ubyte2 BMS_getHighestCellVoltage_mV(BatteryManagementSystem *me)
 ubyte2 BMS_getLowestCellVoltage_mV(BatteryManagementSystem *me)
 {
     return (me->lowestCellVoltage);
+}
+
+ubyte4 BMS_getPackVoltage(BatteryManagementSystem *me)
+{
+    return (me->packVoltage); 
 }
 
 //Split into
