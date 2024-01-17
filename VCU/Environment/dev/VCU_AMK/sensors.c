@@ -76,7 +76,7 @@ void sensors_updateSensors(void)
     */
    
     //Wheel speed sensors ---------------------------------------------------
-
+    /*
     //For input smoothing
     if(Sensor_WSS_FL.sensorValue > 0) //If non-zero reading, update displayed val
     { 
@@ -124,7 +124,8 @@ void sensors_updateSensors(void)
     Sensor_WSS_FR.ioErr_signalGet = IO_PWD_ComplexGet(IO_PWD_08, &Sensor_WSS_FR.sensorValue, &pulseTrash, NULL);
     Sensor_WSS_RL.ioErr_signalGet = IO_PWD_ComplexGet(IO_PWD_09, &Sensor_WSS_RL.sensorValue, &pulseTrash, NULL);
     Sensor_WSS_RR.ioErr_signalGet = IO_PWD_ComplexGet(IO_PWD_11, &Sensor_WSS_RR.sensorValue, &pulseTrash, NULL);
-
+    */
+   
     //Switches / Digital ---------------------------------------------------
     Sensor_RTDButton.ioErr_signalGet = IO_DI_Get(IO_DI_00, &Sensor_RTDButton.sensorValue);
     Sensor_EcoButton.ioErr_signalGet = IO_DI_Get(IO_DI_01, &Sensor_EcoButton.sensorValue);

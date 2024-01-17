@@ -106,14 +106,6 @@ extern Sensor Sensor_TPS0;
 extern Sensor Sensor_TPS1;
 extern Sensor Sensor_BPS0;
 extern Sensor Sensor_BPS1;
-extern Sensor Sensor_WSS_FL;
-extern Sensor Sensor_WSS_FR;
-extern Sensor Sensor_WSS_RL;
-extern Sensor Sensor_WSS_RR;
-extern Sensor Sensor_WPS_FL;
-extern Sensor Sensor_WPS_FR;
-extern Sensor Sensor_WPS_RL;
-extern Sensor Sensor_WPS_RR;
 extern Sensor Sensor_SAS;
 extern Sensor Sensor_TCSKnob;
 
@@ -220,7 +212,6 @@ void main(void)
     InstrumentCluster *ic0 = InstrumentCluster_new(0x702);
     TorqueEncoder *tps = TorqueEncoder_new(bench);
     BrakePressureSensor *bps = BrakePressureSensor_new();
-    WheelSpeeds *wss = WheelSpeeds_new(WHEEL_DIAMETER, WHEEL_DIAMETER, NUM_BUMPS, NUM_BUMPS);
     SafetyChecker *sc = SafetyChecker_new(320, 32); //Must match amp limits
     BatteryManagementSystem *bms = BMS_new(BMS_BASE_ADDRESS);
     CoolingSystem *cs = CoolingSystem_new();
@@ -343,7 +334,7 @@ void main(void)
         //TractionControl_update(tps, mcm0, wss, daq);
 
         //Update WheelSpeed and interpolate
-        WheelSpeeds_update(wss, TRUE);
+        //WheelSpeeds_update(wss, TRUE);
 
         //SRE-7 Update: slip ratio calculation can go here with PID update
 
@@ -411,8 +402,8 @@ void main(void)
         //canOutput_sendMCUControl(mcm0, FALSE);
 
         //Send debug data
-        canOutput_sendDebugMessage0(canMan, tps, bps, ic0, bms, wss, sc, invFL, invFR);
-        canOutput_sendDebugMessage1(canMan, tps, bps, ic0, bms, wss, sc, d1, invRL, invRR);
+        canOutput_sendDebugMessage0(canMan, tps, bps, ic0, bms, sc, drs, invFL, invFR);
+        canOutput_sendDebugMessage1(canMan, tps, bps, ic0, bms, sc, d1, invRL, invRR);
         //canOutput_sendSensorMessages();
         //canOutput_sendStatusMessages(mcm0);
 
