@@ -193,7 +193,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
 
     if (tps->tps0->ioErr_signalInit != IO_E_OK || tps->tps1->ioErr_signalInit != IO_E_OK || tps->tps0->ioErr_signalGet != IO_E_OK || tps->tps1->ioErr_signalGet != IO_E_OK)
     {
-        //me->faults |= F_tpsSignalFailure;
+        me->faults |= F_tpsSignalFailure;
         //SerialManager_send(me->serialMan, "TPS signal error\n");
     }
     else

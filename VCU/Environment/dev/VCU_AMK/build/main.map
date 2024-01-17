@@ -2,16 +2,17 @@
 
 ********************************************************************  Tool and Invocation  *********************************************************************
 +--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| tool         | TASKING VX-toolset for C166: Linker Locator v4.0r1 Build 163 SN 09002374                                                                      |
-| path         | c:\Program Files (x86)\TASKING\C166-VX v4.0r1\bin\lk166                                                                                       |
-| arguments    | -f cc3780a                                                                                                                                    |
-| file:cc3780a | -o build/main.elf -d../../../Environment/bsp/lsl/TTC60/application.lsl -DXC2287_96F -D__CPU__=xc2287 -D__CPU_XC2287__ -obuild/main.hex:IHEX   |
-|              | -obuild/main.s19:SREC -OtZXycL --error-limit=42 --map-file=build/main.mapxml:XML --map-file -mcrfiklSmNuQ                                     |
-|              | ../../../Environment/bsp/bin/bsp_cstart_ttc60.obj build/AMKDrive.obj build/avlTree.obj build/bms.obj build/brakePressureSensor.obj            |
-|              | build/canManager.obj build/cooling.obj build/daqSensors.obj build/initializations.obj build/instrumentCluster.obj build/main.obj              |
-|              | build/mathFunctions.obj build/readyToDriveSound.obj build/safety.obj build/sensorCalculations.obj build/sensors.obj build/torqueEncoder.obj   |
-|              | build/wheelSpeeds.obj ../../../Environment/lib/xc2000_ttc60.lib -lch -lfph -lrth -Lc:\Program" "Files" "(x86)\TASKING\C166-VX" "v4.0r1\lib\2  |
-| task         | task1                                                                                                                                         |
+| tool          | TASKING VX-toolset for C166: Linker Locator v4.0r1 Build 163 SN 09002374                                                                     |
+| path          | c:\Program Files (x86)\TASKING\C166-VX v4.0r1\bin\lk166                                                                                      |
+| arguments     | -f cc23940a                                                                                                                                  |
+| file:cc23940a | -o build/main.elf -d../../../Environment/bsp/lsl/TTC60/application.lsl -DXC2287_96F -D__CPU__=xc2287 -D__CPU_XC2287__ -obuild/main.hex:IHEX  |
+|               | -obuild/main.s19:SREC -OtZXycL --error-limit=42 --map-file=build/main.mapxml:XML --map-file -mcrfiklSmNuQ                                    |
+|               | ../../../Environment/bsp/bin/bsp_cstart_ttc60.obj build/AMKDrive.obj build/avlTree.obj build/bms.obj build/brakePressureSensor.obj           |
+|               | build/canManager.obj build/cooling.obj build/daqSensors.obj build/initializations.obj build/instrumentCluster.obj build/main.obj             |
+|               | build/mathFunctions.obj build/readyToDriveSound.obj build/safety.obj build/sensorCalculations.obj build/sensors.obj build/torqueEncoder.obj  |
+|               | build/wheelSpeeds.obj ../../../Environment/lib/xc2000_ttc60.lib -lch -lfph -lrth -Lc:\Program" "Files" "(x86)\TASKING\C166-VX"               |
+|               | "v4.0r1\lib\2                                                                                                                                |
+| task          | task1                                                                                                                                        |
 +--------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 
@@ -5554,168 +5555,168 @@ Note:
 +--------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Section                                        | File                    | Library          | Symbol                                          | Reason       |
 |==============================================================================================================================================================|
-| code_IO_Tools_DistanceUbyte2 (1500)            | IO_Tools.obj            | xc2000_ttc60.lib | _IO_Tools_DistanceUbyte2                        | unreferenced |
 | code_IO_PWM_INT_CC6Deinit (1165)               | IO_INT_PWM.obj          | xc2000_ttc60.lib | _IO_PWM_INT_CC6Deinit                           | unreferenced |
-| code_IO_ADC_INT_ChannelDeInit (1099)           | IO_INT_ADC.obj          | xc2000_ttc60.lib | _IO_ADC_INT_ChannelDeInit                       | unreferenced |
-| code_IO_PWM_INT_CC2Deinit (1164)               | IO_INT_PWM.obj          | xc2000_ttc60.lib | _IO_PWM_INT_CC2Deinit                           | unreferenced |
 | code_IO_PWM_INT_CC6SetFreq (1162)              | IO_INT_PWM.obj          | xc2000_ttc60.lib | _IO_PWM_INT_CC6SetFreq                          | unreferenced |
-| code_IO_SHIFT_DeInit (1238)                    | IO_INT_SHIFT.obj        | xc2000_ttc60.lib | _IO_SHIFT_DeInit                                | unreferenced |
-| code_IO_SHIFT_Write (1239)                     | IO_INT_SHIFT.obj        | xc2000_ttc60.lib | _IO_SHIFT_Write                                 | unreferenced |
-| code_IO_SHIFT_Read (1241)                      | IO_INT_SHIFT.obj        | xc2000_ttc60.lib | _IO_SHIFT_Read                                  | unreferenced |
-| code_IO_SPI_DeInit (1265)                      | IO_INT_SPI.obj          | xc2000_ttc60.lib | _IO_SPI_DeInit                                  | unreferenced |
+| code_IO_PWM_INT_CC2Deinit (1164)               | IO_INT_PWM.obj          | xc2000_ttc60.lib | _IO_PWM_INT_CC2Deinit                           | unreferenced |
+| code_IO_ADC_INT_ChannelDeInit (1099)           | IO_INT_ADC.obj          | xc2000_ttc60.lib | _IO_ADC_INT_ChannelDeInit                       | unreferenced |
 | code_IO_PWM_INT_CalcPwmData (1180)             | IO_INT_PWM.obj          | xc2000_ttc60.lib | _IO_PWM_INT_CalcPwmData                         | unreferenced |
-| code_IO_PWD_IntPulseDeInit (1345)              | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_IntPulseDeInit                          | unreferenced |
-| code_IO_PWD_FreqInit (1354)                    | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_FreqInit                                | unreferenced |
-| code_IO_POWER_DeInit (1319)                    | IO_POWER.obj            | xc2000_ttc60.lib | _IO_POWER_DeInit                                | unreferenced |
-| code_IO_PWD_FreqGet (1356)                     | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_FreqGet                                 | unreferenced |
-| code_IO_PWD_IncInit (1346)                     | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_IncInit                                 | unreferenced |
-| code_IO_Timer_INT_GPTTimerStop (1296)          | IO_INT_Timer.obj        | xc2000_ttc60.lib | _IO_Timer_INT_GPTTimerStop                      | unreferenced |
-| code_IO_PWD_ComplexInit (1351)                 | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_ComplexInit                             | unreferenced |
-| code_IO_Timer_INT_GPTTimerStart (1295)         | IO_INT_Timer.obj        | xc2000_ttc60.lib | _IO_Timer_INT_GPTTimerStart                     | unreferenced |
-| code_IO_PWD_IncSet (1349)                      | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_IncSet                                  | unreferenced |
-| code_IO_Timer_INT_GPTTimerInit (1294)          | IO_INT_Timer.obj        | xc2000_ttc60.lib | _IO_Timer_INT_GPTTimerInit                      | unreferenced |
-| code_IO_PWD_ComplexDeInit (1353)               | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_ComplexDeInit                           | unreferenced |
-| code_IO_Timer_INT_GPTTimerEnable (1293)        | IO_INT_Timer.obj        | xc2000_ttc60.lib | _IO_Timer_INT_GPTTimerEnable                    | unreferenced |
-| code_IO_PWD_PulseInit (1355)                   | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_PulseInit                               | unreferenced |
-| code_IO_PWD_PulseGet (1358)                    | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_PulseGet                                | unreferenced |
-| code_IO_PWD_FreqDeInit (1360)                  | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_FreqDeInit                              | unreferenced |
-| code_IO_PWD_IncGet (1348)                      | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_IncGet                                  | unreferenced |
-| code_IO_PWD_IncDeInit (1350)                   | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_IncDeInit                               | unreferenced |
-| code_IO_POWER_GetStatus (1328)                 | IO_POWER.obj            | xc2000_ttc60.lib | _IO_POWER_GetStatus                             | unreferenced |
+| code_IO_SHIFT_Write (1239)                     | IO_INT_SHIFT.obj        | xc2000_ttc60.lib | _IO_SHIFT_Write                                 | unreferenced |
+| code_IO_SHIFT_DeInit (1238)                    | IO_INT_SHIFT.obj        | xc2000_ttc60.lib | _IO_SHIFT_DeInit                                | unreferenced |
+| code_IO_SPI_DeInit (1265)                      | IO_INT_SPI.obj          | xc2000_ttc60.lib | _IO_SPI_DeInit                                  | unreferenced |
 | code_IO_SPI_RemoveDevice (1267)                | IO_INT_SPI.obj          | xc2000_ttc60.lib | _IO_SPI_RemoveDevice                            | unreferenced |
-| code_IO_PWD_CountGet (1363)                    | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_CountGet                                | unreferenced |
+| code_IO_SHIFT_Read (1241)                      | IO_INT_SHIFT.obj        | xc2000_ttc60.lib | _IO_SHIFT_Read                                  | unreferenced |
+| code_IO_PWD_IncInit (1346)                     | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_IncInit                                 | unreferenced |
+| code_IO_PWD_PulseInit (1355)                   | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_PulseInit                               | unreferenced |
+| code_IO_Timer_INT_GPTTimerInit (1294)          | IO_INT_Timer.obj        | xc2000_ttc60.lib | _IO_Timer_INT_GPTTimerInit                      | unreferenced |
+| code_IO_Timer_INT_GPTTimerStop (1296)          | IO_INT_Timer.obj        | xc2000_ttc60.lib | _IO_Timer_INT_GPTTimerStop                      | unreferenced |
+| code_IO_Timer_INT_GPTTimerStart (1295)         | IO_INT_Timer.obj        | xc2000_ttc60.lib | _IO_Timer_INT_GPTTimerStart                     | unreferenced |
+| code_IO_POWER_GetStatus (1328)                 | IO_POWER.obj            | xc2000_ttc60.lib | _IO_POWER_GetStatus                             | unreferenced |
+| code_IO_PWD_IncGet (1348)                      | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_IncGet                                  | unreferenced |
+| code_IO_Timer_INT_GPTTimerEnable (1293)        | IO_INT_Timer.obj        | xc2000_ttc60.lib | _IO_Timer_INT_GPTTimerEnable                    | unreferenced |
+| code_IO_POWER_DeInit (1319)                    | IO_POWER.obj            | xc2000_ttc60.lib | _IO_POWER_DeInit                                | unreferenced |
+| code_IO_PWD_FreqInit (1354)                    | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_FreqInit                                | unreferenced |
+| code_IO_PWD_PulseGet (1358)                    | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_PulseGet                                | unreferenced |
+| code_IO_PWD_IncDeInit (1350)                   | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_IncDeInit                               | unreferenced |
+| code_IO_PWD_FreqDeInit (1360)                  | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_FreqDeInit                              | unreferenced |
+| code_IO_PWD_FreqGet (1356)                     | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_FreqGet                                 | unreferenced |
+| code_IO_PWD_IncSet (1349)                      | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_IncSet                                  | unreferenced |
 | code_IO_PWD_PulseDeInit (1361)                 | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_PulseDeInit                             | unreferenced |
 | code_IO_PWD_CountInit (1362)                   | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_CountInit                               | unreferenced |
-| code_IO_PWD_CountSet (1364)                    | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_CountSet                                | unreferenced |
+| code_IO_PWD_ComplexInit (1351)                 | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_ComplexInit                             | unreferenced |
+| code_IO_PWD_IntPulseDeInit (1345)              | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_IntPulseDeInit                          | unreferenced |
+| code_IO_PWD_ComplexDeInit (1353)               | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_ComplexDeInit                           | unreferenced |
+| code_IO_PWM_DeConfig (1422)                    | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_DeConfig                                | unreferenced |
+| code_IO_PWD_CountGet (1363)                    | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_CountGet                                | unreferenced |
 | code_IO_PWD_CountDeInit (1365)                 | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_CountDeInit                             | unreferenced |
-| code_IO_PWM_DualInit (1426)                    | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_DualInit                                | unreferenced |
+| code_IO_PWD_CountSet (1364)                    | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_CountSet                                | unreferenced |
 | code_IO_PWM_Curr_DeConfig (1423)               | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_Curr_DeConfig                           | unreferenced |
 | code_IO_PWM_DeInit (1427)                      | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_DeInit                                  | unreferenced |
-| code_IO_PWM_DeConfig (1422)                    | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_DeConfig                                | unreferenced |
-| code_IO_PWM_DualSetDuty (1430)                 | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_DualSetDuty                             | unreferenced |
-| code_IO_PWM_GetCur (1431)                      | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_GetCur                                  | unreferenced |
 | code_IO_PWM_DualDeInit (1428)                  | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_DualDeInit                              | unreferenced |
+| code_IO_PWM_DualInit (1426)                    | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_DualInit                                | unreferenced |
+| code_IO_PWM_GetCur (1431)                      | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_GetCur                                  | unreferenced |
 | code_IO_PWM_SetFreq (1432)                     | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_SetFreq                                 | unreferenced |
+| code_IO_PWM_DualSetDuty (1430)                 | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_DualSetDuty                             | unreferenced |
+| code_IO_Tools_DistanceUbyte4 (1499)            | IO_Tools.obj            | xc2000_ttc60.lib | _IO_Tools_DistanceUbyte4                        | unreferenced |
+| code_IO_Tools_DistanceUbyte2 (1500)            | IO_Tools.obj            | xc2000_ttc60.lib | _IO_Tools_DistanceUbyte2                        | unreferenced |
+| code_IO_Tools_DistanceUbyte1 (1501)            | IO_Tools.obj            | xc2000_ttc60.lib | _IO_Tools_DistanceUbyte1                        | unreferenced |
 | code_IO_RTC_PeriodicInit (1470)                | IO_RTC.obj              | xc2000_ttc60.lib | _IO_RTC_PeriodicInit                            | unreferenced |
 | code_IO_RTC_PeriodicDeInit (1471)              | IO_RTC.obj              | xc2000_ttc60.lib | _IO_RTC_PeriodicDeInit                          | unreferenced |
-| code_IO_Tools_DistanceUbyte4 (1499)            | IO_Tools.obj            | xc2000_ttc60.lib | _IO_Tools_DistanceUbyte4                        | unreferenced |
 | code_libc (1851)                               | __dohfree.obj           | c166ch.lib       | ___dohfree                                      | unreferenced |
 | code_libc (1852)                               | __dohfree.obj           | c166ch.lib       | _$cocofun_1                                     | unreferenced |
 | code_libc (1853)                               | __dohfree.obj           | c166ch.lib       | __restore_2                                     | unreferenced |
-| code_libc (1878)                               | printf_int.obj          | c166ch.lib       | _dummy                                          | unreferenced |
 | code_libc (1854)                               | __dohfree.obj           | c166ch.lib       | __save_1                                        | unreferenced |
-| code_IO_Tools_DistanceUbyte1 (1501)            | IO_Tools.obj            | xc2000_ttc60.lib | _IO_Tools_DistanceUbyte1                        | unreferenced |
-| code_IO_PWD_INT_CCU2_Init (1617)               | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CCU2_Init                           | unreferenced |
-| code_IO_PWD_INT_CCU2_DeInit (1618)             | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CCU2_DeInit                         | unreferenced |
-| code_IO_Tools_CalcCRC16 (1506)                 | IO_Tools.obj            | xc2000_ttc60.lib | _IO_Tools_CalcCRC16                             | unreferenced |
-| code_IO_Tools_GetIdentificationRegisters       | IO_Tools.obj            | xc2000_ttc60.lib | _IO_Tools_GetIdentificationRegisters            | unreferenced |
-| (1507)                                         |                         |                  |                                                 |              |
-| code_IO_UART_Init (1566)                       | IO_UART.obj             | xc2000_ttc60.lib | _IO_UART_Init                                   | unreferenced |
+| code_libc (1878)                               | printf_int.obj          | c166ch.lib       | _dummy                                          | unreferenced |
 | code_IO_UART_Write (1575)                      | IO_UART.obj             | xc2000_ttc60.lib | _IO_UART_Write                                  | unreferenced |
 | code_IO_UART_DeInit (1569)                     | IO_UART.obj             | xc2000_ttc60.lib | _IO_UART_DeInit                                 | unreferenced |
 | code_IO_UART_GetTxStatus (1577)                | IO_UART.obj             | xc2000_ttc60.lib | _IO_UART_GetTxStatus                            | unreferenced |
-| code_IO_UART_WriteQueue (1563)                 | IO_UART.obj             | xc2000_ttc60.lib | _IO_UART_WriteQueue                             | unreferenced |
 | code_IO_UART_GetRxStatus (1576)                | IO_UART.obj             | xc2000_ttc60.lib | _IO_UART_GetRxStatus                            | unreferenced |
+| code_IO_UART_Init (1566)                       | IO_UART.obj             | xc2000_ttc60.lib | _IO_UART_Init                                   | unreferenced |
+| code_IO_PWD_INT_CCU2_DeInit (1618)             | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CCU2_DeInit                         | unreferenced |
+| code_IO_PWD_INT_CCU2_Init (1617)               | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CCU2_Init                           | unreferenced |
 | code_IO_UART_Read (1574)                       | IO_UART.obj             | xc2000_ttc60.lib | _IO_UART_Read                                   | unreferenced |
 | code_IO_PWD_INT_IncInit (1620)                 | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_IncInit                             | unreferenced |
-| code_IO_PWD_INT_SetInc (1622)                  | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_SetInc                              | unreferenced |
+| code_IO_Tools_GetIdentificationRegisters       | IO_Tools.obj            | xc2000_ttc60.lib | _IO_Tools_GetIdentificationRegisters            | unreferenced |
+| (1507)                                         |                         |                  |                                                 |              |
+| code_IO_UART_WriteQueue (1563)                 | IO_UART.obj             | xc2000_ttc60.lib | _IO_UART_WriteQueue                             | unreferenced |
 | code_IO_PWD_INT_CountInit (1623)               | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CountInit                           | unreferenced |
 | code_IO_PWD_INT_GetCount (1624)                | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_GetCount                            | unreferenced |
 | code_IO_PWD_INT_SetCount (1625)                | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_SetCount                            | unreferenced |
 | code_IO_PWD_INT_GetInc (1621)                  | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_GetInc                              | unreferenced |
 | code_IO_PWD_INT_CCU6_FreqInit (1626)           | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CCU6_FreqInit                       | unreferenced |
-| code_IO_PWD_INT_CCU6_GetFreq (1627)            | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CCU6_GetFreq                        | unreferenced |
-| code_IO_PWD_INT_CCU6_FreqPulseDeInit (1632)    | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CCU6_FreqPulseDeInit                | unreferenced |
-| code_IO_PWD_INT_CCU6_GetPulse (1629)           | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CCU6_GetPulse                       | unreferenced |
+| code_IO_PWD_INT_SetInc (1622)                  | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_SetInc                              | unreferenced |
 | code_IO_PWD_INT_CC6IntOn (1633)                | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CC6IntOn                            | unreferenced |
+| code_IO_PWD_INT_CCU6_FreqPulseDeInit (1632)    | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CCU6_FreqPulseDeInit                | unreferenced |
+| code_IO_PWD_INT_CCU6_GetFreq (1627)            | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CCU6_GetFreq                        | unreferenced |
+| code_IO_PWD_INT_CCU6_GetPulse (1629)           | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CCU6_GetPulse                       | unreferenced |
 | code_libc (1786)                               | __hmalloc.obj           | c166ch.lib       | ___hfree                                        | unreferenced |
-| code_IC_getTorqueMapMode (448)                 | instrumentCluster.obj   |                  | _IC_getTorqueMapMode                            | unreferenced |
+| code_IO_Tools_CalcCRC16 (1506)                 | IO_Tools.obj            | xc2000_ttc60.lib | _IO_Tools_CalcCRC16                             | unreferenced |
+| huge_Sensor_TCSKnob (384)                      | initializations.obj     |                  | _Sensor_TCSKnob                                 | unreferenced |
 | code_IC_getLaunchControlSensitivity (449)      | instrumentCluster.obj   |                  | _IC_getLaunchControlSensitivity                 | unreferenced |
-| code_blink (502)                               | mathFunctions.obj       |                  | _blink                                          | unreferenced |
+| code_IC_getTorqueMapMode (448)                 | instrumentCluster.obj   |                  | _IC_getTorqueMapMode                            | unreferenced |
+| code_IC_parseCanMessage (447)                  | instrumentCluster.obj   |                  | _IC_parseCanMessage                             | unreferenced |
 | code_swap_uint8 (503)                          | mathFunctions.obj       |                  | _swap_uint8                                     | unreferenced |
 | code_min (501)                                 | mathFunctions.obj       |                  | _min                                            | unreferenced |
-| code_RTDS_delete (585)                         | readyToDriveSound.obj   |                  | _RTDS_delete                                    | unreferenced |
-| code_swap_int8 (504)                           | mathFunctions.obj       |                  | _swap_int8                                      | unreferenced |
-| code_swap_int32 (508)                          | mathFunctions.obj       |                  | _swap_int32                                     | unreferenced |
+| code_blink (502)                               | mathFunctions.obj       |                  | _blink                                          | unreferenced |
 | code_swap_int16 (506)                          | mathFunctions.obj       |                  | _swap_int16                                     | unreferenced |
-| code_swap_uint16 (505)                         | mathFunctions.obj       |                  | _swap_uint16                                    | unreferenced |
-| code_SafetyChecker_allSafe (623)               | safety.obj              |                  | _SafetyChecker_allSafe                          | unreferenced |
 | code_swap_uint32 (507)                         | mathFunctions.obj       |                  | _swap_uint32                                    | unreferenced |
-| code_CalibrateBPS (694)                        | sensorCalculations.obj  |                  | _CalibrateBPS                                   | unreferenced |
-| code_rpm_to_mph (697)                          | sensorCalculations.obj  |                  | _rpm_to_mph                                     | unreferenced |
-| code_GetBrakePosition (695)                    | sensorCalculations.obj  |                  | _GetBrakePosition                               | unreferenced |
+| code_swap_int32 (508)                          | mathFunctions.obj       |                  | _swap_int32                                     | unreferenced |
+| code_swap_int8 (504)                           | mathFunctions.obj       |                  | _swap_int8                                      | unreferenced |
+| code_RTDS_delete (585)                         | readyToDriveSound.obj   |                  | _RTDS_delete                                    | unreferenced |
+| code_swap_uint16 (505)                         | mathFunctions.obj       |                  | _swap_uint16                                    | unreferenced |
 | code_freq_to_rpm (696)                         | sensorCalculations.obj  |                  | _freq_to_rpm                                    | unreferenced |
+| code_rpm_to_mph (697)                          | sensorCalculations.obj  |                  | _rpm_to_mph                                     | unreferenced |
+| code_SafetyChecker_allSafe (623)               | safety.obj              |                  | _SafetyChecker_allSafe                          | unreferenced |
+| code_CalibrateBPS (694)                        | sensorCalculations.obj  |                  | _CalibrateBPS                                   | unreferenced |
+| code_GetBrakePosition (695)                    | sensorCalculations.obj  |                  | _GetBrakePosition                               | unreferenced |
+| code_TorqueEncoder_loadCalibrationFromEEPROM   | torqueEncoder.obj       |                  | _TorqueEncoder_loadCalibrationFromEEPROM        | unreferenced |
+| (764)                                          |                         |                  |                                                 |              |
+| code_TorqueEncoder_saveCalibrationToEEPROM     | torqueEncoder.obj       |                  | _TorqueEncoder_saveCalibrationToEEPROM          | unreferenced |
+| (763)                                          |                         |                  |                                                 |              |
 | code_TorqueEncoder_resetCalibration (762)      | torqueEncoder.obj       |                  | _TorqueEncoder_resetCalibration                 | unreferenced |
 | code_WheelSpeeds_getSlowestFront (852)         | wheelSpeeds.obj         |                  | _WheelSpeeds_getSlowestFront                    | unreferenced |
 | code_WheelSpeeds_getFastestRear (853)          | wheelSpeeds.obj         |                  | _WheelSpeeds_getFastestRear                     | unreferenced |
-| code_TorqueEncoder_saveCalibrationToEEPROM     | torqueEncoder.obj       |                  | _TorqueEncoder_saveCalibrationToEEPROM          | unreferenced |
-| (763)                                          |                         |                  |                                                 |              |
-| code_TorqueEncoder_loadCalibrationFromEEPROM   | torqueEncoder.obj       |                  | _TorqueEncoder_loadCalibrationFromEEPROM        | unreferenced |
-| (764)                                          |                         |                  |                                                 |              |
-| code_WheelSpeeds_getGroundSpeedKPH (856)       | wheelSpeeds.obj         |                  | _WheelSpeeds_getGroundSpeedKPH                  | unreferenced |
 | code_WheelSpeeds_getGroundSpeed (854)          | wheelSpeeds.obj         |                  | _WheelSpeeds_getGroundSpeed                     | unreferenced |
-| code_IO_ADC_ChannelDeInit (925)                | IO_ADC.obj              | xc2000_ttc60.lib | _IO_ADC_ChannelDeInit                           | unreferenced |
+| code_WheelSpeeds_getGroundSpeedKPH (856)       | wheelSpeeds.obj         |                  | _WheelSpeeds_getGroundSpeedKPH                  | unreferenced |
 | code_IO_ADC_BoardTempSbyte (935)               | IO_ADC.obj              | xc2000_ttc60.lib | _IO_ADC_BoardTempSbyte                          | unreferenced |
-| code_IO_CAN_ReadMsg (958)                      | IO_CAN.obj              | xc2000_ttc60.lib | _IO_CAN_ReadMsg                                 | unreferenced |
-| code_IO_CAN_WriteMsg (959)                     | IO_CAN.obj              | xc2000_ttc60.lib | _IO_CAN_WriteMsg                                | unreferenced |
-| code_IO_ADC_BoardTempFloat (934)               | IO_ADC.obj              | xc2000_ttc60.lib | _IO_ADC_BoardTempFloat                          | unreferenced |
 | code_IO_CAN_DeInitHandle (955)                 | IO_CAN.obj              | xc2000_ttc60.lib | _IO_CAN_DeInitHandle                            | unreferenced |
-| code_IO_CAN_DeInit (956)                       | IO_CAN.obj              | xc2000_ttc60.lib | _IO_CAN_DeInit                                  | unreferenced |
 | code_IO_CAN_ConfigMsg (957)                    | IO_CAN.obj              | xc2000_ttc60.lib | _IO_CAN_ConfigMsg                               | unreferenced |
+| code_IO_CAN_ReadMsg (958)                      | IO_CAN.obj              | xc2000_ttc60.lib | _IO_CAN_ReadMsg                                 | unreferenced |
+| code_IO_CAN_DeInit (956)                       | IO_CAN.obj              | xc2000_ttc60.lib | _IO_CAN_DeInit                                  | unreferenced |
+| code_IO_ADC_ChannelDeInit (925)                | IO_ADC.obj              | xc2000_ttc60.lib | _IO_ADC_ChannelDeInit                           | unreferenced |
+| code_IO_ADC_BoardTempFloat (934)               | IO_ADC.obj              | xc2000_ttc60.lib | _IO_ADC_BoardTempFloat                          | unreferenced |
 | code_IO_CAN_MsgStatus (964)                    | IO_CAN.obj              | xc2000_ttc60.lib | _IO_CAN_MsgStatus                               | unreferenced |
-| code_IO_DO_DeInit (1013)                       | IO_DIO.obj              | xc2000_ttc60.lib | _IO_DO_DeInit                                   | unreferenced |
-| code_IO_Driver_GetVersionOfDriver (1038)       | IO_Driver.obj           | xc2000_ttc60.lib | _IO_Driver_GetVersionOfDriver                   | unreferenced |
 | code_IO_CAN_Status (963)                       | IO_CAN.obj              | xc2000_ttc60.lib | _IO_CAN_Status                                  | unreferenced |
 | code_IO_CAN_FIFOStatus (965)                   | IO_CAN.obj              | xc2000_ttc60.lib | _IO_CAN_FIFOStatus                              | unreferenced |
+| code_IO_DO_DeInit (1013)                       | IO_DIO.obj              | xc2000_ttc60.lib | _IO_DO_DeInit                                   | unreferenced |
+| code_IO_CAN_WriteMsg (959)                     | IO_CAN.obj              | xc2000_ttc60.lib | _IO_CAN_WriteMsg                                | unreferenced |
+| code_IO_Driver_GetVersionOfDriver (1038)       | IO_Driver.obj           | xc2000_ttc60.lib | _IO_Driver_GetVersionOfDriver                   | unreferenced |
+| code_IO_EEPROM_DeInit (1061)                   | IO_EEPROM.obj           | xc2000_ttc60.lib | _IO_EEPROM_DeInit                               | unreferenced |
 | code_IO_EEPROM_Read (1062)                     | IO_EEPROM.obj           | xc2000_ttc60.lib | _IO_EEPROM_Read                                 | unreferenced |
 | code_IO_EEPROM_Write (1063)                    | IO_EEPROM.obj           | xc2000_ttc60.lib | _IO_EEPROM_Write                                | unreferenced |
 | code_IO_EEPROM_GetStatus (1064)                | IO_EEPROM.obj           | xc2000_ttc60.lib | _IO_EEPROM_GetStatus                            | unreferenced |
-| code_IO_EEPROM_DeInit (1061)                   | IO_EEPROM.obj           | xc2000_ttc60.lib | _IO_EEPROM_DeInit                               | unreferenced |
-| huge_Sensor_TCSKnob (384)                      | initializations.obj     |                  | _Sensor_TCSKnob                                 | unreferenced |
-| huge_Sensor_WPS_RR (381)                       | initializations.obj     |                  | _Sensor_WPS_RR                                  | unreferenced |
-| code_IC_parseCanMessage (447)                  | instrumentCluster.obj   |                  | _IC_parseCanMessage                             | unreferenced |
 | huge_prevHVILState (13)                        | AMKDrive.obj            |                  | _prevHVILState                                  | unreferenced |
-| code_AVL_insert (64)                           | avlTree.obj             |                  | _AVL_insert                                     | unreferenced |
 | code_BMS_getPower_uW (85)                      | bms.obj                 |                  | _BMS_getPower_uW                                | unreferenced |
+| code_AVL_insert (64)                           | avlTree.obj             |                  | _AVL_insert                                     | unreferenced |
+| code_BrakePressureSensor_getIndividualSensorPe | brakePressureSensor.obj |                  | _BrakePressureSensor_getIndividualSensorPercent | unreferenced |
+| rcent (186)                                    |                         |                  |                                                 |              |
 | code_BrakePressureSensor_resetCalibration      | brakePressureSensor.obj |                  | _BrakePressureSensor_resetCalibration           | unreferenced |
 | (181)                                          |                         |                  |                                                 |              |
 | code_BrakePressureSensor_saveCalibrationToEEPR | brakePressureSensor.obj |                  | _BrakePressureSensor_saveCalibrationToEEPROM    | unreferenced |
 | OM (182)                                       |                         |                  |                                                 |              |
 | code_BrakePressureSensor_loadCalibrationFromEE | brakePressureSensor.obj |                  | _BrakePressureSensor_loadCalibrationFromEEPROM  | unreferenced |
 | PROM (183)                                     |                         |                  |                                                 |              |
-| code_BrakePressureSensor_getIndividualSensorPe | brakePressureSensor.obj |                  | _BrakePressureSensor_getIndividualSensorPercent | unreferenced |
-| rcent (186)                                    |                         |                  |                                                 |              |
+| huge_Sensor_WPS_FL (378)                       | initializations.obj     |                  | _Sensor_WPS_FL                                  | unreferenced |
 | code_canOutput_sendSensorMessages (261)        | canManager.obj          |                  | _canOutput_sendSensorMessages                   | unreferenced |
 | code_CanManager_getReadStatus (260)            | canManager.obj          |                  | _CanManager_getReadStatus                       | unreferenced |
-| huge_Sensor_WPS_FL (378)                       | initializations.obj     |                  | _Sensor_WPS_FL                                  | unreferenced |
-| huge_Sensor_WPS_FR (379)                       | initializations.obj     |                  | _Sensor_WPS_FR                                  | unreferenced |
 | huge_Sensor_WPS_RL (380)                       | initializations.obj     |                  | _Sensor_WPS_RL                                  | unreferenced |
+| huge_Sensor_WPS_FR (379)                       | initializations.obj     |                  | _Sensor_WPS_FR                                  | unreferenced |
+| huge_Sensor_WPS_RR (381)                       | initializations.obj     |                  | _Sensor_WPS_RR                                  | unreferenced |
 | code_libc (2271)                               | memcpy.obj              | c166ch.lib       | _memcpy                                         | unreferenced |
 | code_librt (2430)                              | cphnw.obj               | c166rth.lib      | ___memcphnw                                     | unreferenced |
 | code_librt (2449)                              | cphnb.obj               | c166rth.lib      | ___memcphnb                                     | unreferenced |
 | shuge__1_swt (187)                             | brakePressureSensor.obj |                  |                                                 | unreferenced |
-| shuge__6_swt (926)                             | IO_ADC.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
-| shuge__7_swt (927)                             | IO_ADC.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
 | shuge__4_swt (855)                             | wheelSpeeds.obj         |                  |                                                 | unreferenced |
 | shuge__5_swt (857)                             | wheelSpeeds.obj         |                  |                                                 | unreferenced |
-| shuge__10_swt (930)                            | IO_ADC.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
+| shuge__6_swt (926)                             | IO_ADC.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
+| shuge__7_swt (927)                             | IO_ADC.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
 | shuge__8_swt (928)                             | IO_ADC.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
 | huge__1_ini (970)                              | IO_CAN.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
 | shuge__9_swt (929)                             | IO_ADC.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
-| shuge__3_swt (1163)                            | IO_INT_PWM.obj          | xc2000_ttc60.lib |                                                 | unreferenced |
+| shuge__10_swt (930)                            | IO_ADC.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
 | huge__999002_gpt_initialized (1299)            | IO_INT_Timer.obj        | xc2000_ttc60.lib |                                                 | unreferenced |
+| shuge__3_swt (1163)                            | IO_INT_PWM.obj          | xc2000_ttc60.lib |                                                 | unreferenced |
+| shuge__2_swt (1567)                            | IO_UART.obj             | xc2000_ttc60.lib |                                                 | unreferenced |
 | shuge__2_swt (1359)                            | IO_PWD.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
 | huge__1_ini (1523)                             | IO_Tools.obj            | xc2000_ttc60.lib |                                                 | unreferenced |
 | huge__999001_sens_state (1332)                 | IO_POWER.obj            | xc2000_ttc60.lib |                                                 | unreferenced |
 | shuge__1_swt (1357)                            | IO_PWD.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
-| shuge__6_swt (1638)                            | IO_INT_PWD.obj          | xc2000_ttc60.lib |                                                 | unreferenced |
-| shuge__5_swt (1571)                            | IO_UART.obj             | xc2000_ttc60.lib |                                                 | unreferenced |
-| shuge__4_swt (1636)                            | IO_INT_PWD.obj          | xc2000_ttc60.lib |                                                 | unreferenced |
-| shuge__2_swt (1567)                            | IO_UART.obj             | xc2000_ttc60.lib |                                                 | unreferenced |
 | shuge__4_swt (1570)                            | IO_UART.obj             | xc2000_ttc60.lib |                                                 | unreferenced |
+| shuge__5_swt (1571)                            | IO_UART.obj             | xc2000_ttc60.lib |                                                 | unreferenced |
 | shuge__3_swt (1635)                            | IO_INT_PWD.obj          | xc2000_ttc60.lib |                                                 | unreferenced |
-| shuge__2_swt (1634)                            | IO_INT_PWD.obj          | xc2000_ttc60.lib |                                                 | unreferenced |
 | shuge__3_swt (1568)                            | IO_UART.obj             | xc2000_ttc60.lib |                                                 | unreferenced |
+| shuge__2_swt (1634)                            | IO_INT_PWD.obj          | xc2000_ttc60.lib |                                                 | unreferenced |
 | shuge__5_swt (1637)                            | IO_INT_PWD.obj          | xc2000_ttc60.lib |                                                 | unreferenced |
+| shuge__4_swt (1636)                            | IO_INT_PWD.obj          | xc2000_ttc60.lib |                                                 | unreferenced |
+| shuge__6_swt (1638)                            | IO_INT_PWD.obj          | xc2000_ttc60.lib |                                                 | unreferenced |
 | code_libfp (2389)                              | cl2spf.obj              | c166fph.lib      | __ll2spf                                        | unreferenced |
 +--------------------------------------------------------------------------------------------------------------------------------------------------------------+

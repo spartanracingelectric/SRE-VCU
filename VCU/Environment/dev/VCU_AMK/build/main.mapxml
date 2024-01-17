@@ -7,8 +7,8 @@
 		<table>
 			<row>tool;TASKING VX-toolset for C166: Linker Locator v4.0r1 Build 163 SN 09002374</row>
 			<row>path;c:\Program Files (x86)\TASKING\C166-VX v4.0r1\bin\lk166</row>
-			<row>arguments;-f cc3780a </row>
-			<row>file:cc3780a;-o build/main.elf -d../../../Environment/bsp/lsl/TTC60/application.lsl -DXC2287_96F -D__CPU__=xc2287 -D__CPU_XC2287__ -obuild/main.hex:IHEX -obuild/main.s19:SREC -OtZXycL --error-limit=42 --map-file=build/main.mapxml:XML --map-file -mcrfiklSmNuQ ../../../Environment/bsp/bin/bsp_cstart_ttc60.obj build/AMKDrive.obj build/avlTree.obj build/bms.obj build/brakePressureSensor.obj build/canManager.obj build/cooling.obj build/daqSensors.obj build/initializations.obj build/instrumentCluster.obj build/main.obj build/mathFunctions.obj build/readyToDriveSound.obj build/safety.obj build/sensorCalculations.obj build/sensors.obj build/torqueEncoder.obj build/wheelSpeeds.obj ../../../Environment/lib/xc2000_ttc60.lib -lch -lfph -lrth -Lc:\Program" "Files" "(x86)\TASKING\C166-VX" "v4.0r1\lib\2 </row>
+			<row>arguments;-f cc23940a </row>
+			<row>file:cc23940a;-o build/main.elf -d../../../Environment/bsp/lsl/TTC60/application.lsl -DXC2287_96F -D__CPU__=xc2287 -D__CPU_XC2287__ -obuild/main.hex:IHEX -obuild/main.s19:SREC -OtZXycL --error-limit=42 --map-file=build/main.mapxml:XML --map-file -mcrfiklSmNuQ ../../../Environment/bsp/bin/bsp_cstart_ttc60.obj build/AMKDrive.obj build/avlTree.obj build/bms.obj build/brakePressureSensor.obj build/canManager.obj build/cooling.obj build/daqSensors.obj build/initializations.obj build/instrumentCluster.obj build/main.obj build/mathFunctions.obj build/readyToDriveSound.obj build/safety.obj build/sensorCalculations.obj build/sensors.obj build/torqueEncoder.obj build/wheelSpeeds.obj ../../../Environment/lib/xc2000_ttc60.lib -lch -lfph -lrth -Lc:\Program" "Files" "(x86)\TASKING\C166-VX" "v4.0r1\lib\2 </row>
 			<row>task;task1</row>
 		</table>
 	</part>
@@ -5141,162 +5141,162 @@
 			<column>
 				<name>Reason</name>
 			</column>
-			<row>code_IO_Tools_DistanceUbyte2 (1500);IO_Tools.obj;xc2000_ttc60.lib;_IO_Tools_DistanceUbyte2;unreferenced</row>
 			<row>code_IO_PWM_INT_CC6Deinit (1165);IO_INT_PWM.obj;xc2000_ttc60.lib;_IO_PWM_INT_CC6Deinit;unreferenced</row>
-			<row>code_IO_ADC_INT_ChannelDeInit (1099);IO_INT_ADC.obj;xc2000_ttc60.lib;_IO_ADC_INT_ChannelDeInit;unreferenced</row>
-			<row>code_IO_PWM_INT_CC2Deinit (1164);IO_INT_PWM.obj;xc2000_ttc60.lib;_IO_PWM_INT_CC2Deinit;unreferenced</row>
 			<row>code_IO_PWM_INT_CC6SetFreq (1162);IO_INT_PWM.obj;xc2000_ttc60.lib;_IO_PWM_INT_CC6SetFreq;unreferenced</row>
-			<row>code_IO_SHIFT_DeInit (1238);IO_INT_SHIFT.obj;xc2000_ttc60.lib;_IO_SHIFT_DeInit;unreferenced</row>
-			<row>code_IO_SHIFT_Write (1239);IO_INT_SHIFT.obj;xc2000_ttc60.lib;_IO_SHIFT_Write;unreferenced</row>
-			<row>code_IO_SHIFT_Read (1241);IO_INT_SHIFT.obj;xc2000_ttc60.lib;_IO_SHIFT_Read;unreferenced</row>
-			<row>code_IO_SPI_DeInit (1265);IO_INT_SPI.obj;xc2000_ttc60.lib;_IO_SPI_DeInit;unreferenced</row>
+			<row>code_IO_PWM_INT_CC2Deinit (1164);IO_INT_PWM.obj;xc2000_ttc60.lib;_IO_PWM_INT_CC2Deinit;unreferenced</row>
+			<row>code_IO_ADC_INT_ChannelDeInit (1099);IO_INT_ADC.obj;xc2000_ttc60.lib;_IO_ADC_INT_ChannelDeInit;unreferenced</row>
 			<row>code_IO_PWM_INT_CalcPwmData (1180);IO_INT_PWM.obj;xc2000_ttc60.lib;_IO_PWM_INT_CalcPwmData;unreferenced</row>
-			<row>code_IO_PWD_IntPulseDeInit (1345);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_IntPulseDeInit;unreferenced</row>
-			<row>code_IO_PWD_FreqInit (1354);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_FreqInit;unreferenced</row>
-			<row>code_IO_POWER_DeInit (1319);IO_POWER.obj;xc2000_ttc60.lib;_IO_POWER_DeInit;unreferenced</row>
-			<row>code_IO_PWD_FreqGet (1356);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_FreqGet;unreferenced</row>
-			<row>code_IO_PWD_IncInit (1346);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_IncInit;unreferenced</row>
-			<row>code_IO_Timer_INT_GPTTimerStop (1296);IO_INT_Timer.obj;xc2000_ttc60.lib;_IO_Timer_INT_GPTTimerStop;unreferenced</row>
-			<row>code_IO_PWD_ComplexInit (1351);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_ComplexInit;unreferenced</row>
-			<row>code_IO_Timer_INT_GPTTimerStart (1295);IO_INT_Timer.obj;xc2000_ttc60.lib;_IO_Timer_INT_GPTTimerStart;unreferenced</row>
-			<row>code_IO_PWD_IncSet (1349);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_IncSet;unreferenced</row>
-			<row>code_IO_Timer_INT_GPTTimerInit (1294);IO_INT_Timer.obj;xc2000_ttc60.lib;_IO_Timer_INT_GPTTimerInit;unreferenced</row>
-			<row>code_IO_PWD_ComplexDeInit (1353);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_ComplexDeInit;unreferenced</row>
-			<row>code_IO_Timer_INT_GPTTimerEnable (1293);IO_INT_Timer.obj;xc2000_ttc60.lib;_IO_Timer_INT_GPTTimerEnable;unreferenced</row>
-			<row>code_IO_PWD_PulseInit (1355);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_PulseInit;unreferenced</row>
-			<row>code_IO_PWD_PulseGet (1358);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_PulseGet;unreferenced</row>
-			<row>code_IO_PWD_FreqDeInit (1360);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_FreqDeInit;unreferenced</row>
-			<row>code_IO_PWD_IncGet (1348);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_IncGet;unreferenced</row>
-			<row>code_IO_PWD_IncDeInit (1350);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_IncDeInit;unreferenced</row>
-			<row>code_IO_POWER_GetStatus (1328);IO_POWER.obj;xc2000_ttc60.lib;_IO_POWER_GetStatus;unreferenced</row>
+			<row>code_IO_SHIFT_Write (1239);IO_INT_SHIFT.obj;xc2000_ttc60.lib;_IO_SHIFT_Write;unreferenced</row>
+			<row>code_IO_SHIFT_DeInit (1238);IO_INT_SHIFT.obj;xc2000_ttc60.lib;_IO_SHIFT_DeInit;unreferenced</row>
+			<row>code_IO_SPI_DeInit (1265);IO_INT_SPI.obj;xc2000_ttc60.lib;_IO_SPI_DeInit;unreferenced</row>
 			<row>code_IO_SPI_RemoveDevice (1267);IO_INT_SPI.obj;xc2000_ttc60.lib;_IO_SPI_RemoveDevice;unreferenced</row>
-			<row>code_IO_PWD_CountGet (1363);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_CountGet;unreferenced</row>
+			<row>code_IO_SHIFT_Read (1241);IO_INT_SHIFT.obj;xc2000_ttc60.lib;_IO_SHIFT_Read;unreferenced</row>
+			<row>code_IO_PWD_IncInit (1346);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_IncInit;unreferenced</row>
+			<row>code_IO_PWD_PulseInit (1355);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_PulseInit;unreferenced</row>
+			<row>code_IO_Timer_INT_GPTTimerInit (1294);IO_INT_Timer.obj;xc2000_ttc60.lib;_IO_Timer_INT_GPTTimerInit;unreferenced</row>
+			<row>code_IO_Timer_INT_GPTTimerStop (1296);IO_INT_Timer.obj;xc2000_ttc60.lib;_IO_Timer_INT_GPTTimerStop;unreferenced</row>
+			<row>code_IO_Timer_INT_GPTTimerStart (1295);IO_INT_Timer.obj;xc2000_ttc60.lib;_IO_Timer_INT_GPTTimerStart;unreferenced</row>
+			<row>code_IO_POWER_GetStatus (1328);IO_POWER.obj;xc2000_ttc60.lib;_IO_POWER_GetStatus;unreferenced</row>
+			<row>code_IO_PWD_IncGet (1348);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_IncGet;unreferenced</row>
+			<row>code_IO_Timer_INT_GPTTimerEnable (1293);IO_INT_Timer.obj;xc2000_ttc60.lib;_IO_Timer_INT_GPTTimerEnable;unreferenced</row>
+			<row>code_IO_POWER_DeInit (1319);IO_POWER.obj;xc2000_ttc60.lib;_IO_POWER_DeInit;unreferenced</row>
+			<row>code_IO_PWD_FreqInit (1354);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_FreqInit;unreferenced</row>
+			<row>code_IO_PWD_PulseGet (1358);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_PulseGet;unreferenced</row>
+			<row>code_IO_PWD_IncDeInit (1350);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_IncDeInit;unreferenced</row>
+			<row>code_IO_PWD_FreqDeInit (1360);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_FreqDeInit;unreferenced</row>
+			<row>code_IO_PWD_FreqGet (1356);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_FreqGet;unreferenced</row>
+			<row>code_IO_PWD_IncSet (1349);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_IncSet;unreferenced</row>
 			<row>code_IO_PWD_PulseDeInit (1361);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_PulseDeInit;unreferenced</row>
 			<row>code_IO_PWD_CountInit (1362);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_CountInit;unreferenced</row>
-			<row>code_IO_PWD_CountSet (1364);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_CountSet;unreferenced</row>
+			<row>code_IO_PWD_ComplexInit (1351);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_ComplexInit;unreferenced</row>
+			<row>code_IO_PWD_IntPulseDeInit (1345);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_IntPulseDeInit;unreferenced</row>
+			<row>code_IO_PWD_ComplexDeInit (1353);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_ComplexDeInit;unreferenced</row>
+			<row>code_IO_PWM_DeConfig (1422);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_DeConfig;unreferenced</row>
+			<row>code_IO_PWD_CountGet (1363);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_CountGet;unreferenced</row>
 			<row>code_IO_PWD_CountDeInit (1365);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_CountDeInit;unreferenced</row>
-			<row>code_IO_PWM_DualInit (1426);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_DualInit;unreferenced</row>
+			<row>code_IO_PWD_CountSet (1364);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_CountSet;unreferenced</row>
 			<row>code_IO_PWM_Curr_DeConfig (1423);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_Curr_DeConfig;unreferenced</row>
 			<row>code_IO_PWM_DeInit (1427);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_DeInit;unreferenced</row>
-			<row>code_IO_PWM_DeConfig (1422);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_DeConfig;unreferenced</row>
-			<row>code_IO_PWM_DualSetDuty (1430);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_DualSetDuty;unreferenced</row>
-			<row>code_IO_PWM_GetCur (1431);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_GetCur;unreferenced</row>
 			<row>code_IO_PWM_DualDeInit (1428);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_DualDeInit;unreferenced</row>
+			<row>code_IO_PWM_DualInit (1426);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_DualInit;unreferenced</row>
+			<row>code_IO_PWM_GetCur (1431);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_GetCur;unreferenced</row>
 			<row>code_IO_PWM_SetFreq (1432);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_SetFreq;unreferenced</row>
+			<row>code_IO_PWM_DualSetDuty (1430);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_DualSetDuty;unreferenced</row>
+			<row>code_IO_Tools_DistanceUbyte4 (1499);IO_Tools.obj;xc2000_ttc60.lib;_IO_Tools_DistanceUbyte4;unreferenced</row>
+			<row>code_IO_Tools_DistanceUbyte2 (1500);IO_Tools.obj;xc2000_ttc60.lib;_IO_Tools_DistanceUbyte2;unreferenced</row>
+			<row>code_IO_Tools_DistanceUbyte1 (1501);IO_Tools.obj;xc2000_ttc60.lib;_IO_Tools_DistanceUbyte1;unreferenced</row>
 			<row>code_IO_RTC_PeriodicInit (1470);IO_RTC.obj;xc2000_ttc60.lib;_IO_RTC_PeriodicInit;unreferenced</row>
 			<row>code_IO_RTC_PeriodicDeInit (1471);IO_RTC.obj;xc2000_ttc60.lib;_IO_RTC_PeriodicDeInit;unreferenced</row>
-			<row>code_IO_Tools_DistanceUbyte4 (1499);IO_Tools.obj;xc2000_ttc60.lib;_IO_Tools_DistanceUbyte4;unreferenced</row>
 			<row>code_libc (1851);__dohfree.obj;c166ch.lib;___dohfree;unreferenced</row>
 			<row>code_libc (1852);__dohfree.obj;c166ch.lib;_$cocofun_1;unreferenced</row>
 			<row>code_libc (1853);__dohfree.obj;c166ch.lib;__restore_2;unreferenced</row>
-			<row>code_libc (1878);printf_int.obj;c166ch.lib;_dummy;unreferenced</row>
 			<row>code_libc (1854);__dohfree.obj;c166ch.lib;__save_1;unreferenced</row>
-			<row>code_IO_Tools_DistanceUbyte1 (1501);IO_Tools.obj;xc2000_ttc60.lib;_IO_Tools_DistanceUbyte1;unreferenced</row>
-			<row>code_IO_PWD_INT_CCU2_Init (1617);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU2_Init;unreferenced</row>
-			<row>code_IO_PWD_INT_CCU2_DeInit (1618);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU2_DeInit;unreferenced</row>
-			<row>code_IO_Tools_CalcCRC16 (1506);IO_Tools.obj;xc2000_ttc60.lib;_IO_Tools_CalcCRC16;unreferenced</row>
-			<row>code_IO_Tools_GetIdentificationRegisters (1507);IO_Tools.obj;xc2000_ttc60.lib;_IO_Tools_GetIdentificationRegisters;unreferenced</row>
-			<row>code_IO_UART_Init (1566);IO_UART.obj;xc2000_ttc60.lib;_IO_UART_Init;unreferenced</row>
+			<row>code_libc (1878);printf_int.obj;c166ch.lib;_dummy;unreferenced</row>
 			<row>code_IO_UART_Write (1575);IO_UART.obj;xc2000_ttc60.lib;_IO_UART_Write;unreferenced</row>
 			<row>code_IO_UART_DeInit (1569);IO_UART.obj;xc2000_ttc60.lib;_IO_UART_DeInit;unreferenced</row>
 			<row>code_IO_UART_GetTxStatus (1577);IO_UART.obj;xc2000_ttc60.lib;_IO_UART_GetTxStatus;unreferenced</row>
-			<row>code_IO_UART_WriteQueue (1563);IO_UART.obj;xc2000_ttc60.lib;_IO_UART_WriteQueue;unreferenced</row>
 			<row>code_IO_UART_GetRxStatus (1576);IO_UART.obj;xc2000_ttc60.lib;_IO_UART_GetRxStatus;unreferenced</row>
+			<row>code_IO_UART_Init (1566);IO_UART.obj;xc2000_ttc60.lib;_IO_UART_Init;unreferenced</row>
+			<row>code_IO_PWD_INT_CCU2_DeInit (1618);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU2_DeInit;unreferenced</row>
+			<row>code_IO_PWD_INT_CCU2_Init (1617);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU2_Init;unreferenced</row>
 			<row>code_IO_UART_Read (1574);IO_UART.obj;xc2000_ttc60.lib;_IO_UART_Read;unreferenced</row>
 			<row>code_IO_PWD_INT_IncInit (1620);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_IncInit;unreferenced</row>
-			<row>code_IO_PWD_INT_SetInc (1622);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_SetInc;unreferenced</row>
+			<row>code_IO_Tools_GetIdentificationRegisters (1507);IO_Tools.obj;xc2000_ttc60.lib;_IO_Tools_GetIdentificationRegisters;unreferenced</row>
+			<row>code_IO_UART_WriteQueue (1563);IO_UART.obj;xc2000_ttc60.lib;_IO_UART_WriteQueue;unreferenced</row>
 			<row>code_IO_PWD_INT_CountInit (1623);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CountInit;unreferenced</row>
 			<row>code_IO_PWD_INT_GetCount (1624);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_GetCount;unreferenced</row>
 			<row>code_IO_PWD_INT_SetCount (1625);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_SetCount;unreferenced</row>
 			<row>code_IO_PWD_INT_GetInc (1621);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_GetInc;unreferenced</row>
 			<row>code_IO_PWD_INT_CCU6_FreqInit (1626);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU6_FreqInit;unreferenced</row>
-			<row>code_IO_PWD_INT_CCU6_GetFreq (1627);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU6_GetFreq;unreferenced</row>
-			<row>code_IO_PWD_INT_CCU6_FreqPulseDeInit (1632);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU6_FreqPulseDeInit;unreferenced</row>
-			<row>code_IO_PWD_INT_CCU6_GetPulse (1629);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU6_GetPulse;unreferenced</row>
+			<row>code_IO_PWD_INT_SetInc (1622);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_SetInc;unreferenced</row>
 			<row>code_IO_PWD_INT_CC6IntOn (1633);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CC6IntOn;unreferenced</row>
+			<row>code_IO_PWD_INT_CCU6_FreqPulseDeInit (1632);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU6_FreqPulseDeInit;unreferenced</row>
+			<row>code_IO_PWD_INT_CCU6_GetFreq (1627);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU6_GetFreq;unreferenced</row>
+			<row>code_IO_PWD_INT_CCU6_GetPulse (1629);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU6_GetPulse;unreferenced</row>
 			<row>code_libc (1786);__hmalloc.obj;c166ch.lib;___hfree;unreferenced</row>
-			<row>code_IC_getTorqueMapMode (448);instrumentCluster.obj;;_IC_getTorqueMapMode;unreferenced</row>
+			<row>code_IO_Tools_CalcCRC16 (1506);IO_Tools.obj;xc2000_ttc60.lib;_IO_Tools_CalcCRC16;unreferenced</row>
+			<row>huge_Sensor_TCSKnob (384);initializations.obj;;_Sensor_TCSKnob;unreferenced</row>
 			<row>code_IC_getLaunchControlSensitivity (449);instrumentCluster.obj;;_IC_getLaunchControlSensitivity;unreferenced</row>
-			<row>code_blink (502);mathFunctions.obj;;_blink;unreferenced</row>
+			<row>code_IC_getTorqueMapMode (448);instrumentCluster.obj;;_IC_getTorqueMapMode;unreferenced</row>
+			<row>code_IC_parseCanMessage (447);instrumentCluster.obj;;_IC_parseCanMessage;unreferenced</row>
 			<row>code_swap_uint8 (503);mathFunctions.obj;;_swap_uint8;unreferenced</row>
 			<row>code_min (501);mathFunctions.obj;;_min;unreferenced</row>
-			<row>code_RTDS_delete (585);readyToDriveSound.obj;;_RTDS_delete;unreferenced</row>
-			<row>code_swap_int8 (504);mathFunctions.obj;;_swap_int8;unreferenced</row>
-			<row>code_swap_int32 (508);mathFunctions.obj;;_swap_int32;unreferenced</row>
+			<row>code_blink (502);mathFunctions.obj;;_blink;unreferenced</row>
 			<row>code_swap_int16 (506);mathFunctions.obj;;_swap_int16;unreferenced</row>
-			<row>code_swap_uint16 (505);mathFunctions.obj;;_swap_uint16;unreferenced</row>
-			<row>code_SafetyChecker_allSafe (623);safety.obj;;_SafetyChecker_allSafe;unreferenced</row>
 			<row>code_swap_uint32 (507);mathFunctions.obj;;_swap_uint32;unreferenced</row>
-			<row>code_CalibrateBPS (694);sensorCalculations.obj;;_CalibrateBPS;unreferenced</row>
-			<row>code_rpm_to_mph (697);sensorCalculations.obj;;_rpm_to_mph;unreferenced</row>
-			<row>code_GetBrakePosition (695);sensorCalculations.obj;;_GetBrakePosition;unreferenced</row>
+			<row>code_swap_int32 (508);mathFunctions.obj;;_swap_int32;unreferenced</row>
+			<row>code_swap_int8 (504);mathFunctions.obj;;_swap_int8;unreferenced</row>
+			<row>code_RTDS_delete (585);readyToDriveSound.obj;;_RTDS_delete;unreferenced</row>
+			<row>code_swap_uint16 (505);mathFunctions.obj;;_swap_uint16;unreferenced</row>
 			<row>code_freq_to_rpm (696);sensorCalculations.obj;;_freq_to_rpm;unreferenced</row>
+			<row>code_rpm_to_mph (697);sensorCalculations.obj;;_rpm_to_mph;unreferenced</row>
+			<row>code_SafetyChecker_allSafe (623);safety.obj;;_SafetyChecker_allSafe;unreferenced</row>
+			<row>code_CalibrateBPS (694);sensorCalculations.obj;;_CalibrateBPS;unreferenced</row>
+			<row>code_GetBrakePosition (695);sensorCalculations.obj;;_GetBrakePosition;unreferenced</row>
+			<row>code_TorqueEncoder_loadCalibrationFromEEPROM (764);torqueEncoder.obj;;_TorqueEncoder_loadCalibrationFromEEPROM;unreferenced</row>
+			<row>code_TorqueEncoder_saveCalibrationToEEPROM (763);torqueEncoder.obj;;_TorqueEncoder_saveCalibrationToEEPROM;unreferenced</row>
 			<row>code_TorqueEncoder_resetCalibration (762);torqueEncoder.obj;;_TorqueEncoder_resetCalibration;unreferenced</row>
 			<row>code_WheelSpeeds_getSlowestFront (852);wheelSpeeds.obj;;_WheelSpeeds_getSlowestFront;unreferenced</row>
 			<row>code_WheelSpeeds_getFastestRear (853);wheelSpeeds.obj;;_WheelSpeeds_getFastestRear;unreferenced</row>
-			<row>code_TorqueEncoder_saveCalibrationToEEPROM (763);torqueEncoder.obj;;_TorqueEncoder_saveCalibrationToEEPROM;unreferenced</row>
-			<row>code_TorqueEncoder_loadCalibrationFromEEPROM (764);torqueEncoder.obj;;_TorqueEncoder_loadCalibrationFromEEPROM;unreferenced</row>
-			<row>code_WheelSpeeds_getGroundSpeedKPH (856);wheelSpeeds.obj;;_WheelSpeeds_getGroundSpeedKPH;unreferenced</row>
 			<row>code_WheelSpeeds_getGroundSpeed (854);wheelSpeeds.obj;;_WheelSpeeds_getGroundSpeed;unreferenced</row>
-			<row>code_IO_ADC_ChannelDeInit (925);IO_ADC.obj;xc2000_ttc60.lib;_IO_ADC_ChannelDeInit;unreferenced</row>
+			<row>code_WheelSpeeds_getGroundSpeedKPH (856);wheelSpeeds.obj;;_WheelSpeeds_getGroundSpeedKPH;unreferenced</row>
 			<row>code_IO_ADC_BoardTempSbyte (935);IO_ADC.obj;xc2000_ttc60.lib;_IO_ADC_BoardTempSbyte;unreferenced</row>
-			<row>code_IO_CAN_ReadMsg (958);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_ReadMsg;unreferenced</row>
-			<row>code_IO_CAN_WriteMsg (959);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_WriteMsg;unreferenced</row>
-			<row>code_IO_ADC_BoardTempFloat (934);IO_ADC.obj;xc2000_ttc60.lib;_IO_ADC_BoardTempFloat;unreferenced</row>
 			<row>code_IO_CAN_DeInitHandle (955);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_DeInitHandle;unreferenced</row>
-			<row>code_IO_CAN_DeInit (956);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_DeInit;unreferenced</row>
 			<row>code_IO_CAN_ConfigMsg (957);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_ConfigMsg;unreferenced</row>
+			<row>code_IO_CAN_ReadMsg (958);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_ReadMsg;unreferenced</row>
+			<row>code_IO_CAN_DeInit (956);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_DeInit;unreferenced</row>
+			<row>code_IO_ADC_ChannelDeInit (925);IO_ADC.obj;xc2000_ttc60.lib;_IO_ADC_ChannelDeInit;unreferenced</row>
+			<row>code_IO_ADC_BoardTempFloat (934);IO_ADC.obj;xc2000_ttc60.lib;_IO_ADC_BoardTempFloat;unreferenced</row>
 			<row>code_IO_CAN_MsgStatus (964);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_MsgStatus;unreferenced</row>
-			<row>code_IO_DO_DeInit (1013);IO_DIO.obj;xc2000_ttc60.lib;_IO_DO_DeInit;unreferenced</row>
-			<row>code_IO_Driver_GetVersionOfDriver (1038);IO_Driver.obj;xc2000_ttc60.lib;_IO_Driver_GetVersionOfDriver;unreferenced</row>
 			<row>code_IO_CAN_Status (963);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_Status;unreferenced</row>
 			<row>code_IO_CAN_FIFOStatus (965);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_FIFOStatus;unreferenced</row>
+			<row>code_IO_DO_DeInit (1013);IO_DIO.obj;xc2000_ttc60.lib;_IO_DO_DeInit;unreferenced</row>
+			<row>code_IO_CAN_WriteMsg (959);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_WriteMsg;unreferenced</row>
+			<row>code_IO_Driver_GetVersionOfDriver (1038);IO_Driver.obj;xc2000_ttc60.lib;_IO_Driver_GetVersionOfDriver;unreferenced</row>
+			<row>code_IO_EEPROM_DeInit (1061);IO_EEPROM.obj;xc2000_ttc60.lib;_IO_EEPROM_DeInit;unreferenced</row>
 			<row>code_IO_EEPROM_Read (1062);IO_EEPROM.obj;xc2000_ttc60.lib;_IO_EEPROM_Read;unreferenced</row>
 			<row>code_IO_EEPROM_Write (1063);IO_EEPROM.obj;xc2000_ttc60.lib;_IO_EEPROM_Write;unreferenced</row>
 			<row>code_IO_EEPROM_GetStatus (1064);IO_EEPROM.obj;xc2000_ttc60.lib;_IO_EEPROM_GetStatus;unreferenced</row>
-			<row>code_IO_EEPROM_DeInit (1061);IO_EEPROM.obj;xc2000_ttc60.lib;_IO_EEPROM_DeInit;unreferenced</row>
-			<row>huge_Sensor_TCSKnob (384);initializations.obj;;_Sensor_TCSKnob;unreferenced</row>
-			<row>huge_Sensor_WPS_RR (381);initializations.obj;;_Sensor_WPS_RR;unreferenced</row>
-			<row>code_IC_parseCanMessage (447);instrumentCluster.obj;;_IC_parseCanMessage;unreferenced</row>
 			<row>huge_prevHVILState (13);AMKDrive.obj;;_prevHVILState;unreferenced</row>
-			<row>code_AVL_insert (64);avlTree.obj;;_AVL_insert;unreferenced</row>
 			<row>code_BMS_getPower_uW (85);bms.obj;;_BMS_getPower_uW;unreferenced</row>
+			<row>code_AVL_insert (64);avlTree.obj;;_AVL_insert;unreferenced</row>
+			<row>code_BrakePressureSensor_getIndividualSensorPercent (186);brakePressureSensor.obj;;_BrakePressureSensor_getIndividualSensorPercent;unreferenced</row>
 			<row>code_BrakePressureSensor_resetCalibration (181);brakePressureSensor.obj;;_BrakePressureSensor_resetCalibration;unreferenced</row>
 			<row>code_BrakePressureSensor_saveCalibrationToEEPROM (182);brakePressureSensor.obj;;_BrakePressureSensor_saveCalibrationToEEPROM;unreferenced</row>
 			<row>code_BrakePressureSensor_loadCalibrationFromEEPROM (183);brakePressureSensor.obj;;_BrakePressureSensor_loadCalibrationFromEEPROM;unreferenced</row>
-			<row>code_BrakePressureSensor_getIndividualSensorPercent (186);brakePressureSensor.obj;;_BrakePressureSensor_getIndividualSensorPercent;unreferenced</row>
+			<row>huge_Sensor_WPS_FL (378);initializations.obj;;_Sensor_WPS_FL;unreferenced</row>
 			<row>code_canOutput_sendSensorMessages (261);canManager.obj;;_canOutput_sendSensorMessages;unreferenced</row>
 			<row>code_CanManager_getReadStatus (260);canManager.obj;;_CanManager_getReadStatus;unreferenced</row>
-			<row>huge_Sensor_WPS_FL (378);initializations.obj;;_Sensor_WPS_FL;unreferenced</row>
-			<row>huge_Sensor_WPS_FR (379);initializations.obj;;_Sensor_WPS_FR;unreferenced</row>
 			<row>huge_Sensor_WPS_RL (380);initializations.obj;;_Sensor_WPS_RL;unreferenced</row>
+			<row>huge_Sensor_WPS_FR (379);initializations.obj;;_Sensor_WPS_FR;unreferenced</row>
+			<row>huge_Sensor_WPS_RR (381);initializations.obj;;_Sensor_WPS_RR;unreferenced</row>
 			<row>code_libc (2271);memcpy.obj;c166ch.lib;_memcpy;unreferenced</row>
 			<row>code_librt (2430);cphnw.obj;c166rth.lib;___memcphnw;unreferenced</row>
 			<row>code_librt (2449);cphnb.obj;c166rth.lib;___memcphnb;unreferenced</row>
 			<row>shuge__1_swt (187);brakePressureSensor.obj;;;unreferenced</row>
-			<row>shuge__6_swt (926);IO_ADC.obj;xc2000_ttc60.lib;;unreferenced</row>
-			<row>shuge__7_swt (927);IO_ADC.obj;xc2000_ttc60.lib;;unreferenced</row>
 			<row>shuge__4_swt (855);wheelSpeeds.obj;;;unreferenced</row>
 			<row>shuge__5_swt (857);wheelSpeeds.obj;;;unreferenced</row>
-			<row>shuge__10_swt (930);IO_ADC.obj;xc2000_ttc60.lib;;unreferenced</row>
+			<row>shuge__6_swt (926);IO_ADC.obj;xc2000_ttc60.lib;;unreferenced</row>
+			<row>shuge__7_swt (927);IO_ADC.obj;xc2000_ttc60.lib;;unreferenced</row>
 			<row>shuge__8_swt (928);IO_ADC.obj;xc2000_ttc60.lib;;unreferenced</row>
 			<row>huge__1_ini (970);IO_CAN.obj;xc2000_ttc60.lib;;unreferenced</row>
 			<row>shuge__9_swt (929);IO_ADC.obj;xc2000_ttc60.lib;;unreferenced</row>
-			<row>shuge__3_swt (1163);IO_INT_PWM.obj;xc2000_ttc60.lib;;unreferenced</row>
+			<row>shuge__10_swt (930);IO_ADC.obj;xc2000_ttc60.lib;;unreferenced</row>
 			<row>huge__999002_gpt_initialized (1299);IO_INT_Timer.obj;xc2000_ttc60.lib;;unreferenced</row>
+			<row>shuge__3_swt (1163);IO_INT_PWM.obj;xc2000_ttc60.lib;;unreferenced</row>
+			<row>shuge__2_swt (1567);IO_UART.obj;xc2000_ttc60.lib;;unreferenced</row>
 			<row>shuge__2_swt (1359);IO_PWD.obj;xc2000_ttc60.lib;;unreferenced</row>
 			<row>huge__1_ini (1523);IO_Tools.obj;xc2000_ttc60.lib;;unreferenced</row>
 			<row>huge__999001_sens_state (1332);IO_POWER.obj;xc2000_ttc60.lib;;unreferenced</row>
 			<row>shuge__1_swt (1357);IO_PWD.obj;xc2000_ttc60.lib;;unreferenced</row>
-			<row>shuge__6_swt (1638);IO_INT_PWD.obj;xc2000_ttc60.lib;;unreferenced</row>
-			<row>shuge__5_swt (1571);IO_UART.obj;xc2000_ttc60.lib;;unreferenced</row>
-			<row>shuge__4_swt (1636);IO_INT_PWD.obj;xc2000_ttc60.lib;;unreferenced</row>
-			<row>shuge__2_swt (1567);IO_UART.obj;xc2000_ttc60.lib;;unreferenced</row>
 			<row>shuge__4_swt (1570);IO_UART.obj;xc2000_ttc60.lib;;unreferenced</row>
+			<row>shuge__5_swt (1571);IO_UART.obj;xc2000_ttc60.lib;;unreferenced</row>
 			<row>shuge__3_swt (1635);IO_INT_PWD.obj;xc2000_ttc60.lib;;unreferenced</row>
-			<row>shuge__2_swt (1634);IO_INT_PWD.obj;xc2000_ttc60.lib;;unreferenced</row>
 			<row>shuge__3_swt (1568);IO_UART.obj;xc2000_ttc60.lib;;unreferenced</row>
+			<row>shuge__2_swt (1634);IO_INT_PWD.obj;xc2000_ttc60.lib;;unreferenced</row>
 			<row>shuge__5_swt (1637);IO_INT_PWD.obj;xc2000_ttc60.lib;;unreferenced</row>
+			<row>shuge__4_swt (1636);IO_INT_PWD.obj;xc2000_ttc60.lib;;unreferenced</row>
+			<row>shuge__6_swt (1638);IO_INT_PWD.obj;xc2000_ttc60.lib;;unreferenced</row>
 			<row>code_libfp (2389);cl2spf.obj;c166fph.lib;__ll2spf;unreferenced</row>
 		</table>
 	</part>
