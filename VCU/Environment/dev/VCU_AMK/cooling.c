@@ -8,6 +8,8 @@
 #include "mathFunctions.h"
 #include "bms.h"
 
+extern Sensor Sensor_HVILTerminationSense;
+
 //All temperatures in C
 CoolingSystem *CoolingSystem_new()
 {
@@ -30,6 +32,11 @@ CoolingSystem *CoolingSystem_new()
     me->motorFanHigh = 43;    //Turn on at this temperature
     me->motorFanState = TRUE; //float4 motorFanPercent;
 
+    me->radFanMinPercent = 0;
+    me->radFanLow = 25;
+    me->radFanHigh = 40;
+    me->radFanPercent = 0;
+
     // Battery fans (Unused in 2021)
     me->batteryFanLow = 38;     //Turn off BELOW this point
     me->batteryFanHigh = 43;    //Turn on at this temperature
@@ -39,10 +46,10 @@ CoolingSystem *CoolingSystem_new()
 }
 
 //-------------------------------------------------------------------
-// Cooling system calculations - turns fans on/off, sends water pump PWM control signal
+// Cooling system calculations - turns fans PWM, sends water pump DO control signal
 //Rinehart water temperature operating range: -30C to +80C before derating
 //-------------------------------------------------------------------
-void CoolingSystem_calculations(CoolingSystem *me, sbyte2 motorControllerTemp, sbyte2 motorTemp, sbyte1 batteryTemp)
+void CoolingSystem_calculations(CoolingSystem *me, sbyte2 motorControllerTemp, sbyte2 motorTemp, sbyte1 batteryTemp, Sensor *HVILTermSense)
 {
     //Water pump ------------------
     //Water pump PWM protocol unknown
