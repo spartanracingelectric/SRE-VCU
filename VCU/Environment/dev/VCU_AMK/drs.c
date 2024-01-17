@@ -4,10 +4,8 @@
 
 #include "drs.h"
 #include "sensors.h"
-#include "wheelSpeeds.h"
 #include "brakePressureSensor.h"
 #include "torqueEncoder.h"
-#include "motorController.h"
 #include "sensorCalculations.h"
 
 extern Sensor Sensor_DRSButton; 
@@ -46,7 +44,7 @@ DRS *DRS_new()
 //----------------------------------------------------------------------
 
 
-void DRS_update(DRS *me, MotorController *mcm, TorqueEncoder *tps, BrakePressureSensor *bps, ubyte1 pot_DRS_LC) {
+void DRS_update(DRS *me, TorqueEncoder *tps, BrakePressureSensor *bps, ubyte1 pot_DRS_LC) {
 
     // .sensorvalue true/false are switched to account for Pull Up
     if(pot_DRS_LC == 1) {
@@ -74,7 +72,7 @@ void DRS_update(DRS *me, MotorController *mcm, TorqueEncoder *tps, BrakePressure
                 }
                 break;
             case AUTO:
-                runAuto(me, mcm, tps, bps);
+                runAuto(me, tps, bps);
                 break;
             default:
                 break;
@@ -83,8 +81,8 @@ void DRS_update(DRS *me, MotorController *mcm, TorqueEncoder *tps, BrakePressure
 
 }
 
-void runAuto(DRS *me, MotorController *mcm, TorqueEncoder *tps, BrakePressureSensor *bps) {
-    sbyte2 vehicle_speed_mph = 0.62 * MCM_getGroundSpeedKPH(mcm); // >30mph
+void runAuto(DRS *me, TorqueEncoder *tps, BrakePressureSensor *bps) {
+    sbyte2 vehicle_speed_mph = 0.62 * 0;// SRE-7 Replace: MCM_getGroundSpeedKPH(mcm); // >30mph
     sbyte2 curr_steer_angle = steering_degrees(); // < +-15 deg
     float4 brake_travel = bps->percent; // > 50%
     float4 throttle_travel = tps->travelPercent; // > 90%

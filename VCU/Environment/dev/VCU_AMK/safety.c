@@ -565,7 +565,7 @@ ubyte4 SafetyChecker_getNotices(SafetyChecker *me)
     return (me->notices);
 }
 
-void SafetyChecker_reduceTorque(SafetyChecker *me, BatteryManagementSystem *bms, WheelSpeeds *wss, _DriveInverter *in1, _DriveInverter *in2, _DriveInverter *in3, _DriveInverter *in4)
+void SafetyChecker_reduceTorque(SafetyChecker *me, BatteryManagementSystem *bms, _DriveInverter *in1, _DriveInverter *in2, _DriveInverter *in3, _DriveInverter *in4)
 {
     float4 multiplier = 1;
     //float4 tempMultiplier = 1;

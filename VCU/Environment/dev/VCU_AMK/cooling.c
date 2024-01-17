@@ -3,20 +3,17 @@
 //#include "IO_DIO.h"
 //#include "IO_PWM.h"
 
-#include "serial.h"
 #include "sensors.h"
 #include "cooling.h"
-#include "motorController.h"
 #include "mathFunctions.h"
 #include "bms.h"
 
 extern Sensor Sensor_HVILTerminationSense;
 
 //All temperatures in C
-CoolingSystem *CoolingSystem_new(SerialManager *serialMan)
+CoolingSystem *CoolingSystem_new()
 {
     CoolingSystem *me = (CoolingSystem *)malloc(sizeof(struct _CoolingSystem));
-    SerialManager *sm = serialMan;
 
     //-------------------------------------------------------------------
     // Cooling System Configuration

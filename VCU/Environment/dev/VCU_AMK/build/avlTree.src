@@ -1,5 +1,5 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc26220a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2023 -DRTS_TTC_FLASH_DATE_MONTH=7 -DRTS_TTC_FLASH_DATE_DAY=9 -DRTS_TTC_FLASH_DATE_HOUR=20 -DRTS_TTC_FLASH_DATE_MINUTE=16 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\avlTree.src
+	; Options: -f cc6504a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=1 -DRTS_TTC_FLASH_DATE_DAY=17 -DRTS_TTC_FLASH_DATE_HOUR=13 -DRTS_TTC_FLASH_DATE_MINUTE=3 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\avlTree.src
 	; Module start
 	.source	'avlTree.c'
 code_AVL_insert	.section	code, cluster 'AVL_insert', new
@@ -497,7 +497,7 @@ _24:
 	.extern	_IO_RTC_StartTime : far
 	.debug		.debug_info
 _17:
-	.dl	762
+	.dl	782
 	.dw	3
 	.dl	_18
 	.db	4
@@ -505,115 +505,115 @@ _16:
 	.db	1
 	.db	'avlTree.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_19
 	.db	2
 	.db	'void',0,3,5
-	.dl	158
+	.dl	178
 	.db	4
-	.dl	164
+	.dl	184
 	.db	5
-	.dl	158
+	.dl	178
 	.db	3,5
-	.dl	175
+	.dl	195
 	.db	4
-	.dl	180
+	.dl	200
 	.db	6
 	.db	'unsigned int',0,2,7,7
 	.db	'memcpy',0,1,53,17,6
-	.dl	164
+	.dl	184
 	.db	1,1,1,1,8,1,53,33,2
-	.dl	170
+	.dl	190
 	.db	8,1,53,56,2
-	.dl	186
+	.dl	206
 	.db	8,1,53,68,2
-	.dl	191
+	.dl	211
 	.db	0,7
 	.db	'malloc',0,2,78,33,6
-	.dl	164
+	.dl	184
 	.db	1,1,1,1,8,2,78,44,2
-	.dl	191
+	.dl	211
 	.db	0
 _28:
 	.db	6
 	.db	'unsigned long int',0,4,7,3,5
-	.dl	285
+	.dl	305
 	.db	5
-	.dl	306
+	.dl	326
 	.db	7
 	.db	'IO_RTC_StartTime',0,3,118,15,6
-	.dl	191
+	.dl	211
 	.db	1,1,1,1,9
 	.db	'timestamp',0,3,118,49,2
-	.dl	312
+	.dl	332
 	.db	0
 _34:
 	.db	6
 	.db	'unsigned char',0,1,8,10,8
-	.dl	367
+	.dl	387
 	.db	11,7,0,12
 	.db	'AVLNode',0,4,8,16,22,13
 	.db	'data',0
-	.dl	384
+	.dl	404
 	.db	8,2,35,0,13
 	.db	'timeBetweenMessages_Min',0
-	.dl	285
+	.dl	305
 	.db	4,2,35,8,13
 	.db	'lastMessage_timeStamp',0
-	.dl	285
+	.dl	305
 	.db	4,2,35,12,13
 	.db	'required',0
-	.dl	367
+	.dl	387
 	.db	1,2,35,16,13
 	.db	'timeBetweenMessages_Max',0
-	.dl	285
+	.dl	305
 	.db	4,2,35,18,0
 _25:
 	.db	3,5
-	.dl	393
+	.dl	413
 _26:
 	.db	3,5
-	.dl	536
+	.dl	556
 _30:
 	.db	3,5
-	.dl	367
+	.dl	387
 	.db	6
 	.db	'unsigned short int',0,2,7,14
 	.db	'__wchar_t',0,5,1,1
-	.dl	554
+	.dl	574
 	.db	14
 	.db	'__size_t',0,5,1,1
-	.dl	191
+	.dl	211
 	.db	3,5
-	.dl	158
+	.dl	178
 	.db	14
 	.db	'__prof_adm',0,5,1,1
-	.dl	611
+	.dl	631
 	.db	14
 	.db	'__codeptr',0,5,1,1
-	.dl	285
+	.dl	305
 	.db	14
 	.db	'size_t',0,1,29,25
-	.dl	191
+	.dl	211
 	.db	14
 	.db	'ubyte1',0,6,21,29
-	.dl	367
+	.dl	387
 	.db	14
 	.db	'ubyte2',0,6,22,29
-	.dl	191
+	.dl	211
 	.db	14
 	.db	'ubyte4',0,6,23,29
-	.dl	285
+	.dl	305
 	.db	14
 	.db	'bool',0,6,31,29
-	.dl	367
+	.dl	387
 	.db	14
 	.db	'IO_ErrorType',0,7,150,1,17
-	.dl	191
+	.dl	211
 	.db	14
 	.db	'AVLNode',0,4,25,3
-	.dl	393
+	.dl	413
 	.db	0
 	; End of section
 
@@ -650,24 +650,24 @@ _384:
 	.debug		.debug_pubnames
 	.dl	57
 	.dw	2
-	.dl	_17,766,207
+	.dl	_17,786,227
 	.db	'memcpy',0
-	.dl	255
+	.dl	275
 	.db	'malloc',0
-	.dl	317
+	.dl	337
 	.db	'IO_RTC_StartTime',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'AVL_insert'
 _20:
-	.dl	393
+	.dl	413
 	.dw	3
 	.dl	_21
 	.db	4,1
 	.db	'avlTree.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_23,_22
 	.db	2
@@ -778,7 +778,7 @@ _23:
 	.debug		.debug_pubnames
 	.dl	29
 	.dw	2
-	.dl	_20,397,167
+	.dl	_20,417,187
 	.db	'AVL_insert',0
 	.dl	0
 	; End of section

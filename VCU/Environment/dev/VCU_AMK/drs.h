@@ -2,10 +2,8 @@
 #define _DRS_H
 
 #include "IO_Driver.h"
-#include "WheelSpeeds.h"
 #include "brakePressureSensor.h"
 #include "torqueEncoder.h"
-#include "motorController.h"
 #include "sensorCalculations.h"
 
 // Rotary Switch modes:
@@ -34,9 +32,9 @@ typedef struct _DRS
 DRS *DRS_new();
 
 //DRS control logic
-void DRS_update(DRS *me, MotorController *mcm, TorqueEncoder *tps, BrakePressureSensor *bps, ubyte1 pot_DRS_LC);
+void DRS_update(DRS *me, TorqueEncoder *tps, BrakePressureSensor *bps, ubyte1 pot_DRS_LC);
 //make sensor comparisons to thresholds and set drsActive flag
-void runAuto(DRS *me, MotorController *mcm, TorqueEncoder *tps, BrakePressureSensor *bps);
+void runAuto(DRS *me, TorqueEncoder *tps, BrakePressureSensor *bps);
 
 //actuate the wing to physically activate DRS
 void DRS_open(DRS *me);

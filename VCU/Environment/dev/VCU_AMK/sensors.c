@@ -25,14 +25,6 @@ extern Sensor Sensor_TPS0;
 extern Sensor Sensor_TPS1;
 extern Sensor Sensor_BPS0;
 extern Sensor Sensor_BPS1;
-extern Sensor Sensor_WSS_FL;
-extern Sensor Sensor_WSS_FR;
-extern Sensor Sensor_WSS_RL;
-extern Sensor Sensor_WSS_RR;
-extern Sensor Sensor_WPS_FL;
-extern Sensor Sensor_WPS_FR;
-extern Sensor Sensor_WPS_RL;
-extern Sensor Sensor_WPS_RR;
 extern Sensor Sensor_SAS;
 extern Sensor Sensor_LVBattery;
 
@@ -41,6 +33,11 @@ extern Sensor Sensor_BenchTPS1;
 
 extern Sensor Sensor_RTDButton;
 extern Sensor Sensor_EcoButton;
+
+extern Sensor Sensor_DRSButton;
+extern Sensor Sensor_DRSKnob;
+extern Sensor Sensor_LCButton;
+
 extern Sensor Sensor_HVILTerminationSense;
 extern Sensor Sensor_TVButton;
 
@@ -55,9 +52,6 @@ extern Sensor Sensor_TVButton;
 //----------------------------------------------------------------------------
 void sensors_updateSensors(void)
 {
-    //TODO: Handle errors (using the return values for these Get functions)
-
-    //TODO: RTDS
 
     //Torque Encoders ---------------------------------------------------
     //Sensor_BenchTPS0.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_00, &Sensor_BenchTPS0.sensorValue, &Sensor_BenchTPS0.fresh);
@@ -71,7 +65,7 @@ void sensors_updateSensors(void)
     Sensor_BPS0.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_02, &Sensor_BPS0.sensorValue, &Sensor_BPS0.fresh);
     Sensor_BPS1.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_03, &Sensor_BPS1.sensorValue, &Sensor_BPS1.fresh);
 
-    //TCS Knob (unused)
+    //TCS Knob 
     //Sensor_TCSKnob.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_04, &Sensor_TCSKnob.sensorValue, &Sensor_TCSKnob.fresh);
 
     //Shock pots ---------------------------------------------------
@@ -134,19 +128,27 @@ void sensors_updateSensors(void)
     //Switches / Digital ---------------------------------------------------
     Sensor_RTDButton.ioErr_signalGet = IO_DI_Get(IO_DI_00, &Sensor_RTDButton.sensorValue);
     Sensor_EcoButton.ioErr_signalGet = IO_DI_Get(IO_DI_01, &Sensor_EcoButton.sensorValue);
-    Sensor_TVButton.ioErr_signalGet = IO_DI_Get(IO_DI_03, &Sensor_TVButton.sensorValue);
+    Sensor_TVButton.ioErr_signalGet = IO_DI_Get(IO_DI_03, &Sensor_TVButton.sensorValue); //USed to be Launch Control Button
     //Sensor_TCSSwitchDown.ioErr_signalGet = IO_DI_Get(IO_DI_03, &Sensor_TCSSwitchDown.sensorValue);
     Sensor_HVILTerminationSense.ioErr_signalGet = IO_DI_Get(IO_DI_07, &Sensor_HVILTerminationSense.sensorValue);
+
+    Sensor_DRSButton.ioErr_signalGet = IO_DI_Get(IO_DI_04, &Sensor_DRSButton.sensorValue);
 
     //Other stuff ---------------------------------------------------
     //Battery voltage (at VCU internal electronics supply input)
     Sensor_LVBattery.ioErr_signalGet = IO_ADC_Get(IO_ADC_UBAT, &Sensor_LVBattery.sensorValue, &Sensor_LVBattery.fresh);
+
+    //Steering Angle Sensor
     Sensor_SAS.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_04, &Sensor_SAS.sensorValue, &Sensor_SAS.fresh);
+
+    //DRS Knob
+    Sensor_DRSKnob.ioErr_signalGet = IO_ADC_Get(IO_ADC_VAR_00, &Sensor_DRSKnob.sensorValue, &Sensor_DRSKnob.fresh);
 }
 
 void Light_set(Light light, float4 percent)
 {
-    ubyte2 duty = 65535 * percent;
+    ubyte2 duty = 65535 * percent; //For Cooling_RadFans
+
     bool power = duty > 5000 ? TRUE : FALSE; //Even though it's a lowside output, TRUE = on
 
     switch (light)
@@ -157,11 +159,11 @@ void Light_set(Light light, float4 percent)
         break;
 
     case Cooling_waterPump:
-        IO_PWM_SetDuty(IO_PWM_02, duty, NULL);
+        IO_DO_Set(IO_DO_02, power);
         break;
 
-    case Cooling_motorFans:  // Powerpack fan(s)
-        IO_DO_Set(IO_DO_03, power);
+    case Cooling_RadFans:  // Powerpack fan(s)
+        IO_PWM_SetDuty(IO_PWM_02, duty, NULL);
         break;
 
     case Cooling_batteryFans:

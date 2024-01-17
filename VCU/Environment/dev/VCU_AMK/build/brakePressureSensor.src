@@ -1,5 +1,5 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc12408a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2023 -DRTS_TTC_FLASH_DATE_MONTH=7 -DRTS_TTC_FLASH_DATE_DAY=9 -DRTS_TTC_FLASH_DATE_HOUR=20 -DRTS_TTC_FLASH_DATE_MINUTE=16 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\brakePressureSensor.src
+	; Options: -f cc3056a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=1 -DRTS_TTC_FLASH_DATE_DAY=17 -DRTS_TTC_FLASH_DATE_HOUR=13 -DRTS_TTC_FLASH_DATE_MINUTE=3 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\brakePressureSensor.src
 	; Module start
 	.source	'brakePressureSensor.c'
 code_BrakePressureSensor_new	.section	code, cluster 'BrakePressureSensor_new', new
@@ -1532,7 +1532,7 @@ _188:
 	.extern	__spf2us : far
 	.debug		.debug_info
 _141:
-	.dl	1742
+	.dl	1760
 	.dw	3
 	.dl	_142
 	.db	4
@@ -1540,7 +1540,7 @@ _140:
 	.db	1
 	.db	'brakePressureSensor.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_143
 _203:
@@ -1550,134 +1550,134 @@ _203:
 	.db	'unsigned int',0,2,7,3
 	.db	'_Sensor',0,3,126,16,30,4
 	.db	'specMin',0
-	.dl	187
+	.dl	207
 	.db	4,2,35,0,4
 	.db	'specMax',0
-	.dl	187
+	.dl	207
 	.db	4,2,35,4,4
 	.db	'sensorValue',0
-	.dl	187
+	.dl	207
 	.db	4,2,35,8,4
 	.db	'heldSensorValue',0
-	.dl	187
+	.dl	207
 	.db	4,2,35,12,4
 	.db	'timestamp',0
-	.dl	187
+	.dl	207
 	.db	4,2,35,16,4
 	.db	'fresh',0
-	.dl	170
+	.dl	190
 	.db	1,2,35,20,4
 	.db	'ioErr_powerInit',0
-	.dl	208
+	.dl	228
 	.db	2,2,35,22,4
 	.db	'ioErr_powerSet',0
-	.dl	208
+	.dl	228
 	.db	2,2,35,24,4
 	.db	'ioErr_signalInit',0
-	.dl	208
+	.dl	228
 	.db	2,2,35,26,4
 	.db	'ioErr_signalGet',0
-	.dl	208
+	.dl	228
 	.db	2,2,35,28,0,5,5
-	.dl	224
+	.dl	244
 	.db	2
 	.db	'float',0,4,4,3
 	.db	'_BrakePressureSensor',0,2,10,16,48,4
 	.db	'bench',0
-	.dl	170
+	.dl	190
 	.db	1,2,35,0,4
 	.db	'bps0',0
-	.dl	452
+	.dl	472
 	.db	4,2,35,2,4
 	.db	'bps1',0
-	.dl	452
+	.dl	472
 	.db	4,2,35,6,4
 	.db	'bps0_calibMin',0
-	.dl	208
+	.dl	228
 	.db	2,2,35,10,4
 	.db	'bps0_calibMax',0
-	.dl	208
+	.dl	228
 	.db	2,2,35,12,4
 	.db	'bps0_reverse',0
-	.dl	170
+	.dl	190
 	.db	1,2,35,14,4
 	.db	'bps0_value',0
-	.dl	208
+	.dl	228
 	.db	2,2,35,16,4
 	.db	'bps0_percent',0
-	.dl	458
+	.dl	478
 	.db	4,2,35,18,4
 	.db	'bps1_calibMin',0
-	.dl	208
+	.dl	228
 	.db	2,2,35,22,4
 	.db	'bps1_calibMax',0
-	.dl	208
+	.dl	228
 	.db	2,2,35,24,4
 	.db	'bps1_reverse',0
-	.dl	170
+	.dl	190
 	.db	1,2,35,26,4
 	.db	'bps1_value',0
-	.dl	208
+	.dl	228
 	.db	2,2,35,28,4
 	.db	'bps1_percent',0
-	.dl	458
+	.dl	478
 	.db	4,2,35,30,4
 	.db	'runCalibration',0
-	.dl	170
+	.dl	190
 	.db	1,2,35,34,4
 	.db	'timestamp_calibrationStart',0
-	.dl	187
+	.dl	207
 	.db	4,2,35,36,4
 	.db	'calibrationRunTime',0
-	.dl	170
+	.dl	190
 	.db	1,2,35,40,4
 	.db	'calibrated',0
-	.dl	170
+	.dl	190
 	.db	1,2,35,41,4
 	.db	'percent',0
-	.dl	458
+	.dl	478
 	.db	4,2,35,42,4
 	.db	'brakesAreOn',0
-	.dl	170
+	.dl	190
 	.db	1,2,35,46,4
 	.db	'implausibility',0
-	.dl	170
+	.dl	190
 	.db	1,2,35,47,0
 _189:
 	.db	5,5
-	.dl	467
+	.dl	487
 _191:
 	.db	6
 	.db	'BrakePressureSensor_resetCalibration',0,1,1,105,6,6,1,1
 _194:
 	.db	7
 	.db	'me',0,1,105,64,2
-	.dl	927
+	.dl	947
 _196:
 	.db	8,0,9
 	.db	'void',0,5,5
-	.dl	992
+	.dl	1012
 	.db	10
 	.db	'malloc',0,4,78,33,6
-	.dl	998
+	.dl	1018
 	.db	1,1,1,1,11,4,78,44,2
-	.dl	208
+	.dl	228
 	.db	0,5,5
-	.dl	187
+	.dl	207
 	.db	12
-	.dl	1034
+	.dl	1054
 	.db	10
 	.db	'IO_RTC_StartTime',0,5,118,15,6
-	.dl	208
+	.dl	228
 	.db	1,1,1,1,7
 	.db	'timestamp',0,5,118,49,2
-	.dl	1040
+	.dl	1060
 	.db	0,10
 	.db	'IO_RTC_GetTimeUS',0,5,143,1,9,6
-	.dl	187
+	.dl	207
 	.db	1,1,1,1,7
 	.db	'timestamp',0,5,143,1,35,2
-	.dl	187
+	.dl	207
 	.db	0,13,3,103,9,1,14
 	.db	'Light_dashEco',0,0,14
 	.db	'Light_dashError',0,1,14
@@ -1685,84 +1685,84 @@ _196:
 	.db	'Light_dashTCS',0,3,14
 	.db	'Light_brake',0,4,14
 	.db	'Cooling_waterPump',0,5,14
-	.db	'Cooling_motorFans',0,6,14
+	.db	'Cooling_RadFans',0,6,14
 	.db	'Cooling_batteryFans',0,7,0,15
-	.db	'Light_set',0,3,205,1,6,6,1,1,1,1,7
-	.db	'light',0,3,205,1,22,2
-	.dl	1147
+	.db	'Light_set',0,3,207,1,6,6,1,1,1,1,7
+	.db	'light',0,3,207,1,22,2
+	.dl	1167
 	.db	7
-	.db	'percent',0,3,205,1,36,2
-	.dl	458
+	.db	'percent',0,3,207,1,36,2
+	.dl	478
 	.db	0
 _207:
 	.db	5,5
-	.dl	458
+	.dl	478
 _221:
 	.db	5,5
-	.dl	170
+	.dl	190
 	.db	10
 	.db	'getPercent',0,6,15,8,6
-	.dl	458
+	.dl	478
 	.db	1,1,1,1,7
 	.db	'value',0,6,15,26,2
-	.dl	458
+	.dl	478
 	.db	7
 	.db	'start',0,6,15,40,2
-	.dl	458
+	.dl	478
 	.db	7
 	.db	'end',0,6,15,54,2
-	.dl	458
+	.dl	478
 	.db	7
 	.db	'zeroToOneOnly',0,6,15,64,2
-	.dl	170
+	.dl	190
 	.db	0,2
 	.db	'unsigned short int',0,2,7,16
 	.db	'__wchar_t',0,1,1,1
-	.dl	1453
+	.dl	1471
 	.db	16
 	.db	'__size_t',0,1,1,1
-	.dl	208
+	.dl	228
 	.db	5,5
-	.dl	992
+	.dl	1012
 	.db	16
 	.db	'__prof_adm',0,1,1,1
-	.dl	1510
+	.dl	1528
 	.db	16
 	.db	'__codeptr',0,1,1,1
-	.dl	187
+	.dl	207
 	.db	16
 	.db	'size_t',0,4,29,25
-	.dl	208
+	.dl	228
 	.db	16
 	.db	'ubyte1',0,7,21,29
-	.dl	170
+	.dl	190
 	.db	16
 	.db	'ubyte2',0,7,22,29
-	.dl	208
+	.dl	228
 	.db	16
 	.db	'ubyte4',0,7,23,29
-	.dl	187
+	.dl	207
 	.db	16
 	.db	'float4',0,7,29,29
-	.dl	458
+	.dl	478
 	.db	16
 	.db	'bool',0,7,31,29
-	.dl	170
+	.dl	190
 	.db	16
 	.db	'IO_ErrorType',0,8,150,1,17
-	.dl	208
+	.dl	228
 	.db	16
 	.db	'Light',0,3,113,3
-	.dl	1147
+	.dl	1167
 	.db	16
 	.db	'Sensor',0,3,145,1,3
-	.dl	224
+	.dl	244
 	.db	17
 	.db	'Sensor_BPS0',0,3,158,1,15,5
-	.dl	224
+	.dl	244
 	.db	1,1,16
 	.db	'BrakePressureSensor',0,2,38,3
-	.dl	467
+	.dl	487
 	.db	0
 	; End of section
 
@@ -1802,28 +1802,28 @@ _1988:
 	.debug		.debug_pubnames
 	.dl	96
 	.dw	2
-	.dl	_141,1746,1004
+	.dl	_141,1764,1024
 	.db	'malloc',0
-	.dl	1045
+	.dl	1065
 	.db	'IO_RTC_StartTime',0
-	.dl	1095
+	.dl	1115
 	.db	'IO_RTC_GetTimeUS',0
-	.dl	1295
+	.dl	1313
 	.db	'Light_set',0
-	.dl	1362
+	.dl	1380
 	.db	'getPercent',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'BrakePressureSensor_new'
 _144:
-	.dl	342
+	.dl	362
 	.dw	3
 	.dl	_145
 	.db	4,1
 	.db	'brakePressureSensor.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_147,_146
 	.db	2
@@ -1986,20 +1986,20 @@ _197:
 	.debug		.debug_pubnames
 	.dl	42
 	.dw	2
-	.dl	_144,346,179
+	.dl	_144,366,199
 	.db	'BrakePressureSensor_new',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'BrakePressureSensor_update'
 _149:
-	.dl	281
+	.dl	301
 	.dw	3
 	.dl	_150
 	.db	4,1
 	.db	'brakePressureSensor.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_152,_151
 	.db	2
@@ -2235,20 +2235,20 @@ _152:
 	.debug		.debug_pubnames
 	.dl	45
 	.dw	2
-	.dl	_149,285,179
+	.dl	_149,305,199
 	.db	'BrakePressureSensor_update',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'BrakePressureSensor_getIndividualSensorPercent'
 _154:
-	.dl	333
+	.dl	353
 	.dw	3
 	.dl	_155
 	.db	4,1
 	.db	'brakePressureSensor.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_157,_156
 	.db	2
@@ -2313,20 +2313,20 @@ _157:
 	.debug		.debug_pubnames
 	.dl	65
 	.dw	2
-	.dl	_154,337,179
+	.dl	_154,357,199
 	.db	'BrakePressureSensor_getIndividualSensorPercent',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'BrakePressureSensor_resetCalibration'
 _159:
-	.dl	226
+	.dl	246
 	.dw	3
 	.dl	_160
 	.db	4,1
 	.db	'brakePressureSensor.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_162,_161
 	.db	2
@@ -2411,13 +2411,13 @@ _162:
 
 	.debug		.debug_info, cluster 'BrakePressureSensor_saveCalibrationToEEPROM'
 _164:
-	.dl	279
+	.dl	299
 	.dw	3
 	.dl	_165
 	.db	4,1
 	.db	'brakePressureSensor.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_167,_166
 	.db	2
@@ -2466,20 +2466,20 @@ _167:
 	.debug		.debug_pubnames
 	.dl	62
 	.dw	2
-	.dl	_164,283,179
+	.dl	_164,303,199
 	.db	'BrakePressureSensor_saveCalibrationToEEPROM',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'BrakePressureSensor_loadCalibrationFromEEPROM'
 _169:
-	.dl	281
+	.dl	301
 	.dw	3
 	.dl	_170
 	.db	4,1
 	.db	'brakePressureSensor.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_172,_171
 	.db	2
@@ -2528,20 +2528,20 @@ _172:
 	.debug		.debug_pubnames
 	.dl	64
 	.dw	2
-	.dl	_169,285,179
+	.dl	_169,305,199
 	.db	'BrakePressureSensor_loadCalibrationFromEEPROM',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'BrakePressureSensor_startCalibration'
 _174:
-	.dl	354
+	.dl	374
 	.dw	3
 	.dl	_175
 	.db	4,1
 	.db	'brakePressureSensor.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_177,_176
 	.db	2
@@ -2683,20 +2683,20 @@ _217:
 	.debug		.debug_pubnames
 	.dl	55
 	.dw	2
-	.dl	_174,358,179
+	.dl	_174,378,199
 	.db	'BrakePressureSensor_startCalibration',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'BrakePressureSensor_calibrationCycle'
 _179:
-	.dl	309
+	.dl	329
 	.dw	3
 	.dl	_180
 	.db	4,1
 	.db	'brakePressureSensor.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_182,_181
 	.db	2
@@ -2848,20 +2848,20 @@ _182:
 	.debug		.debug_pubnames
 	.dl	55
 	.dw	2
-	.dl	_179,313,179
+	.dl	_179,333,199
 	.db	'BrakePressureSensor_calibrationCycle',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'BrakePressureSensor_getPedalTravel'
 _184:
-	.dl	324
+	.dl	344
 	.dw	3
 	.dl	_185
 	.db	4,1
 	.db	'brakePressureSensor.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_187,_186
 	.db	2
@@ -2920,7 +2920,7 @@ _187:
 	.debug		.debug_pubnames
 	.dl	53
 	.dw	2
-	.dl	_184,328,179
+	.dl	_184,348,199
 	.db	'BrakePressureSensor_getPedalTravel',0
 	.dl	0
 	; End of section

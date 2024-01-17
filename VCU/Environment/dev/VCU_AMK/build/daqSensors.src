@@ -1,5 +1,5 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc6124a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2023 -DRTS_TTC_FLASH_DATE_MONTH=7 -DRTS_TTC_FLASH_DATE_DAY=9 -DRTS_TTC_FLASH_DATE_HOUR=20 -DRTS_TTC_FLASH_DATE_MINUTE=16 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\daqSensors.src
+	; Options: -f cc12372a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=1 -DRTS_TTC_FLASH_DATE_DAY=17 -DRTS_TTC_FLASH_DATE_HOUR=13 -DRTS_TTC_FLASH_DATE_MINUTE=3 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\daqSensors.src
 	; Module start
 	.source	'daqSensors.c'
 code_DAQ_Sensor_new	.section	code, cluster 'DAQ_Sensor_new', new
@@ -376,7 +376,7 @@ _43:
 	.extern	__dpf2ul : far
 	.debug		.debug_info
 _31:
-	.dl	786
+	.dl	806
 	.dw	3
 	.dl	_32
 	.db	4
@@ -384,109 +384,109 @@ _30:
 	.db	1
 	.db	'daqSensors.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_33
 	.db	2
 	.db	'void',0,3,5
-	.dl	161
+	.dl	181
 	.db	4
 	.db	'unsigned int',0,2,7,5
 	.db	'malloc',0,1,78,33,6
-	.dl	167
+	.dl	187
 	.db	1,1,1,1,6,1,78,44,2
-	.dl	173
+	.dl	193
 	.db	0,4
 	.db	'unsigned long int',0,4,7,7
 	.db	'DAQSensors',0,2,11,16,12,8
 	.db	'AccelX',0
-	.dl	219
+	.dl	239
 	.db	4,2,35,0,8
 	.db	'AccelY',0
-	.dl	219
+	.dl	239
 	.db	4,2,35,4,8
 	.db	'GyroZ',0
-	.dl	219
+	.dl	239
 	.db	4,2,35,8,0
 _44:
 	.db	3,5
-	.dl	240
+	.dl	260
 	.db	4
 	.db	'unsigned char',0,1,8,9,8
-	.dl	310
+	.dl	330
 	.db	10,7,0,7
 	.db	'_io_can_data_frame',0,3,209,2,16,14,8
 	.db	'data',0
-	.dl	327
+	.dl	347
 	.db	8,2,35,0,8
 	.db	'length',0
-	.dl	310
+	.dl	330
 	.db	1,2,35,8,8
 	.db	'id_format',0
-	.dl	310
+	.dl	330
 	.db	1,2,35,9,8
 	.db	'id',0
-	.dl	219
+	.dl	239
 	.db	4,2,35,10,0
 _47:
 	.db	3,5
-	.dl	336
+	.dl	356
 	.db	4
 	.db	'unsigned short int',0,2,7,11
 	.db	'__wchar_t',0,4,1,1
-	.dl	429
+	.dl	449
 	.db	11
 	.db	'__size_t',0,4,1,1
-	.dl	173
+	.dl	193
 	.db	3,5
-	.dl	161
+	.dl	181
 	.db	11
 	.db	'__prof_adm',0,4,1,1
-	.dl	486
+	.dl	506
 	.db	11
 	.db	'__codeptr',0,4,1,1
-	.dl	219
+	.dl	239
 	.db	11
 	.db	'size_t',0,1,29,25
-	.dl	173
+	.dl	193
 	.db	11
 	.db	'ubyte1',0,5,21,29
-	.dl	310
+	.dl	330
 	.db	11
 	.db	'ubyte2',0,5,22,29
-	.dl	173
+	.dl	193
 	.db	11
 	.db	'ubyte4',0,5,23,29
-	.dl	219
+	.dl	239
 	.db	11
 	.db	'bool',0,5,31,29
-	.dl	310
+	.dl	330
 	.db	11
 	.db	'IO_ErrorType',0,6,150,1,17
-	.dl	173
+	.dl	193
 	.db	11
 	.db	'IO_CAN_DATA_FRAME',0,3,215,2,3
-	.dl	336
+	.dl	356
 	.db	7
 	.db	'_bl_t_date',0,7,90,16,4,8
 	.db	'date',0
-	.dl	219
+	.dl	239
 	.db	4,2,35,0,0,11
 	.db	'BL_T_DATE',0,7,93,2
-	.dl	651
+	.dl	671
 	.db	7
 	.db	'_bl_t_can_id',0,7,102,16,8,8
 	.db	'extended',0
-	.dl	219
+	.dl	239
 	.db	4,2,35,0,8
 	.db	'ID',0
-	.dl	219
+	.dl	239
 	.db	4,2,35,4,0,11
 	.db	'BL_T_CAN_ID',0,7,106,2
-	.dl	700
+	.dl	720
 	.db	11
 	.db	'_DAQSensors',0,2,17,3
-	.dl	240
+	.dl	260
 	.db	0
 	; End of section
 
@@ -522,20 +522,20 @@ _521:
 	.debug		.debug_pubnames
 	.dl	25
 	.dw	2
-	.dl	_31,790,189
+	.dl	_31,810,209
 	.db	'malloc',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'DAQ_Sensor_new'
 _34:
-	.dl	245
+	.dl	265
 	.dw	3
 	.dl	_35
 	.db	4,1
 	.db	'daqSensors.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_37,_36
 	.db	2
@@ -600,20 +600,20 @@ _37:
 	.debug		.debug_pubnames
 	.dl	33
 	.dw	2
-	.dl	_34,249,170
+	.dl	_34,269,190
 	.db	'DAQ_Sensor_new',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'DAQ_parseCanMessage'
 _39:
-	.dl	273
+	.dl	293
 	.dw	3
 	.dl	_40
 	.db	4,1
 	.db	'daqSensors.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_42,_41
 	.db	2
@@ -775,7 +775,7 @@ _42:
 	.debug		.debug_pubnames
 	.dl	38
 	.dw	2
-	.dl	_39,277,170
+	.dl	_39,297,190
 	.db	'DAQ_parseCanMessage',0
 	.dl	0
 	; End of section

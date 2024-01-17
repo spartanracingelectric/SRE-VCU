@@ -1,5 +1,5 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc18348a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2023 -DRTS_TTC_FLASH_DATE_MONTH=7 -DRTS_TTC_FLASH_DATE_DAY=9 -DRTS_TTC_FLASH_DATE_HOUR=20 -DRTS_TTC_FLASH_DATE_MINUTE=16 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\bms.src
+	; Options: -f cc12092a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=1 -DRTS_TTC_FLASH_DATE_DAY=17 -DRTS_TTC_FLASH_DATE_HOUR=13 -DRTS_TTC_FLASH_DATE_MINUTE=3 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\bms.src
 	; Module start
 	.source	'bms.c'
 code_BMS_new	.section	code, cluster 'BMS_new', new
@@ -3567,7 +3567,7 @@ _$2$str	.label	byte
 	.extern	__udil : far
 	.debug		.debug_info
 _199:
-	.dl	2628
+	.dl	2648
 	.dw	3
 	.dl	_200
 	.db	4
@@ -3575,7 +3575,7 @@ _198:
 	.db	1
 	.db	'bms.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_201
 _271:
@@ -3593,308 +3593,308 @@ _273:
 	.db	'long int',0,4,5,3
 	.db	'_BatteryManagementSystem',0,1,16,8,122,4
 	.db	'canMessageBaseId',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,0,4
 	.db	'imminentContactorOpenWarning',0
-	.dl	154
+	.dl	174
 	.db	1,2,35,2,4
 	.db	'faultFlags1',0
-	.dl	154
+	.dl	174
 	.db	1,2,35,3,4
 	.db	'faultFlags0',0
-	.dl	154
+	.dl	174
 	.db	1,2,35,4,4
 	.db	'warningFlags0',0
-	.dl	154
+	.dl	174
 	.db	1,2,35,5,4
 	.db	'state',0
-	.dl	154
+	.dl	174
 	.db	1,2,35,6,4
 	.db	'numMonitorBoards',0
-	.dl	154
+	.dl	174
 	.db	1,2,35,7,4
 	.db	'monitorBoardCommErrFlags',0
-	.dl	154
+	.dl	174
 	.db	1,2,35,8,4
 	.db	'statusFlags1',0
-	.dl	154
+	.dl	174
 	.db	1,2,35,9,4
 	.db	'statusFlags2',0
-	.dl	154
+	.dl	174
 	.db	1,2,35,10,4
 	.db	'numFailedThermistors',0
-	.dl	154
+	.dl	174
 	.db	1,2,35,11,4
 	.db	'chargerConstVoltageSetPoint',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,12,4
 	.db	'maxDischargeCurrentAllowed',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,14,4
 	.db	'maxChargeCurrentAllowed',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,16,4
 	.db	'boardTemperature',0
-	.dl	187
+	.dl	207
 	.db	2,2,35,18,4
 	.db	'powerInputSense_12V_24V',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,20,4
 	.db	'powerInputSense_HVIL',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,22,4
 	.db	'internalRailSense_5V',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,24,4
 	.db	'digitalOutputStatus',0
-	.dl	154
+	.dl	174
 	.db	1,2,35,26,4
 	.db	'digitalInputStatus',0
-	.dl	154
+	.dl	174
 	.db	1,2,35,27,4
 	.db	'packVoltage',0
-	.dl	194
+	.dl	214
 	.db	4,2,35,28,4
 	.db	'packCurrent',0
-	.dl	215
+	.dl	235
 	.db	4,2,35,32,4
 	.db	'packStateOfCharge',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,36,4
 	.db	'packStateOfHealth',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,38,4
 	.db	'packAmpHoursRemaining',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,40,4
 	.db	'highestCellVoltage',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,42,4
 	.db	'lowestCellVoltage',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,44,4
 	.db	'highestCellVoltagePos',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,46,4
 	.db	'lowestCellVoltagePos',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,48,4
 	.db	'highestCellTemperature',0
-	.dl	187
+	.dl	207
 	.db	2,2,35,50,4
 	.db	'lowestCellTemperature',0
-	.dl	187
+	.dl	207
 	.db	2,2,35,52,4
 	.db	'highestCellTemperaturePos',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,54,4
 	.db	'lowestCellTemperaturePos',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,56,4
 	.db	'sumOfCellVoltages',0
-	.dl	194
+	.dl	214
 	.db	4,2,35,58,4
 	.db	'preChargeVoltage',0
-	.dl	194
+	.dl	214
 	.db	4,2,35,62,4
 	.db	'cellVoltage_4X_1',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,66,4
 	.db	'cellVoltage_4X_2',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,68,4
 	.db	'cellVoltage_4X_3',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,70,4
 	.db	'cellVoltage_4X_4',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,72,4
 	.db	'cellTemperature_4X_1',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,74,4
 	.db	'cellTemperature_4X_2',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,76,4
 	.db	'cellTemperature_4X_3',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,78,4
 	.db	'cellTemperature_4X_4',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,80,4
 	.db	'cellShuntingStatusArray1_0',0
-	.dl	194
+	.dl	214
 	.db	4,2,35,82,4
 	.db	'cellShuntingStatusArray1_1',0
-	.dl	194
+	.dl	214
 	.db	4,2,35,86,4
 	.db	'cellShuntingStatusArray2_0',0
-	.dl	194
+	.dl	214
 	.db	4,2,35,90,4
 	.db	'cellShuntingStatusArray2_1',0
-	.dl	194
+	.dl	214
 	.db	4,2,35,94,4
 	.db	'cellShuntingStatusArray3_0',0
-	.dl	194
+	.dl	214
 	.db	4,2,35,98,4
 	.db	'cellShuntingStatusArray3_1',0
-	.dl	194
+	.dl	214
 	.db	4,2,35,102,4
 	.db	'cellShuntingStatusArray4_0',0
-	.dl	194
+	.dl	214
 	.db	4,2,35,106,4
 	.db	'cellShuntingStatusArray4_1',0
-	.dl	194
+	.dl	214
 	.db	4,2,35,110,4
 	.db	'numSeriesCells',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,114,4
 	.db	'numThermistors',0
-	.dl	171
+	.dl	191
 	.db	2,2,35,116,4
 	.db	'fwMajorVerNum',0
-	.dl	154
+	.dl	174
 	.db	1,2,35,118,4
 	.db	'fwMinorVerNum',0
-	.dl	154
+	.dl	174
 	.db	1,2,35,119,4
 	.db	'fwRevNum',0
-	.dl	154
+	.dl	174
 	.db	1,2,35,120,4
 	.db	'relayState',0
-	.dl	154
+	.dl	174
 	.db	1,2,35,121,0
 _262:
 	.db	5,5
-	.dl	227
+	.dl	247
 _284:
 	.db	6
 	.db	'BMS_getFaultFlags0',0,1,1,231,3,8,6
-	.dl	154
+	.dl	174
 	.db	1,1
 _285:
 	.db	7
 	.db	'me',0,1,231,3,52,2
-	.dl	1890
+	.dl	1910
 	.db	8,0
 _287:
 	.db	6
 	.db	'BMS_getFaultFlags1',0,1,1,243,3,8,6
-	.dl	154
+	.dl	174
 	.db	1,1
 _288:
 	.db	7
 	.db	'me',0,1,243,3,52,2
-	.dl	1890
+	.dl	1910
 	.db	8,0,2
 	.db	'char',0,1,6,5,5
-	.dl	1990
+	.dl	2010
 	.db	9
-	.dl	1998
+	.dl	2018
 	.db	10
-	.dl	1990
+	.dl	2010
 	.db	5,5
-	.dl	2009
+	.dl	2029
 	.db	9
-	.dl	2014
+	.dl	2034
 	.db	11
 	.db	'sprintf',0,2,150,1,16,6
-	.dl	187
+	.dl	207
 	.db	1,1,1,1,12,2,150,1,32,2
-	.dl	2004
+	.dl	2024
 	.db	12,2,150,1,55,2
-	.dl	2020
+	.dl	2040
 	.db	13,2,150,1,67,0,14,8
-	.dl	154
+	.dl	174
 	.db	15,7,0,3
 	.db	'_io_can_data_frame',0,3,209,2,16,14,4
 	.db	'data',0
-	.dl	2073
+	.dl	2093
 	.db	8,2,35,0,4
 	.db	'length',0
-	.dl	154
+	.dl	174
 	.db	1,2,35,8,4
 	.db	'id_format',0
-	.dl	154
+	.dl	174
 	.db	1,2,35,9,4
 	.db	'id',0
-	.dl	194
+	.dl	214
 	.db	4,2,35,10,0
 _267:
 	.db	5,5
-	.dl	2082
+	.dl	2102
 _280:
 	.db	14,32
-	.dl	1990
+	.dl	2010
 	.db	15,31,0,16
 	.db	'void',0,5,5
-	.dl	2184
+	.dl	2204
 	.db	11
 	.db	'malloc',0,4,78,33,6
-	.dl	2190
+	.dl	2210
 	.db	1,1,1,1,12,4,78,44,2
-	.dl	171
+	.dl	191
 	.db	0,11
 	.db	'IO_DO_Set',0,5,141,2,14,6
-	.dl	171
+	.dl	191
 	.db	1,1,1,1,7
 	.db	'do_channel',0,5,141,2,32,2
-	.dl	154
+	.dl	174
 	.db	7
 	.db	'do_value',0,5,142,2,30,2
-	.dl	154
+	.dl	174
 	.db	0,2
 	.db	'unsigned short int',0,2,7,17
 	.db	'__wchar_t',0,1,1,1
-	.dl	2291
+	.dl	2311
 	.db	17
 	.db	'__size_t',0,1,1,1
-	.dl	171
+	.dl	191
 	.db	5,5
-	.dl	2184
+	.dl	2204
 	.db	17
 	.db	'__prof_adm',0,1,1,1
-	.dl	2348
+	.dl	2368
 	.db	17
 	.db	'__codeptr',0,1,1,1
-	.dl	194
+	.dl	214
 	.db	17
 	.db	'size_t',0,2,31,25
-	.dl	171
+	.dl	191
 	.db	17
 	.db	'_iob_flag_t',0,2,82,25
-	.dl	2291
+	.dl	2311
 	.db	17
 	.db	'ubyte1',0,6,21,29
-	.dl	154
+	.dl	174
 	.db	17
 	.db	'ubyte2',0,6,22,29
-	.dl	171
+	.dl	191
 	.db	17
 	.db	'ubyte4',0,6,23,29
-	.dl	194
+	.dl	214
 	.db	17
 	.db	'sbyte2',0,6,26,29
-	.dl	187
+	.dl	207
 	.db	17
 	.db	'sbyte4',0,6,27,29
-	.dl	215
+	.dl	235
 	.db	17
 	.db	'bool',0,6,31,29
-	.dl	154
+	.dl	174
 	.db	17
 	.db	'IO_ErrorType',0,7,150,1,17
-	.dl	171
+	.dl	191
 	.db	17
 	.db	'IO_CAN_DATA_FRAME',0,3,215,2,3
-	.dl	2082
+	.dl	2102
 	.db	17
 	.db	'BatteryManagementSystem',0,8,65,41
-	.dl	227
+	.dl	247
 	.db	18
-	.dl	154
+	.dl	174
 	.db	19,0,20
 	.db	'_lc_ub_user_stack',0,1,1,1,2
-	.dl	2595
+	.dl	2615
 	.db	1,1,0
 	; End of section
 
@@ -3934,24 +3934,24 @@ _1263:
 	.debug		.debug_pubnames
 	.dl	51
 	.dw	2
-	.dl	_199,2632,2025
+	.dl	_199,2652,2045
 	.db	'sprintf',0
-	.dl	2196
+	.dl	2216
 	.db	'malloc',0
-	.dl	2226
+	.dl	2246
 	.db	'IO_DO_Set',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'BMS_new'
 _202:
-	.dl	265
+	.dl	285
 	.dw	3
 	.dl	_203
 	.db	4,1
 	.db	'bms.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_205,_204
 	.db	2
@@ -4049,20 +4049,20 @@ _205:
 	.debug		.debug_pubnames
 	.dl	26
 	.dw	2
-	.dl	_202,269,163
+	.dl	_202,289,183
 	.db	'BMS_new',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'BMS_parseCanMessage'
 _207:
-	.dl	270
+	.dl	290
 	.dw	3
 	.dl	_208
 	.db	4,1
 	.db	'bms.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_210,_209
 	.db	2
@@ -5572,20 +5572,20 @@ _210:
 	.debug		.debug_pubnames
 	.dl	38
 	.dw	2
-	.dl	_207,274,163
+	.dl	_207,294,183
 	.db	'BMS_parseCanMessage',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'BMS_relayControl'
 _212:
-	.dl	261
+	.dl	281
 	.dw	3
 	.dl	_213
 	.db	4,1
 	.db	'bms.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_215,_214
 	.db	2
@@ -5667,20 +5667,20 @@ _215:
 	.debug		.debug_pubnames
 	.dl	35
 	.dw	2
-	.dl	_212,265,163
+	.dl	_212,285,183
 	.db	'BMS_relayControl',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'BMS_getRelayState'
 _217:
-	.dl	243
+	.dl	263
 	.dw	3
 	.dl	_218
 	.db	4,1
 	.db	'bms.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_220,_219
 	.db	2
@@ -5733,20 +5733,20 @@ _220:
 	.debug		.debug_pubnames
 	.dl	36
 	.dw	2
-	.dl	_217,247,163
+	.dl	_217,267,183
 	.db	'BMS_getRelayState',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'BMS_getPower_uW'
 _222:
-	.dl	241
+	.dl	261
 	.dw	3
 	.dl	_223
 	.db	4,1
 	.db	'bms.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_225,_224
 	.db	2
@@ -5811,20 +5811,20 @@ _225:
 	.debug		.debug_pubnames
 	.dl	34
 	.dw	2
-	.dl	_222,245,163
+	.dl	_222,265,183
 	.db	'BMS_getPower_uW',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'BMS_getPower_W'
 _227:
-	.dl	240
+	.dl	260
 	.dw	3
 	.dl	_228
 	.db	4,1
 	.db	'bms.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_230,_229
 	.db	2
@@ -5899,20 +5899,20 @@ _230:
 	.debug		.debug_pubnames
 	.dl	33
 	.dw	2
-	.dl	_227,244,163
+	.dl	_227,264,183
 	.db	'BMS_getPower_W',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'BMS_getHighestCellVoltage_mV'
 _232:
-	.dl	254
+	.dl	274
 	.dw	3
 	.dl	_233
 	.db	4,1
 	.db	'bms.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_235,_234
 	.db	2
@@ -5965,20 +5965,20 @@ _235:
 	.debug		.debug_pubnames
 	.dl	47
 	.dw	2
-	.dl	_232,258,163
+	.dl	_232,278,183
 	.db	'BMS_getHighestCellVoltage_mV',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'BMS_getLowestCellVoltage_mV'
 _237:
-	.dl	253
+	.dl	273
 	.dw	3
 	.dl	_238
 	.db	4,1
 	.db	'bms.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_240,_239
 	.db	2
@@ -6031,20 +6031,20 @@ _240:
 	.debug		.debug_pubnames
 	.dl	46
 	.dw	2
-	.dl	_237,257,163
+	.dl	_237,277,183
 	.db	'BMS_getLowestCellVoltage_mV',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'BMS_getHighestCellTemp_d_degC'
 _242:
-	.dl	277
+	.dl	297
 	.dw	3
 	.dl	_243
 	.db	4,1
 	.db	'bms.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_245,_244
 	.db	2
@@ -6108,20 +6108,20 @@ _245:
 	.debug		.debug_pubnames
 	.dl	48
 	.dw	2
-	.dl	_242,281,163
+	.dl	_242,301,183
 	.db	'BMS_getHighestCellTemp_d_degC',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'BMS_getHighestCellTemp_degC'
 _247:
-	.dl	275
+	.dl	295
 	.dw	3
 	.dl	_248
 	.db	4,1
 	.db	'bms.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_250,_249
 	.db	2
@@ -6207,20 +6207,20 @@ _250:
 	.debug		.debug_pubnames
 	.dl	46
 	.dw	2
-	.dl	_247,279,163
+	.dl	_247,299,183
 	.db	'BMS_getHighestCellTemp_degC',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'BMS_getFaultFlags0'
 _252:
-	.dl	210
+	.dl	230
 	.dw	3
 	.dl	_253
 	.db	4,1
 	.db	'bms.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_255,_254
 	.db	2
@@ -6269,13 +6269,13 @@ _255:
 
 	.debug		.debug_info, cluster 'BMS_getFaultFlags1'
 _257:
-	.dl	210
+	.dl	230
 	.dw	3
 	.dl	_258
 	.db	4,1
 	.db	'bms.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_260,_259
 	.db	2

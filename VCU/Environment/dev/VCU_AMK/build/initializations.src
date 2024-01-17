@@ -1,5 +1,5 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc23096a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2023 -DRTS_TTC_FLASH_DATE_MONTH=7 -DRTS_TTC_FLASH_DATE_DAY=9 -DRTS_TTC_FLASH_DATE_HOUR=20 -DRTS_TTC_FLASH_DATE_MINUTE=16 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\initializations.src
+	; Options: -f cc13300a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=1 -DRTS_TTC_FLASH_DATE_DAY=17 -DRTS_TTC_FLASH_DATE_HOUR=13 -DRTS_TTC_FLASH_DATE_MINUTE=3 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\initializations.src
 	; Module start
 	.source	'initializations.c'
 code_vcu_initializeADC	.section	code, cluster 'vcu_initializeADC', new
@@ -903,7 +903,7 @@ _Sensor_TVButton	.label	word
 	.extern	__lc_ub_user_stack : nearbyte
 	.debug		.debug_info
 _32:
-	.dl	1990
+	.dl	2010
 	.dw	3
 	.dl	_33
 	.db	4
@@ -911,7 +911,7 @@ _31:
 	.db	1
 	.db	'initializations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_34
 _90:
@@ -921,265 +921,265 @@ _83:
 	.db	2
 	.db	'unsigned char',0,1,8,3
 	.db	'IO_POWER_Set',0,1,184,1,15,6
-	.dl	166
+	.dl	186
 	.db	1,1,1,1,4
 	.db	'pin',0,1,184,1,35,2
-	.dl	182
+	.dl	202
 	.db	4
 	.db	'mode',0,1,184,1,47,2
-	.dl	182
+	.dl	202
 	.db	0,5
 	.db	'IO_Driver_TaskBegin',0,2,192,3,15,6
-	.dl	166
+	.dl	186
 	.db	1,1,1,1,5
 	.db	'IO_Driver_TaskEnd',0,2,207,3,15,6
-	.dl	166
+	.dl	186
 	.db	1,1,1,1,6
 	.db	'_io_adc_safety_conf',0,3,161,1,16,4,7
 	.db	'adc_val_upper',0
-	.dl	182
+	.dl	202
 	.db	1,2,35,0,7
 	.db	'adc_val_lower',0
-	.dl	182
+	.dl	202
 	.db	1,2,35,1,7
 	.db	'redundant_channel',0
-	.dl	182
+	.dl	202
 	.db	1,2,35,2,0,8
-	.dl	322
+	.dl	342
 	.db	9,5
-	.dl	422
+	.dl	442
 	.db	8
-	.dl	427
+	.dl	447
 	.db	3
 	.db	'IO_ADC_ChannelInit',0,3,156,2,14,6
-	.dl	166
+	.dl	186
 	.db	1,1,1,1,4
 	.db	'adc_channel',0,3,156,2,41,2
-	.dl	182
+	.dl	202
 	.db	4
 	.db	'type',0,3,157,2,41,2
-	.dl	182
+	.dl	202
 	.db	4
 	.db	'range',0,3,158,2,41,2
-	.dl	182
+	.dl	202
 	.db	4
 	.db	'pupd',0,3,159,2,41,2
-	.dl	182
+	.dl	202
 	.db	4
 	.db	'sensor_supply',0,3,160,2,41,2
-	.dl	182
+	.dl	202
 	.db	4
 	.db	'safety_conf',0,3,161,2,67,2
-	.dl	433
+	.dl	453
 	.db	0,9,5
-	.dl	166
+	.dl	186
 	.db	8
-	.dl	586
+	.dl	606
 	.db	9,5
-	.dl	182
+	.dl	202
 	.db	8
-	.dl	597
+	.dl	617
 	.db	3
 	.db	'IO_ADC_Get',0,3,131,3,14,6
-	.dl	166
+	.dl	186
 	.db	1,1,1,1,4
 	.db	'adc_channel',0,3,131,3,33,2
-	.dl	182
+	.dl	202
 	.db	4
 	.db	'adc_value',0,3,132,3,41,2
-	.dl	592
+	.dl	612
 	.db	4
 	.db	'fresh',0,3,133,3,39,2
-	.dl	603
+	.dl	623
 	.db	0
 _92:
 	.db	2
 	.db	'unsigned long int',0,4,7,9,5
-	.dl	692
+	.dl	712
 	.db	8
-	.dl	713
+	.dl	733
 	.db	3
 	.db	'IO_RTC_StartTime',0,4,118,15,6
-	.dl	166
+	.dl	186
 	.db	1,1,1,1,4
 	.db	'timestamp',0,4,118,49,2
-	.dl	719
+	.dl	739
 	.db	0,3
 	.db	'IO_RTC_GetTimeUS',0,4,143,1,9,6
-	.dl	692
+	.dl	712
 	.db	1,1,1,1,4
 	.db	'timestamp',0,4,143,1,35,2
-	.dl	692
+	.dl	712
 	.db	0,6
 	.db	'_io_pwm_safety_conf',0,5,111,16,2,7
 	.db	'resistance',0
-	.dl	182
+	.dl	202
 	.db	1,2,35,0,0,8
-	.dl	826
+	.dl	846
 	.db	9,5
-	.dl	872
+	.dl	892
 	.db	8
-	.dl	877
+	.dl	897
 	.db	3
 	.db	'IO_PWM_Init',0,5,203,1,14,6
-	.dl	166
+	.dl	186
 	.db	1,1,1,1,4
 	.db	'pwm_channel',0,5,203,1,34,2
-	.dl	182
+	.dl	202
 	.db	4
 	.db	'frequency',0,5,204,1,34,2
-	.dl	166
+	.dl	186
 	.db	4
 	.db	'polarity',0,5,205,1,32,2
-	.dl	182
+	.dl	202
 	.db	4
 	.db	'cur_measurement',0,5,206,1,32,2
-	.dl	182
+	.dl	202
 	.db	4
 	.db	'cur_channel',0,5,207,1,34,2
-	.dl	182
+	.dl	202
 	.db	4
 	.db	'diag_margin',0,5,208,1,32,2
-	.dl	182
+	.dl	202
 	.db	4
 	.db	'safety_conf',0,5,209,1,60,2
-	.dl	883
+	.dl	903
 	.db	0,8
-	.dl	713
+	.dl	733
 	.db	3
 	.db	'IO_PWM_SetDuty',0,5,235,2,14,6
-	.dl	166
+	.dl	186
 	.db	1,1,1,1,4
 	.db	'pwm_channel',0,5,235,2,37,2
-	.dl	182
+	.dl	202
 	.db	4
 	.db	'duty_cycle',0,5,236,2,37,2
-	.dl	166
+	.dl	186
 	.db	4
 	.db	'duty_cycle_fb',0,5,237,2,45,2
-	.dl	1068
+	.dl	1088
 	.db	0,3
 	.db	'IO_DI_Init',0,6,119,14,6
-	.dl	166
+	.dl	186
 	.db	1,1,1,1,4
 	.db	'di_channel',0,6,119,33,2
-	.dl	182
+	.dl	202
 	.db	4
 	.db	'mode',0,6,120,33,2
-	.dl	182
+	.dl	202
 	.db	0,3
 	.db	'IO_DO_Init',0,6,155,1,14,6
-	.dl	166
+	.dl	186
 	.db	1,1,1,1,4
 	.db	'do_channel',0,6,155,1,33,2
-	.dl	182
+	.dl	202
 	.db	0,8
-	.dl	597
+	.dl	617
 	.db	3
 	.db	'IO_DI_Get',0,6,220,1,14,6
-	.dl	166
+	.dl	186
 	.db	1,1,1,1,4
 	.db	'di_channel',0,6,220,1,32,2
-	.dl	182
+	.dl	202
 	.db	4
 	.db	'di_value',0,6,221,1,38,2
-	.dl	1276
+	.dl	1296
 	.db	0,3
 	.db	'IO_DO_Set',0,6,141,2,14,6
-	.dl	166
+	.dl	186
 	.db	1,1,1,1,4
 	.db	'do_channel',0,6,141,2,32,2
-	.dl	182
+	.dl	202
 	.db	4
 	.db	'do_value',0,6,142,2,30,2
-	.dl	182
+	.dl	202
 	.db	0,10
 	.db	'void',0,9,5
-	.dl	1411
+	.dl	1431
 	.db	11
 	.db	'__prof_adm',0,7,1,1
-	.dl	1417
+	.dl	1437
 	.db	11
 	.db	'__codeptr',0,7,1,1
-	.dl	692
+	.dl	712
 	.db	11
 	.db	'ubyte1',0,8,21,29
-	.dl	182
+	.dl	202
 	.db	11
 	.db	'ubyte2',0,8,22,29
-	.dl	166
+	.dl	186
 	.db	11
 	.db	'ubyte4',0,8,23,29
-	.dl	692
+	.dl	712
 	.db	11
 	.db	'bool',0,8,31,29
-	.dl	182
+	.dl	202
 	.db	11
 	.db	'IO_ErrorType',0,9,150,1,17
-	.dl	166
+	.dl	186
 	.db	11
 	.db	'IO_ADC_SAFETY_CONF',0,3,171,1,3
-	.dl	322
+	.dl	342
 	.db	11
 	.db	'IO_PWM_SAFETY_CONF',0,5,114,3
-	.dl	826
+	.dl	846
 _94:
 	.db	6
 	.db	'_Sensor',0,10,126,16,30,7
 	.db	'specMin',0
-	.dl	692
+	.dl	712
 	.db	4,2,35,0,7
 	.db	'specMax',0
-	.dl	692
+	.dl	712
 	.db	4,2,35,4,7
 	.db	'sensorValue',0
-	.dl	692
+	.dl	712
 	.db	4,2,35,8,7
 	.db	'heldSensorValue',0
-	.dl	692
+	.dl	712
 	.db	4,2,35,12,7
 	.db	'timestamp',0
-	.dl	692
+	.dl	712
 	.db	4,2,35,16,7
 	.db	'fresh',0
-	.dl	182
+	.dl	202
 	.db	1,2,35,20,7
 	.db	'ioErr_powerInit',0
-	.dl	166
+	.dl	186
 	.db	2,2,35,22,7
 	.db	'ioErr_powerSet',0
-	.dl	166
+	.dl	186
 	.db	2,2,35,24,7
 	.db	'ioErr_signalInit',0
-	.dl	166
+	.dl	186
 	.db	2,2,35,26,7
 	.db	'ioErr_signalGet',0
-	.dl	166
+	.dl	186
 	.db	2,2,35,28,0,11
 	.db	'Sensor',0,10,145,1,3
-	.dl	1595
+	.dl	1615
 	.db	6
 	.db	'_bl_t_date',0,11,90,16,4,7
 	.db	'date',0
-	.dl	692
+	.dl	712
 	.db	4,2,35,0,0,11
 	.db	'BL_T_DATE',0,11,93,2
-	.dl	1839
+	.dl	1859
 	.db	6
 	.db	'_bl_t_can_id',0,11,102,16,8,7
 	.db	'extended',0
-	.dl	692
+	.dl	712
 	.db	4,2,35,0,7
 	.db	'ID',0
-	.dl	692
+	.dl	712
 	.db	4,2,35,4,0,11
 	.db	'BL_T_CAN_ID',0,11,106,2
-	.dl	1888
+	.dl	1908
 	.db	12
-	.dl	182
+	.dl	202
 	.db	13,0,14
 	.db	'_lc_ub_user_stack',0,7,1,1,2
-	.dl	1957
+	.dl	1977
 	.db	1,1,0
 	; End of section
 
@@ -1219,44 +1219,44 @@ _647:
 	.debug		.debug_pubnames
 	.dl	250
 	.dw	2
-	.dl	_32,1994,199
+	.dl	_32,2014,219
 	.db	'IO_POWER_Set',0
-	.dl	256
+	.dl	276
 	.db	'IO_Driver_TaskBegin',0
-	.dl	290
+	.dl	310
 	.db	'IO_Driver_TaskEnd',0
-	.dl	438
+	.dl	458
 	.db	'IO_ADC_ChannelInit',0
-	.dl	608
+	.dl	628
 	.db	'IO_ADC_Get',0
-	.dl	724
+	.dl	744
 	.db	'IO_RTC_StartTime',0
-	.dl	774
+	.dl	794
 	.db	'IO_RTC_GetTimeUS',0
-	.dl	888
+	.dl	908
 	.db	'IO_PWM_Init',0
-	.dl	1073
+	.dl	1093
 	.db	'IO_PWM_SetDuty',0
-	.dl	1170
+	.dl	1190
 	.db	'IO_DI_Init',0
-	.dl	1229
+	.dl	1249
 	.db	'IO_DO_Init',0
-	.dl	1281
+	.dl	1301
 	.db	'IO_DI_Get',0
-	.dl	1346
+	.dl	1366
 	.db	'IO_DO_Set',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'vcu_initializeADC'
 _35:
-	.dl	262
+	.dl	282
 	.dw	3
 	.dl	_36
 	.db	4,1
 	.db	'initializations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_38,_37
 	.db	2
@@ -1489,20 +1489,20 @@ _85:
 	.debug		.debug_pubnames
 	.dl	36
 	.dw	2
-	.dl	_35,266,175
+	.dl	_35,286,195
 	.db	'vcu_initializeADC',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'vcu_ADCWasteLoop'
 _40:
-	.dl	316
+	.dl	336
 	.dw	3
 	.dl	_41
 	.db	4,1
 	.db	'initializations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_43,_42
 	.db	2
@@ -1613,20 +1613,20 @@ _43:
 	.debug		.debug_pubnames
 	.dl	35
 	.dw	2
-	.dl	_40,320,175
+	.dl	_40,340,195
 	.db	'vcu_ADCWasteLoop',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'Sensor_TPS0'
 _45:
-	.dl	193
+	.dl	213
 	.dw	3
 	.dl	_46
 	.db	4,1
 	.db	'initializations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1,2
 	.dl	_31
 	.db	3
@@ -1645,13 +1645,13 @@ _46:
 
 	.debug		.debug_info, cluster 'Sensor_TPS1'
 _47:
-	.dl	193
+	.dl	213
 	.dw	3
 	.dl	_48
 	.db	4,1
 	.db	'initializations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1,2
 	.dl	_31
 	.db	3
@@ -1670,13 +1670,13 @@ _48:
 
 	.debug		.debug_info, cluster 'Sensor_BPS0'
 _49:
-	.dl	193
+	.dl	213
 	.dw	3
 	.dl	_50
 	.db	4,1
 	.db	'initializations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1,2
 	.dl	_31
 	.db	3
@@ -1695,13 +1695,13 @@ _50:
 
 	.debug		.debug_info, cluster 'Sensor_BPS1'
 _51:
-	.dl	193
+	.dl	213
 	.dw	3
 	.dl	_52
 	.db	4,1
 	.db	'initializations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1,2
 	.dl	_31
 	.db	3
@@ -1720,13 +1720,13 @@ _52:
 
 	.debug		.debug_info, cluster 'Sensor_WSS_FL'
 _53:
-	.dl	195
+	.dl	215
 	.dw	3
 	.dl	_54
 	.db	4,1
 	.db	'initializations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1,2
 	.dl	_31
 	.db	3
@@ -1745,13 +1745,13 @@ _54:
 
 	.debug		.debug_info, cluster 'Sensor_WSS_FR'
 _55:
-	.dl	195
+	.dl	215
 	.dw	3
 	.dl	_56
 	.db	4,1
 	.db	'initializations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1,2
 	.dl	_31
 	.db	3
@@ -1770,13 +1770,13 @@ _56:
 
 	.debug		.debug_info, cluster 'Sensor_WSS_RL'
 _57:
-	.dl	195
+	.dl	215
 	.dw	3
 	.dl	_58
 	.db	4,1
 	.db	'initializations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1,2
 	.dl	_31
 	.db	3
@@ -1795,13 +1795,13 @@ _58:
 
 	.debug		.debug_info, cluster 'Sensor_WSS_RR'
 _59:
-	.dl	195
+	.dl	215
 	.dw	3
 	.dl	_60
 	.db	4,1
 	.db	'initializations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1,2
 	.dl	_31
 	.db	3
@@ -1820,13 +1820,13 @@ _60:
 
 	.debug		.debug_info, cluster 'Sensor_WPS_FL'
 _61:
-	.dl	195
+	.dl	215
 	.dw	3
 	.dl	_62
 	.db	4,1
 	.db	'initializations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1,2
 	.dl	_31
 	.db	3
@@ -1845,13 +1845,13 @@ _62:
 
 	.debug		.debug_info, cluster 'Sensor_WPS_FR'
 _63:
-	.dl	195
+	.dl	215
 	.dw	3
 	.dl	_64
 	.db	4,1
 	.db	'initializations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1,2
 	.dl	_31
 	.db	3
@@ -1870,13 +1870,13 @@ _64:
 
 	.debug		.debug_info, cluster 'Sensor_WPS_RL'
 _65:
-	.dl	195
+	.dl	215
 	.dw	3
 	.dl	_66
 	.db	4,1
 	.db	'initializations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1,2
 	.dl	_31
 	.db	3
@@ -1895,13 +1895,13 @@ _66:
 
 	.debug		.debug_info, cluster 'Sensor_WPS_RR'
 _67:
-	.dl	195
+	.dl	215
 	.dw	3
 	.dl	_68
 	.db	4,1
 	.db	'initializations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1,2
 	.dl	_31
 	.db	3
@@ -1920,13 +1920,13 @@ _68:
 
 	.debug		.debug_info, cluster 'Sensor_SAS'
 _69:
-	.dl	192
+	.dl	212
 	.dw	3
 	.dl	_70
 	.db	4,1
 	.db	'initializations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1,2
 	.dl	_31
 	.db	3
@@ -1945,13 +1945,13 @@ _70:
 
 	.debug		.debug_info, cluster 'Sensor_RTDButton'
 _71:
-	.dl	198
+	.dl	218
 	.dw	3
 	.dl	_72
 	.db	4,1
 	.db	'initializations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1,2
 	.dl	_31
 	.db	3
@@ -1970,13 +1970,13 @@ _72:
 
 	.debug		.debug_info, cluster 'Sensor_EcoButton'
 _73:
-	.dl	198
+	.dl	218
 	.dw	3
 	.dl	_74
 	.db	4,1
 	.db	'initializations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1,2
 	.dl	_31
 	.db	3
@@ -1995,13 +1995,13 @@ _74:
 
 	.debug		.debug_info, cluster 'Sensor_TVButton'
 _75:
-	.dl	197
+	.dl	217
 	.dw	3
 	.dl	_76
 	.db	4,1
 	.db	'initializations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1,2
 	.dl	_31
 	.db	3
@@ -2020,13 +2020,13 @@ _76:
 
 	.debug		.debug_info, cluster 'Sensor_TCSKnob'
 _77:
-	.dl	196
+	.dl	216
 	.dw	3
 	.dl	_78
 	.db	4,1
 	.db	'initializations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1,2
 	.dl	_31
 	.db	3
@@ -2045,13 +2045,13 @@ _78:
 
 	.debug		.debug_info, cluster 'Sensor_HVILTerminationSense'
 _79:
-	.dl	209
+	.dl	229
 	.dw	3
 	.dl	_80
 	.db	4,1
 	.db	'initializations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1,2
 	.dl	_31
 	.db	3
@@ -2070,13 +2070,13 @@ _80:
 
 	.debug		.debug_info, cluster 'Sensor_LVBattery'
 _81:
-	.dl	198
+	.dl	218
 	.dw	3
 	.dl	_82
 	.db	4,1
 	.db	'initializations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1,2
 	.dl	_31
 	.db	3

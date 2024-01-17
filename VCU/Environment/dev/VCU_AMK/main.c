@@ -2,7 +2,7 @@
 * SRE-7 Vehicle Control Firmware for the TTTech HY-TTC 60 Controller (VCU)
 ******************************************************************************
 * For project info and history, see https://github.com/spartanracingelectric
-* For software/development questions, email shinika.balasundar@yahoo.com or rusty@pedrosatech.com
+* For software/development questions, email shinika.balasundar@yahoo.com 
 ******************************************************************************
 * Files
 * The Git repository does not contain the complete firmware for SRE-7.  Modules
@@ -46,6 +46,7 @@
 #include "sensorCalculations.h"
 #include "cooling.h"
 #include "daqSensors.h"
+#include "drs.h"
 
 //Application Database, needed for TTC-Downloader
 APDB appl_db =
@@ -120,6 +121,8 @@ extern Sensor Sensor_RTDButton;
 extern Sensor Sensor_TEMP_BrakingSwitch;
 extern Sensor Sensor_EcoButton;
 
+extern Sensor Sensor_DRSButton;
+
 /*****************************************************************************
 * Main!
 * Initializes I/O
@@ -184,6 +187,7 @@ void main(void)
     vcu_ADCWasteLoop();
 
     //vcu_init functions may have to be performed BEFORE creating CAN Manager object
+
     // Total CAN0 and CAN1 read & write 128 
     CanManager *canMan = CanManager_new(500, 40, 40, 500, 20, 20, 200000); //3rd param = messages per node (can0/can1; read/write)
     //can0_busSpeed ---------------------^    ^   ^   ^    ^   ^     ^         
@@ -198,6 +202,9 @@ void main(void)
     // Object representations of external devices
     // Most default values for things should be specified here
     //----------------------------------------------------------------------------
+
+    ubyte1 pot_DRS_LC = 0; //0 is for DRS and 1 is for Torque Vectoring
+
     ReadyToDriveSound *rtds = RTDS_new();
     //BatteryManagementSystem* bms = BMS_new();
 
@@ -217,6 +224,7 @@ void main(void)
     SafetyChecker *sc = SafetyChecker_new(320, 32); //Must match amp limits
     BatteryManagementSystem *bms = BMS_new(BMS_BASE_ADDRESS);
     CoolingSystem *cs = CoolingSystem_new();
+    DRS *drs = DRS_new();
     _DAQSensors *d1 = DAQ_Sensor_new();
 
     //----------------------------------------------------------------------------
@@ -226,10 +234,10 @@ void main(void)
     // ubyte2 tps0_calibMax = 0x9876;  //me->tps0->sensorValue;
     // ubyte2 tps1_calibMin = 0x5432;  //me->tps1->sensorValue;
     // ubyte2 tps1_calibMax = 0xCDEF;  //me->tps1->sensorValue;
-    ubyte2 tps0_calibMin = 0;  //me->tps0->sensorValue;
-    ubyte2 tps0_calibMax = 1800; //me->tps0->sensorValue;
-    ubyte2 tps1_calibMin = 3270; //me->tps1->sensorValue;
-    ubyte2 tps1_calibMax = 4900; //me->tps1->sensorValue;
+    ubyte2 tps0_calibMin = 200;  //me->tps0->sensorValue;
+    ubyte2 tps0_calibMax = 1900; //me->tps0->sensorValue;
+    ubyte2 tps1_calibMin = 3000; //me->tps1->sensorValue;
+    ubyte2 tps1_calibMax = 4800; //me->tps1->sensorValue;
     //TODO: Read calibration data from EEPROM?
     //TODO: Run calibration functions?
     //TODO: Power-on error checking?
@@ -284,6 +292,21 @@ void main(void)
         //do actual processing work, from pedal travel calcs to traction control
         //calculations_calculateStuff();
 
+        //No regen below 5kph
+        sbyte2 groundSpeedKPH = 0; //SRE-7 Update
+        if (groundSpeedKPH < 15)
+        {
+            //Regen OFF
+        } else {
+            if(BMS_getPackVoltage(bms) >= 38500 * 10){
+                //Set regen mode to coasting
+            } else {
+                //Set regen mode to brakes and (coasting)
+            }
+        }
+
+        //SensorValue TRUE and FALSE are reversed due to Pull Up Resistor
+
         //Run calibration if commanded
         //if (IO_RTC_GetTimeUS(timestamp_calibStart) < (ubyte4)5000000)
         if (Sensor_EcoButton.sensorValue == FALSE)
@@ -322,6 +345,11 @@ void main(void)
         //Update WheelSpeed and interpolate
         WheelSpeeds_update(wss, TRUE);
 
+        //SRE-7 Update: slip ratio calculation can go here with PID update
+
+        //DRS
+        DRS_update(drs, tps, bps, pot_DRS_LC);
+
         //DataAquisition_update(); //includes accelerometer
         //TireModel_update()
         //ControlLaw_update();
@@ -331,7 +359,7 @@ void main(void)
             StateObserver //choose driver command or ctrl law
         */
 
-        CoolingSystem_calculations(cs, invFL->AMK_TempInverter, invFR->AMK_TempMotor, BMS_getHighestCellTemp_degC(bms)); // Needs to be updated in future to cool based on inverters. Placeholder values are placed right now
+        CoolingSystem_calculations(cs, invFL->AMK_TempInverter, invFR->AMK_TempMotor, BMS_getHighestCellTemp_degC(bms), &Sensor_HVILTerminationSense); // SRE-7 Update: Needs to be updated in future to cool based on inverters. 
         //CoolingSystem_calculations(cs, 20, 20, 20);
         CoolingSystem_enactCooling(cs); //This belongs under outputs but it doesn't really matter for cooling
 
@@ -347,13 +375,15 @@ void main(void)
         DI_calculateCommands(invRL, tps, bps);
         DI_calculateCommands(invRR, tps, bps);
 
+        //SRE-7 Update: Torque Vectoring Calculation can go here
+
         SafetyChecker_update(sc, bms, tps, bps, &Sensor_HVILTerminationSense, &Sensor_LVBattery);
 
         /*******************************************/
         /*  Output Adjustments by Safety Checker   */
         /*******************************************/
         //Make sure to change for temp values etc
-        SafetyChecker_reduceTorque(sc, bms, wss, invFL, invFR, invRL, invRR);
+        SafetyChecker_reduceTorque(sc, bms, invFL, invFR, invRL, invRR);
 
         /*******************************************/
         /*              Enact Outputs              */
