@@ -22,6 +22,8 @@
 #include "readyToDriveSound.h"
 
 extern Sensor Sensor_RTDButton;
+extern Sensor Sensor_HVILTerminationSense;
+
 ubyte4 timestamp_Precharge = 0;
 bool prevHVILState = FALSE;
 
@@ -78,6 +80,7 @@ enum InverterStatus {
 };
 
 void DI_calculateCommands(_DriveInverter* me, TorqueEncoder *tps, BrakePressureSensor *bps){
+//SRE-7 Update: CAN has a scaling of 0.1. So for 21nm you need to send 210 * 10 || OR Send 214% of 9.8nm (nominal) to get 21nm
 
     sbyte2 torqueOutput = 0;
     sbyte2 appsTorque = 0;
@@ -87,16 +90,12 @@ void DI_calculateCommands(_DriveInverter* me, TorqueEncoder *tps, BrakePressureS
 
     TorqueEncoder_getOutputPercent(tps, &appsOutputPercent);
 
-    appsTorque = me->AMK_TorqueLimitPositiv * getPercent(appsOutputPercent,0, 1, TRUE) - 0 * getPercent(appsOutputPercent, 0, 0, TRUE);
+    appsTorque = 214.0 * getPercent(appsOutputPercent, 0, 1, TRUE) - 0 * getPercent(appsOutputPercent, 0, 0, TRUE);
     bpsTorque = 0 - (0 - 0) * getPercent(bps->percent, 0, 0, TRUE);
 
     torqueOutput = appsTorque + bpsTorque;
+    torqueOutput = torqueOutput * 10;
 
-    // To send 25nm you need to send a torque setpoint of 2500
-    torqueOutput = torqueOutput * 100;
-    if(torqueOutput < 0 || torqueOutput > 25 * 100){
-        torqueOutput = 0;
-    }
     DI_commandTorque(me, torqueOutput);
     DI_getCommandedTorque(me);
 
@@ -200,10 +199,10 @@ void DI_calculateInverterControl(_DriveInverter* me, Sensor *HVILTermSense, Torq
             me->AMK_bInverterOn = TRUE;
             me->AMK_bDcOn = TRUE;
             me->AMK_bEnable = TRUE;
-            me->AMK_TorqueLimitPositiv = 30 * 100; // 25Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
-            me->AMK_TorqueLimitNegativ = 0;
+            me->AMK_TorqueLimitPositiv = 21 * 100; // SRE-7 Update: 21Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
+            me->AMK_TorqueLimitNegativ = 0; //SRE-7 Update: Make -21 for Regen
             if(me->AMK_bError == TRUE /*|| Verify Voltage Range Here w/ PCB*/){
-                me->startUpStage = 1; //Create a temp case that will take this to torque setpoints 0 -> inverterOf -> and then to startupstage 1 // TODO: ADD FEATURE IN EACH STAGE FOR AMK ERROR TO GO BACK
+                me->startUpStage = 1; 
             }
         break;
 

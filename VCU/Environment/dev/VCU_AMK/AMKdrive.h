@@ -68,7 +68,7 @@ typedef struct _DriveInverter {
     bool AMK_bQuitInverterOnVal;
     bool AMK_bInverterOnVal;
     bool AMK_bDerating;
-    float4 AMK_ActualVelocity;  // RPM
+    float4 AMK_ActualVelocity;  // RPM (SRE-7 Update: May Need Multiplier)
     float4 AMK_TorqueCurrent;
     float4 AMK_MagnetizingCurrent;
 
@@ -76,7 +76,7 @@ typedef struct _DriveInverter {
     float4 AMK_TempMotor;       // 0.1degC
     float4 AMK_TempInverter;    // 0.1degC
     ubyte2 AMK_ErrorInfo;       
-    float4 AMK_TorqueFeedback;        // 0.1degC
+    float4 AMK_TorqueFeedback;        // Nm
 
 } _DriveInverter;
 
