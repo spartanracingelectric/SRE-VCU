@@ -33,10 +33,10 @@ void vcu_initializeADC(bool benchMode)
     //Relay power outputs
     IO_DO_Init(IO_DO_00);    IO_DO_Set(IO_DO_00, FALSE); //mcm0 Relay
     IO_DO_Init(IO_DO_01);    IO_DO_Set(IO_DO_01, FALSE); //VCU-BMS Shutdown Relay
-    IO_DO_Init(IO_DO_02);    IO_DO_Set(IO_DO_02, FALSE); //Water pump relay - always on per RMS HW manual pg 7 - NOT USED
+    IO_DO_Init(IO_DO_02);    IO_DO_Set(IO_DO_02, FALSE); //Water pump signal (no longer using PWM signal for the water pump)
     IO_DO_Init(IO_DO_03);    IO_DO_Set(IO_DO_03, FALSE); //Fan relay - motor fan and radiator fan are on same circuit
     IO_DO_Init(IO_DO_04);    IO_DO_Set(IO_DO_04, FALSE); //Battery fan relay - not used on SRE-4
-    //IO_DO_Init(IO_DO_05);    IO_DO_Set(IO_DO_05, benchMode); //power output for switches - only used on bench
+    IO_DO_Init(IO_DO_05);    IO_DO_Set(IO_DO_05, benchMode); //power output for switches - only used on bench
     IO_DO_Init(IO_DO_06);    IO_DO_Set(IO_DO_06, FALSE); //DRS Open
     IO_DO_Init(IO_DO_07);    IO_DO_Set(IO_DO_07, FALSE); //DRS Close
 
@@ -56,12 +56,12 @@ void vcu_initializeADC(bool benchMode)
     IO_PWM_SetDuty(IO_PWM_01, 0, NULL);
 
     //Bench LED 12V source
-    //IO_PWM_Init(IO_PWM_03, 500, TRUE, FALSE, 0, FALSE, NULL);
-    //IO_PWM_SetDuty(IO_PWM_03, benchMode == TRUE ? 0xFFFF : 0, NULL);
+    IO_PWM_Init(IO_PWM_03, 500, TRUE, FALSE, 0, FALSE, NULL);
+    IO_PWM_SetDuty(IO_PWM_03, benchMode == TRUE ? 0xFFFF : 0, NULL);
     
-    //Water pump signal
-    IO_PWM_Init(IO_PWM_02, 100, TRUE, FALSE, 0, FALSE, NULL);
-    IO_PWM_SetDuty(IO_PWM_02, .90 * 0xFFFF, NULL);
+    // Rad Fans (SR-14 and above)
+    IO_PWM_Init(IO_PWM_02, 100, TRUE, FALSE, 0, FALSE, NULL); //Pin, Frequency Hz, Boolean for pos polarity, current measurement enabled bool, weird other pin (current), no diagram margin, not safety critical
+    IO_PWM_SetDuty(IO_PWM_02, .90 * 0xFFFF, NULL); //Pin, 0 - 65535, Feedback Measurement
 
     //Accum fan signal
     IO_PWM_Init(IO_PWM_04, 100, TRUE, FALSE, 0, FALSE, NULL);
@@ -142,13 +142,14 @@ void vcu_initializeADC(bool benchMode)
     //----------------------------------------------------------------------------
     Sensor_RTDButton.ioErr_signalInit = IO_DI_Init(IO_DI_00, IO_DI_PU_10K);     //RTD Button
     Sensor_EcoButton.ioErr_signalInit = IO_DI_Init(IO_DI_01, IO_DI_PU_10K);     //Eco Button
-    //Sensor_TCSSwitchUp.ioErr_signalInit = IO_DI_Init(IO_DI_02, IO_DI_PD_10K);   //TCS Switch A
-    //Sensor_DRSButton.ioErr_signalInit = IO_DI_Init(IO_DI_04, IO_DI_PD_10K); //TCS Switch B
+    //Sensor_TCSSwitchUp.ioErr_signalInit = IO_DI_Init(IO_DI_02, IO_DI_PU_10K);   //TCS Switch A
     Sensor_TVButton.ioErr_signalInit = IO_DI_Init(IO_DI_03, IO_DI_PU_10K); // Torque Control Enable Button
     Sensor_DRSButton.ioErr_signalInit = IO_DI_Init(IO_DI_04, IO_DI_PU_10K);
 
+    //TV and DRS Button may be switched on SRE-7
+
     // Sensor_IO_DI_06.ioErr_signalInit = IO_DI_Init(IO_DI_06, IO_DI_PD_10K); //Unused
-    Sensor_HVILTerminationSense.ioErr_signalInit = IO_DI_Init(IO_DI_07, IO_DI_PU_10K); //HVIL Term sense, high = HV present
+    Sensor_HVILTerminationSense.ioErr_signalInit = IO_DI_Init(IO_DI_07, IO_DI_PD_10K); //HVIL Term sense, high = HV present
 }
 
 //----------------------------------------------------------------------------
@@ -197,8 +198,8 @@ Sensor Sensor_TCSKnob;
 Sensor Sensor_RTDButton;
 Sensor Sensor_EcoButton;
 Sensor Sensor_HVILTerminationSense;
-
 Sensor Sensor_TVButton;
+
 Sensor Sensor_DRSButton;
 Sensor Sensor_DRSKnob;
 

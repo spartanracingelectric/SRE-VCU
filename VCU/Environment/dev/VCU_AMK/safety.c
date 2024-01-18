@@ -172,7 +172,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     bps->calibrated == TRUE; // Remove later with BPS. Dont keep
     if (bps->calibrated == FALSE)
     {
-        //me->faults |= F_bpsNotCalibrated;
+        me->faults |= F_bpsNotCalibrated;
     }
     else
     {
@@ -232,7 +232,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     //-------------------------------------------------------------------
     if (tps->tps0->sensorValue < tps->tps0->specMin || tps->tps0->sensorValue > tps->tps0->specMax || tps->tps1->sensorValue < tps->tps1->specMin || tps->tps1->sensorValue > tps->tps1->specMax)
     {
-        //me->faults |= F_tpsOutOfRange;
+        me->faults |= F_tpsOutOfRange;
     }
     else
     {
@@ -244,7 +244,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     //-------------------------------------------------------------------
     if (bps->bps0->sensorValue < bps->bps0->specMin || bps->bps0->sensorValue > bps->bps0->specMax)
     {
-        //me->faults |= F_bpsOutOfRange;
+        me->faults |= F_bpsOutOfRange;
     }
     else
     {
@@ -290,7 +290,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     //     This must be demonstrated at Technical Inspection
     // EV.5.7.2 The Motor shut down must remain active until the APPS signals less than 5% pedal travel, with or without brake operation.
     //-------------------------------------------------------------------
-    bool tpsAbove25Percent = (tps->travelPercent > .25);
+    bool tpsAbove25Percent = (tps->travelPercent > .25); //Rules is 25% this is a hack that is made to check
 
     //If mechanical brakes actuated && tps > 25%
     if (bps->brakesAreOn && tpsAbove25Percent)
@@ -429,8 +429,8 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     // 40922 = 60227 <-- This discrepancy is because we don't get all of the requested torque 
 
 
-    me->softBSPD_bpsHigh = bps->bps0->sensorValue > 2500;
-    //Need updating for future: me->softBSPD_kwHigh = MCM_getPower(mcm) > 4000;
+    me->softBSPD_bpsHigh = bps->bps0->sensorValue > 1900;
+    me->softBSPD_kwHigh = FALSE; //SRE-7 Update: MCM_getPower(mcm) > 4000;
 
     // Note: this is using the FUTURE torque request with the PREVIOUS RPM
     if (me->softBSPD_bpsHigh && me->softBSPD_kwHigh)
@@ -531,6 +531,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
         me->notices &= ~N_Over75kW_BMS;
     }
 
+    //SRE-7 Update: Need to find power to make sure it is limited
     //if (MCM_getPower(mcm) > 75000)
     //{
     //    me->notices |= N_Over75kW_MCM;
@@ -599,13 +600,6 @@ void SafetyChecker_reduceTorque(SafetyChecker *me, BatteryManagementSystem *bms,
        multiplier = 0;
        //SerialManager_send(me->serialMan, "HVIL term sense low\n");
     }
-
-    //No regen below 5kph : Needs to be updated for Inverters in future Regen Control
-    //if (MCM_commands_getTorque(mcm) < 0 && groundSpeedKPH < 5)
-    //{
-        //SerialManager_send(me->serialMan, "Regen < 5kph\n");
-    //    multiplier = 0;
-    //}
     
 
     //-------------------------------------------------------------------
@@ -681,7 +675,6 @@ void SafetyChecker_reduceTorque(SafetyChecker *me, BatteryManagementSystem *bms,
     DI_commandTorque(in2, DI_getCommandedTorque(in1) * multiplier);
     DI_commandTorque(in3, DI_getCommandedTorque(in1) * multiplier);
     DI_commandTorque(in4, DI_getCommandedTorque(in1) * multiplier); 
-    // Derating features regarding close temperature will be managed within TV. These derates set on safety.c is for hard limit faulting
 }
 
 //-------------------------------------------------------------------

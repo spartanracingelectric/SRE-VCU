@@ -36,16 +36,11 @@ extern Sensor Sensor_TPS0;
 extern Sensor Sensor_TPS1;
 extern Sensor Sensor_BPS0;
 extern Sensor Sensor_BPS1;
-extern Sensor Sensor_WSS_FL;
-extern Sensor Sensor_WSS_FR;
-extern Sensor Sensor_WSS_RL;
-extern Sensor Sensor_WSS_RR;
-extern Sensor Sensor_WPS_FL;
-extern Sensor Sensor_WPS_FR;
-extern Sensor Sensor_WPS_RL;
-extern Sensor Sensor_WPS_RR;
+
 extern Sensor Sensor_SAS;
 extern Sensor Sensor_LVBattery;
+extern Sensor Sensor_DRSKnob;
+extern Sensor Sensor_DRSButton;
 
 extern Sensor Sensor_BenchTPS0;
 extern Sensor Sensor_BenchTPS1;
@@ -325,12 +320,17 @@ double rpm_to_mph(double rpm) {
  * Output: Degrees
  * **************************************************************************/
 
-sbyte2 steering_degrees(){
-    sbyte2 min_voltage = 0;
-    sbyte2 max_voltage = 5000;
-    sbyte2 min_angle = -90;
-    sbyte2 max_angle = 90;
-    sbyte2 deg = min_angle + (max_angle - min_angle) * (Sensor_SAS.sensorValue - min_voltage) / (max_voltage - min_voltage);
+sbyte4 steering_degrees(){
+    sbyte4 min_voltage = 960;
+    sbyte4 max_voltage = 2560;
+    sbyte4 min_angle = -90;
+    sbyte4 max_angle = 90;
+
+    sbyte4 voltage_range = max_voltage - min_voltage;
+    sbyte4 angle_range = max_angle - min_angle;
+    sbyte4 voltage = Sensor_SAS.sensorValue;
+
+    sbyte4 deg = min_angle + (angle_range * (voltage - min_voltage)) / voltage_range;
     return deg;
 }
 
