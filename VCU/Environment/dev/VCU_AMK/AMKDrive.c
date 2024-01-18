@@ -80,7 +80,7 @@ enum InverterStatus {
 };
 
 void DI_calculateCommands(_DriveInverter* me, TorqueEncoder *tps, BrakePressureSensor *bps){
-//SRE-7 Update: CAN has a scaling of 0.1. So for 21nm you need to send 210 * 10 || OR Send 214% of 9.8nm (nominal) to get 21nm
+//SRE-7 Update: CAN has a scaling of 0.1. So send 214% of 9.8nm (nominal) to get 21nm. So 0.25 is 25% of 9.8 and 2.14 is 214% of 9.8. 
 
     sbyte2 torqueOutput = 0;
     sbyte2 appsTorque = 0;
@@ -90,11 +90,13 @@ void DI_calculateCommands(_DriveInverter* me, TorqueEncoder *tps, BrakePressureS
 
     TorqueEncoder_getOutputPercent(tps, &appsOutputPercent);
 
-    appsTorque = 214.0 * getPercent(appsOutputPercent, 0, 1, TRUE) - 0 * getPercent(appsOutputPercent, 0, 0, TRUE);
+    sbyte2 torqueMax = (me->AMK_TorqueLimitPositiv / 100); // this should give 21 or the max value 
+    torqueMax = torqueMax / 9.8; //Needs to be divided by the nominal torque and give 2.14 as max since 2.14 is 214% of 9.8. Should scale to any max value
+
+    appsTorque = torqueMax * getPercent(appsOutputPercent, 0, 1, TRUE) - 0 * getPercent(appsOutputPercent, 0, 0, TRUE);
     bpsTorque = 0 - (0 - 0) * getPercent(bps->percent, 0, 0, TRUE);
 
-    torqueOutput = appsTorque + bpsTorque;
-    torqueOutput = torqueOutput * 10;
+    torqueOutput = appsTorque + bpsTorque; //This should be giving a value on CAN from 0 - 2.14. 
 
     DI_commandTorque(me, torqueOutput);
     DI_getCommandedTorque(me);
@@ -189,7 +191,7 @@ void DI_calculateInverterControl(_DriveInverter* me, Sensor *HVILTermSense, Torq
             me->AMK_bDcOn = TRUE;
             me->AMK_bEnable = TRUE;
             me->AMK_TorqueSetpoint = 0;
-            me->AMK_TorqueLimitPositiv = 30 * 100; // 25Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
+            me->AMK_TorqueLimitPositiv = 21 * 100; // 25Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
             me->AMK_TorqueLimitNegativ = 0;
             if(me->AMK_bError == FALSE){
                 me->startUpStage = 6;
