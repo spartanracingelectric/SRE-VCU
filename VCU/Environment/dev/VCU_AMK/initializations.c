@@ -149,7 +149,7 @@ void vcu_initializeADC(bool benchMode)
     //TV and DRS Button may be switched on SRE-7
 
     // Sensor_IO_DI_06.ioErr_signalInit = IO_DI_Init(IO_DI_06, IO_DI_PD_10K); //Unused
-    Sensor_HVILTerminationSense.ioErr_signalInit = IO_DI_Init(IO_DI_07, IO_DI_PD_10K); //HVIL Term sense, high = HV present
+    Sensor_HVILTerminationSense.ioErr_signalInit = IO_DI_Init(IO_DI_07, IO_DI_PU_10K); //HVIL Term sense, high = HV present
 }
 
 //----------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc10888a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=1 -DRTS_TTC_FLASH_DATE_DAY=18 -DRTS_TTC_FLASH_DATE_HOUR=0 -DRTS_TTC_FLASH_DATE_MINUTE=28 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\initializations.src
+	; Options: -f cc28756a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=2 -DRTS_TTC_FLASH_DATE_DAY=14 -DRTS_TTC_FLASH_DATE_HOUR=20 -DRTS_TTC_FLASH_DATE_MINUTE=30 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\initializations.src
 	; Module start
 	.source	'initializations.c'
 code_vcu_initializeADC	.section	code, cluster 'vcu_initializeADC', new
@@ -583,10 +583,10 @@ _695:
 ; initializations.c	   149      //TV and DRS Button may be switched on SRE-7
 ; initializations.c	   150  
 ; initializations.c	   151      // Sensor_IO_DI_06.ioErr_signalInit = IO_DI_Init(IO_DI_06, IO_DI_PD_10K); //Unused
-; initializations.c	   152      Sensor_HVILTerminationSense.ioErr_signalInit = IO_DI_Init(IO_DI_07, IO_DI_PD_10K); //HVIL Term sense, high = HV present
+; initializations.c	   152      Sensor_HVILTerminationSense.ioErr_signalInit = IO_DI_Init(IO_DI_07, IO_DI_PU_10K); //HVIL Term sense, high = HV present
 	movb	rl2,#0x2d
 _696:
-	movb	rh2,#0x0
+	movb	rh2,#0x1
 	call	_IO_DI_Init
 _697:
 	extp	#@pag(_Sensor_HVILTerminationSense+0x1a),#0x1

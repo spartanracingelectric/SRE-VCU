@@ -191,7 +191,7 @@ void DI_calculateInverterControl(_DriveInverter* me, Sensor *HVILTermSense, Torq
             me->AMK_bDcOn = TRUE;
             me->AMK_bEnable = TRUE;
             me->AMK_TorqueSetpoint = 0;
-            me->AMK_TorqueLimitPositiv = 21 * 100; // 25Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
+            me->AMK_TorqueLimitPositiv = 21 * 10; // 25Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
             me->AMK_TorqueLimitNegativ = 0;
             if(me->AMK_bError == FALSE){
                 me->startUpStage = 6;
@@ -201,7 +201,7 @@ void DI_calculateInverterControl(_DriveInverter* me, Sensor *HVILTermSense, Torq
             me->AMK_bInverterOn = TRUE;
             me->AMK_bDcOn = TRUE;
             me->AMK_bEnable = TRUE;
-            me->AMK_TorqueLimitPositiv = 21 * 100; // SRE-7 Update: 21Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
+            me->AMK_TorqueLimitPositiv = 21 * 10; // SRE-7 Update: 21Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
             me->AMK_TorqueLimitNegativ = 0; //SRE-7 Update: Make -21 for Regen
             if(me->AMK_bError == TRUE /*|| Verify Voltage Range Here w/ PCB*/){
                 me->startUpStage = 1; 
