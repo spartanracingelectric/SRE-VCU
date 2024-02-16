@@ -88,6 +88,7 @@ void DI_calculateCommands(_DriveInverter* me, TorqueEncoder *tps, BrakePressureS
 
     float4 appsOutputPercent;
 
+    /*
     TorqueEncoder_getOutputPercent(tps, &appsOutputPercent);
 
     sbyte2 torqueMax = (me->AMK_TorqueLimitPositiv / 100); // this should give 21 or the max value 
@@ -95,8 +96,16 @@ void DI_calculateCommands(_DriveInverter* me, TorqueEncoder *tps, BrakePressureS
 
     appsTorque = torqueMax * getPercent(appsOutputPercent, 0, 1, TRUE) - 0 * getPercent(appsOutputPercent, 0, 0, TRUE);
     bpsTorque = 0 - (0 - 0) * getPercent(bps->percent, 0, 0, TRUE);
+    */ 
 
-    torqueOutput = appsTorque + bpsTorque; //This should be giving a value on CAN from 0 - 2.14. 
+    //Vehicle Testing works on Test-Bench
+    TorqueEncoder_getIndividualSensorPercent(tps, 0, &appsOutputPercent);
+    appsOutputPercent = appsOutputPercent * 10000;
+
+    //sbyte2 torqueMax = (me->AMK_TorqueLimitPositiv / 100);
+    float4 torqueMax = ((21.0 / 9.8) / 100.0);
+
+    torqueOutput = appsOutputPercent * torqueMax; //add in 0.0214 here
 
     DI_commandTorque(me, torqueOutput);
     DI_getCommandedTorque(me);
