@@ -1,5 +1,5 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc4932a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=1 -DRTS_TTC_FLASH_DATE_DAY=17 -DRTS_TTC_FLASH_DATE_HOUR=13 -DRTS_TTC_FLASH_DATE_MINUTE=38 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\main.src
+	; Options: -f cc8020a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=2 -DRTS_TTC_FLASH_DATE_DAY=27 -DRTS_TTC_FLASH_DATE_HOUR=16 -DRTS_TTC_FLASH_DATE_MINUTE=39 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\main.src
 	; Module start
 	.source	'main.c'
 code_main	.section	code, cluster 'main', new
@@ -314,23 +314,27 @@ _1520:
 ; main.c	   195      // Most default values for things should be specified here
 ; main.c	   196      //----------------------------------------------------------------------------
 ; main.c	   197  
-; main.c	   198      ubyte1 pot_DRS_LC = 0; //0 is for DRS and 1 is for Torque Vectoring
-; main.c	   199  
-; main.c	   200      ReadyToDriveSound *rtds = RTDS_new();
+; main.c	   198      //0 is for MANUAL DRS and 1 is for AUTO DRS
+; main.c	   199      ubyte1 pot_DRS_LC = 0; 
+; main.c	   200  
+; main.c	   201      //0 is for AWD, 1 is for RWD
+; main.c	   202      ubyte1 AMK_Mode = 0;
+; main.c	   203  
+; main.c	   204      ReadyToDriveSound *rtds = RTDS_new();
 	call	_RTDS_new
 _1521:
 	movw	[r15+#0x2e],r2
 	movw	[r15+#0x2c],r3
 _1522:
 
-; main.c	   201      //BatteryManagementSystem* bms = BMS_new();
-; main.c	   202  
-; main.c	   203      // 240 Nm
-; main.c	   204      //MotorController *mcm0 = MotorController_new(serialMan, 0xA0, FORWARD, 2400, 5, 10); //CAN addr, direction, torque limit x10 (100 = 10Nm)
-; main.c	   205      // 75 Nm
-; main.c	   206      //MotorController *mcm0 = MotorController_new(0xA0, FORWARD, 750, 5, 10); //CAN addr, direction, torque limit x10 (100 = 10Nm)
-; main.c	   207      //MCM_setRegenMode(mcm0, REGENMODE_OFF);
-; main.c	   208      _DriveInverter *invFL = AmkDriver_new(FRONT_LEFT);
+; main.c	   205      //BatteryManagementSystem* bms = BMS_new();
+; main.c	   206  
+; main.c	   207      // 240 Nm
+; main.c	   208      //MotorController *mcm0 = MotorController_new(serialMan, 0xA0, FORWARD, 2400, 5, 10); //CAN addr, direction, torque limit x10 (100 = 10Nm)
+; main.c	   209      // 75 Nm
+; main.c	   210      //MotorController *mcm0 = MotorController_new(0xA0, FORWARD, 750, 5, 10); //CAN addr, direction, torque limit x10 (100 = 10Nm)
+; main.c	   211      //MCM_setRegenMode(mcm0, REGENMODE_OFF);
+; main.c	   212      _DriveInverter *invFL = AmkDriver_new(FRONT_LEFT);
 	movb	rl2,#0x1
 	call	_AmkDriver_new
 _1523:
@@ -338,7 +342,7 @@ _1523:
 	movw	[r15+#0x20],r3
 _1524:
 
-; main.c	   209      _DriveInverter *invFR = AmkDriver_new(FRONT_RIGHT);
+; main.c	   213      _DriveInverter *invFR = AmkDriver_new(FRONT_RIGHT);
 	movb	rl2,#0x2
 	call	_AmkDriver_new
 _1525:
@@ -346,7 +350,7 @@ _1525:
 	movw	[r15+#0x1c],r3
 _1526:
 
-; main.c	   210      _DriveInverter *invRL = AmkDriver_new(REAR_LEFT);
+; main.c	   214      _DriveInverter *invRL = AmkDriver_new(REAR_LEFT);
 	movb	rl2,#0x5
 	call	_AmkDriver_new
 _1527:
@@ -354,7 +358,7 @@ _1527:
 	movw	[r15+#0x28],r3
 _1528:
 
-; main.c	   211      _DriveInverter *invRR = AmkDriver_new(REAR_RIGHT);
+; main.c	   215      _DriveInverter *invRR = AmkDriver_new(REAR_RIGHT);
 	movb	rl2,#0x6
 	call	_AmkDriver_new
 _1529:
@@ -362,7 +366,7 @@ _1529:
 	movw	[r15+#0x24],r3
 _1530:
 
-; main.c	   212      InstrumentCluster *ic0 = InstrumentCluster_new(0x702);
+; main.c	   216      InstrumentCluster *ic0 = InstrumentCluster_new(0x702);
 	movw	r2,#0x702
 	call	_InstrumentCluster_new
 _1531:
@@ -370,7 +374,7 @@ _1531:
 	movw	[r15+#0x30],r3
 _1532:
 
-; main.c	   213      TorqueEncoder *tps = TorqueEncoder_new(bench);
+; main.c	   217      TorqueEncoder *tps = TorqueEncoder_new(bench);
 	movb	rl2,[r15+#0x9]
 	call	_TorqueEncoder_new
 _1533:
@@ -378,14 +382,14 @@ _1533:
 	movw	[r15+#0x10],r3
 _1534:
 
-; main.c	   214      BrakePressureSensor *bps = BrakePressureSensor_new();
+; main.c	   218      BrakePressureSensor *bps = BrakePressureSensor_new();
 	call	_BrakePressureSensor_new
 _1535:
 	movw	[r15+#0xe],r2
 	movw	r0,r3
 _1536:
 
-; main.c	   215      SafetyChecker *sc = SafetyChecker_new(320, 32); //Must match amp limits
+; main.c	   219      SafetyChecker *sc = SafetyChecker_new(320, 32); //Must match amp limits
 	movw	r2,#0x140
 _1537:
 	movw	r3,#0x20
@@ -395,7 +399,7 @@ _1538:
 	movw	[r15+#0x18],r3
 _1539:
 
-; main.c	   216      BatteryManagementSystem *bms = BMS_new(BMS_BASE_ADDRESS);
+; main.c	   220      BatteryManagementSystem *bms = BMS_new(BMS_BASE_ADDRESS);
 	movw	r2,#0x600
 	call	_BMS_new
 _1540:
@@ -403,63 +407,63 @@ _1540:
 	movw	[r15+#0x14],r3
 _1541:
 
-; main.c	   217      CoolingSystem *cs = CoolingSystem_new();
+; main.c	   221      CoolingSystem *cs = CoolingSystem_new();
 	call	_CoolingSystem_new
 _1542:
 	movw	[r15+#0x42],r2
 	movw	[r15+#0x40],r3
 _1543:
 
-; main.c	   218      DRS *drs = DRS_new();
+; main.c	   222      DRS *drs = DRS_new();
 	call	_DRS_new
 _1544:
 	movw	[r15+#0x3e],r2
 	movw	[r15+#0x3c],r3
 _1545:
 
-; main.c	   219      _DAQSensors *d1 = DAQ_Sensor_new();
+; main.c	   223      _DAQSensors *d1 = DAQ_Sensor_new();
 	call	_DAQ_Sensor_new
 _1546:
 	movw	[r15+#0x3a],r2
 	movw	[r15+#0x38],r3
 _1547:
 
-; main.c	   220  
-; main.c	   221      //----------------------------------------------------------------------------
-; main.c	   222      // TODO: Additional Initial Power-up functions
-; main.c	   223      // //----------------------------------------------------------------------------
-; main.c	   224      // ubyte2 tps0_calibMin = 0xABCD;  //me->tps0->sensorValue;
-; main.c	   225      // ubyte2 tps0_calibMax = 0x9876;  //me->tps0->sensorValue;
-; main.c	   226      // ubyte2 tps1_calibMin = 0x5432;  //me->tps1->sensorValue;
-; main.c	   227      // ubyte2 tps1_calibMax = 0xCDEF;  //me->tps1->sensorValue;
-; main.c	   228      ubyte2 tps0_calibMin = 200;  //me->tps0->sensorValue;
-; main.c	   229      ubyte2 tps0_calibMax = 1900; //me->tps0->sensorValue;
-; main.c	   230      ubyte2 tps1_calibMin = 3000; //me->tps1->sensorValue;
-; main.c	   231      ubyte2 tps1_calibMax = 4800; //me->tps1->sensorValue;
-; main.c	   232      //TODO: Read calibration data from EEPROM?
-; main.c	   233      //TODO: Run calibration functions?
-; main.c	   234      //TODO: Power-on error checking?
-; main.c	   235  
-; main.c	   236      /*******************************************/
-; main.c	   237      /*       PERIODIC APPLICATION CODE         */
-; main.c	   238      /*******************************************/
-; main.c	   239      /* main loop, executed periodically with a defined cycle time (here: 5 ms) */
-; main.c	   240      ubyte4 timestamp_mainLoopStart = 0;
+; main.c	   224  
+; main.c	   225      //----------------------------------------------------------------------------
+; main.c	   226      // TODO: Additional Initial Power-up functions
+; main.c	   227      // //----------------------------------------------------------------------------
+; main.c	   228      // ubyte2 tps0_calibMin = 0xABCD;  //me->tps0->sensorValue;
+; main.c	   229      // ubyte2 tps0_calibMax = 0x9876;  //me->tps0->sensorValue;
+; main.c	   230      // ubyte2 tps1_calibMin = 0x5432;  //me->tps1->sensorValue;
+; main.c	   231      // ubyte2 tps1_calibMax = 0xCDEF;  //me->tps1->sensorValue;
+; main.c	   232      ubyte2 tps0_calibMin = 200;  //me->tps0->sensorValue;
+; main.c	   233      ubyte2 tps0_calibMax = 1900; //me->tps0->sensorValue;
+; main.c	   234      ubyte2 tps1_calibMin = 3000; //me->tps1->sensorValue;
+; main.c	   235      ubyte2 tps1_calibMax = 4800; //me->tps1->sensorValue;
+; main.c	   236      //TODO: Read calibration data from EEPROM?
+; main.c	   237      //TODO: Run calibration functions?
+; main.c	   238      //TODO: Power-on error checking?
+; main.c	   239  
+; main.c	   240      /*******************************************/
+; main.c	   241      /*       PERIODIC APPLICATION CODE         */
+; main.c	   242      /*******************************************/
+; main.c	   243      /* main loop, executed periodically with a defined cycle time (here: 5 ms) */
+; main.c	   244      ubyte4 timestamp_mainLoopStart = 0;
 	movw	r11,#0x0
 _1548:
 	movw	[r15+#0xa],r11
 	movw	[r15+#0xc],r11
 _1549:
 
-; main.c	   241      //IO_RTC_StartTime(&timestamp_calibStart);
-; main.c	   242      //SerialManager_send(serialMan, "VCU initializations complete.  Entering main loop.\n");
-; main.c	   243      while (1)
-; main.c	   244      {
-; main.c	   245          //----------------------------------------------------------------------------
-; main.c	   246          // Task management stuff (start)
-; main.c	   247          //----------------------------------------------------------------------------
-; main.c	   248          //Get a timestamp of when this task started from the Real Time Clock
-; main.c	   249          IO_RTC_StartTime(&timestamp_mainLoopStart);
+; main.c	   245      //IO_RTC_StartTime(&timestamp_calibStart);
+; main.c	   246      //SerialManager_send(serialMan, "VCU initializations complete.  Entering main loop.\n");
+; main.c	   247      while (1)
+; main.c	   248      {
+; main.c	   249          //----------------------------------------------------------------------------
+; main.c	   250          // Task management stuff (start)
+; main.c	   251          //----------------------------------------------------------------------------
+; main.c	   252          //Get a timestamp of when this task started from the Real Time Clock
+; main.c	   253          IO_RTC_StartTime(&timestamp_mainLoopStart);
 	movw	r7,#0xa
 	addw	r7,r15
 	andw	r7,#0x3fff
@@ -467,121 +471,121 @@ _1549:
 	movw	r10,#@seg(__lc_ub_user_stack+0xffff)
 _72:
 
-; main.c	   250          //Mark the beginning of a task - what does this actually do?
-; main.c	   251          IO_Driver_TaskBegin();
-; main.c	   252  
-; main.c	   253          //SerialManager_send(serialMan, "VCU has entered main loop.");
-; main.c	   254  
-; main.c	   255          /*******************************************/
-; main.c	   256          /*              Read Inputs                */
-; main.c	   257          /*******************************************/
-; main.c	   258          //----------------------------------------------------------------------------
-; main.c	   259          // Handle data input streams
-; main.c	   260          //----------------------------------------------------------------------------
-; main.c	   261          //Get readings from our sensors and other local devices (buttons, 12v battery, etc)
-; main.c	   262          sensors_updateSensors();
-; main.c	   263  
-; main.c	   264          //Pull messages from CAN FIFO and update our object representations.
-; main.c	   265          //IMU DAQ will be sending to CAN1 so CAN0 is written incase there is necessity for it to be on that bus
-; main.c	   266          CanManager_read(canMan, CAN0_HIPRI, ic0, bms, sc, d1, invFL, invFR);
-; main.c	   267          CanManager_read(canMan, CAN1_LOPRI, ic0, bms, sc, d1, invRL, invRR);
-; main.c	   268          /*switch (CanManager_getReadStatus(canMan, CAN0_HIPRI))
-; main.c	   269          {
-; main.c	   270              case IO_E_OK: SerialManager_send(serialMan, "IO_E_OK: everything fine\n"); break;
-; main.c	   271              case IO_E_NULL_POINTER: SerialManager_send(serialMan, "IO_E_NULL_POINTER: null pointer has been passed to function\n"); break;
-; main.c	   272              case IO_E_CAN_FIFO_FULL: SerialManager_send(serialMan, "IO_E_CAN_FIFO_FULL: overflow of FIFO buffer\n"); break;
-; main.c	   273              case IO_E_CAN_WRONG_HANDLE: SerialManager_send(serialMan, "IO_E_CAN_WRONG_HANDLE: invalid handle has been passed\n"); break;
-; main.c	   274              case IO_E_CHANNEL_NOT_CONFIGURED: SerialManager_send(serialMan, "IO_E_CHANNEL_NOT_CONFIGURED: the given handle has not been configured\n"); break;
-; main.c	   275              case IO_E_CAN_OLD_DATA: SerialManager_send(serialMan, "IO_E_CAN_OLD_DATA: no data has been received\n"); break;
-; main.c	   276              default: SerialManager_send(serialMan, "Warning: Unknown CAN read status\n"); break;
-; main.c	   277          }*/
-; main.c	   278  
-; main.c	   279          /*******************************************/
-; main.c	   280          /*          Perform Calculations           */
-; main.c	   281          /*******************************************/
-; main.c	   282          //calculations - Now that we have local sensor data and external data from CAN, we can
-; main.c	   283          //do actual processing work, from pedal travel calcs to traction control
-; main.c	   284          //calculations_calculateStuff();
-; main.c	   285  
-; main.c	   286          //No regen below 5kph
-; main.c	   287          sbyte2 groundSpeedKPH = 0; //SRE-7 Update
-; main.c	   288          if (groundSpeedKPH < 15)
-; main.c	   289          {
-; main.c	   290              //Regen OFF
-; main.c	   291          } else {
-; main.c	   292              if(BMS_getPackVoltage(bms) >= 38500 * 10){
-; main.c	   293                  //Set regen mode to coasting
-; main.c	   294              } else {
-; main.c	   295                  //Set regen mode to brakes and (coasting)
-; main.c	   296              }
-; main.c	   297          }
-; main.c	   298  
-; main.c	   299          //SensorValue TRUE and FALSE are reversed due to Pull Up Resistor
-; main.c	   300  
-; main.c	   301          //Run calibration if commanded
-; main.c	   302          //if (IO_RTC_GetTimeUS(timestamp_calibStart) < (ubyte4)5000000)
-; main.c	   303          if (Sensor_EcoButton.sensorValue == FALSE)
-; main.c	   304          {
-; main.c	   305              if (timestamp_EcoButton == 0)
-; main.c	   306              {
-; main.c	   307                  //SerialManager_send(serialMan, "Eco button detected\n");
-; main.c	   308                  IO_RTC_StartTime(&timestamp_EcoButton);
+; main.c	   254          //Mark the beginning of a task - what does this actually do?
+; main.c	   255          IO_Driver_TaskBegin();
+; main.c	   256  
+; main.c	   257          //SerialManager_send(serialMan, "VCU has entered main loop.");
+; main.c	   258  
+; main.c	   259          /*******************************************/
+; main.c	   260          /*              Read Inputs                */
+; main.c	   261          /*******************************************/
+; main.c	   262          //----------------------------------------------------------------------------
+; main.c	   263          // Handle data input streams
+; main.c	   264          //----------------------------------------------------------------------------
+; main.c	   265          //Get readings from our sensors and other local devices (buttons, 12v battery, etc)
+; main.c	   266          sensors_updateSensors();
+; main.c	   267  
+; main.c	   268          //Pull messages from CAN FIFO and update our object representations.
+; main.c	   269          //IMU DAQ will be sending to CAN1 so CAN0 is written incase there is necessity for it to be on that bus
+; main.c	   270          CanManager_read(canMan, CAN0_HIPRI, ic0, bms, sc, d1, invFL, invFR);
+; main.c	   271          CanManager_read(canMan, CAN1_LOPRI, ic0, bms, sc, d1, invRL, invRR);
+; main.c	   272          /*switch (CanManager_getReadStatus(canMan, CAN0_HIPRI))
+; main.c	   273          {
+; main.c	   274              case IO_E_OK: SerialManager_send(serialMan, "IO_E_OK: everything fine\n"); break;
+; main.c	   275              case IO_E_NULL_POINTER: SerialManager_send(serialMan, "IO_E_NULL_POINTER: null pointer has been passed to function\n"); break;
+; main.c	   276              case IO_E_CAN_FIFO_FULL: SerialManager_send(serialMan, "IO_E_CAN_FIFO_FULL: overflow of FIFO buffer\n"); break;
+; main.c	   277              case IO_E_CAN_WRONG_HANDLE: SerialManager_send(serialMan, "IO_E_CAN_WRONG_HANDLE: invalid handle has been passed\n"); break;
+; main.c	   278              case IO_E_CHANNEL_NOT_CONFIGURED: SerialManager_send(serialMan, "IO_E_CHANNEL_NOT_CONFIGURED: the given handle has not been configured\n"); break;
+; main.c	   279              case IO_E_CAN_OLD_DATA: SerialManager_send(serialMan, "IO_E_CAN_OLD_DATA: no data has been received\n"); break;
+; main.c	   280              default: SerialManager_send(serialMan, "Warning: Unknown CAN read status\n"); break;
+; main.c	   281          }*/
+; main.c	   282  
+; main.c	   283          /*******************************************/
+; main.c	   284          /*          Perform Calculations           */
+; main.c	   285          /*******************************************/
+; main.c	   286          //calculations - Now that we have local sensor data and external data from CAN, we can
+; main.c	   287          //do actual processing work, from pedal travel calcs to traction control
+; main.c	   288          //calculations_calculateStuff();
+; main.c	   289  
+; main.c	   290          //No regen below 5kph
+; main.c	   291          sbyte2 groundSpeedKPH = 0; //SRE-7 Update
+; main.c	   292          if (groundSpeedKPH < 15)
+; main.c	   293          {
+; main.c	   294              //Regen OFF
+; main.c	   295          } else {
+; main.c	   296              if(BMS_getPackVoltage(bms) >= 38500 * 10){
+; main.c	   297                  //Set regen mode to coasting
+; main.c	   298              } else {
+; main.c	   299                  //Set regen mode to brakes and (coasting)
+; main.c	   300              }
+; main.c	   301          }
+; main.c	   302  
+; main.c	   303          //SensorValue TRUE and FALSE are reversed due to Pull Up Resistor
+; main.c	   304  
+; main.c	   305          //Run calibration if commanded
+; main.c	   306          //if (IO_RTC_GetTimeUS(timestamp_calibStart) < (ubyte4)5000000)
+; main.c	   307          if (Sensor_EcoButton.sensorValue == FALSE)
+; main.c	   308          {
+; main.c	   309              if (timestamp_EcoButton == 0)
+; main.c	   310              {
+; main.c	   311                  //SerialManager_send(serialMan, "Eco button detected\n");
+; main.c	   312                  IO_RTC_StartTime(&timestamp_EcoButton);
 	movw	r9,r15
 	andw	r9,#0x3fff
 	orw	r9,#@sof(__lc_ub_user_stack+0xffff) & 0xc000
 _1550:
 
-; main.c	   309              }
-; main.c	   310              else if (IO_RTC_GetTimeUS(timestamp_EcoButton) >= 3000000)
-; main.c	   311              {
-; main.c	   312                  //SerialManager_send(serialMan, "Eco button held 3s - starting calibrations\n");
-; main.c	   313                  //calibrateTPS(TRUE, 5);
-; main.c	   314                  TorqueEncoder_startCalibration(tps, 5);
-; main.c	   315                  BrakePressureSensor_startCalibration(bps, 5);
-; main.c	   316                  Light_set(Light_dashEco, 1);
-; main.c	   317                  //DIGITAL OUTPUT 4 for STATUS LED
-; main.c	   318              }
-; main.c	   319          }
-; main.c	   320          else
-; main.c	   321          {
-; main.c	   322              if (IO_RTC_GetTimeUS(timestamp_EcoButton) > 10000 && IO_RTC_GetTimeUS(timestamp_EcoButton) < 1000000)
-; main.c	   323              {
-; main.c	   324                  //SerialManager_send(serialMan, "Eco mode requested\n");
-; main.c	   325              }
-; main.c	   326              timestamp_EcoButton = 0;
-; main.c	   327          }
-; main.c	   328          TorqueEncoder_update(tps);
-; main.c	   329          //Every cycle: if the calibration was started and hasn't finished, check the values again
-; main.c	   330          TorqueEncoder_calibrationCycle(tps, &calibrationErrors); //Todo: deal with calibration errors
+; main.c	   313              }
+; main.c	   314              else if (IO_RTC_GetTimeUS(timestamp_EcoButton) >= 3000000)
+; main.c	   315              {
+; main.c	   316                  //SerialManager_send(serialMan, "Eco button held 3s - starting calibrations\n");
+; main.c	   317                  //calibrateTPS(TRUE, 5);
+; main.c	   318                  TorqueEncoder_startCalibration(tps, 5);
+; main.c	   319                  BrakePressureSensor_startCalibration(bps, 5);
+; main.c	   320                  Light_set(Light_dashEco, 1);
+; main.c	   321                  //DIGITAL OUTPUT 4 for STATUS LED
+; main.c	   322              }
+; main.c	   323          }
+; main.c	   324          else
+; main.c	   325          {
+; main.c	   326              if (IO_RTC_GetTimeUS(timestamp_EcoButton) > 10000 && IO_RTC_GetTimeUS(timestamp_EcoButton) < 1000000)
+; main.c	   327              {
+; main.c	   328                  //SerialManager_send(serialMan, "Eco mode requested\n");
+; main.c	   329              }
+; main.c	   330              timestamp_EcoButton = 0;
+; main.c	   331          }
+; main.c	   332          TorqueEncoder_update(tps);
+; main.c	   333          //Every cycle: if the calibration was started and hasn't finished, check the values again
+; main.c	   334          TorqueEncoder_calibrationCycle(tps, &calibrationErrors); //Todo: deal with calibration errors
 	movw	r8,#0x8
 	addw	r8,r15
 	andw	r8,#0x3fff
 	orw	r8,#@sof(__lc_ub_user_stack+0xffff) & 0xc000
 _1551:
 
-; main.c	   331          BrakePressureSensor_update(bps, bench);
-; main.c	   332          BrakePressureSensor_calibrationCycle(bps, &calibrationErrors);
-; main.c	   333  
-; main.c	   334          //TractionControl_update(tps, mcm0, wss, daq);
-; main.c	   335  
-; main.c	   336          //Update WheelSpeed and interpolate
-; main.c	   337          //WheelSpeeds_update(wss, TRUE);
-; main.c	   338  
-; main.c	   339          //SRE-7 Update: slip ratio calculation can go here with PID update
-; main.c	   340  
-; main.c	   341          //DRS
-; main.c	   342          DRS_update(drs, tps, bps, pot_DRS_LC);
-; main.c	   343  
-; main.c	   344          //DataAquisition_update(); //includes accelerometer
-; main.c	   345          //TireModel_update()
-; main.c	   346          //ControlLaw_update();
-; main.c	   347          /*
-; main.c	   348          ControlLaw //Tq command
-; main.c	   349              TireModel //used by control law -> read from WSS, accelerometer
-; main.c	   350              StateObserver //choose driver command or ctrl law
-; main.c	   351          */
-; main.c	   352  
-; main.c	   353          CoolingSystem_calculations(cs, invFL->AMK_TempInverter, invFR->AMK_TempMotor, BMS_getHighestCellTemp_degC(bms), &Sensor_HVILTerminationSense); // SRE-7 Update: Needs to be updated in future to cool based on inverters. 
+; main.c	   335          BrakePressureSensor_update(bps, bench);
+; main.c	   336          BrakePressureSensor_calibrationCycle(bps, &calibrationErrors);
+; main.c	   337  
+; main.c	   338          //TractionControl_update(tps, mcm0, wss, daq);
+; main.c	   339  
+; main.c	   340          //Update WheelSpeed and interpolate
+; main.c	   341          //WheelSpeeds_update(wss, TRUE);
+; main.c	   342  
+; main.c	   343          //SRE-7 Update: slip ratio calculation can go here with PID update
+; main.c	   344  
+; main.c	   345          //DRS
+; main.c	   346          DRS_update(drs, tps, bps, pot_DRS_LC);
+; main.c	   347  
+; main.c	   348          //DataAquisition_update(); //includes accelerometer
+; main.c	   349          //TireModel_update()
+; main.c	   350          //ControlLaw_update();
+; main.c	   351          /*
+; main.c	   352          ControlLaw //Tq command
+; main.c	   353              TireModel //used by control law -> read from WSS, accelerometer
+; main.c	   354              StateObserver //choose driver command or ctrl law
+; main.c	   355          */
+; main.c	   356  
+; main.c	   357          CoolingSystem_calculations(cs, invFL->AMK_TempInverter, invFR->AMK_TempMotor, BMS_getHighestCellTemp_degC(bms), &Sensor_HVILTerminationSense); // SRE-7 Update: Needs to be updated in future to cool based on inverters. 
 	movw	r11,[r15+#0x1e]
 	movw	r12,[r15+#0x1c]
 	addw	r11,#0x26
@@ -597,71 +601,76 @@ _1552:
 	movw	[r15+#0x44],r12
 _5:
 
-; main.c	   354          //CoolingSystem_calculations(cs, 20, 20, 20);
-; main.c	   355          CoolingSystem_enactCooling(cs); //This belongs under outputs but it doesn't really matter for cooling
-; main.c	   356  
-; main.c	   357          //Assign motor controls to MCM command message
-; main.c	   358          //motorController_setCommands(rtds);
-; main.c	   359          //DOES NOT set inverter command or rtds flag
-; main.c	   360          //MCM_setRegenMode(mcm0, REGENMODE_FORMULAE); // TODO: Read regen mode from DCU CAN message - Issue #96
-; main.c	   361          // MCM_readTCSSettings(mcm0, &Sensor_TCSSwitchUp, &Sensor_TCSSwitchDown, &Sensor_TCSKnob);
-; main.c	   362          //MCM_calculateCommands(mcm0, tps, bps);
-; main.c	   363  
-; main.c	   364          DI_calculateCommands(invFL, tps, bps);
-; main.c	   365          DI_calculateCommands(invFR, tps, bps);
-; main.c	   366          DI_calculateCommands(invRL, tps, bps);
-; main.c	   367          DI_calculateCommands(invRR, tps, bps);
-; main.c	   368  
-; main.c	   369          //SRE-7 Update: Torque Vectoring Calculation can go here
-; main.c	   370  
-; main.c	   371          SafetyChecker_update(sc, bms, tps, bps, &Sensor_HVILTerminationSense, &Sensor_LVBattery);
-; main.c	   372  
-; main.c	   373          /*******************************************/
-; main.c	   374          /*  Output Adjustments by Safety Checker   */
-; main.c	   375          /*******************************************/
-; main.c	   376          //Make sure to change for temp values etc
-; main.c	   377          SafetyChecker_reduceTorque(sc, bms, invFL, invFR, invRL, invRR);
-; main.c	   378  
-; main.c	   379          /*******************************************/
-; main.c	   380          /*              Enact Outputs              */
-; main.c	   381          /*******************************************/
-; main.c	   382          //MOVE INTO SAFETYCHECKER
-; main.c	   383          //SafetyChecker_setErrorLight(sc);
-; main.c	   384          Light_set(Light_dashError, (SafetyChecker_getFaults(sc) == 0) ? 0 : 1);
-; main.c	   385          //Handle motor controller startup procedures
-; main.c	   386          //MCM_relayControl(mcm0, &Sensor_HVILTerminationSense);
+; main.c	   358          //CoolingSystem_calculations(cs, 20, 20, 20);
+; main.c	   359          CoolingSystem_enactCooling(cs); //This belongs under outputs but it doesn't really matter for cooling
+; main.c	   360  
+; main.c	   361          //Assign motor controls to MCM command message
+; main.c	   362          //motorController_setCommands(rtds);
+; main.c	   363          //DOES NOT set inverter command or rtds flag
+; main.c	   364          //MCM_setRegenMode(mcm0, REGENMODE_FORMULAE); // TODO: Read regen mode from DCU CAN message - Issue #96
+; main.c	   365          // MCM_readTCSSettings(mcm0, &Sensor_TCSSwitchUp, &Sensor_TCSSwitchDown, &Sensor_TCSKnob);
+; main.c	   366          //MCM_calculateCommands(mcm0, tps, bps);
+; main.c	   367  
+; main.c	   368          if(AMK_Mode == 0){
+; main.c	   369              DI_calculateCommands(invFL, tps, bps);
+; main.c	   370              DI_calculateCommands(invFR, tps, bps);
+; main.c	   371              DI_calculateCommands(invRL, tps, bps);
+; main.c	   372              DI_calculateCommands(invRR, tps, bps);
+; main.c	   373          } else {
+; main.c	   374              DI_calculateCommands(invRL, tps, bps);
+; main.c	   375              DI_calculateCommands(invRR, tps, bps);
+; main.c	   376          }
+; main.c	   377  
+; main.c	   378          //SRE-7 Update: Torque Vectoring Calculation can go here
+; main.c	   379  
+; main.c	   380          SafetyChecker_update(sc, bms, tps, bps, &Sensor_HVILTerminationSense, &Sensor_LVBattery);
+; main.c	   381  
+; main.c	   382          /*******************************************/
+; main.c	   383          /*  Output Adjustments by Safety Checker   */
+; main.c	   384          /*******************************************/
+; main.c	   385          //Make sure to change for temp values etc
+; main.c	   386          SafetyChecker_reduceTorque(sc, bms, invFL, invFR, invRL, invRR);
 ; main.c	   387  
-; main.c	   388          //MCM_inverterControl(mcm0, tps, bps, rtds);
-; main.c	   389  
-; main.c	   390          DI_calculateInverterControl(invFL, &Sensor_HVILTerminationSense, tps, bps, rtds);
-; main.c	   391          DI_calculateInverterControl(invFR, &Sensor_HVILTerminationSense, tps, bps, rtds);
-; main.c	   392          DI_calculateInverterControl(invRL, &Sensor_HVILTerminationSense, tps, bps, rtds);
-; main.c	   393          DI_calculateInverterControl(invRR, &Sensor_HVILTerminationSense, tps, bps, rtds);
-; main.c	   394  
-; main.c	   395          IO_ErrorType err = 0;
-; main.c	   396          //Comment out to disable shutdown board control
-; main.c	   397          err = BMS_relayControl(bms);
+; main.c	   388          /*******************************************/
+; main.c	   389          /*              Enact Outputs              */
+; main.c	   390          /*******************************************/
+; main.c	   391          //MOVE INTO SAFETYCHECKER
+; main.c	   392          //SafetyChecker_setErrorLight(sc);
+; main.c	   393          Light_set(Light_dashError, (SafetyChecker_getFaults(sc) == 0) ? 0 : 1);
+; main.c	   394          //Handle motor controller startup procedures
+; main.c	   395          //MCM_relayControl(mcm0, &Sensor_HVILTerminationSense);
+; main.c	   396  
+; main.c	   397          //MCM_inverterControl(mcm0, tps, bps, rtds);
 ; main.c	   398  
-; main.c	   399          //CanManager_sendMCMCommandMessage(mcm0, canMan, FALSE);
-; main.c	   400  
-; main.c	   401          //Drop the sensor readings into CAN (just raw data, not calculated stuff)
-; main.c	   402          //canOutput_sendMCUControl(mcm0, FALSE);
+; main.c	   399          DI_calculateInverterControl(invFL, &Sensor_HVILTerminationSense, tps, bps, rtds);
+; main.c	   400          DI_calculateInverterControl(invFR, &Sensor_HVILTerminationSense, tps, bps, rtds);
+; main.c	   401          DI_calculateInverterControl(invRL, &Sensor_HVILTerminationSense, tps, bps, rtds);
+; main.c	   402          DI_calculateInverterControl(invRR, &Sensor_HVILTerminationSense, tps, bps, rtds);
 ; main.c	   403  
-; main.c	   404          //Send debug data
-; main.c	   405          canOutput_sendDebugMessage0(canMan, tps, bps, ic0, bms, sc, drs, invFL, invFR);
-; main.c	   406          canOutput_sendDebugMessage1(canMan, tps, bps, ic0, bms, sc, d1, invRL, invRR);
-; main.c	   407          //canOutput_sendSensorMessages();
-; main.c	   408          //canOutput_sendStatusMessages(mcm0);
+; main.c	   404          IO_ErrorType err = 0;
+; main.c	   405          //Comment out to disable shutdown board control
+; main.c	   406          err = BMS_relayControl(bms);
+; main.c	   407  
+; main.c	   408          //CanManager_sendMCMCommandMessage(mcm0, canMan, FALSE);
 ; main.c	   409  
-; main.c	   410          //----------------------------------------------------------------------------
-; main.c	   411          // Task management stuff (end)
-; main.c	   412          //----------------------------------------------------------------------------
-; main.c	   413          RTDS_shutdownHelper(rtds); //Stops the RTDS from playing if the set time has elapsed
-; main.c	   414  
-; main.c	   415          //Task end function for IO Driver - This function needs to be called at the end of every SW cycle
-; main.c	   416          IO_Driver_TaskEnd();
-; main.c	   417          //wait until the cycle time is over
-; main.c	   418          while (IO_RTC_GetTimeUS(timestamp_mainLoopStart) < 10000) // 1000 = 1ms 
+; main.c	   410          //Drop the sensor readings into CAN (just raw data, not calculated stuff)
+; main.c	   411          //canOutput_sendMCUControl(mcm0, FALSE);
+; main.c	   412  
+; main.c	   413          //Send debug data
+; main.c	   414          canOutput_sendDebugMessage0(canMan, tps, bps, ic0, bms, sc, drs, invFL, invFR);
+; main.c	   415          canOutput_sendDebugMessage1(canMan, tps, bps, ic0, bms, sc, d1, invRL, invRR);
+; main.c	   416          //canOutput_sendSensorMessages();
+; main.c	   417          //canOutput_sendStatusMessages(mcm0);
+; main.c	   418  
+; main.c	   419          //----------------------------------------------------------------------------
+; main.c	   420          // Task management stuff (end)
+; main.c	   421          //----------------------------------------------------------------------------
+; main.c	   422          RTDS_shutdownHelper(rtds); //Stops the RTDS from playing if the set time has elapsed
+; main.c	   423  
+; main.c	   424          //Task end function for IO Driver - This function needs to be called at the end of every SW cycle
+; main.c	   425          IO_Driver_TaskEnd();
+; main.c	   426          //wait until the cycle time is over
+; main.c	   427          while (IO_RTC_GetTimeUS(timestamp_mainLoopStart) < 10000) // 1000 = 1ms 
 _6:
 	movw	r2,r7
 	movw	r3,r10
@@ -1142,8 +1151,8 @@ _1588:
 	jmp+	cc_uge,_6
 _13:
 
-; main.c	   419          {
-; main.c	   420              IO_UART_Task(); //The task function shall be called every SW cycle.
+; main.c	   428          {
+; main.c	   429              IO_UART_Task(); //The task function shall be called every SW cycle.
 	call	_IO_UART_Task
 _1589:
 	movw	r3,[r15+#0xc]
@@ -1170,7 +1179,7 @@ _appl_db	.label	word
 	.db	0x0
 	.db	0x0
 	.db	0x0
-	.dl	0x99b117e8
+	.dl	0x9e1b27e8
 	.db	0x0
 	.db	0x0
 	.db	0x0
@@ -2561,46 +2570,46 @@ _30:
 	.db	'canMan',0,1,184,1,17,2
 	.dl	_45,_46
 	.db	5
-	.db	'rtds',0,1,200,1,24,2
+	.db	'rtds',0,1,204,1,24,2
 	.dl	_47,_48
 	.db	5
-	.db	'invFL',0,1,208,1,21,2
+	.db	'invFL',0,1,212,1,21,2
 	.dl	_49,_50
 	.db	5
-	.db	'invFR',0,1,209,1,21,2
+	.db	'invFR',0,1,213,1,21,2
 	.dl	_49,_51
 	.db	5
-	.db	'invRL',0,1,210,1,21,2
+	.db	'invRL',0,1,214,1,21,2
 	.dl	_49,_52
 	.db	5
-	.db	'invRR',0,1,211,1,21,2
+	.db	'invRR',0,1,215,1,21,2
 	.dl	_49,_53
 	.db	5
-	.db	'ic0',0,1,212,1,24,2
+	.db	'ic0',0,1,216,1,24,2
 	.dl	_54,_55
 	.db	5
-	.db	'tps',0,1,213,1,20,2
+	.db	'tps',0,1,217,1,20,2
 	.dl	_56,_57
 	.db	5
-	.db	'bps',0,1,214,1,26,2
+	.db	'bps',0,1,218,1,26,2
 	.dl	_58,_59
 	.db	5
-	.db	'sc',0,1,215,1,20,2
+	.db	'sc',0,1,219,1,20,2
 	.dl	_60,_61
 	.db	5
-	.db	'bms',0,1,216,1,30,2
+	.db	'bms',0,1,220,1,30,2
 	.dl	_62,_63
 	.db	5
-	.db	'cs',0,1,217,1,20,2
+	.db	'cs',0,1,221,1,20,2
 	.dl	_64,_65
 	.db	5
-	.db	'drs',0,1,218,1,10,2
+	.db	'drs',0,1,222,1,10,2
 	.dl	_66,_67
 	.db	5
-	.db	'd1',0,1,219,1,18,2
+	.db	'd1',0,1,223,1,18,2
 	.dl	_68,_69
 	.db	5
-	.db	'timestamp_mainLoopStart',0,1,240,1,12,2
+	.db	'timestamp_mainLoopStart',0,1,244,1,12,2
 	.dl	_37,_70
 	.db	6
 	.dl	_71
@@ -2684,7 +2693,7 @@ _1498:
 	.dw	_1519-_1518
 	.db	1,5,39,9
 	.dw	_1520-_1519
-	.db	3,16,1,5,29,9
+	.db	3,20,1,5,29,9
 	.dw	_1521-_1520
 	.db	1,5,43,9
 	.dw	_1522-_1521
@@ -2830,17 +2839,17 @@ _1498:
 	.dw	_1575-_1574
 	.db	1,5,36,9
 	.dw	_318-_1575
-	.db	3,2,1,5,42,9
+	.db	3,2,1,5,46,9
 	.dw	_1483-_318
-	.db	3,9,1,9
+	.db	3,10,1,9
 	.dw	_1576-_1483
 	.db	3,1,1,9
 	.dw	_1577-_1576
-	.db	3,1,1,9
+	.db	3,4,1,9
 	.dw	_1578-_1577
 	.db	3,1,1,5,80,9
 	.dw	_1579-_1578
-	.db	3,4,1,5,50,9
+	.db	3,5,1,5,50,9
 	.dw	_340-_1579
 	.db	1,5,44,9
 	.dw	_362-_340
@@ -2922,9 +2931,9 @@ _1498:
 	.dw	_1590-_1589
 	.db	1,5,13,9
 	.dw	_74-_1590
-	.db	3,209,126,1,5,1,9
+	.db	3,204,126,1,5,1,9
 	.dw	_34-_74
-	.db	3,187,1,0,1,1
+	.db	3,192,1,0,1,1
 _1496:
 	; End of section
 
@@ -6798,16 +6807,16 @@ _1475:
 	; End of section
 
 
-; main.c	   421          }
-; main.c	   422  
-; main.c	   423      } //end of main loop
-; main.c	   424  
-; main.c	   425      //----------------------------------------------------------------------------
-; main.c	   426      // VCU Subsystem Deinitializations
-; main.c	   427      //----------------------------------------------------------------------------
-; main.c	   428      //IO_ADC_ChannelDeInit(IO_ADC_5V_00);
-; main.c	   429      //Free memory if object won't be used anymore
-; main.c	   430  }
+; main.c	   430          }
+; main.c	   431  
+; main.c	   432      } //end of main loop
+; main.c	   433  
+; main.c	   434      //----------------------------------------------------------------------------
+; main.c	   435      // VCU Subsystem Deinitializations
+; main.c	   436      //----------------------------------------------------------------------------
+; main.c	   437      //IO_ADC_ChannelDeInit(IO_ADC_5V_00);
+; main.c	   438      //Free memory if object won't be used anymore
+; main.c	   439  }
 
 	; Module end
 	.end
