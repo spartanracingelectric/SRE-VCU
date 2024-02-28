@@ -603,7 +603,10 @@ void SafetyChecker_reduceTorque(SafetyChecker *me, BatteryManagementSystem *bms,
 
     //If any AMK motor runs into issues we want to set them all to 0 to prevent driver spin
 
-    
+    if(in1->AMK_bError == TRUE || in2->AMK_bError == TRUE || in3->AMK_bError == TRUE || in4->AMK_bError == TRUE)
+    {
+        multiplier = 0;
+    }
     
 
     //-------------------------------------------------------------------
