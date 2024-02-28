@@ -600,6 +600,10 @@ void SafetyChecker_reduceTorque(SafetyChecker *me, BatteryManagementSystem *bms,
        multiplier = 0;
        //SerialManager_send(me->serialMan, "HVIL term sense low\n");
     }
+
+    //If any AMK motor runs into issues we want to set them all to 0 to prevent driver spin
+
+    
     
 
     //-------------------------------------------------------------------

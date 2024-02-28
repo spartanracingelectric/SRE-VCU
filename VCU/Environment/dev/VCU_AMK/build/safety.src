@@ -1,5 +1,5 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc34328a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=2 -DRTS_TTC_FLASH_DATE_DAY=14 -DRTS_TTC_FLASH_DATE_HOUR=20 -DRTS_TTC_FLASH_DATE_MINUTE=40 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\safety.src
+	; Options: -f cc276a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=2 -DRTS_TTC_FLASH_DATE_DAY=27 -DRTS_TTC_FLASH_DATE_HOUR=16 -DRTS_TTC_FLASH_DATE_MINUTE=58 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\safety.src
 	; Module start
 	.source	'safety.c'
 code_SafetyChecker_new	.section	code, cluster 'SafetyChecker_new', new
@@ -2369,72 +2369,76 @@ _65:
 
 ; safety.c	   601         //SerialManager_send(me->serialMan, "HVIL term sense low\n");
 ; safety.c	   602      }
-; safety.c	   603      
-; safety.c	   604  
-; safety.c	   605      //-------------------------------------------------------------------
-; safety.c	   606      // Other limits (% reduction) - set torque to the lowest of all these
-; safety.c	   607      // IMPORTANT: Be aware of direction-sensitive situations (accel/regen)
-; safety.c	   608      //-------------------------------------------------------------------
-; safety.c	   609      //80kW limit ---------------------------------
-; safety.c	   610      // if either the bms or mcm goes over 75kw, limit torque
-; safety.c	   611      //////////if ((BMS_getPower(bms) > 75000) || (MCM_getPower(mcm) > 75000))
-; safety.c	   612      //////////{
-; safety.c	   613      //////////    // using bmsPower since closer to e-meter
-; safety.c	   614      //////////    tempMultiplier = 1 - getPercent(max(BMS_getPower(bms), MCM_getPower(mcm)), 75000, 80000, TRUE);
-; safety.c	   615      //////////    SerialManager_send(me->serialMan, "SC.Mult: 80kW\n");
-; safety.c	   616      //////////}
-; safety.c	   617      //////////if (tempMultiplier < multiplier) { multiplier = tempMultiplier; }
-; safety.c	   618  
-; safety.c	   619      //CCL/DCL from BMS --------------------------------
-; safety.c	   620      //why the DCL/CCL could be limited:
-; safety.c	   621      //0: No limit
-; safety.c	   622      //1 : Pack voltage too low
-; safety.c	   623      //2 : Pack voltage high
-; safety.c	   624      //3 : Cell voltage low
-; safety.c	   625      //4 : Cell voltage high
-; safety.c	   626      //5 : Temperature high for charging
-; safety.c	   627      //6 : Temperature too low for charging
-; safety.c	   628      //7 : Temperature high for discharging
-; safety.c	   629      //8 : Temperature too low for discharging
-; safety.c	   630      //9 : Charging current peak lasted too long
-; safety.c	   631      //10 = A : Discharging current peak lasted too long
-; safety.c	   632      //11 = B : Power up delay(Charge testing)
-; safety.c	   633      //12 = C : Fault
-; safety.c	   634      //13 = D : Contactors are off
-; safety.c	   635      ////////if (MCM_commands/*_getTorque(mcm) >= 0)
-; safety.c	   636      ////////{*/
-; safety.c	   637      ///////////*tempMultiplier = getPercent(BMS_getDCL(bms), 0, me->maxAmpsDischarge, TRUE);
-; safety.c	   638      //////////if (tempMultiplier < 1)
-; safety.c	   639      //////////{
-; safety.c	   640      //////////    SerialManager_send(me->serialMan, "SC.Mult: DCL\n");
-; safety.c	   641      //////////}*/
-; safety.c	   642      //////////}
-; safety.c	   643      //////////else //regen - Pick the lowest of CCL and speed reductions
-; safety.c	   644      //////////{
-; safety.c	   645      //////////    tempMultiplier = getPercent(BMS_getCCL(bms), 0, me->maxAmpsCharge, TRUE);
-; safety.c	   646      //////////    if (tempMultiplier < 1)
-; safety.c	   647      //////////    {
-; safety.c	   648      //////////        SerialManager_send(me->serialMan, "SC.Mult: CCL\n");
-; safety.c	   649      //////////    }
-; safety.c	   650      //////////    //Also, regen should be ramped down as speed approaches minimum
-; safety.c	   651      
-; safety.c	   652      
-; safety.c	   653      //////////        if (tempMultiplier < 1) { SerialManager_send(me->serialMan, "SC.Mult: Regen < 15kph\n"); }
-; safety.c	   654      //////////    }
-; safety.c	   655      ////////if (tempMultiplier < multiplier) { multiplier = tempMultiplier; }
-; safety.c	   656  
-; safety.c	   657     /* if ( groundSpeedKPH < MCM_getRegenRampdownStartSpeed(mcm))
-; safety.c	   658      {
-; safety.c	   659          float4 regenMultiplier = 1 - getPercent(groundSpeedKPH, MCM_getRegenMinSpeed(mcm), MCM_getRegenRampdownStartSpeed(mcm), TRUE);
-; safety.c	   660          //float4 regenMultiplier = 1 - getPercent(WheelSpeeds_getGroundSpeed(wss), MCM_getRegenMinSpeed(mcm), MCM_getRegenRampdownStartSpeed(mcm), TRUE);
-; safety.c	   661              //USE FOR WHEEL SPEEDS TO DETECT RAMP DOWN
-; safety.c	   662          if (regenMultiplier < multiplier ) { multiplier = regenMultiplier; } // Use regenMultiplier if it is lower
-; safety.c	   663      }
-; safety.c	   664      */
-; safety.c	   665      //Reduce the torque command.  Multiplier should be a percent value (between 0 and 1)
-; safety.c	   666  
-; safety.c	   667      //If the safety bypass is enabled, then override the multiplier to 100% (no reduction)
-; safety.c	   668      if ((me->warnings & W_safetyBypassEnabled) == W_safetyBypassEnabled)
+; safety.c	   603  
+; safety.c	   604      //If any AMK motor runs into issues we want to set them all to 0 to prevent driver spin
+; safety.c	   605  
+; safety.c	   606      
+; safety.c	   607      
+; safety.c	   608  
+; safety.c	   609      //-------------------------------------------------------------------
+; safety.c	   610      // Other limits (% reduction) - set torque to the lowest of all these
+; safety.c	   611      // IMPORTANT: Be aware of direction-sensitive situations (accel/regen)
+; safety.c	   612      //-------------------------------------------------------------------
+; safety.c	   613      //80kW limit ---------------------------------
+; safety.c	   614      // if either the bms or mcm goes over 75kw, limit torque
+; safety.c	   615      //////////if ((BMS_getPower(bms) > 75000) || (MCM_getPower(mcm) > 75000))
+; safety.c	   616      //////////{
+; safety.c	   617      //////////    // using bmsPower since closer to e-meter
+; safety.c	   618      //////////    tempMultiplier = 1 - getPercent(max(BMS_getPower(bms), MCM_getPower(mcm)), 75000, 80000, TRUE);
+; safety.c	   619      //////////    SerialManager_send(me->serialMan, "SC.Mult: 80kW\n");
+; safety.c	   620      //////////}
+; safety.c	   621      //////////if (tempMultiplier < multiplier) { multiplier = tempMultiplier; }
+; safety.c	   622  
+; safety.c	   623      //CCL/DCL from BMS --------------------------------
+; safety.c	   624      //why the DCL/CCL could be limited:
+; safety.c	   625      //0: No limit
+; safety.c	   626      //1 : Pack voltage too low
+; safety.c	   627      //2 : Pack voltage high
+; safety.c	   628      //3 : Cell voltage low
+; safety.c	   629      //4 : Cell voltage high
+; safety.c	   630      //5 : Temperature high for charging
+; safety.c	   631      //6 : Temperature too low for charging
+; safety.c	   632      //7 : Temperature high for discharging
+; safety.c	   633      //8 : Temperature too low for discharging
+; safety.c	   634      //9 : Charging current peak lasted too long
+; safety.c	   635      //10 = A : Discharging current peak lasted too long
+; safety.c	   636      //11 = B : Power up delay(Charge testing)
+; safety.c	   637      //12 = C : Fault
+; safety.c	   638      //13 = D : Contactors are off
+; safety.c	   639      ////////if (MCM_commands/*_getTorque(mcm) >= 0)
+; safety.c	   640      ////////{*/
+; safety.c	   641      ///////////*tempMultiplier = getPercent(BMS_getDCL(bms), 0, me->maxAmpsDischarge, TRUE);
+; safety.c	   642      //////////if (tempMultiplier < 1)
+; safety.c	   643      //////////{
+; safety.c	   644      //////////    SerialManager_send(me->serialMan, "SC.Mult: DCL\n");
+; safety.c	   645      //////////}*/
+; safety.c	   646      //////////}
+; safety.c	   647      //////////else //regen - Pick the lowest of CCL and speed reductions
+; safety.c	   648      //////////{
+; safety.c	   649      //////////    tempMultiplier = getPercent(BMS_getCCL(bms), 0, me->maxAmpsCharge, TRUE);
+; safety.c	   650      //////////    if (tempMultiplier < 1)
+; safety.c	   651      //////////    {
+; safety.c	   652      //////////        SerialManager_send(me->serialMan, "SC.Mult: CCL\n");
+; safety.c	   653      //////////    }
+; safety.c	   654      //////////    //Also, regen should be ramped down as speed approaches minimum
+; safety.c	   655      
+; safety.c	   656      
+; safety.c	   657      //////////        if (tempMultiplier < 1) { SerialManager_send(me->serialMan, "SC.Mult: Regen < 15kph\n"); }
+; safety.c	   658      //////////    }
+; safety.c	   659      ////////if (tempMultiplier < multiplier) { multiplier = tempMultiplier; }
+; safety.c	   660  
+; safety.c	   661     /* if ( groundSpeedKPH < MCM_getRegenRampdownStartSpeed(mcm))
+; safety.c	   662      {
+; safety.c	   663          float4 regenMultiplier = 1 - getPercent(groundSpeedKPH, MCM_getRegenMinSpeed(mcm), MCM_getRegenRampdownStartSpeed(mcm), TRUE);
+; safety.c	   664          //float4 regenMultiplier = 1 - getPercent(WheelSpeeds_getGroundSpeed(wss), MCM_getRegenMinSpeed(mcm), MCM_getRegenRampdownStartSpeed(mcm), TRUE);
+; safety.c	   665              //USE FOR WHEEL SPEEDS TO DETECT RAMP DOWN
+; safety.c	   666          if (regenMultiplier < multiplier ) { multiplier = regenMultiplier; } // Use regenMultiplier if it is lower
+; safety.c	   667      }
+; safety.c	   668      */
+; safety.c	   669      //Reduce the torque command.  Multiplier should be a percent value (between 0 and 1)
+; safety.c	   670  
+; safety.c	   671      //If the safety bypass is enabled, then override the multiplier to 100% (no reduction)
+; safety.c	   672      if ((me->warnings & W_safetyBypassEnabled) == W_safetyBypassEnabled)
 	addw	r2,#0x4
 	addcw	r3,#0x0
 	exts	r3,#0x1
@@ -2443,16 +2447,16 @@ _1567:
 	jnb	r11.7,_66
 _1568:
 
-; safety.c	   669      {
-; safety.c	   670          multiplier = 1;
+; safety.c	   673      {
+; safety.c	   674          multiplier = 1;
 	movw	r9,#0x0
 	movw	r8,#0x3f80
 _66:
 
-; safety.c	   671      }
-; safety.c	   672  
-; safety.c	   673      //MCM_commands_setTorqueDNm(mcm, MCM_commands_getTorque(mcm) * multiplier);
-; safety.c	   674      DI_commandTorque(in1, DI_getCommandedTorque(in1) * multiplier);
+; safety.c	   675      }
+; safety.c	   676  
+; safety.c	   677      //MCM_commands_setTorqueDNm(mcm, MCM_commands_getTorque(mcm) * multiplier);
+; safety.c	   678      DI_commandTorque(in1, DI_getCommandedTorque(in1) * multiplier);
 	movw	r2,r10
 _1252:
 	movw	r3,r7
@@ -2470,7 +2474,7 @@ _1569:
 	call	_DI_commandTorque
 _1570:
 
-; safety.c	   675      DI_commandTorque(in2, DI_getCommandedTorque(in1) * multiplier);
+; safety.c	   679      DI_commandTorque(in2, DI_getCommandedTorque(in1) * multiplier);
 	movw	r2,r10
 	movw	r3,r7
 	call	_DI_getCommandedTorque
@@ -2488,7 +2492,7 @@ _1255:
 	call	_DI_commandTorque
 _1256:
 
-; safety.c	   676      DI_commandTorque(in3, DI_getCommandedTorque(in1) * multiplier);
+; safety.c	   680      DI_commandTorque(in3, DI_getCommandedTorque(in1) * multiplier);
 	movw	r2,r10
 	movw	r3,r7
 	call	_DI_getCommandedTorque
@@ -2507,7 +2511,7 @@ _1257:
 	call	_DI_commandTorque
 _1258:
 
-; safety.c	   677      DI_commandTorque(in4, DI_getCommandedTorque(in1) * multiplier); 
+; safety.c	   681      DI_commandTorque(in4, DI_getCommandedTorque(in1) * multiplier); 
 	movw	r2,r10
 	movw	r3,r7
 	call	_DI_getCommandedTorque
@@ -2526,7 +2530,7 @@ _1259:
 	call	_DI_commandTorque
 _1260:
 
-; safety.c	   678  }
+; safety.c	   682  }
 	addw	r15,#0xa
 _999:
 	movw	r10,[r15+]
@@ -4492,7 +4496,7 @@ _1559:
 	.dw	_1566-_1565
 	.db	3,2,1,5,12,9
 	.dw	_65-_1566
-	.db	3,196,0,1,5,5,9
+	.db	3,200,0,1,5,5,9
 	.dw	_1567-_65
 	.db	1,5,20,7,9
 	.dw	_1568-_1567
@@ -7653,24 +7657,24 @@ _1240:
 	; End of section
 
 
-; safety.c	   679  
-; safety.c	   680  //-------------------------------------------------------------------
-; safety.c	   681  // 80kW Limit Check
-; safety.c	   682  //-------------------------------------------------------------------
-; safety.c	   683  //Change this to return a multiplier instead of torque value
-; safety.c	   684  //ubyte2 checkPowerDraw(BatteryManagementSystem* bms, MotorController* mcm)
-; safety.c	   685  //{
-; safety.c	   686  //    ubyte2 torqueThrottle = 0;
-; safety.c	   687  //
-; safety.c	   688  //    // if either the bms or mcm goes over 75kw, limit torque
-; safety.c	   689  //    if ((BMS_getPower(bms) > 75000) || (MCM_getPower(mcm) > 75000))
-; safety.c	   690  //    {
-; safety.c	   691  //        // using bmsPower since closer to e-meter
-; safety.c	   692  //        torqueThrottle = MCM_getCommandedTorque(mcm) - (((BMS_getPower(bms) - 80000) / 80000) * MCM_getCommandedTorque(mcm));
-; safety.c	   693  //    }
-; safety.c	   694  //
-; safety.c	   695  //    return torqueThrottle;
-; safety.c	   696  //}
+; safety.c	   683  
+; safety.c	   684  //-------------------------------------------------------------------
+; safety.c	   685  // 80kW Limit Check
+; safety.c	   686  //-------------------------------------------------------------------
+; safety.c	   687  //Change this to return a multiplier instead of torque value
+; safety.c	   688  //ubyte2 checkPowerDraw(BatteryManagementSystem* bms, MotorController* mcm)
+; safety.c	   689  //{
+; safety.c	   690  //    ubyte2 torqueThrottle = 0;
+; safety.c	   691  //
+; safety.c	   692  //    // if either the bms or mcm goes over 75kw, limit torque
+; safety.c	   693  //    if ((BMS_getPower(bms) > 75000) || (MCM_getPower(mcm) > 75000))
+; safety.c	   694  //    {
+; safety.c	   695  //        // using bmsPower since closer to e-meter
+; safety.c	   696  //        torqueThrottle = MCM_getCommandedTorque(mcm) - (((BMS_getPower(bms) - 80000) / 80000) * MCM_getCommandedTorque(mcm));
+; safety.c	   697  //    }
+; safety.c	   698  //
+; safety.c	   699  //    return torqueThrottle;
+; safety.c	   700  //}
 
 	; Module end
 	.end
