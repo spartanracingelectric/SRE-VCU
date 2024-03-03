@@ -1,88 +1,81 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc19884a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=1 -DRTS_TTC_FLASH_DATE_DAY=17 -DRTS_TTC_FLASH_DATE_HOUR=13 -DRTS_TTC_FLASH_DATE_MINUTE=38 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\canManager.src
+	; Options: -f cc25144a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=3 -DRTS_TTC_FLASH_DATE_DAY=3 -DRTS_TTC_FLASH_DATE_HOUR=12 -DRTS_TTC_FLASH_DATE_MINUTE=6 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\canManager.src
 	; Module start
 	.source	'canManager.c'
 code_CanManager_new	.section	code, cluster 'CanManager_new', new
 	.global	_CanManager_new
 
 ; canManager.c	     1  
-; canManager.c	     2  #include <stdlib.h> //malloc
-; canManager.c	     3  
-; canManager.c	     4  #include "IO_Driver.h" 
-; canManager.c	     5  #include "IO_CAN.h"
-; canManager.c	     6  #include "IO_RTC.h"
-; canManager.c	     7  
-; canManager.c	     8  #include "mathFunctions.h"
-; canManager.c	     9  #include "sensors.h"
-; canManager.c	    10  #include "canManager.h"
-; canManager.c	    11  #include "avlTree.h"
-; canManager.c	    12  #include "bms.h"
-; canManager.c	    13  #include "safety.h"
-; canManager.c	    14  #include "sensorCalculations.h"
-; canManager.c	    15  #include "daqSensors.h"
-; canManager.c	    16  #include "drs.h"
-; canManager.c	    17  
-; canManager.c	    18  
-; canManager.c	    19  struct _CanManager {
-; canManager.c	    20      //AVLNode* incomingTree;
-; canManager.c	    21      //AVLNode* outgoingTree;
-; canManager.c	    22  
-; canManager.c	    23      ubyte1 canMessageLimit;
-; canManager.c	    24      
-; canManager.c	    25      //These are our four FIFO queues.  All messages should come/go through one of these queues.
-; canManager.c	    26      //Functions shall have a CanChannel enum (see header) parameter.  Direction (send/receive is not
-; canManager.c	    27      //specified by this parameter.  The CAN0/CAN1 is selected based on the parameter passed in, and 
-; canManager.c	    28      //Read/Write is selected based on the function that is being called (get/send)
-; canManager.c	    29      ubyte1 can0_busSpeed;
-; canManager.c	    30      ubyte1 can0_readHandle;
-; canManager.c	    31      ubyte1 can0_read_messageLimit;
-; canManager.c	    32      ubyte1 can0_writeHandle;
-; canManager.c	    33      ubyte1 can0_write_messageLimit;
-; canManager.c	    34  
-; canManager.c	    35      ubyte1 can1_busSpeed;
-; canManager.c	    36      ubyte1 can1_readHandle;
-; canManager.c	    37      ubyte1 can1_read_messageLimit;
-; canManager.c	    38      ubyte1 can1_writeHandle;
-; canManager.c	    39      ubyte1 can1_write_messageLimit;
-; canManager.c	    40      
-; canManager.c	    41      IO_ErrorType ioErr_can0_Init;
-; canManager.c	    42      IO_ErrorType ioErr_can1_Init;
-; canManager.c	    43  
-; canManager.c	    44      IO_ErrorType ioErr_can0_fifoInit_R;
-; canManager.c	    45      IO_ErrorType ioErr_can0_fifoInit_W;
-; canManager.c	    46      IO_ErrorType ioErr_can1_fifoInit_R;
-; canManager.c	    47      IO_ErrorType ioErr_can1_fifoInit_W;
-; canManager.c	    48  
-; canManager.c	    49      IO_ErrorType ioErr_can0_read;
-; canManager.c	    50      IO_ErrorType ioErr_can0_write;
-; canManager.c	    51      IO_ErrorType ioErr_can1_read;
-; canManager.c	    52      IO_ErrorType ioErr_can1_write;
-; canManager.c	    53  
-; canManager.c	    54      ubyte4 sendDelayus;
+; canManager.c	     2  /*****************************************************************************
+; canManager.c	     3   * canManager.c - CAN Message Sending and Recieve
+; canManager.c	     4   * Initial Author: Rusty P 
+; canManager.c	     5   ******************************************************************************
+; canManager.c	     6   * Works with sending the CAN messages and recieving with the specific values
+; canManager.c	     7   ****************************************************************************/
+; canManager.c	     8  
+; canManager.c	     9  #include <stdlib.h> //malloc
+; canManager.c	    10  
+; canManager.c	    11  #include "IO_Driver.h" 
+; canManager.c	    12  #include "IO_CAN.h"
+; canManager.c	    13  #include "IO_RTC.h"
+; canManager.c	    14  
+; canManager.c	    15  #include "mathFunctions.h"
+; canManager.c	    16  #include "sensors.h"
+; canManager.c	    17  #include "canManager.h"
+; canManager.c	    18  #include "avlTree.h"
+; canManager.c	    19  #include "bms.h"
+; canManager.c	    20  #include "safety.h"
+; canManager.c	    21  #include "sensorCalculations.h"
+; canManager.c	    22  #include "daqSensors.h"
+; canManager.c	    23  #include "drs.h"
+; canManager.c	    24  
+; canManager.c	    25  
+; canManager.c	    26  struct _CanManager {
+; canManager.c	    27      //AVLNode* incomingTree;
+; canManager.c	    28      //AVLNode* outgoingTree;
+; canManager.c	    29  
+; canManager.c	    30      ubyte1 canMessageLimit;
+; canManager.c	    31      
+; canManager.c	    32      //These are our four FIFO queues.  All messages should come/go through one of these queues.
+; canManager.c	    33      //Functions shall have a CanChannel enum (see header) parameter.  Direction (send/receive is not
+; canManager.c	    34      //specified by this parameter.  The CAN0/CAN1 is selected based on the parameter passed in, and 
+; canManager.c	    35      //Read/Write is selected based on the function that is being called (get/send)
+; canManager.c	    36      ubyte1 can0_busSpeed;
+; canManager.c	    37      ubyte1 can0_readHandle;
+; canManager.c	    38      ubyte1 can0_read_messageLimit;
+; canManager.c	    39      ubyte1 can0_writeHandle;
+; canManager.c	    40      ubyte1 can0_write_messageLimit;
+; canManager.c	    41  
+; canManager.c	    42      ubyte1 can1_busSpeed;
+; canManager.c	    43      ubyte1 can1_readHandle;
+; canManager.c	    44      ubyte1 can1_read_messageLimit;
+; canManager.c	    45      ubyte1 can1_writeHandle;
+; canManager.c	    46      ubyte1 can1_write_messageLimit;
+; canManager.c	    47      
+; canManager.c	    48      IO_ErrorType ioErr_can0_Init;
+; canManager.c	    49      IO_ErrorType ioErr_can1_Init;
+; canManager.c	    50  
+; canManager.c	    51      IO_ErrorType ioErr_can0_fifoInit_R;
+; canManager.c	    52      IO_ErrorType ioErr_can0_fifoInit_W;
+; canManager.c	    53      IO_ErrorType ioErr_can1_fifoInit_R;
+; canManager.c	    54      IO_ErrorType ioErr_can1_fifoInit_W;
 ; canManager.c	    55  
-; canManager.c	    56  
-; canManager.c	    57      //WARNING: These values are not initialized - be careful to only access
-; canManager.c	    58      //pointers that have been previously assigned
-; canManager.c	    59      //AVLNode* canMessageHistory[0x7FF];
-; canManager.c	    60      AVLNode* canMessageHistory[0x7FF];
-; canManager.c	    61      //Needs to change to the extended CAN limit
-; canManager.c	    62  };
+; canManager.c	    56      IO_ErrorType ioErr_can0_read;
+; canManager.c	    57      IO_ErrorType ioErr_can0_write;
+; canManager.c	    58      IO_ErrorType ioErr_can1_read;
+; canManager.c	    59      IO_ErrorType ioErr_can1_write;
+; canManager.c	    60  
+; canManager.c	    61      ubyte4 sendDelayus;
+; canManager.c	    62  
 ; canManager.c	    63  
-; canManager.c	    64  //Keep track of CAN message IDs, their data, and when they were last sent.
-; canManager.c	    65  /*
-; canManager.c	    66  struct _CanMessageNode
-; canManager.c	    67  {
-; canManager.c	    68      IO_CAN_DATA_FRAME canMessage;
-; canManager.c	    69      ubyte4 timeBetweenMessages_Min;
-; canManager.c	    70      ubyte4 timeBetweenMessages_Max;
-; canManager.c	    71      ubyte1 lastMessage_data[8];
-; canManager.c	    72      ubyte4 lastMessage_timeStamp;
-; canManager.c	    73      canHistoryNode* left;
-; canManager.c	    74      canHistoryNode* right;
-; canManager.c	    75  };
-; canManager.c	    76  */
-; canManager.c	    77  
-; canManager.c	    78  CanManager* CanManager_new(ubyte2 can0_busSpeed, ubyte1 can0_read_messageLimit, ubyte1 can0_write_messageLimit
+; canManager.c	    64      //WARNING: These values are not initialized - be careful to only access
+; canManager.c	    65      //pointers that have been previously assigned
+; canManager.c	    66      //AVLNode* canMessageHistory[0x7FF];
+; canManager.c	    67      AVLNode* canMessageHistory[0x7FF];
+; canManager.c	    68      //Needs to change to the extended CAN limit
+; canManager.c	    69  };
+; canManager.c	    70  
+; canManager.c	    71  CanManager* CanManager_new(ubyte2 can0_busSpeed, ubyte1 can0_read_messageLimit, ubyte1 can0_write_messageLimit
 ; Function _CanManager_new
 _124:
 _CanManager_new	.proc	far
@@ -118,10 +111,10 @@ _727:
 	movw	r9,r12
 _728:
 
-; canManager.c	    79                           , ubyte2 can1_busSpeed, ubyte1 can1_read_messageLimit, ubyte1 can1_write_messageLimit
-; canManager.c	    80                           , ubyte4 defaultSendDelayus) //ubyte4 defaultMinSendDelay, ubyte4 defaultMaxSendDelay)
-; canManager.c	    81  {
-; canManager.c	    82      CanManager* me = (CanManager*)malloc(sizeof(struct _CanManager));
+; canManager.c	    72                           , ubyte2 can1_busSpeed, ubyte1 can1_read_messageLimit, ubyte1 can1_write_messageLimit
+; canManager.c	    73                           , ubyte4 defaultSendDelayus) //ubyte4 defaultMinSendDelay, ubyte4 defaultMaxSendDelay)
+; canManager.c	    74  {
+; canManager.c	    75      CanManager* me = (CanManager*)malloc(sizeof(struct _CanManager));
 	movw	r2,#0x2020
 _719:
 	call	_malloc
@@ -130,17 +123,17 @@ _720:
 	movw	r0,r3
 _258:
 
-; canManager.c	    83  
-; canManager.c	    84      //me->sm = serialMan;
-; canManager.c	    85      //SerialManager_send(me->sm, "CanManager's reference to SerialManager was created.\n");
-; canManager.c	    86      
-; canManager.c	    87      //create can history data structure (AVL tree?)
-; canManager.c	    88      //me->incomingTree = NULL;
-; canManager.c	    89      //me->outgoingTree = NULL;
-; canManager.c	    90      //Need to change to extended CAN limit
-; canManager.c	    91      for (ubyte4 id = 0; id <= 0x7FF; id++)
-; canManager.c	    92      {
-; canManager.c	    93          me->canMessageHistory[id] = 0;
+; canManager.c	    76  
+; canManager.c	    77      //me->sm = serialMan;
+; canManager.c	    78      //SerialManager_send(me->sm, "CanManager's reference to SerialManager was created.\n");
+; canManager.c	    79      
+; canManager.c	    80      //create can history data structure (AVL tree?)
+; canManager.c	    81      //me->incomingTree = NULL;
+; canManager.c	    82      //me->outgoingTree = NULL;
+; canManager.c	    83      //Need to change to extended CAN limit
+; canManager.c	    84      for (ubyte4 id = 0; id <= 0x7FF; id++)
+; canManager.c	    85      {
+; canManager.c	    86          me->canMessageHistory[id] = 0;
 	movw	r11,r3
 	addw	r2,#0x24
 	addcw	r11,#0x0
@@ -170,18 +163,18 @@ _2752:
 	jmp+	cc_uge,_2
 _259:
 
-; canManager.c	    94      }
-; canManager.c	    95  
-; canManager.c	    96      me->sendDelayus = defaultSendDelayus;
+; canManager.c	    87      }
+; canManager.c	    88  
+; canManager.c	    89      me->sendDelayus = defaultSendDelayus;
 	movw	r11,r1
 	movw	r12,r0
 	addw	r11,#0x20
 	addcw	r12,#0x0
 _2753:
 
-; canManager.c	    97  
-; canManager.c	    98      //Activate the CAN channels --------------------------------------------------
-; canManager.c	    99      me->ioErr_can0_Init = IO_CAN_Init(IO_CAN_CHANNEL_0, can0_busSpeed, 0, 0, 0);
+; canManager.c	    90  
+; canManager.c	    91      //Activate the CAN channels --------------------------------------------------
+; canManager.c	    92      me->ioErr_can0_Init = IO_CAN_Init(IO_CAN_CHANNEL_0, can0_busSpeed, 0, 0, 0);
 	movb	rl2,#0x3a
 _2754:
 	exts	r12,#0x1
@@ -209,7 +202,7 @@ _731:
 	movw	[r9],r2
 _2758:
 
-; canManager.c	   100      me->ioErr_can1_Init = IO_CAN_Init(IO_CAN_CHANNEL_1, can1_busSpeed, 0, 0, 0);
+; canManager.c	    93      me->ioErr_can1_Init = IO_CAN_Init(IO_CAN_CHANNEL_1, can1_busSpeed, 0, 0, 0);
 	movw	r9,r1
 	movw	r8,r0
 	addw	r9,#0xe
@@ -228,15 +221,14 @@ _733:
 	movw	[r9],r2
 _2761:
 
-; canManager.c	   101  
-; canManager.c	   102      //Configure the FIFO queues
-; canManager.c	   103      //This specifies: The handle names for the queues
-; canManager.c	   104      //, which channel the queue belongs to
-; canManager.c	   105      //, the # of messages (or maximum count?)
-; canManager.c	   106      //, the direction of the queue (in/out)
-; canManager.c	   107      //, the frame size
-; canManager.c	   108      //, and other stuff?
-; canManager.c	   109      IO_CAN_ConfigFIFO(&me->can0_readHandle, IO_CAN_CHANNEL_0, can0_read_messageLimit, IO_CAN_MSG_READ, IO_CAN_STD_FRAME, 0, 0);
+; canManager.c	    94  
+; canManager.c	    95      //Configure the FIFO queues
+; canManager.c	    96      //This specifies: The handle names for the queues
+; canManager.c	    97      //, which channel the queue belongs to
+; canManager.c	    98      //, the # of messages (or maximum count?)
+; canManager.c	    99      //, the direction of the queue (in/out)
+; canManager.c	   100      //, the frame size
+; canManager.c	   101      IO_CAN_ConfigFIFO(&me->can0_readHandle, IO_CAN_CHANNEL_0, can0_read_messageLimit, IO_CAN_MSG_READ, IO_CAN_STD_FRAME, 0, 0);
 	movw	r2,r1
 	movw	r3,r0
 	addw	r2,#0x2
@@ -255,7 +247,7 @@ _734:
 	call	_IO_CAN_ConfigFIFO
 _735:
 
-; canManager.c	   110      IO_CAN_ConfigFIFO(&me->can0_writeHandle, IO_CAN_CHANNEL_0, can0_write_messageLimit, IO_CAN_MSG_WRITE, IO_CAN_STD_FRAME, 0, 0);
+; canManager.c	   102      IO_CAN_ConfigFIFO(&me->can0_writeHandle, IO_CAN_CHANNEL_0, can0_write_messageLimit, IO_CAN_MSG_WRITE, IO_CAN_STD_FRAME, 0, 0);
 	movw	r2,r1
 	movw	r3,r0
 	addw	r2,#0x4
@@ -274,7 +266,7 @@ _736:
 	call	_IO_CAN_ConfigFIFO
 _737:
 
-; canManager.c	   111      IO_CAN_ConfigFIFO(&me->can1_readHandle, IO_CAN_CHANNEL_1, can1_read_messageLimit, IO_CAN_MSG_READ, IO_CAN_STD_FRAME, 0, 0); //Only change for CAN1 Read for IMU
+; canManager.c	   103      IO_CAN_ConfigFIFO(&me->can1_readHandle, IO_CAN_CHANNEL_1, can1_read_messageLimit, IO_CAN_MSG_READ, IO_CAN_STD_FRAME, 0, 0); //Only change for CAN1 Read for IMU
 	movw	r2,r1
 	movw	r3,r0
 	addw	r2,#0x7
@@ -293,7 +285,7 @@ _738:
 	call	_IO_CAN_ConfigFIFO
 _739:
 
-; canManager.c	   112      IO_CAN_ConfigFIFO(&me->can1_writeHandle, IO_CAN_CHANNEL_1, can1_write_messageLimit, IO_CAN_MSG_WRITE, IO_CAN_STD_FRAME, 0, 0);
+; canManager.c	   104      IO_CAN_ConfigFIFO(&me->can1_writeHandle, IO_CAN_CHANNEL_1, can1_write_messageLimit, IO_CAN_MSG_WRITE, IO_CAN_STD_FRAME, 0, 0);
 	movw	r2,r1
 	movw	r3,r0
 	addw	r2,#0x9
@@ -312,9 +304,9 @@ _740:
 	call	_IO_CAN_ConfigFIFO
 _741:
 
-; canManager.c	   113  
-; canManager.c	   114      //Assume read/write at error state until used
-; canManager.c	   115      me->ioErr_can0_read = IO_E_CAN_BUS_OFF;
+; canManager.c	   105  
+; canManager.c	   106      //Assume read/write at error state until used
+; canManager.c	   107      me->ioErr_can0_read = IO_E_CAN_BUS_OFF;
 	movw	r11,r1
 	movw	r12,r0
 	addw	r11,#0x18
@@ -326,27 +318,24 @@ _2771:
 	movw	[r11],r13
 _2772:
 
-; canManager.c	   116      me->ioErr_can0_write = IO_E_CAN_BUS_OFF;
+; canManager.c	   108      me->ioErr_can0_write = IO_E_CAN_BUS_OFF;
 	movw	r11,r1
 	movw	r12,r0
 	addw	r11,#0x1a
 	addcw	r12,#0x0
 _262:
 
-; canManager.c	   117      me->ioErr_can1_read = IO_E_CAN_BUS_OFF;
-; canManager.c	   118      me->ioErr_can1_write = IO_E_CAN_BUS_OFF;
-; canManager.c	   119  
-; canManager.c	   120      //-------------------------------------------------------------------
-; canManager.c	   121      //Define default messages
-; canManager.c	   122      //-------------------------------------------------------------------
-; canManager.c	   123      //AVLNode* insertedMessage;
-; canManager.c	   124      //insertedMessage = AVL_insert(me->canMessageHistory, 0x0C0, 0, 50000, 125000, TRUE); //MCM command message
-; canManager.c	   125  
-; canManager.c	   126  
-; canManager.c	   127      ubyte2 messageID;
-; canManager.c	   128      //Outgoing ----------------------------
-; canManager.c	   129      messageID = 0x184;  //Inverter FL 1 Command Message
-; canManager.c	   130      me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0; // us (microseconds)
+; canManager.c	   109      me->ioErr_can1_read = IO_E_CAN_BUS_OFF;
+; canManager.c	   110      me->ioErr_can1_write = IO_E_CAN_BUS_OFF;
+; canManager.c	   111  
+; canManager.c	   112      //-------------------------------------------------------------------
+; canManager.c	   113      //Define default messages
+; canManager.c	   114      //-------------------------------------------------------------------
+; canManager.c	   115  
+; canManager.c	   116      ubyte2 messageID;
+; canManager.c	   117      //Outgoing ----------------------------
+; canManager.c	   118      messageID = 0x184;  //Inverter FL 1 Command Message
+; canManager.c	   119      me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0; // us (microseconds)
 	movw	r4,r1
 _263:
 	exts	r12,#0x1
@@ -381,8 +370,8 @@ _268:
 	addcw	r12,#0x0
 _2775:
 
-; canManager.c	   131      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 8000; 
-; canManager.c	   132      me->canMessageHistory[messageID]->required = TRUE;
+; canManager.c	   120      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 8000; 
+; canManager.c	   121      me->canMessageHistory[messageID]->required = TRUE;
 	movb	rh2,#0x1
 _2776:
 	exts	r12,#0x1
@@ -399,7 +388,7 @@ _2779:
 	addcw	r11,#0x0
 _271:
 
-; canManager.c	   133      for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
+; canManager.c	   122      for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
 	movw	r3,#0x0
 _272:
 	exts	r11,#0x1
@@ -464,7 +453,7 @@ _2791:
 	jmp+	cc_ult,_3
 _273:
 
-; canManager.c	   134      IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
+; canManager.c	   123      IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
 	exts	r5,#0x1
 	movw	r2,[r4]
 	addw	r4,#0x2
@@ -477,9 +466,9 @@ _2792:
 	call	_IO_RTC_StartTime
 _2793:
 
-; canManager.c	   135  
-; canManager.c	   136      messageID = 0x185;  //Inverter FR 2 Command Message
-; canManager.c	   137      me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
+; canManager.c	   124  
+; canManager.c	   125      messageID = 0x185;  //Inverter FR 2 Command Message
+; canManager.c	   126      me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
 	movw	r4,r1
 	movw	r5,r0
 	addw	r4,#0x638
@@ -493,8 +482,8 @@ _2794:
 	addcw	r12,#0x0
 _2795:
 
-; canManager.c	   138      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 8000;
-; canManager.c	   139      me->canMessageHistory[messageID]->required = TRUE;
+; canManager.c	   127      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 8000;
+; canManager.c	   128      me->canMessageHistory[messageID]->required = TRUE;
 	movb	rh2,#0x1
 _2796:
 	exts	r12,#0x1
@@ -511,7 +500,7 @@ _2799:
 	addcw	r11,#0x0
 _276:
 
-; canManager.c	   140      for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
+; canManager.c	   129      for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
 	movw	r3,#0x0
 _277:
 	exts	r11,#0x1
@@ -576,7 +565,7 @@ _2811:
 	jmp+	cc_ult,_4
 _278:
 
-; canManager.c	   141      IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
+; canManager.c	   130      IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
 	exts	r5,#0x1
 	movw	r2,[r4]
 	addw	r4,#0x2
@@ -589,9 +578,9 @@ _2812:
 	call	_IO_RTC_StartTime
 _2813:
 
-; canManager.c	   142  
-; canManager.c	   143      messageID = 0x188;  //Inverter RL 1 Command Message
-; canManager.c	   144      me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
+; canManager.c	   131  
+; canManager.c	   132      messageID = 0x188;  //Inverter RL 1 Command Message
+; canManager.c	   133      me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
 	movw	r4,r1
 	movw	r5,r0
 	addw	r4,#0x644
@@ -605,8 +594,8 @@ _2814:
 	addcw	r12,#0x0
 _2815:
 
-; canManager.c	   145      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 8000;
-; canManager.c	   146      me->canMessageHistory[messageID]->required = TRUE;
+; canManager.c	   134      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 8000;
+; canManager.c	   135      me->canMessageHistory[messageID]->required = TRUE;
 	movb	rh2,#0x1
 _2816:
 	exts	r12,#0x1
@@ -623,7 +612,7 @@ _2819:
 	addcw	r11,#0x0
 _281:
 
-; canManager.c	   147      for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
+; canManager.c	   136      for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
 	movw	r3,#0x0
 _282:
 	exts	r11,#0x1
@@ -688,7 +677,7 @@ _2831:
 	jmp+	cc_ult,_5
 _283:
 
-; canManager.c	   148      IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
+; canManager.c	   137      IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
 	exts	r5,#0x1
 	movw	r2,[r4]
 	addw	r4,#0x2
@@ -701,9 +690,9 @@ _2832:
 	call	_IO_RTC_StartTime
 _2833:
 
-; canManager.c	   149  
-; canManager.c	   150      messageID = 0x189;  //Inverter RR 2 Command Message
-; canManager.c	   151      me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
+; canManager.c	   138  
+; canManager.c	   139      messageID = 0x189;  //Inverter RR 2 Command Message
+; canManager.c	   140      me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
 	movw	r4,r1
 	movw	r5,r0
 	addw	r4,#0x648
@@ -717,8 +706,8 @@ _2834:
 	addcw	r12,#0x0
 _2835:
 
-; canManager.c	   152      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 8000;
-; canManager.c	   153      me->canMessageHistory[messageID]->required = TRUE;
+; canManager.c	   141      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 8000;
+; canManager.c	   142      me->canMessageHistory[messageID]->required = TRUE;
 	movb	rh2,#0x1
 _2836:
 	exts	r12,#0x1
@@ -735,7 +724,7 @@ _2839:
 	addcw	r11,#0x0
 _286:
 
-; canManager.c	   154      for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
+; canManager.c	   143      for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
 	movw	r3,#0x0
 _287:
 	exts	r11,#0x1
@@ -800,15 +789,15 @@ _2851:
 	jmp+	cc_ult,_6
 _288:
 
-; canManager.c	   155      IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
+; canManager.c	   144      IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
 	exts	r5,#0x1
 	movw	r2,[r4]
 	addw	r4,#0x2
 	addcw	r5,#0x0
 _2852:
 
-; canManager.c	   156  
-; canManager.c	   157      for (messageID = 0x500; messageID <= 0x515; messageID++)
+; canManager.c	   145  
+; canManager.c	   146      for (messageID = 0x500; messageID <= 0x515; messageID++)
 	movw	r8,#0x500
 _742:
 	exts	r5,#0x1
@@ -819,8 +808,8 @@ _2853:
 	call	_IO_RTC_StartTime
 _2854:
 
-; canManager.c	   158      {
-; canManager.c	   159          me->canMessageHistory[messageID]->timeBetweenMessages_Min = 50000;
+; canManager.c	   147      {
+; canManager.c	   148          me->canMessageHistory[messageID]->timeBetweenMessages_Min = 50000;
 	movw	r9,[r15+#0x4]
 	movw	r10,[r15+#0x2]
 _722:
@@ -850,7 +839,7 @@ _2859:
 	addcw	r11,#0x0
 _2860:
 
-; canManager.c	   160          me->canMessageHistory[messageID]->timeBetweenMessages_Max = 250000;
+; canManager.c	   149          me->canMessageHistory[messageID]->timeBetweenMessages_Max = 250000;
 	movw	r12,r10
 _2861:
 	exts	r11,#0x1
@@ -866,7 +855,7 @@ _2864:
 	addcw	r12,#0x0
 _2865:
 
-; canManager.c	   161          me->canMessageHistory[messageID]->required = TRUE;
+; canManager.c	   150          me->canMessageHistory[messageID]->required = TRUE;
 	movb	rh4,#0x1
 _2866:
 	exts	r12,#0x1
@@ -890,7 +879,7 @@ _2872:
 	movw	r11,r9
 _291:
 
-; canManager.c	   162          for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
+; canManager.c	   151          for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
 	movw	r5,#0x0
 _292:
 	exts	r12,#0x1
@@ -929,7 +918,7 @@ _2879:
 	jmp+	cc_ult,_8
 _293:
 
-; canManager.c	   163          IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
+; canManager.c	   152          IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
 	movw	r11,r9
 	movw	r12,r10
 	exts	r12,#0x1
@@ -951,97 +940,38 @@ _2883:
 	jmp+	cc_ult,_7
 _2884:
 
-; canManager.c	   164      }
-; canManager.c	   165  
-; canManager.c	   166      //Incoming ----------------------------
-; canManager.c	   167      /* Currently unused for any timeout errors on VCU side
-; canManager.c	   168      //Look into this since the AMKs did timeout
-; canManager.c	   169      messageID = 0x283;  //Inverter1FL 1
-; canManager.c	   170      me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0; 
-; canManager.c	   171      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 500000; 
-; canManager.c	   172      me->canMessageHistory[messageID]->required = TRUE;
-; canManager.c	   173      for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
-; canManager.c	   174      IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
-; canManager.c	   175  
-; canManager.c	   176      messageID = 0x285;  //Inverter1FL 2
-; canManager.c	   177      me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
-; canManager.c	   178      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 500000;
-; canManager.c	   179      me->canMessageHistory[messageID]->required = TRUE;
-; canManager.c	   180      for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
-; canManager.c	   181      IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
-; canManager.c	   182  
-; canManager.c	   183      messageID = 0x284;   //Inverter2FR 1
-; canManager.c	   184      me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
-; canManager.c	   185      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 500000;
-; canManager.c	   186      me->canMessageHistory[messageID]->required = TRUE;
-; canManager.c	   187      for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
-; canManager.c	   188      IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
-; canManager.c	   189  
-; canManager.c	   190      messageID = 0x286;   //Inverter2FR 2
-; canManager.c	   191      me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
-; canManager.c	   192      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 500000;
-; canManager.c	   193      me->canMessageHistory[messageID]->required = TRUE;
-; canManager.c	   194      for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
-; canManager.c	   195      IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
-; canManager.c	   196  
-; canManager.c	   197      messageID = 0x287;   //Inverter3RL 1
-; canManager.c	   198      me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
-; canManager.c	   199      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 500000;
-; canManager.c	   200      me->canMessageHistory[messageID]->required = TRUE;
-; canManager.c	   201      for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
-; canManager.c	   202      IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
-; canManager.c	   203  
-; canManager.c	   204      messageID = 0x289;   //Inverter3RL 2
-; canManager.c	   205      me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
-; canManager.c	   206      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 500000;
-; canManager.c	   207      me->canMessageHistory[messageID]->required = TRUE;
-; canManager.c	   208      for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
-; canManager.c	   209      IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
-; canManager.c	   210  
-; canManager.c	   211      messageID = 0x288;   //Inverter3RR 1
-; canManager.c	   212      me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
-; canManager.c	   213      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 500000;
-; canManager.c	   214      me->canMessageHistory[messageID]->required = TRUE;
-; canManager.c	   215      for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
-; canManager.c	   216      IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
-; canManager.c	   217  
-; canManager.c	   218      messageID = 0x290;   //Inverter3RR 2
-; canManager.c	   219      me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
-; canManager.c	   220      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 500000;
-; canManager.c	   221      me->canMessageHistory[messageID]->required = TRUE;
-; canManager.c	   222      for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
-; canManager.c	   223      IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
-; canManager.c	   224  
-; canManager.c	   225      //////////////////////////////////////////////////////////////////////////////////
-; canManager.c	   226  
-; canManager.c	   227      messageID = 0x623;  //BMS faults
-; canManager.c	   228      me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
-; canManager.c	   229      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 5000000;
-; canManager.c	   230      me->canMessageHistory[messageID]->required = TRUE;
-; canManager.c	   231      for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
-; canManager.c	   232      IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
-; canManager.c	   233  
-; canManager.c	   234      messageID = 0x623;  //BMS faults
-; canManager.c	   235      me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
-; canManager.c	   236      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 5000000;
-; canManager.c	   237      me->canMessageHistory[messageID]->required = TRUE;
-; canManager.c	   238      for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
-; canManager.c	   239      IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
-; canManager.c	   240  
-; canManager.c	   241      messageID = 0x629;  //BMS details
-; canManager.c	   242      me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
-; canManager.c	   243      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 1000000;
-; canManager.c	   244      me->canMessageHistory[messageID]->required = TRUE;
-; canManager.c	   245      for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
-; canManager.c	   246      IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
-; canManager.c	   247      */
-; canManager.c	   248  
-; canManager.c	   249      return me;
+; canManager.c	   153      }
+; canManager.c	   154  
+; canManager.c	   155      /*
+; canManager.c	   156  
+; canManager.c	   157      messageID = 0x623;  //BMS faults
+; canManager.c	   158      me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
+; canManager.c	   159      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 5000000;
+; canManager.c	   160      me->canMessageHistory[messageID]->required = TRUE;
+; canManager.c	   161      for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
+; canManager.c	   162      IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
+; canManager.c	   163  
+; canManager.c	   164      messageID = 0x623;  //BMS faults
+; canManager.c	   165      me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
+; canManager.c	   166      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 5000000;
+; canManager.c	   167      me->canMessageHistory[messageID]->required = TRUE;
+; canManager.c	   168      for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
+; canManager.c	   169      IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
+; canManager.c	   170  
+; canManager.c	   171      messageID = 0x629;  //BMS details
+; canManager.c	   172      me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
+; canManager.c	   173      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 1000000;
+; canManager.c	   174      me->canMessageHistory[messageID]->required = TRUE;
+; canManager.c	   175      for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
+; canManager.c	   176      IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
+; canManager.c	   177      */
+; canManager.c	   178  
+; canManager.c	   179      return me;
 	movw	r2,r1
 	movw	r3,r0
 _2885:
 
-; canManager.c	   250  }
+; canManager.c	   180  }
 	addw	r15,#0x6
 _471:
 	movw	r10,[r15+]
@@ -1066,20 +996,20 @@ _215:
 code_CanManager_send	.section	code, cluster 'CanManager_send', new
 	.global	_CanManager_send
 
-; canManager.c	   251  
-; canManager.c	   252  
-; canManager.c	   253  /*****************************************************************************
-; canManager.c	   254  * This function takes an array of messages, determines which messages to send
-; canManager.c	   255  * based on whether or not data has changed since the last time it was sent,
-; canManager.c	   256  * or if a certain amount of time has passed since the last time it was sent.
-; canManager.c	   257  *
-; canManager.c	   258  * Messages that need to be sent are copied to another array and passed to the
-; canManager.c	   259  * FIFO queue.
-; canManager.c	   260  *
-; canManager.c	   261  * Note: http://stackoverflow.com/questions/5573310/difference-between-passing-array-and-array-pointer-into-function-in-c
-; canManager.c	   262  * http://stackoverflow.com/questions/2360794/how-to-pass-an-array-of-struct-using-pointer-in-c-c
-; canManager.c	   263  ****************************************************************************/
-; canManager.c	   264  IO_ErrorType CanManager_send(CanManager* me, CanChannel channel, IO_CAN_DATA_FRAME canMessages[], ubyte1 canMessageCount)
+; canManager.c	   181  
+; canManager.c	   182  
+; canManager.c	   183  /*****************************************************************************
+; canManager.c	   184  * This function takes an array of messages, determines which messages to send
+; canManager.c	   185  * based on whether or not data has changed since the last time it was sent,
+; canManager.c	   186  * or if a certain amount of time has passed since the last time it was sent.
+; canManager.c	   187  *
+; canManager.c	   188  * Messages that need to be sent are copied to another array and passed to the
+; canManager.c	   189  * FIFO queue.
+; canManager.c	   190  *
+; canManager.c	   191  * Note: http://stackoverflow.com/questions/5573310/difference-between-passing-array-and-array-pointer-into-function-in-c
+; canManager.c	   192  * http://stackoverflow.com/questions/2360794/how-to-pass-an-array-of-struct-using-pointer-in-c-c
+; canManager.c	   193  ****************************************************************************/
+; canManager.c	   194  IO_ErrorType CanManager_send(CanManager* me, CanChannel channel, IO_CAN_DATA_FRAME canMessages[], ubyte1 canMessageCount)
 ; Function _CanManager_send
 _136:
 _CanManager_send	.proc	far
@@ -1102,13 +1032,13 @@ _820:
 	movw	r8,r15
 _2890:
 
-; canManager.c	   265  {
-; canManager.c	   266      //SerialManager_send(me->sm, "Do you even send?\n");
-; canManager.c	   267      bool sendSerialDebug = FALSE;
-; canManager.c	   268      ubyte2 serialMessageID = 0xC0;
-; canManager.c	   269      bool sendMessage = FALSE;
-; canManager.c	   270      ubyte1 messagesToSendCount = 0;
-; canManager.c	   271      IO_CAN_DATA_FRAME messagesToSend[canMessageCount];//[channel == CAN0_HIPRI ? me->can0_write_messageLimit : me->can1_write_messageLimit];
+; canManager.c	   195  {
+; canManager.c	   196      //SerialManager_send(me->sm, "Do you even send?\n");
+; canManager.c	   197      bool sendSerialDebug = FALSE;
+; canManager.c	   198      ubyte2 serialMessageID = 0xC0;
+; canManager.c	   199      bool sendMessage = FALSE;
+; canManager.c	   200      ubyte1 messagesToSendCount = 0;
+; canManager.c	   201      IO_CAN_DATA_FRAME messagesToSend[canMessageCount];//[channel == CAN0_HIPRI ? me->can0_write_messageLimit : me->can1_write_messageLimit];
 	movbz	r13,rh4
 _1080:
 	movw	r14,#0xe
@@ -1135,25 +1065,25 @@ _1085:
 	movw	[r8+#0xa],r13
 _1086:
 
-; canManager.c	   272  
-; canManager.c	   273      //----------------------------------------------------------------------------
-; canManager.c	   274      // Check if message exists in outgoing message history tree
-; canManager.c	   275      //----------------------------------------------------------------------------
-; canManager.c	   276      AVLNode* lastMessage;  //replace with me->canMessageHistory[ID]
-; canManager.c	   277      ubyte1 messagePosition; //used twice
-; canManager.c	   278      for (messagePosition = 0; messagePosition < canMessageCount; messagePosition++)
+; canManager.c	   202  
+; canManager.c	   203      //----------------------------------------------------------------------------
+; canManager.c	   204      // Check if message exists in outgoing message history tree
+; canManager.c	   205      //----------------------------------------------------------------------------
+; canManager.c	   206      AVLNode* lastMessage;  //replace with me->canMessageHistory[ID]
+; canManager.c	   207      ubyte1 messagePosition; //used twice
+; canManager.c	   208      for (messagePosition = 0; messagePosition < canMessageCount; messagePosition++)
 	movw	[r8],r11
 	movw	r1,r12
 _307:
 
-; canManager.c	   279      {
-; canManager.c	   280          bool firstTimeMessage = FALSE;
-; canManager.c	   281          bool dataChanged = FALSE;
-; canManager.c	   282          bool minTimeExceeded = FALSE;
-; canManager.c	   283          bool maxTimeExceeded = FALSE;
-; canManager.c	   284  
-; canManager.c	   285          ubyte2 outboundMessageID = canMessages[messagePosition].id;
-; canManager.c	   286          lastMessage = me->canMessageHistory[outboundMessageID];
+; canManager.c	   209      {
+; canManager.c	   210          bool firstTimeMessage = FALSE;
+; canManager.c	   211          bool dataChanged = FALSE;
+; canManager.c	   212          bool minTimeExceeded = FALSE;
+; canManager.c	   213          bool maxTimeExceeded = FALSE;
+; canManager.c	   214  
+; canManager.c	   215          ubyte2 outboundMessageID = canMessages[messagePosition].id;
+; canManager.c	   216          lastMessage = me->canMessageHistory[outboundMessageID];
 	addw	r2,#0x24
 	addcw	r3,#0x0
 	movw	[r8+#0x8],r2
@@ -1196,15 +1126,15 @@ _1090:
 	movw	r0,[r11]
 _2896:
 
-; canManager.c	   287          sendMessage = FALSE;
+; canManager.c	   217          sendMessage = FALSE;
 	movb	[r8+#0x2],rl6
 _1092:
 
-; canManager.c	   288  
-; canManager.c	   289          //----------------------------------------------------------------------------
-; canManager.c	   290          // Check if this message exists in the array
-; canManager.c	   291          //----------------------------------------------------------------------------
-; canManager.c	   292          firstTimeMessage = (me->canMessageHistory[outboundMessageID] == 0);  
+; canManager.c	   218  
+; canManager.c	   219          //----------------------------------------------------------------------------
+; canManager.c	   220          // Check if this message exists in the array
+; canManager.c	   221          //----------------------------------------------------------------------------
+; canManager.c	   222          firstTimeMessage = (me->canMessageHistory[outboundMessageID] == 0);  
 	movw	r11,r0
 	movb	rh4,rl6
 _1093:
@@ -1215,12 +1145,12 @@ _12:
 	movb	[r8+#0x4],rh4
 _1095:
 
-; canManager.c	   293          if (firstTimeMessage)
+; canManager.c	   223          if (firstTimeMessage)
 	jmp-	cc_eq,_13
 _2897:
 
-; canManager.c	   294          {
-; canManager.c	   295              me->canMessageHistory[outboundMessageID]->timeBetweenMessages_Min = 25000;
+; canManager.c	   224          {
+; canManager.c	   225              me->canMessageHistory[outboundMessageID]->timeBetweenMessages_Min = 25000;
 	movw	r11,r9
 	movw	r12,r0
 	addw	r11,#0x8
@@ -1239,7 +1169,7 @@ _2900:
 	movw	[r11],r5
 _2901:
 
-; canManager.c	   296              me->canMessageHistory[outboundMessageID]->timeBetweenMessages_Max = 125000;
+; canManager.c	   226              me->canMessageHistory[outboundMessageID]->timeBetweenMessages_Max = 125000;
 	movw	r11,r13
 	movw	r12,r14
 	exts	r12,#0x1
@@ -1263,7 +1193,7 @@ _2906:
 	addcw	r11,#0x0
 _2907:
 
-; canManager.c	   297              me->canMessageHistory[outboundMessageID]->required = TRUE;
+; canManager.c	   227              me->canMessageHistory[outboundMessageID]->required = TRUE;
 	movw	r12,r14
 _2908:
 	exts	r11,#0x1
@@ -1287,7 +1217,7 @@ _2913:
 	movb	[r5],rh4
 _315:
 
-; canManager.c	   298              for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[outboundMessageID]->data[i] = 0; }
+; canManager.c	   228              for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[outboundMessageID]->data[i] = 0; }
 	movw	r5,#0x0
 _14:
 	movw	r2,r13
@@ -1313,8 +1243,8 @@ _2918:
 	jmp+	cc_ult,_14
 _316:
 
-; canManager.c	   299              //IO_RTC_StartTime(&me->canMessageHistory[outboundMessageID]->lastMessage_timeStamp);
-; canManager.c	   300              me->canMessageHistory[outboundMessageID]->lastMessage_timeStamp = 0;
+; canManager.c	   229              //IO_RTC_StartTime(&me->canMessageHistory[outboundMessageID]->lastMessage_timeStamp);
+; canManager.c	   230              me->canMessageHistory[outboundMessageID]->lastMessage_timeStamp = 0;
 	exts	r14,#0x1
 	movw	r11,[r13]
 	addw	r13,#0x2
@@ -1335,13 +1265,13 @@ _2921:
 	movw	[r11],r13
 _13:
 
-; canManager.c	   301          }
-; canManager.c	   302  
-; canManager.c	   303          //----------------------------------------------------------------------------
-; canManager.c	   304          // Check if data has changed since last time message was sent
-; canManager.c	   305          //----------------------------------------------------------------------------
-; canManager.c	   306          //Check each data byte in the data array
-; canManager.c	   307          for (ubyte1 dataPosition = 0; dataPosition < 8; dataPosition++)
+; canManager.c	   231          }
+; canManager.c	   232  
+; canManager.c	   233          //----------------------------------------------------------------------------
+; canManager.c	   234          // Check if data has changed since last time message was sent
+; canManager.c	   235          //----------------------------------------------------------------------------
+; canManager.c	   236          //Check each data byte in the data array
+; canManager.c	   237          for (ubyte1 dataPosition = 0; dataPosition < 8; dataPosition++)
 	movw	r2,r9
 	movw	r11,r0
 	movw	r12,[r8]
@@ -1350,27 +1280,27 @@ _2922:
 	movw	r5,#0x0
 _15:
 
-; canManager.c	   308          {
-; canManager.c	   309              ubyte1 oldData = lastMessage->data[dataPosition];
-; canManager.c	   310              ubyte1 newData = canMessages[messagePosition].data[dataPosition];
+; canManager.c	   238          {
+; canManager.c	   239              ubyte1 oldData = lastMessage->data[dataPosition];
+; canManager.c	   240              ubyte1 newData = canMessages[messagePosition].data[dataPosition];
 	exts	r13,#0x1
 	movb	rh4,[r12]
 _2923:
 
-; canManager.c	   311              //if any data byte is changed, then probably want to send the message
-; canManager.c	   312              if (oldData == newData)
+; canManager.c	   241              //if any data byte is changed, then probably want to send the message
+; canManager.c	   242              if (oldData == newData)
 	exts	r11,#0x1
 	cmpb	rh4,[r2]
 	jmp+	cc_eq,_16
 _2924:
 
-; canManager.c	   313              {
-; canManager.c	   314                  //data has not changed.  No action required (DO NOT SET)
-; canManager.c	   315                  //dataChanged = FALSE;
-; canManager.c	   316              }
-; canManager.c	   317              else
-; canManager.c	   318              {
-; canManager.c	   319                  dataChanged = TRUE; //ONLY MODIFY IF CHANGED
+; canManager.c	   243              {
+; canManager.c	   244                  //data has not changed.  No action required (DO NOT SET)
+; canManager.c	   245                  //dataChanged = FALSE;
+; canManager.c	   246              }
+; canManager.c	   247              else
+; canManager.c	   248              {
+; canManager.c	   249                  dataChanged = TRUE; //ONLY MODIFY IF CHANGED
 	movb	rl6,#0x1
 _16:
 	addw	r2,#0x1
@@ -1382,13 +1312,13 @@ _2925:
 	jmp+	cc_ult,_15
 _318:
 
-; canManager.c	   320              }
-; canManager.c	   321          }//end checking each byte in message
-; canManager.c	   322  
-; canManager.c	   323          //----------------------------------------------------------------------------
-; canManager.c	   324          // Check if time has exceeded
-; canManager.c	   325          //----------------------------------------------------------------------------
-; canManager.c	   326          minTimeExceeded = ((IO_RTC_GetTimeUS(lastMessage->lastMessage_timeStamp) >= lastMessage->timeBetweenMessages_Min));
+; canManager.c	   250              }
+; canManager.c	   251          }//end checking each byte in message
+; canManager.c	   252  
+; canManager.c	   253          //----------------------------------------------------------------------------
+; canManager.c	   254          // Check if time has exceeded
+; canManager.c	   255          //----------------------------------------------------------------------------
+; canManager.c	   256          minTimeExceeded = ((IO_RTC_GetTimeUS(lastMessage->lastMessage_timeStamp) >= lastMessage->timeBetweenMessages_Min));
 	movw	r7,r9
 	movw	r10,r0
 	addw	r7,#0xc
@@ -1423,7 +1353,7 @@ _2930:
 	movb	rh6,#0x1
 _17:
 
-; canManager.c	   327          maxTimeExceeded = ((IO_RTC_GetTimeUS(lastMessage->lastMessage_timeStamp) >= 50000));//lastMessage->timeBetweenMessages_Max));
+; canManager.c	   257          maxTimeExceeded = ((IO_RTC_GetTimeUS(lastMessage->lastMessage_timeStamp) >= 50000));//lastMessage->timeBetweenMessages_Max));
 	exts	r10,#0x1
 	movw	r2,[r7]
 	addw	r7,#0x2
@@ -1440,17 +1370,17 @@ _1097:
 	movb	rh4,#0x1
 _18:
 
-; canManager.c	   328          
-; canManager.c	   329          //----------------------------------------------------------------------------
-; canManager.c	   330          // If any criteria were exceeded, send the message out
-; canManager.c	   331          //----------------------------------------------------------------------------
-; canManager.c	   332          if (  (firstTimeMessage)
+; canManager.c	   258          
+; canManager.c	   259          //----------------------------------------------------------------------------
+; canManager.c	   260          // If any criteria were exceeded, send the message out
+; canManager.c	   261          //----------------------------------------------------------------------------
+; canManager.c	   262          if (  (firstTimeMessage)
 	movb	rl4,[r8+#0x4]
 _1098:
 	jmp-	cc_ne,_19
 _2932:
 
-; canManager.c	   333             || (dataChanged && minTimeExceeded)
+; canManager.c	   263             || (dataChanged && minTimeExceeded)
 	cmpb	rl6,#0x0
 	jmp+	cc_eq,_20
 _2933:
@@ -1458,7 +1388,7 @@ _2933:
 	jmp-	cc_ne,_21
 _20:
 
-; canManager.c	   334             || (!dataChanged && maxTimeExceeded)
+; canManager.c	   264             || (!dataChanged && maxTimeExceeded)
 	cmpb	rl6,#0x0
 	jmp	cc_ne,_22
 _2934:
@@ -1467,31 +1397,31 @@ _2934:
 _21:
 _19:
 
-; canManager.c	   335             )
-; canManager.c	   336          {
-; canManager.c	   337              sendMessage = TRUE;
+; canManager.c	   265             )
+; canManager.c	   266          {
+; canManager.c	   267              sendMessage = TRUE;
 	movb	rh4,#0x1
 _1091:
 	movb	[r8+#0x2],rh4
 _23:
 _22:
 
-; canManager.c	   338          }
-; canManager.c	   339  
-; canManager.c	   340          //----------------------------------------------------------------------------
-; canManager.c	   341          // If we determined that this message should be sent
-; canManager.c	   342          //----------------------------------------------------------------------------
-; canManager.c	   343          if (sendMessage == TRUE)
+; canManager.c	   268          }
+; canManager.c	   269  
+; canManager.c	   270          //----------------------------------------------------------------------------
+; canManager.c	   271          // If we determined that this message should be sent
+; canManager.c	   272          //----------------------------------------------------------------------------
+; canManager.c	   273          if (sendMessage == TRUE)
 	movb	rh4,[r8+#0x2]
 _1100:
 	jmp+	cc_eq,_24
 _2935:
 
-; canManager.c	   344          {
-; canManager.c	   345              //copy the message that needs to be sent into the outgoing messages array
-; canManager.c	   346              //see http://stackoverflow.com/questions/1693853/copying-arrays-of-structs-in-c
-; canManager.c	   347              //http://www.socialledge.com/sjsu/index.php?title=ES101_-_Lesson_9_:_Structures
-; canManager.c	   348              messagesToSend[messagesToSendCount++] = canMessages[messagePosition];
+; canManager.c	   274          {
+; canManager.c	   275              //copy the message that needs to be sent into the outgoing messages array
+; canManager.c	   276              //see http://stackoverflow.com/questions/1693853/copying-arrays-of-structs-in-c
+; canManager.c	   277              //http://www.socialledge.com/sjsu/index.php?title=ES101_-_Lesson_9_:_Structures
+; canManager.c	   278              messagesToSend[messagesToSendCount++] = canMessages[messagePosition];
 	movb	rh4,[r8+#0x5]
 _1101:
 	movbz	r11,rh4
@@ -1525,35 +1455,35 @@ _2937:
 	jmp+	cc_ne,_11
 _10:
 
-; canManager.c	   349          }
-; canManager.c	   350          else
-; canManager.c	   351          {
-; canManager.c	   352              if (sendSerialDebug && (serialMessageID == outboundMessageID)) {
-; canManager.c	   353                  //SerialManager_send(me->sm, "This message did not need to be sent.\n");
-; canManager.c	   354              }
-; canManager.c	   355          }
-; canManager.c	   356      } //end of loop for each message in outgoing messages
-; canManager.c	   357  
-; canManager.c	   358      IO_UART_Task();
+; canManager.c	   279          }
+; canManager.c	   280          else
+; canManager.c	   281          {
+; canManager.c	   282              if (sendSerialDebug && (serialMessageID == outboundMessageID)) {
+; canManager.c	   283                  //SerialManager_send(me->sm, "This message did not need to be sent.\n");
+; canManager.c	   284              }
+; canManager.c	   285          }
+; canManager.c	   286      } //end of loop for each message in outgoing messages
+; canManager.c	   287  
+; canManager.c	   288      IO_UART_Task();
 	call	_IO_UART_Task
 _321:
 
-; canManager.c	   359      //----------------------------------------------------------------------------
-; canManager.c	   360      // If there are messages to send
-; canManager.c	   361      //----------------------------------------------------------------------------
-; canManager.c	   362      IO_ErrorType sendResult = IO_E_OK;
+; canManager.c	   289      //----------------------------------------------------------------------------
+; canManager.c	   290      // If there are messages to send
+; canManager.c	   291      //----------------------------------------------------------------------------
+; canManager.c	   292      IO_ErrorType sendResult = IO_E_OK;
 	movw	r9,#0x0
 _1107:
 
-; canManager.c	   363      if (messagesToSendCount > 0)
+; canManager.c	   293      if (messagesToSendCount > 0)
 	movb	rh4,[r8+#0x5]
 _1109:
 	jmp	cc_eq,_25
 _2938:
 
-; canManager.c	   364      {
-; canManager.c	   365          //Send the messages to send to the appropriate FIFO queue
-; canManager.c	   366          sendResult = IO_CAN_WriteFIFO((channel == CAN0_HIPRI) ? me->can0_writeHandle : me->can1_writeHandle, messagesToSend, messagesToSendCount);
+; canManager.c	   294      {
+; canManager.c	   295          //Send the messages to send to the appropriate FIFO queue
+; canManager.c	   296          sendResult = IO_CAN_WriteFIFO((channel == CAN0_HIPRI) ? me->can0_writeHandle : me->can1_writeHandle, messagesToSend, messagesToSendCount);
 	movb	rh4,[r8+#0x10]
 _1110:
 	jmp	cc_ne,_26
@@ -1593,7 +1523,7 @@ _1108:
 	movw	r9,r2
 _1115:
 
-; canManager.c	   367          *((channel == CAN0_HIPRI) ? &me->ioErr_can0_write : &me->ioErr_can1_write) = sendResult;
+; canManager.c	   297          *((channel == CAN0_HIPRI) ? &me->ioErr_can0_write : &me->ioErr_can1_write) = sendResult;
 	movb	rh4,[r8+#0x10]
 _1116:
 	jmp	cc_ne,_29
@@ -1614,9 +1544,9 @@ _2944:
 	movw	[r11],r9
 _2945:
 
-; canManager.c	   368  
-; canManager.c	   369          //Update the outgoing message tree with message sent timestamps
-; canManager.c	   370          if ((channel == CAN0_HIPRI ? me->ioErr_can0_write : me->ioErr_can1_write) == IO_E_OK)
+; canManager.c	   298  
+; canManager.c	   299          //Update the outgoing message tree with message sent timestamps
+; canManager.c	   300          if ((channel == CAN0_HIPRI ? me->ioErr_can0_write : me->ioErr_can1_write) == IO_E_OK)
 	cmpb	rh4,#0x0
 	jmp	cc_ne,_31
 _2946:
@@ -1638,10 +1568,10 @@ _2949:
 	jmp-	cc_ne,_33
 _2950:
 
-; canManager.c	   371          {
-; canManager.c	   372              //Loop through the messages that we sent...
-; canManager.c	   373              ///////////AVLNode* messageToUpdate;
-; canManager.c	   374              for (messagePosition = 0; messagePosition < messagesToSendCount; messagePosition++)
+; canManager.c	   301          {
+; canManager.c	   302              //Loop through the messages that we sent...
+; canManager.c	   303              ///////////AVLNode* messageToUpdate;
+; canManager.c	   304              for (messagePosition = 0; messagePosition < messagesToSendCount; messagePosition++)
 	movb	rh6,#0x0
 _1117:
 	movw	r10,[r8+#0xa]
@@ -1652,14 +1582,14 @@ _309:
 	addcw	r0,#0x0
 _34:
 
-; canManager.c	   375              {
-; canManager.c	   376                  //...find the message ID in the outgoing message tree again (big inefficiency here)...
-; canManager.c	   377                  //////////messageToUpdate = AVL_find(me->outgoingTree, messagesToSend[messagePosition].id);
-; canManager.c	   378  
-; canManager.c	   379                  //and update the message sent timestamp
-; canManager.c	   380                  /////////////IO_RTC_GetTimeUS(messageToUpdate->lastMessage_timeStamp); //Update the timestamp for when the message was last sent
-; canManager.c	   381                  //IO_RTC_GetTimeUS(me->canMessageHistory[messagesToSend[messagePosition].id]->lastMessage_timeStamp);
-; canManager.c	   382                  IO_RTC_StartTime(&me->canMessageHistory[messagesToSend[messagePosition].id]->lastMessage_timeStamp);
+; canManager.c	   305              {
+; canManager.c	   306                  //...find the message ID in the outgoing message tree again (big inefficiency here)...
+; canManager.c	   307                  //////////messageToUpdate = AVL_find(me->outgoingTree, messagesToSend[messagePosition].id);
+; canManager.c	   308  
+; canManager.c	   309                  //and update the message sent timestamp
+; canManager.c	   310                  /////////////IO_RTC_GetTimeUS(messageToUpdate->lastMessage_timeStamp); //Update the timestamp for when the message was last sent
+; canManager.c	   311                  //IO_RTC_GetTimeUS(me->canMessageHistory[messagesToSend[messagePosition].id]->lastMessage_timeStamp);
+; canManager.c	   312                  IO_RTC_StartTime(&me->canMessageHistory[messagesToSend[messagePosition].id]->lastMessage_timeStamp);
 	movw	r11,[r10+#0xc]
 	movw	r12,[r10+#0xa]
 	addw	r12,r12
@@ -1695,17 +1625,17 @@ _1118:
 _33:
 _25:
 
-; canManager.c	   383              }
-; canManager.c	   384          }
-; canManager.c	   385      }
-; canManager.c	   386      return sendResult;
+; canManager.c	   313              }
+; canManager.c	   314          }
+; canManager.c	   315      }
+; canManager.c	   316      return sendResult;
 	movw	r11,[r8+#0xa]
 _1119:
 	movw	r15,[r11+#0xfffe]
 	movw	r2,r9
 _1120:
 
-; canManager.c	   387  }
+; canManager.c	   317  }
 	addw	r15,#0x12
 _831:
 	movw	r10,[r15+]
@@ -1730,19 +1660,12 @@ _220:
 code_CanManager_read	.section	code, cluster 'CanManager_read', new
 	.global	_CanManager_read
 
-; canManager.c	   388  
-; canManager.c	   389  /*
-; canManager.c	   390  //Helper functions
-; canManager.c	   391  ubyte4 CanManager_timeSinceLastTransmit(IO_CAN_DATA_FRAME* canMessage)  //Overflows/resets at 74 min
-; canManager.c	   392  bool CanManager_enoughTimeSinceLastTransmit(IO_CAN_DATA_FRAME* canMessage) // timesincelast > timeBetweenMessages_Min
-; canManager.c	   393  bool CanManager_dataChangedSinceLastTransmit(IO_CAN_DATA_FRAME* canMessage) //bitwise comparison for all data bytes
-; canManager.c	   394  */
-; canManager.c	   395  
-; canManager.c	   396  
-; canManager.c	   397  /*****************************************************************************
-; canManager.c	   398  * read
-; canManager.c	   399  ****************************************************************************/
-; canManager.c	   400  void CanManager_read(CanManager *me, CanChannel channel, InstrumentCluster *ic, BatteryManagementSystem *bms, SafetyChecker *sc, _DAQSensors *d1, _DriveInverter *inv1, _DriveInverter *inv2)
+; canManager.c	   318  
+; canManager.c	   319  
+; canManager.c	   320  /*****************************************************************************
+; canManager.c	   321  * read
+; canManager.c	   322  ****************************************************************************/
+; canManager.c	   323  void CanManager_read(CanManager *me, CanChannel channel, InstrumentCluster *ic, BatteryManagementSystem *bms, SafetyChecker *sc, _DAQSensors *d1, _DriveInverter *inv1, _DriveInverter *inv2)
 ; Function _CanManager_read
 _148:
 _CanManager_read	.proc	far
@@ -1783,8 +1706,8 @@ _1462:
 	movb	rl4,rl4
 _2962:
 
-; canManager.c	   401  {
-; canManager.c	   402      IO_CAN_DATA_FRAME canMessages[(channel == CAN0_HIPRI ? me->can0_read_messageLimit : me->can1_read_messageLimit)];
+; canManager.c	   324  {
+; canManager.c	   325      IO_CAN_DATA_FRAME canMessages[(channel == CAN0_HIPRI ? me->can0_read_messageLimit : me->can1_read_messageLimit)];
 	jmp	cc_ne,_36
 _2963:
 	movw	r11,r2
@@ -1816,10 +1739,10 @@ _1465:
 	movw	[r8+#0xe],r11
 _1467:
 
-; canManager.c	   403      ubyte1 canMessageCount;  //FIFO queue only holds 128 messages max
-; canManager.c	   404  
-; canManager.c	   405      //Read messages from hi/lopri channel 
-; canManager.c	   406      *(channel == CAN0_HIPRI ? &me->ioErr_can0_read : &me->ioErr_can1_read) =
+; canManager.c	   326      ubyte1 canMessageCount;  //FIFO queue only holds 128 messages max
+; canManager.c	   327  
+; canManager.c	   328      //Read messages from hi/lopri channel 
+; canManager.c	   329      *(channel == CAN0_HIPRI ? &me->ioErr_can0_read : &me->ioErr_can1_read) =
 	cmpb	rl4,#0x0
 	jmp	cc_ne,_38
 _2966:
@@ -1836,7 +1759,7 @@ _39:
 	addcw	r7,#0x0
 _2968:
 
-; canManager.c	   407      IO_CAN_ReadFIFO((channel == CAN0_HIPRI ? me->can0_readHandle : me->can1_readHandle)
+; canManager.c	   330      IO_CAN_ReadFIFO((channel == CAN0_HIPRI ? me->can0_readHandle : me->can1_readHandle)
 	cmpb	rl4,#0x0
 	jmp	cc_ne,_40
 _2969:
@@ -1858,8 +1781,8 @@ _41:
 	movbz	r11,rh4
 _2971:
 
-; canManager.c	   408                      , canMessages
-; canManager.c	   409                      , (channel == CAN0_HIPRI ? me->can0_read_messageLimit : me->can1_read_messageLimit)
+; canManager.c	   331                      , canMessages
+; canManager.c	   332                      , (channel == CAN0_HIPRI ? me->can0_read_messageLimit : me->can1_read_messageLimit)
 	cmpb	rl4,#0x0
 	jmp	cc_ne,_42
 _2972:
@@ -1889,7 +1812,7 @@ _1470:
 	shr	r5,#0x2
 _44:
 
-; canManager.c	   410                      , &canMessageCount);
+; canManager.c	   333                      , &canMessageCount);
 	movw	r12,r8
 	andw	r12,#0x3fff
 	orw	r12,#@sof(__lc_ub_user_stack+0xffff) & 0xc000
@@ -1904,9 +1827,9 @@ _1457:
 	movw	[r9],r2
 _338:
 
-; canManager.c	   411  
-; canManager.c	   412      //Determine message type based on ID
-; canManager.c	   413      for (int currMessage = 0; currMessage < canMessageCount; currMessage++)
+; canManager.c	   334  
+; canManager.c	   335      //Determine message type based on ID
+; canManager.c	   336      for (int currMessage = 0; currMessage < canMessageCount; currMessage++)
 	movw	r9,#0x0
 _1471:
 	movw	r7,[r8+#0xe]
@@ -1916,9 +1839,9 @@ _2975:
 	jmp-	cc_eq,_45
 _46:
 
-; canManager.c	   414      {
-; canManager.c	   415          // Seperate based on CAN message
-; canManager.c	   416          switch (canMessages[currMessage].id)
+; canManager.c	   337      {
+; canManager.c	   338          // Seperate based on CAN message
+; canManager.c	   339          switch (canMessages[currMessage].id)
 	movw	r11,[r7+#0xc]
 	movw	r12,[r7+#0xa]
 _2976:
@@ -2899,30 +2822,30 @@ _$1$swt	.label	word
 
 code_CanManager_read	.section	code, cluster 'CanManager_read'
 
-; canManager.c	   417          {
-; canManager.c	   418          //-------------------------------------------------------------------------
-; canManager.c	   419          //Inverters (Inverter FL and FR are together CAN0 and Inverter RL and RR are together CAN1) 
-; canManager.c	   420          //This is to ensure better debug between the two busses
-; canManager.c	   421          //-------------------------------------------------------------------------
-; canManager.c	   422          case 0x283:
-; canManager.c	   423          case 0x285:
-; canManager.c	   424              //Inverter FL 1 (CAN0)
-; canManager.c	   425              DI_parseCanMessage(inv1, &canMessages[currMessage]);
-; canManager.c	   426              break;
-; canManager.c	   427          case 0x284:
-; canManager.c	   428          case 0x286:
-; canManager.c	   429              //Inverter FR 1 (CAN0)
-; canManager.c	   430              DI_parseCanMessage(inv2, &canMessages[currMessage]);
-; canManager.c	   431              break;
-; canManager.c	   432          case 0x287:
-; canManager.c	   433          case 0x289:
+; canManager.c	   340          {
+; canManager.c	   341          //-------------------------------------------------------------------------
+; canManager.c	   342          //Inverters (Inverter FL and FR are together CAN0 and Inverter RL and RR are together CAN1) 
+; canManager.c	   343          //This is to ensure better debug between the two busses
+; canManager.c	   344          //-------------------------------------------------------------------------
+; canManager.c	   345          case 0x283:
+; canManager.c	   346          case 0x285:
+; canManager.c	   347              //Inverter FL 1 (CAN0)
+; canManager.c	   348              DI_parseCanMessage(inv1, &canMessages[currMessage]);
+; canManager.c	   349              break;
+; canManager.c	   350          case 0x284:
+; canManager.c	   351          case 0x286:
+; canManager.c	   352              //Inverter FR 1 (CAN0)
+; canManager.c	   353              DI_parseCanMessage(inv2, &canMessages[currMessage]);
+; canManager.c	   354              break;
+; canManager.c	   355          case 0x287:
+; canManager.c	   356          case 0x289:
 _54:
 _52:
 _50:
 _48:
 
-; canManager.c	   434              //Inverter RL 1 (CAN1)
-; canManager.c	   435              DI_parseCanMessage(inv1, &canMessages[currMessage]);
+; canManager.c	   357              //Inverter RL 1 (CAN1)
+; canManager.c	   358              DI_parseCanMessage(inv1, &canMessages[currMessage]);
 	movw	r4,r7
 	movw	r5,r7
 	jmp	cc_z,_91
@@ -2938,18 +2861,18 @@ _91:
 	call	_DI_parseCanMessage
 _2977:
 
-; canManager.c	   436              break;
+; canManager.c	   359              break;
 	jmp	_92
 
-; canManager.c	   437          case 0x288:
-; canManager.c	   438          case 0x290:
+; canManager.c	   360          case 0x288:
+; canManager.c	   361          case 0x290:
 _55:
 _53:
 _51:
 _49:
 
-; canManager.c	   439              //Inverter RR 1 (CAN1)
-; canManager.c	   440              DI_parseCanMessage(inv2, &canMessages[currMessage]);
+; canManager.c	   362              //Inverter RR 1 (CAN1)
+; canManager.c	   363              DI_parseCanMessage(inv2, &canMessages[currMessage]);
 	movw	r4,r7
 	movw	r5,r7
 	jmp	cc_z,_93
@@ -2965,21 +2888,21 @@ _93:
 	call	_DI_parseCanMessage
 _2978:
 
-; canManager.c	   441              break;
+; canManager.c	   364              break;
 	jmp	_94
 
-; canManager.c	   442          
-; canManager.c	   443          //-------------------------------------------------------------------------
-; canManager.c	   444          //IMU from DAQ
-; canManager.c	   445          //-------------------------------------------------------------------------
-; canManager.c	   446          case 0x400:
-; canManager.c	   447              DAQ_parseCanMessage(d1, &canMessages[currMessage]);
-; canManager.c	   448              break;
-; canManager.c	   449          case 0x402:
+; canManager.c	   365          
+; canManager.c	   366          //-------------------------------------------------------------------------
+; canManager.c	   367          //IMU from DAQ
+; canManager.c	   368          //-------------------------------------------------------------------------
+; canManager.c	   369          case 0x400:
+; canManager.c	   370              DAQ_parseCanMessage(d1, &canMessages[currMessage]);
+; canManager.c	   371              break;
+; canManager.c	   372          case 0x402:
 _57:
 _56:
 
-; canManager.c	   450              DAQ_parseCanMessage(d1, &canMessages[currMessage]);
+; canManager.c	   373              DAQ_parseCanMessage(d1, &canMessages[currMessage]);
 	movw	r4,r7
 	movw	r5,r7
 	jmp	cc_z,_95
@@ -2996,58 +2919,58 @@ _1474:
 	call	_DAQ_parseCanMessage
 _1475:
 
-; canManager.c	   451              break;
+; canManager.c	   374              break;
 	jmp	_96
 
-; canManager.c	   452  
-; canManager.c	   453          //-------------------------------------------------------------------------
-; canManager.c	   454          //BMS
-; canManager.c	   455          //-------------------------------------------------------------------------
-; canManager.c	   456          case 0x600:
-; canManager.c	   457          case 0x602: //Faults
-; canManager.c	   458              BMS_parseCanMessage(bms, &canMessages[currMessage]);
-; canManager.c	   459              break;
-; canManager.c	   460          case 0x604:
-; canManager.c	   461          case 0x608:
-; canManager.c	   462          case 0x610:
-; canManager.c	   463          case 0x611:
-; canManager.c	   464          case 0x612:
-; canManager.c	   465          case 0x613:
-; canManager.c	   466          case 0x620:
-; canManager.c	   467          case 0x621:
-; canManager.c	   468          case 0x622: //Cell Voltage Summary
-; canManager.c	   469              BMS_parseCanMessage(bms, &canMessages[currMessage]);
-; canManager.c	   470              break;
-; canManager.c	   471          case 0x623: //Cell Temperature Summary
-; canManager.c	   472              BMS_parseCanMessage(bms, &canMessages[currMessage]);
-; canManager.c	   473              break;
-; canManager.c	   474          case 0x624:
-; canManager.c	   475          //1st Module
-; canManager.c	   476          case 0x630:
-; canManager.c	   477          case 0x631:
-; canManager.c	   478          case 0x632:
-; canManager.c	   479          //2nd Module
-; canManager.c	   480          case 0x633:
-; canManager.c	   481          case 0x634:
-; canManager.c	   482          case 0x635:
-; canManager.c	   483          //3rd Module
-; canManager.c	   484          case 0x636:
-; canManager.c	   485          case 0x637:
-; canManager.c	   486          case 0x638:
-; canManager.c	   487          //4th Module
-; canManager.c	   488          case 0x639:
-; canManager.c	   489          case 0x63A:
-; canManager.c	   490          case 0x63B:
-; canManager.c	   491          //5th Module
-; canManager.c	   492          case 0x63C:
-; canManager.c	   493          case 0x63D:
-; canManager.c	   494          case 0x63E:
-; canManager.c	   495          //6th Module
-; canManager.c	   496          case 0x63F:
-; canManager.c	   497          case 0x640:
-; canManager.c	   498          case 0x641:
-; canManager.c	   499  
-; canManager.c	   500          case 0x629:
+; canManager.c	   375  
+; canManager.c	   376          //-------------------------------------------------------------------------
+; canManager.c	   377          //BMS
+; canManager.c	   378          //-------------------------------------------------------------------------
+; canManager.c	   379          case 0x600:
+; canManager.c	   380          case 0x602: //Faults
+; canManager.c	   381              BMS_parseCanMessage(bms, &canMessages[currMessage]);
+; canManager.c	   382              break;
+; canManager.c	   383          case 0x604:
+; canManager.c	   384          case 0x608:
+; canManager.c	   385          case 0x610:
+; canManager.c	   386          case 0x611:
+; canManager.c	   387          case 0x612:
+; canManager.c	   388          case 0x613:
+; canManager.c	   389          case 0x620:
+; canManager.c	   390          case 0x621:
+; canManager.c	   391          case 0x622: //Cell Voltage Summary
+; canManager.c	   392              BMS_parseCanMessage(bms, &canMessages[currMessage]);
+; canManager.c	   393              break;
+; canManager.c	   394          case 0x623: //Cell Temperature Summary
+; canManager.c	   395              BMS_parseCanMessage(bms, &canMessages[currMessage]);
+; canManager.c	   396              break;
+; canManager.c	   397          case 0x624:
+; canManager.c	   398          //1st Module
+; canManager.c	   399          case 0x630:
+; canManager.c	   400          case 0x631:
+; canManager.c	   401          case 0x632:
+; canManager.c	   402          //2nd Module
+; canManager.c	   403          case 0x633:
+; canManager.c	   404          case 0x634:
+; canManager.c	   405          case 0x635:
+; canManager.c	   406          //3rd Module
+; canManager.c	   407          case 0x636:
+; canManager.c	   408          case 0x637:
+; canManager.c	   409          case 0x638:
+; canManager.c	   410          //4th Module
+; canManager.c	   411          case 0x639:
+; canManager.c	   412          case 0x63A:
+; canManager.c	   413          case 0x63B:
+; canManager.c	   414          //5th Module
+; canManager.c	   415          case 0x63C:
+; canManager.c	   416          case 0x63D:
+; canManager.c	   417          case 0x63E:
+; canManager.c	   418          //6th Module
+; canManager.c	   419          case 0x63F:
+; canManager.c	   420          case 0x640:
+; canManager.c	   421          case 0x641:
+; canManager.c	   422  
+; canManager.c	   423          case 0x629:
 _72:
 _90:
 _89:
@@ -3081,7 +3004,7 @@ _61:
 _60:
 _59:
 
-; canManager.c	   501              BMS_parseCanMessage(bms, &canMessages[currMessage]);
+; canManager.c	   424              BMS_parseCanMessage(bms, &canMessages[currMessage]);
 	movw	r4,r7
 	movw	r5,r7
 	jmp	cc_z,_97
@@ -3098,29 +3021,29 @@ _1476:
 	call	_BMS_parseCanMessage
 _1477:
 
-; canManager.c	   502              break;
+; canManager.c	   425              break;
 	jmp	_98
 
-; canManager.c	   503  
-; canManager.c	   504          case 0x702:
-; canManager.c	   505              //Need Updating: IC_parseCanMessage(ic, mcm, &canMessages[currMessage]);
-; canManager.c	   506              break;
-; canManager.c	   507          case 0x703:
-; canManager.c	   508              //Need Updating: IC_parseCanMessage(ic, mcm, &canMessages[currMessage]);
-; canManager.c	   509              break;
-; canManager.c	   510          case 0x704:
-; canManager.c	   511              //Need Updating: IC_parseCanMessage(ic, mcm, &canMessages[currMessage]);
-; canManager.c	   512              break;
-; canManager.c	   513  
-; canManager.c	   514              
-; canManager.c	   515              
-; canManager.c	   516          //-------------------------------------------------------------------------
-; canManager.c	   517          //VCU Debug Control
-; canManager.c	   518          //-------------------------------------------------------------------------
-; canManager.c	   519          case 0x5FF:
+; canManager.c	   426  
+; canManager.c	   427          case 0x702:
+; canManager.c	   428              //Need Updating: IC_parseCanMessage(ic, mcm, &canMessages[currMessage]);
+; canManager.c	   429              break;
+; canManager.c	   430          case 0x703:
+; canManager.c	   431              //Need Updating: IC_parseCanMessage(ic, mcm, &canMessages[currMessage]);
+; canManager.c	   432              break;
+; canManager.c	   433          case 0x704:
+; canManager.c	   434              //Need Updating: IC_parseCanMessage(ic, mcm, &canMessages[currMessage]);
+; canManager.c	   435              break;
+; canManager.c	   436  
+; canManager.c	   437              
+; canManager.c	   438              
+; canManager.c	   439          //-------------------------------------------------------------------------
+; canManager.c	   440          //VCU Debug Control
+; canManager.c	   441          //-------------------------------------------------------------------------
+; canManager.c	   442          case 0x5FF:
 _58:
 
-; canManager.c	   520              SafetyChecker_parseCanMessage(sc, &canMessages[currMessage]);
+; canManager.c	   443              SafetyChecker_parseCanMessage(sc, &canMessages[currMessage]);
 	movw	r4,r7
 	movw	r5,r7
 	jmp	cc_z,_99
@@ -3136,13 +3059,13 @@ _99:
 _1478:
 	call	_SafetyChecker_parseCanMessage
 
-; canManager.c	   521              //MCM_parseCanMessage(mcm, &canMessages[currMessage]);
-; canManager.c	   522              break;
-; canManager.c	   523              //default:
-; canManager.c	   524          }
-; canManager.c	   525  
-; canManager.c	   526          //Parse IMU here
-; canManager.c	   527      }
+; canManager.c	   444              //MCM_parseCanMessage(mcm, &canMessages[currMessage]);
+; canManager.c	   445              break;
+; canManager.c	   446              //default:
+; canManager.c	   447          }
+; canManager.c	   448  
+; canManager.c	   449          //Parse IMU here
+; canManager.c	   450      }
 _98:
 _96:
 _94:
@@ -3158,9 +3081,9 @@ _2980:
 	jmp+	cc_slt,_46
 _45:
 
-; canManager.c	   528      //IO_CAN_WriteFIFO(me->can1_writeHandle, canMessages, messagesReceived);
-; canManager.c	   529      //IO_CAN_WriteMsg(canFifoHandle_LoPri_Write, canMessages);
-; canManager.c	   530  }
+; canManager.c	   451      //IO_CAN_WriteFIFO(me->can1_writeHandle, canMessages, messagesReceived);
+; canManager.c	   452      //IO_CAN_WriteMsg(canFifoHandle_LoPri_Write, canMessages);
+; canManager.c	   453  }
 	movw	r11,[r8+#0xe]
 _1473:
 	movw	r15,[r11+#0xfffe]
@@ -3188,14 +3111,14 @@ _225:
 code_CanManager_getReadStatus	.section	code, cluster 'CanManager_getReadStatus', new
 	.global	_CanManager_getReadStatus
 
-; canManager.c	   531  
-; canManager.c	   532  ubyte1 CanManager_getReadStatus(CanManager* me, CanChannel channel)
+; canManager.c	   454  
+; canManager.c	   455  ubyte1 CanManager_getReadStatus(CanManager* me, CanChannel channel)
 ; Function _CanManager_getReadStatus
 _160:
 _CanManager_getReadStatus	.proc	far
 
-; canManager.c	   533  {
-; canManager.c	   534      return (channel == CAN0_HIPRI) ? me->ioErr_can0_read : me->ioErr_can1_read;
+; canManager.c	   456  {
+; canManager.c	   457      return (channel == CAN0_HIPRI) ? me->ioErr_can0_read : me->ioErr_can1_read;
 	cmpb	rl4,#0x0
 	jmp	cc_ne,_100
 _3525:
@@ -3211,7 +3134,7 @@ _1479:
 	movw	r2,[r2]
 _3527:
 
-; canManager.c	   535  }
+; canManager.c	   458  }
 	ret
 _245:
 	; End of function
@@ -3220,29 +3143,29 @@ _245:
 code_canOutput_sendSensorMessages	.section	code, cluster 'canOutput_sendSensorMessages', new
 	.global	_canOutput_sendSensorMessages
 
-; canManager.c	   536  
-; canManager.c	   537  
-; canManager.c	   538  
-; canManager.c	   539  
-; canManager.c	   540  /*****************************************************************************
-; canManager.c	   541  * device-specific functions
-; canManager.c	   542  ****************************************************************************/
-; canManager.c	   543  /*****************************************************************************
-; canManager.c	   544  * Standalone Sensor messages
-; canManager.c	   545  ******************************************************************************
-; canManager.c	   546  * Load sensor values into CAN messages
-; canManager.c	   547  * Each can message's .data[] holds 1 byte - sensor data must be broken up into separate bytes
-; canManager.c	   548  * The message addresses are at:
-; canManager.c	   549  * https://docs.google.com/spreadsheets/d/1sYXx191RtMq5Vp5PbPsq3BziWvESF9arZhEjYUMFO3Y/edit
-; canManager.c	   550  ****************************************************************************/
-; canManager.c	   551  void canOutput_sendSensorMessages(CanManager* me)
+; canManager.c	   459  
+; canManager.c	   460  
+; canManager.c	   461  
+; canManager.c	   462  
+; canManager.c	   463  /*****************************************************************************
+; canManager.c	   464  * device-specific functions
+; canManager.c	   465  ****************************************************************************/
+; canManager.c	   466  /*****************************************************************************
+; canManager.c	   467  * Standalone Sensor messages
+; canManager.c	   468  ******************************************************************************
+; canManager.c	   469  * Load sensor values into CAN messages
+; canManager.c	   470  * Each can message's .data[] holds 1 byte - sensor data must be broken up into separate bytes
+; canManager.c	   471  * The message addresses are at:
+; canManager.c	   472  * https://docs.google.com/spreadsheets/d/1sYXx191RtMq5Vp5PbPsq3BziWvESF9arZhEjYUMFO3Y/edit
+; canManager.c	   473  ****************************************************************************/
+; canManager.c	   474  void canOutput_sendSensorMessages(CanManager* me)
 ; Function _canOutput_sendSensorMessages
 _172:
 _canOutput_sendSensorMessages	.proc	far
 
-; canManager.c	   552  {
-; canManager.c	   553  
-; canManager.c	   554  }
+; canManager.c	   475  {
+; canManager.c	   476  
+; canManager.c	   477  }
 	ret
 _230:
 	; End of function
@@ -3251,12 +3174,12 @@ _230:
 code_canOutput_sendDebugMessage0	.section	code, cluster 'canOutput_sendDebugMessage0', new
 	.global	_canOutput_sendDebugMessage0
 
-; canManager.c	   555  
-; canManager.c	   556  
-; canManager.c	   557  //----------------------------------------------------------------------------
-; canManager.c	   558  // 
-; canManager.c	   559  //----------------------------------------------------------------------------
-; canManager.c	   560  void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressureSensor* bps, InstrumentCluster* ic, BatteryManagementSystem* bms, SafetyChecker* sc, DRS *drs, _DriveInverter *inv1, _DriveInverter *inv2)
+; canManager.c	   478  
+; canManager.c	   479  
+; canManager.c	   480  //----------------------------------------------------------------------------
+; canManager.c	   481  // 
+; canManager.c	   482  //----------------------------------------------------------------------------
+; canManager.c	   483  void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressureSensor* bps, InstrumentCluster* ic, BatteryManagementSystem* bms, SafetyChecker* sc, DRS *drs, _DriveInverter *inv1, _DriveInverter *inv2)
 ; Function _canOutput_sendDebugMessage0
 _184:
 _canOutput_sendDebugMessage0	.proc	far
@@ -3279,17 +3202,17 @@ _1557:
 	movw	r8,r15
 _2989:
 
-; canManager.c	   561  {
-; canManager.c	   562      IO_CAN_DATA_FRAME canMessages[me->can0_write_messageLimit];
-; canManager.c	   563      ubyte1 errorCount;
-; canManager.c	   564      float4 tempPedalPercent;   //Pedal percent float (a decimal between 0 and 1
-; canManager.c	   565      ubyte1 tps0Percent;  //Pedal percent int   (a number from 0 to 100)
-; canManager.c	   566      ubyte1 tps1Percent;
-; canManager.c	   567      ubyte2 canMessageCount = 0;
-; canManager.c	   568      ubyte2 canMessageID = 0x500;
-; canManager.c	   569      ubyte1 byteNum;
-; canManager.c	   570  
-; canManager.c	   571      TorqueEncoder_getIndividualSensorPercent(tps, 0, &tempPedalPercent); //borrow the pedal percent variable
+; canManager.c	   484  {
+; canManager.c	   485      IO_CAN_DATA_FRAME canMessages[me->can0_write_messageLimit];
+; canManager.c	   486      ubyte1 errorCount;
+; canManager.c	   487      float4 tempPedalPercent;   //Pedal percent float (a decimal between 0 and 1
+; canManager.c	   488      ubyte1 tps0Percent;  //Pedal percent int   (a number from 0 to 100)
+; canManager.c	   489      ubyte1 tps1Percent;
+; canManager.c	   490      ubyte2 canMessageCount = 0;
+; canManager.c	   491      ubyte2 canMessageID = 0x500;
+; canManager.c	   492      ubyte1 byteNum;
+; canManager.c	   493  
+; canManager.c	   494      TorqueEncoder_getIndividualSensorPercent(tps, 0, &tempPedalPercent); //borrow the pedal percent variable
 	movw	r7,r8
 	andw	r7,#0x3fff
 _2990:
@@ -3357,7 +3280,7 @@ _2247:
 	call	_TorqueEncoder_getIndividualSensorPercent
 _2239:
 
-; canManager.c	   572      tps0Percent = 0xFF * tempPedalPercent;
+; canManager.c	   495      tps0Percent = 0xFF * tempPedalPercent;
 	movw	r3,[r8+#0x2]
 	movw	r2,[r8]
 _2997:
@@ -3370,7 +3293,7 @@ _2249:
 	movb	[r8+#0xd],rh2
 _2250:
 
-; canManager.c	   573      TorqueEncoder_getIndividualSensorPercent(tps, 1, &tempPedalPercent);
+; canManager.c	   496      TorqueEncoder_getIndividualSensorPercent(tps, 1, &tempPedalPercent);
 	movw	r2,[r8+#0x8]
 	movw	r3,[r8+#0xa]
 	movb	rl4,#0x1
@@ -3379,7 +3302,7 @@ _2250:
 	call	_TorqueEncoder_getIndividualSensorPercent
 _2999:
 
-; canManager.c	   574      tps1Percent = 0xFF * (tempPedalPercent);
+; canManager.c	   497      tps1Percent = 0xFF * (tempPedalPercent);
 	movw	r3,[r8+#0x2]
 	movw	r2,[r8]
 _3000:
@@ -3388,9 +3311,9 @@ _3001:
 	movw	r4,#0x0
 _3002:
 
-; canManager.c	   575      //tps1Percent = 0xFF * (1 - tempPedalPercent);  //OLD: flipped over pedal percent (this value for display in CAN only)
-; canManager.c	   576  
-; canManager.c	   577      TorqueEncoder_getPedalTravel(tps, &errorCount, &tempPedalPercent); //getThrottlePercent(TRUE, &errorCount);
+; canManager.c	   498      //tps1Percent = 0xFF * (1 - tempPedalPercent);  //OLD: flipped over pedal percent (this value for display in CAN only)
+; canManager.c	   499  
+; canManager.c	   500      TorqueEncoder_getPedalTravel(tps, &errorCount, &tempPedalPercent); //getThrottlePercent(TRUE, &errorCount);
 	movw	r10,#0x4
 _3003:
 	call	__mul_spf
@@ -3415,7 +3338,7 @@ _3007:
 	call	_TorqueEncoder_getPedalTravel
 _361:
 
-; canManager.c	   578      ubyte1 throttlePercent = 0xFF * tempPedalPercent;
+; canManager.c	   501      ubyte1 throttlePercent = 0xFF * tempPedalPercent;
 	movw	r3,[r8+#0x2]
 	movw	r2,[r8]
 _3008:
@@ -3428,8 +3351,8 @@ _2253:
 	movb	[r8+#0xc],rh2
 _2254:
 
-; canManager.c	   579  
-; canManager.c	   580      BrakePressureSensor_getPedalTravel(bps, &errorCount, &tempPedalPercent); //getThrottlePercent(TRUE, &errorCount);
+; canManager.c	   502  
+; canManager.c	   503      BrakePressureSensor_getPedalTravel(bps, &errorCount, &tempPedalPercent); //getThrottlePercent(TRUE, &errorCount);
 	movw	r2,[r8+#0x14]
 	movw	r3,[r8+#0x16]
 	movw	r4,r10
@@ -3439,12 +3362,12 @@ _2254:
 	call	_BrakePressureSensor_getPedalTravel
 _366:
 
-; canManager.c	   581      ubyte1 brakePercent = 0xFF * tempPedalPercent;
-; canManager.c	   582  
-; canManager.c	   583      //500: TPS 0
-; canManager.c	   584      canMessageCount++;
-; canManager.c	   585      byteNum = 0;
-; canManager.c	   586      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   504      ubyte1 brakePercent = 0xFF * tempPedalPercent;
+; canManager.c	   505  
+; canManager.c	   506      //500: TPS 0
+; canManager.c	   507      canMessageCount++;
+; canManager.c	   508      byteNum = 0;
+; canManager.c	   509      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movw	r11,[r8+#0x6]
 _2255:
 	movw	r3,[r8+#0x2]
@@ -3460,7 +3383,7 @@ _3013:
 	movb	[r11+#0x9],rl4
 _3014:
 
-; canManager.c	   587      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1; //500
+; canManager.c	   510      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1; //500
 	movw	r12,#0x500
 _3015:
 	movw	[r11+#0xa],r12
@@ -3470,26 +3393,26 @@ _3017:
 	movw	[r11+#0xc],r13
 _3018:
 
-; canManager.c	   588      canMessages[canMessageCount - 1].data[byteNum++] = throttlePercent;
+; canManager.c	   511      canMessages[canMessageCount - 1].data[byteNum++] = throttlePercent;
 	movb	rh4,[r8+#0xc]
 _2257:
 	movb	[r11],rh4
 _3019:
 
-; canManager.c	   589      canMessages[canMessageCount - 1].data[byteNum++] = tps0Percent;
+; canManager.c	   512      canMessages[canMessageCount - 1].data[byteNum++] = tps0Percent;
 	movb	rh4,[r8+#0xd]
 _2258:
 	movb	[r11+#0x1],rh4
 _3020:
 
-; canManager.c	   590      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_TPS0.sensorValue; // tps->tps0_value;
+; canManager.c	   513      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_TPS0.sensorValue; // tps->tps0_value;
 	exts	#@seg(_Sensor_TPS0+0x8),#0x1
 	movw	r5,@sof(_Sensor_TPS0+0x8)
 _3021:
 	movb	[r11+#0x2],rl5
 _3022:
 
-; canManager.c	   591      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_TPS0.sensorValue >> 8; //tps->tps0_value >> 8;
+; canManager.c	   514      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_TPS0.sensorValue >> 8; //tps->tps0_value >> 8;
 	movw	r11,[r8+#0x6]
 _3023:
 	exts	#@seg(_Sensor_TPS0+0x8),#0x1
@@ -3500,7 +3423,7 @@ _3025:
 	movb	[r11+#0x3],rl5
 _3026:
 
-; canManager.c	   592      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps0_calibMin;
+; canManager.c	   515      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps0_calibMin;
 	movw	r14,[r8+#0x6]
 _2256:
 	movw	r11,[r8+#0x8]
@@ -3516,7 +3439,7 @@ _3029:
 	movb	[r14+#0x4],rl5
 _3030:
 
-; canManager.c	   593      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps0_calibMin >> 8;
+; canManager.c	   516      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps0_calibMin >> 8;
 	exts	r12,#0x1
 	movw	r5,[r11]
 _3031:
@@ -3529,7 +3452,7 @@ _2263:
 	movb	[r11+#0x5],rl5
 _3032:
 
-; canManager.c	   594      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps0_calibMax;
+; canManager.c	   517      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps0_calibMax;
 	movw	r11,[r8+#0x8]
 _2261:
 	movw	r12,[r8+#0xa]
@@ -3537,8 +3460,8 @@ _2261:
 	addcw	r12,#0x0
 _3033:
 
-; canManager.c	   595      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps0_calibMax >> 8;
-; canManager.c	   596      canMessages[canMessageCount - 1].length = byteNum;
+; canManager.c	   518      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps0_calibMax >> 8;
+; canManager.c	   519      canMessages[canMessageCount - 1].length = byteNum;
 	movb	rh4,#0x8
 _2259:
 	exts	r12,#0x1
@@ -3554,12 +3477,12 @@ _2266:
 	movb	rl5,rh5
 _3035:
 
-; canManager.c	   597  
-; canManager.c	   598      //TPS 1
-; canManager.c	   599      canMessageCount++;
-; canManager.c	   600      byteNum = 0;
-; canManager.c	   601      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-; canManager.c	   602      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
+; canManager.c	   520  
+; canManager.c	   521      //TPS 1
+; canManager.c	   522      canMessageCount++;
+; canManager.c	   523      byteNum = 0;
+; canManager.c	   524      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   525      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r12,#0x501
 _3036:
 	movb	[r11+#0x7],rl5
@@ -3572,19 +3495,19 @@ _3039:
 	movw	[r11+#0x1a],r13
 _3040:
 
-; canManager.c	   603      canMessages[canMessageCount - 1].data[byteNum++] = throttlePercent;
+; canManager.c	   526      canMessages[canMessageCount - 1].data[byteNum++] = throttlePercent;
 	movb	rh5,[r8+#0xc]
 _2268:
 	movb	[r11+#0xe],rh5
 _3041:
 
-; canManager.c	   604      canMessages[canMessageCount - 1].data[byteNum++] = tps1Percent;
+; canManager.c	   527      canMessages[canMessageCount - 1].data[byteNum++] = tps1Percent;
 	movb	rh5,[r8+#0xe]
 _2269:
 	movb	[r11+#0xf],rh5
 _3042:
 
-; canManager.c	   605      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_value;
+; canManager.c	   528      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_value;
 	movw	r11,[r8+#0x8]
 _2267:
 	movw	r12,[r8+#0xa]
@@ -3596,7 +3519,7 @@ _2270:
 	movb	[r14+#0x10],rl5
 _2271:
 
-; canManager.c	   606      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_value >> 8;
+; canManager.c	   529      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_value >> 8;
 	exts	r12,#0x1
 	movw	r5,[r11]
 _3043:
@@ -3607,7 +3530,7 @@ _3044:
 	movb	[r11+#0x11],rl5
 _3045:
 
-; canManager.c	   607      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_calibMin;
+; canManager.c	   530      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_calibMin;
 	movw	r11,[r8+#0x8]
 _2273:
 	movw	r12,[r8+#0xa]
@@ -3619,7 +3542,7 @@ _2274:
 	movb	[r14+#0x12],rl5
 _2275:
 
-; canManager.c	   608      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_calibMin >> 8;
+; canManager.c	   531      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_calibMin >> 8;
 	exts	r12,#0x1
 	movw	r5,[r11]
 _3046:
@@ -3630,7 +3553,7 @@ _3047:
 	movb	[r11+#0x13],rl5
 _3048:
 
-; canManager.c	   609      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_calibMax;
+; canManager.c	   532      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_calibMax;
 	movw	r11,[r8+#0x8]
 _2277:
 	movw	r12,[r8+#0xa]
@@ -3643,7 +3566,7 @@ _2280:
 	movb	[r14+#0x14],rl5
 _2281:
 
-; canManager.c	   610      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_calibMax >> 8;
+; canManager.c	   533      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_calibMax >> 8;
 	exts	r12,#0x1
 	movw	r5,[r11]
 _3049:
@@ -3652,13 +3575,13 @@ _2279:
 	movb	rl5,rh5
 _3050:
 
-; canManager.c	   611      canMessages[canMessageCount - 1].length = byteNum;
-; canManager.c	   612  
-; canManager.c	   613      //BPS0
-; canManager.c	   614      canMessageCount++;
-; canManager.c	   615      byteNum = 0;
-; canManager.c	   616      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-; canManager.c	   617      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
+; canManager.c	   534      canMessages[canMessageCount - 1].length = byteNum;
+; canManager.c	   535  
+; canManager.c	   536      //BPS0
+; canManager.c	   537      canMessageCount++;
+; canManager.c	   538      byteNum = 0;
+; canManager.c	   539      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   540      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r12,#0x502
 _3051:
 	movb	[r11+#0x15],rl5
@@ -3671,15 +3594,15 @@ _3054:
 	movw	[r11+#0x28],r13
 _3055:
 
-; canManager.c	   618      canMessages[canMessageCount - 1].data[byteNum++] = brakePercent; //This should be bps0Percent, but for now bps0Percent = brakePercent
+; canManager.c	   541      canMessages[canMessageCount - 1].data[byteNum++] = brakePercent; //This should be bps0Percent, but for now bps0Percent = brakePercent
 	movb	[r11+#0x1c],rh7
 _3056:
 
-; canManager.c	   619      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   542      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x1d],rl4
 _3057:
 
-; canManager.c	   620      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_value;
+; canManager.c	   543      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_value;
 	movw	r11,[r8+#0x14]
 _2282:
 	movw	r12,[r8+#0x16]
@@ -3691,7 +3614,7 @@ _2283:
 	movb	[r14+#0x1e],rl5
 _2284:
 
-; canManager.c	   621      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_value >> 8;
+; canManager.c	   544      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_value >> 8;
 	exts	r12,#0x1
 	movw	r5,[r11]
 _3058:
@@ -3702,7 +3625,7 @@ _3059:
 	movb	[r11+#0x1f],rl5
 _3060:
 
-; canManager.c	   622      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_calibMin;
+; canManager.c	   545      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_calibMin;
 	movw	r11,[r8+#0x14]
 _2286:
 	movw	r12,[r8+#0x16]
@@ -3714,7 +3637,7 @@ _2287:
 	movb	[r14+#0x20],rl5
 _2288:
 
-; canManager.c	   623      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_calibMin >> 8;
+; canManager.c	   546      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_calibMin >> 8;
 	exts	r12,#0x1
 	movw	r5,[r11]
 _3061:
@@ -3725,7 +3648,7 @@ _3062:
 	movb	[r11+#0x21],rl5
 _3063:
 
-; canManager.c	   624      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_calibMax;
+; canManager.c	   547      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_calibMax;
 	movw	r11,[r8+#0x14]
 _2290:
 	movw	r12,[r8+#0x16]
@@ -3737,7 +3660,7 @@ _2291:
 	movb	[r14+#0x22],rl5
 _2292:
 
-; canManager.c	   625      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_calibMax >> 8;
+; canManager.c	   548      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_calibMax >> 8;
 	exts	r12,#0x1
 	movw	r5,[r11]
 _3064:
@@ -3746,13 +3669,13 @@ _2293:
 	shr	r5,#0x8
 _3065:
 
-; canManager.c	   626      canMessages[canMessageCount - 1].length = byteNum;
-; canManager.c	   627  
-; canManager.c	   628      //WSS mm/s output //UNUSED
-; canManager.c	   629      canMessageCount++;
-; canManager.c	   630      byteNum = 0;
-; canManager.c	   631      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-; canManager.c	   632      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
+; canManager.c	   549      canMessages[canMessageCount - 1].length = byteNum;
+; canManager.c	   550  
+; canManager.c	   551      //WSS mm/s output //UNUSED
+; canManager.c	   552      canMessageCount++;
+; canManager.c	   553      byteNum = 0;
+; canManager.c	   554      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   555      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r12,#0x503
 _3066:
 	movb	[r11+#0x23],rl5
@@ -3765,48 +3688,48 @@ _3069:
 	movw	[r11+#0x36],r13
 _3070:
 
-; canManager.c	   633      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   556      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x2a],rl4
 _3071:
 
-; canManager.c	   634      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   557      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x2b],rl4
 _3072:
 
-; canManager.c	   635      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   558      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x2c],rl4
 _3073:
 
-; canManager.c	   636      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   559      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x2d],rl4
 _3074:
 
-; canManager.c	   637      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   560      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x2e],rl4
 _3075:
 
-; canManager.c	   638      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   561      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x2f],rl4
 _3076:
 
-; canManager.c	   639      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   562      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x30],rl4
 _3077:
 
-; canManager.c	   640      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   563      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x31],rl4
 _3078:
 
-; canManager.c	   641      canMessages[canMessageCount - 1].length = byteNum;
+; canManager.c	   564      canMessages[canMessageCount - 1].length = byteNum;
 	movb	[r11+#0x32],rh4
 _3079:
 
-; canManager.c	   642  
-; canManager.c	   643      //WSS RPM non-interpolated output //UNUSED
-; canManager.c	   644      canMessageCount++;
-; canManager.c	   645      byteNum = 0;
-; canManager.c	   646      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-; canManager.c	   647      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
+; canManager.c	   565  
+; canManager.c	   566      //WSS RPM non-interpolated output //UNUSED
+; canManager.c	   567      canMessageCount++;
+; canManager.c	   568      byteNum = 0;
+; canManager.c	   569      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   570      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r12,#0x504
 _3080:
 	movb	[r11+#0x41],rl4
@@ -3815,81 +3738,81 @@ _3081:
 	movw	[r11+#0x44],r13
 _3082:
 
-; canManager.c	   648      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   571      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x38],rl4
 _3083:
 
-; canManager.c	   649      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   572      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x39],rl4
 _3084:
 
-; canManager.c	   650      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   573      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x3a],rl4
 _3085:
 
-; canManager.c	   651      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   574      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x3b],rl4
 _3086:
 
-; canManager.c	   652      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   575      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x3c],rl4
 _3087:
 
-; canManager.c	   653      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   576      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x3d],rl4
 _3088:
 
-; canManager.c	   654      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   577      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x3e],rl4
 _3089:
 
-; canManager.c	   655      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   578      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x3f],rl4
 _3090:
 
-; canManager.c	   656      canMessages[canMessageCount - 1].length = byteNum;
+; canManager.c	   579      canMessages[canMessageCount - 1].length = byteNum;
 	movb	[r11+#0x40],rh4
 _3091:
 
-; canManager.c	   657  
-; canManager.c	   658      /*
-; canManager.c	   659      //TEMP: WSS3
-; canManager.c	   660      canMessageCount++;
-; canManager.c	   661      byteNum = 0;
-; canManager.c	   662      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-; canManager.c	   663      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;  //505
-; canManager.c	   664      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_RL.sensorValue;
-; canManager.c	   665      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_RL.sensorValue >> 8;
-; canManager.c	   666      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_RL.sensorValue >> 16;
-; canManager.c	   667      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_RL.sensorValue >> 24;
-; canManager.c	   668      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_RR.sensorValue;
-; canManager.c	   669      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_RR.sensorValue >> 8;
-; canManager.c	   670      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_RR.sensorValue >> 16;
-; canManager.c	   671      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_RR.sensorValue >> 24;
-; canManager.c	   672      canMessages[canMessageCount - 1].length = byteNum;
-; canManager.c	   673      */
-; canManager.c	   674      /*
-; canManager.c	   675      //TEMP: FRONT WSS PIN DEBUG
-; canManager.c	   676      canMessageCount++;
-; canManager.c	   677      byteNum = 0;
-; canManager.c	   678      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-; canManager.c	   679      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;  //505
-; canManager.c	   680      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_FL.ioErr_signalInit;
-; canManager.c	   681      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_FL.ioErr_signalInit >> 8;
-; canManager.c	   682      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_FL.ioErr_signalGet;
-; canManager.c	   683      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_FL.ioErr_signalGet >> 8;
-; canManager.c	   684      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_FR.ioErr_signalInit;
-; canManager.c	   685      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_FR.ioErr_signalInit >> 8;
-; canManager.c	   686      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_FR.ioErr_signalGet;
-; canManager.c	   687      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_FR.ioErr_signalGet >> 8;
-; canManager.c	   688      canMessages[canMessageCount - 1].length = byteNum;
-; canManager.c	   689      */
-; canManager.c	   690  
-; canManager.c	   691      //WSS RPM interpolated output
-; canManager.c	   692      canMessageCount++;
-; canManager.c	   693      byteNum = 0;
-; canManager.c	   694      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-; canManager.c	   695      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
+; canManager.c	   580  
+; canManager.c	   581      /*
+; canManager.c	   582      //TEMP: WSS3
+; canManager.c	   583      canMessageCount++;
+; canManager.c	   584      byteNum = 0;
+; canManager.c	   585      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   586      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;  //505
+; canManager.c	   587      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_RL.sensorValue;
+; canManager.c	   588      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_RL.sensorValue >> 8;
+; canManager.c	   589      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_RL.sensorValue >> 16;
+; canManager.c	   590      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_RL.sensorValue >> 24;
+; canManager.c	   591      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_RR.sensorValue;
+; canManager.c	   592      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_RR.sensorValue >> 8;
+; canManager.c	   593      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_RR.sensorValue >> 16;
+; canManager.c	   594      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_RR.sensorValue >> 24;
+; canManager.c	   595      canMessages[canMessageCount - 1].length = byteNum;
+; canManager.c	   596      */
+; canManager.c	   597      /*
+; canManager.c	   598      //TEMP: FRONT WSS PIN DEBUG
+; canManager.c	   599      canMessageCount++;
+; canManager.c	   600      byteNum = 0;
+; canManager.c	   601      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   602      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;  //505
+; canManager.c	   603      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_FL.ioErr_signalInit;
+; canManager.c	   604      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_FL.ioErr_signalInit >> 8;
+; canManager.c	   605      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_FL.ioErr_signalGet;
+; canManager.c	   606      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_FL.ioErr_signalGet >> 8;
+; canManager.c	   607      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_FR.ioErr_signalInit;
+; canManager.c	   608      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_FR.ioErr_signalInit >> 8;
+; canManager.c	   609      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_FR.ioErr_signalGet;
+; canManager.c	   610      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_WSS_FR.ioErr_signalGet >> 8;
+; canManager.c	   611      canMessages[canMessageCount - 1].length = byteNum;
+; canManager.c	   612      */
+; canManager.c	   613  
+; canManager.c	   614      //WSS RPM interpolated output
+; canManager.c	   615      canMessageCount++;
+; canManager.c	   616      byteNum = 0;
+; canManager.c	   617      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   618      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r12,#0x505
 _3092:
 	movb	[r11+#0x4f],rl4
@@ -3898,51 +3821,51 @@ _3093:
 	movw	[r11+#0x52],r13
 _3094:
 
-; canManager.c	   696      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   619      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x46],rl4
 _3095:
 
-; canManager.c	   697      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   620      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x47],rl4
 _3096:
 
-; canManager.c	   698      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   621      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x48],rl4
 _3097:
 
-; canManager.c	   699      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   622      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x49],rl4
 _3098:
 
-; canManager.c	   700      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   623      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x4a],rl4
 _3099:
 
-; canManager.c	   701      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   624      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x4b],rl4
 _3100:
 
-; canManager.c	   702      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   625      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x4c],rl4
 _3101:
 
-; canManager.c	   703      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   626      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x4d],rl4
 _3102:
 
-; canManager.c	   704      canMessages[canMessageCount - 1].length = byteNum;
+; canManager.c	   627      canMessages[canMessageCount - 1].length = byteNum;
 	movb	[r11+#0x4e],rh4
 _3103:
 
-; canManager.c	   705  
-; canManager.c	   706      //506: Safety Checker
-; canManager.c	   707      canMessageCount++;
-; canManager.c	   708      byteNum = 0;
-; canManager.c	   709      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   628  
+; canManager.c	   629      //506: Safety Checker
+; canManager.c	   630      canMessageCount++;
+; canManager.c	   631      byteNum = 0;
+; canManager.c	   632      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	[r11+#0x5d],rl4
 _3104:
 
-; canManager.c	   710      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
+; canManager.c	   633      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r11,#0x506
 _2294:
 	movw	r12,[r8+#0x6]
@@ -3953,7 +3876,7 @@ _2296:
 	movw	[r11+#0x60],r13
 _3105:
 
-; canManager.c	   711      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getFaults(sc);
+; canManager.c	   634      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getFaults(sc);
 	movw	r2,[r8+#0x12]
 	movw	r3,[r8+#0x10]
 	call	_SafetyChecker_getFaults
@@ -3963,7 +3886,7 @@ _2298:
 	movb	[r11+#0x54],rl2
 _3106:
 
-; canManager.c	   712      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getFaults(sc) >> 8;
+; canManager.c	   635      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getFaults(sc) >> 8;
 	movw	r2,[r8+#0x12]
 	movw	r3,[r8+#0x10]
 	call	_SafetyChecker_getFaults
@@ -3975,7 +3898,7 @@ _3107:
 	movb	[r11+#0x55],rl2
 _3108:
 
-; canManager.c	   713      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getFaults(sc) >> 16;
+; canManager.c	   636      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getFaults(sc) >> 16;
 	movw	r2,[r8+#0x12]
 	movw	r3,[r8+#0x10]
 	call	_SafetyChecker_getFaults
@@ -3985,7 +3908,7 @@ _2302:
 	movb	[r11+#0x56],rl3
 _3109:
 
-; canManager.c	   714      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getFaults(sc) >> 24;
+; canManager.c	   637      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getFaults(sc) >> 24;
 	movw	r2,[r8+#0x12]
 	movw	r3,[r8+#0x10]
 	call	_SafetyChecker_getFaults
@@ -3997,7 +3920,7 @@ _3110:
 	movb	[r11+#0x57],rl3
 _3111:
 
-; canManager.c	   715      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getWarnings(sc);
+; canManager.c	   638      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getWarnings(sc);
 	movw	r2,[r8+#0x12]
 	movw	r3,[r8+#0x10]
 	call	_SafetyChecker_getWarnings
@@ -4007,7 +3930,7 @@ _2306:
 	movb	[r11+#0x58],rl2
 _3112:
 
-; canManager.c	   716      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getWarnings(sc) >> 8;
+; canManager.c	   639      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getWarnings(sc) >> 8;
 	movw	r2,[r8+#0x12]
 	movw	r3,[r8+#0x10]
 	call	_SafetyChecker_getWarnings
@@ -4019,7 +3942,7 @@ _3113:
 	movb	[r11+#0x59],rl2
 _3114:
 
-; canManager.c	   717      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getNotices(sc);
+; canManager.c	   640      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getNotices(sc);
 	movw	r2,[r8+#0x12]
 	movw	r3,[r8+#0x10]
 	call	_SafetyChecker_getNotices
@@ -4029,7 +3952,7 @@ _2310:
 	movb	[r11+#0x5a],rl2
 _3115:
 
-; canManager.c	   718      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getNotices(sc) >> 8;
+; canManager.c	   641      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getNotices(sc) >> 8;
 	movw	r2,[r8+#0x12]
 	movw	r3,[r8+#0x10]
 	call	_SafetyChecker_getNotices
@@ -4039,7 +3962,7 @@ _2312:
 	movb	rl2,rh2
 _3116:
 
-; canManager.c	   719      canMessages[canMessageCount - 1].length = byteNum;
+; canManager.c	   642      canMessages[canMessageCount - 1].length = byteNum;
 	movb	rh4,#0x8
 _3117:
 	movb	[r11+#0x5b],rl2
@@ -4047,11 +3970,11 @@ _3118:
 	movb	[r11+#0x5c],rh4
 _369:
 
-; canManager.c	   720  
-; canManager.c	   721      //12v battery
-; canManager.c	   722      float4 LVBatterySOC = 0;
-; canManager.c	   723      if (Sensor_LVBattery.sensorValue < 12730)
-; canManager.c	   724          LVBatterySOC = .0 + .1 * getPercent(Sensor_LVBattery.sensorValue, 9200, 12730, FALSE);
+; canManager.c	   643  
+; canManager.c	   644      //12v battery
+; canManager.c	   645      float4 LVBatterySOC = 0;
+; canManager.c	   646      if (Sensor_LVBattery.sensorValue < 12730)
+; canManager.c	   647          LVBatterySOC = .0 + .1 * getPercent(Sensor_LVBattery.sensorValue, 9200, 12730, FALSE);
 	exts	#@seg(_Sensor_LVBattery+0x8),#0x1
 	movw	r12,@sof(_Sensor_LVBattery+0x8)
 	exts	#@seg(_Sensor_LVBattery+0xa),#0x1
@@ -4091,14 +4014,14 @@ _3126:
 	jmp	_104
 _103:
 
-; canManager.c	   725      else if (Sensor_LVBattery.sensorValue < 12866)
+; canManager.c	   648      else if (Sensor_LVBattery.sensorValue < 12866)
 	movw	r11,r13
 	cmpw	r12,#0x3242
 	subcw	r11,#0x0
 	jmp+	cc_uge,_105
 _3127:
 
-; canManager.c	   726          LVBatterySOC = .1 + .1 * getPercent(Sensor_LVBattery.sensorValue, 12730, 12866, FALSE);
+; canManager.c	   649          LVBatterySOC = .1 + .1 * getPercent(Sensor_LVBattery.sensorValue, 12730, 12866, FALSE);
 	subw	r15,#0x2
 _1590:
 	movw	r4,#0xe800
@@ -4128,14 +4051,14 @@ _3134:
 	jmp	_106
 _105:
 
-; canManager.c	   727      else if (Sensor_LVBattery.sensorValue < 12996)
+; canManager.c	   650      else if (Sensor_LVBattery.sensorValue < 12996)
 	movw	r11,r13
 	cmpw	r12,#0x32c4
 	subcw	r11,#0x0
 	jmp+	cc_uge,_107
 _3135:
 
-; canManager.c	   728          LVBatterySOC = .2 + .1 * getPercent(Sensor_LVBattery.sensorValue, 12866, 12996, FALSE);
+; canManager.c	   651          LVBatterySOC = .2 + .1 * getPercent(Sensor_LVBattery.sensorValue, 12866, 12996, FALSE);
 	subw	r15,#0x2
 _1612:
 	movw	r4,#0x800
@@ -4165,14 +4088,14 @@ _3142:
 	jmp	_108
 _107:
 
-; canManager.c	   729      else if (Sensor_LVBattery.sensorValue < 13104)
+; canManager.c	   652      else if (Sensor_LVBattery.sensorValue < 13104)
 	movw	r11,r13
 	cmpw	r12,#0x3330
 	subcw	r11,#0x0
 	jmp+	cc_uge,_109
 _3143:
 
-; canManager.c	   730          LVBatterySOC = .3 + .1 * getPercent(Sensor_LVBattery.sensorValue, 12996, 13104, FALSE);
+; canManager.c	   653          LVBatterySOC = .3 + .1 * getPercent(Sensor_LVBattery.sensorValue, 12996, 13104, FALSE);
 	subw	r15,#0x2
 _1634:
 	movw	r4,#0x1000
@@ -4204,14 +4127,14 @@ _3151:
 	jmp	_110
 _109:
 
-; canManager.c	   731      else if (Sensor_LVBattery.sensorValue < 13116)
+; canManager.c	   654      else if (Sensor_LVBattery.sensorValue < 13116)
 	movw	r11,r13
 	cmpw	r12,#0x333c
 	subcw	r11,#0x0
 	jmp+	cc_uge,_111
 _3152:
 
-; canManager.c	   732          LVBatterySOC = .4 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13104, 13116, FALSE);
+; canManager.c	   655          LVBatterySOC = .4 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13104, 13116, FALSE);
 	subw	r15,#0x2
 _1656:
 	movw	r4,#0xc000
@@ -4241,14 +4164,14 @@ _3159:
 	jmp	_112
 _111:
 
-; canManager.c	   733      else if (Sensor_LVBattery.sensorValue < 13130)
+; canManager.c	   656      else if (Sensor_LVBattery.sensorValue < 13130)
 	movw	r11,r13
 	cmpw	r12,#0x334a
 	subcw	r11,#0x0
 	jmp+	cc_uge,_113
 _3160:
 
-; canManager.c	   734          LVBatterySOC = .5 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13116, 13130, FALSE);
+; canManager.c	   657          LVBatterySOC = .5 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13116, 13130, FALSE);
 	subw	r15,#0x2
 _1678:
 	movw	r4,#0xf000
@@ -4280,14 +4203,14 @@ _3168:
 	jmp	_114
 _113:
 
-; canManager.c	   735      else if (Sensor_LVBattery.sensorValue < 13160)
+; canManager.c	   658      else if (Sensor_LVBattery.sensorValue < 13160)
 	movw	r11,r13
 	cmpw	r12,#0x3368
 	subcw	r11,#0x0
 	jmp+	cc_uge,_115
 _3169:
 
-; canManager.c	   736          LVBatterySOC = .6 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13130, 13160, FALSE);
+; canManager.c	   659          LVBatterySOC = .6 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13130, 13160, FALSE);
 	subw	r15,#0x2
 _1700:
 	movw	r4,#0x2800
@@ -4319,14 +4242,14 @@ _3177:
 	jmp	_116
 _115:
 
-; canManager.c	   737      else if (Sensor_LVBattery.sensorValue < 13270)
+; canManager.c	   660      else if (Sensor_LVBattery.sensorValue < 13270)
 	movw	r11,r13
 	cmpw	r12,#0x33d6
 	subcw	r11,#0x0
 	jmp+	cc_uge,_117
 _3178:
 
-; canManager.c	   738          LVBatterySOC = .7 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13160, 13270, FALSE);
+; canManager.c	   661          LVBatterySOC = .7 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13160, 13270, FALSE);
 	subw	r15,#0x2
 _1722:
 	movw	r4,#0xa000
@@ -4358,13 +4281,13 @@ _3186:
 	jmp	_118
 _117:
 
-; canManager.c	   739      else if (Sensor_LVBattery.sensorValue < 13300)
+; canManager.c	   662      else if (Sensor_LVBattery.sensorValue < 13300)
 	cmpw	r12,#0x33f4
 	subcw	r13,#0x0
 	jmp	cc_uge,_119
 _3187:
 
-; canManager.c	   740          LVBatterySOC = .8 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13270, 13300, FALSE);
+; canManager.c	   663          LVBatterySOC = .8 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13270, 13300, FALSE);
 	subw	r15,#0x2
 _1744:
 	movw	r4,#0x5800
@@ -4394,8 +4317,8 @@ _3194:
 	jmp	_120
 _119:
 
-; canManager.c	   741      else //if (Sensor_LVBattery.sensorValue < 14340)
-; canManager.c	   742          LVBatterySOC = .9 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13300, 14340, FALSE);
+; canManager.c	   664      else //if (Sensor_LVBattery.sensorValue < 14340)
+; canManager.c	   665          LVBatterySOC = .9 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13300, 14340, FALSE);
 	subw	r15,#0x2
 _1766:
 	movw	r4,#0xd000
@@ -4433,10 +4356,10 @@ _118:
 	call	__add_dpf
 _104:
 
-; canManager.c	   743  
-; canManager.c	   744      canMessageCount++;
-; canManager.c	   745      byteNum = 0;
-; canManager.c	   746      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
+; canManager.c	   666  
+; canManager.c	   667      canMessageCount++;
+; canManager.c	   668      byteNum = 0;
+; canManager.c	   669      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r13,[r8+#0x6]
 _2314:
 	movw	r11,#0x507
@@ -4449,7 +4372,7 @@ _2315:
 	movw	r12,#0x0
 _3203:
 
-; canManager.c	   747      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   670      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	rh4,#0x0
 _3204:
 	movw	[r11+#0x6e],r12
@@ -4457,14 +4380,14 @@ _3205:
 	movb	[r11+#0x6b],rh4
 _3206:
 
-; canManager.c	   748      canMessages[canMessageCount - 1].data[byteNum++] = (ubyte1)Sensor_LVBattery.sensorValue;
+; canManager.c	   671      canMessages[canMessageCount - 1].data[byteNum++] = (ubyte1)Sensor_LVBattery.sensorValue;
 	exts	#@seg(_Sensor_LVBattery+0x8),#0x1
 	movw	r4,@sof(_Sensor_LVBattery+0x8)
 _3207:
 	movb	[r11+#0x62],rl4
 _3208:
 
-; canManager.c	   749      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_LVBattery.sensorValue >> 8;
+; canManager.c	   672      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_LVBattery.sensorValue >> 8;
 	movw	r11,[r8+#0x6]
 _3209:
 	exts	#@seg(_Sensor_LVBattery+0x8),#0x1
@@ -4475,7 +4398,7 @@ _3211:
 	movb	[r11+#0x63],rl4
 _3212:
 
-; canManager.c	   750      canMessages[canMessageCount - 1].data[byteNum++] = (sbyte1)(100 * LVBatterySOC);
+; canManager.c	   673      canMessages[canMessageCount - 1].data[byteNum++] = (sbyte1)(100 * LVBatterySOC);
 	movw	r5,#0x42c8
 _3213:
 	movw	r4,#0x0
@@ -4486,26 +4409,26 @@ _3215:
 	movb	[r11+#0x64],rh2
 _3216:
 
-; canManager.c	   751      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   674      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	rh4,#0x0
 _3217:
 	movb	[r11+#0x65],rh4
 _3218:
 
-; canManager.c	   752      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   675      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x66],rh4
 _3219:
 
-; canManager.c	   753      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   676      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x67],rh4
 _3220:
 
-; canManager.c	   754      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   677      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x68],rh4
 _3221:
 
-; canManager.c	   755      canMessages[canMessageCount - 1].data[byteNum++] = 0;
-; canManager.c	   756      canMessages[canMessageCount - 1].length = byteNum;
+; canManager.c	   678      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   679      canMessages[canMessageCount - 1].length = byteNum;
 	movb	rl4,#0x8
 _3222:
 	movb	[r11+#0x69],rh4
@@ -4513,11 +4436,11 @@ _3223:
 	movb	[r11+#0x6a],rl4
 _3224:
 
-; canManager.c	   757  
-; canManager.c	   758      //508: Regen settings (Need to be updated for the future)
-; canManager.c	   759      canMessageCount++;
-; canManager.c	   760      byteNum = 0;
-; canManager.c	   761      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
+; canManager.c	   680  
+; canManager.c	   681      //508: Regen settings (Need to be updated for the future)
+; canManager.c	   682      canMessageCount++;
+; canManager.c	   683      byteNum = 0;
+; canManager.c	   684      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r12,#0x508
 _3225:
 	movw	[r11+#0x7a],r12
@@ -4527,48 +4450,48 @@ _3227:
 	movw	[r11+#0x7c],r13
 _3228:
 
-; canManager.c	   762      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   685      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	[r11+#0x79],rh4
 _3229:
 
-; canManager.c	   763      canMessages[canMessageCount - 1].data[byteNum++] = 0; //MCM_getRegenMode(mcm);
+; canManager.c	   686      canMessages[canMessageCount - 1].data[byteNum++] = 0; //MCM_getRegenMode(mcm);
 	movb	[r11+#0x70],rh4
 _3230:
 
-; canManager.c	   764      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   687      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x71],rh4
 _3231:
 
-; canManager.c	   765      canMessages[canMessageCount - 1].data[byteNum++] = 0; //MCM_getMaxTorqueDNm(mcm)/10;
+; canManager.c	   688      canMessages[canMessageCount - 1].data[byteNum++] = 0; //MCM_getMaxTorqueDNm(mcm)/10;
 	movb	[r11+#0x72],rh4
 _3232:
 
-; canManager.c	   766      canMessages[canMessageCount - 1].data[byteNum++] = 0; //MCM_getRegenTorqueLimitDNm(mcm)/10;
+; canManager.c	   689      canMessages[canMessageCount - 1].data[byteNum++] = 0; //MCM_getRegenTorqueLimitDNm(mcm)/10;
 	movb	[r11+#0x73],rh4
 _3233:
 
-; canManager.c	   767      canMessages[canMessageCount - 1].data[byteNum++] = 0; //MCM_getRegenTorqueAtZeroPedalDNm(mcm)/10;
+; canManager.c	   690      canMessages[canMessageCount - 1].data[byteNum++] = 0; //MCM_getRegenTorqueAtZeroPedalDNm(mcm)/10;
 	movb	[r11+#0x74],rh4
 _3234:
 
-; canManager.c	   768      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   691      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x75],rh4
 _3235:
 
-; canManager.c	   769      canMessages[canMessageCount - 1].data[byteNum++] = 0; //MCM_getRegenAPPSForMaxCoastingZeroToFF(mcm);
+; canManager.c	   692      canMessages[canMessageCount - 1].data[byteNum++] = 0; //MCM_getRegenAPPSForMaxCoastingZeroToFF(mcm);
 	movb	[r11+#0x76],rh4
 _3236:
 
-; canManager.c	   770      canMessages[canMessageCount - 1].data[byteNum++] = 0; //MCM_getRegenBPSForMaxRegenZeroToFF(mcm);
+; canManager.c	   693      canMessages[canMessageCount - 1].data[byteNum++] = 0; //MCM_getRegenBPSForMaxRegenZeroToFF(mcm);
 	movb	[r11+#0x77],rh4
 _3237:
 
-; canManager.c	   771      canMessages[canMessageCount - 1].length = byteNum;
-; canManager.c	   772  
-; canManager.c	   773      //509: MCM RTD Status
-; canManager.c	   774      canMessageCount++;
-; canManager.c	   775      byteNum = 0;
-; canManager.c	   776      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
+; canManager.c	   694      canMessages[canMessageCount - 1].length = byteNum;
+; canManager.c	   695  
+; canManager.c	   696      //509: MCM RTD Status
+; canManager.c	   697      canMessageCount++;
+; canManager.c	   698      byteNum = 0;
+; canManager.c	   699      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r12,#0x509
 _3238:
 	movb	[r11+#0x78],rl4
@@ -4577,30 +4500,30 @@ _3239:
 	movw	[r11+#0x8a],r13
 _3240:
 
-; canManager.c	   777      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   700      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	[r11+#0x87],rh4
 _3241:
 
-; canManager.c	   778      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_HVILTerminationSense.sensorValue;
+; canManager.c	   701      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_HVILTerminationSense.sensorValue;
 	exts	#@seg(_Sensor_HVILTerminationSense+0x8),#0x1
 	movw	r5,@sof(_Sensor_HVILTerminationSense+0x8)
 _3242:
 	movb	[r11+#0x7e],rl5
 _3243:
 
-; canManager.c	   779      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_HVILTerminationSense.sensorValue >> 8;
-; canManager.c	   780      canMessages[canMessageCount - 1].data[byteNum++] = 0;
-; canManager.c	   781      canMessages[canMessageCount - 1].data[byteNum++] = 0;
-; canManager.c	   782      canMessages[canMessageCount - 1].data[byteNum++] = 0;
-; canManager.c	   783      canMessages[canMessageCount - 1].data[byteNum++] = 0;
-; canManager.c	   784      canMessages[canMessageCount - 1].data[byteNum++] = 0;
-; canManager.c	   785      canMessages[canMessageCount - 1].data[byteNum++] = 0;
-; canManager.c	   786      canMessages[canMessageCount - 1].length = byteNum;
-; canManager.c	   787  
-; canManager.c	   788      //50A: Torque Vectoring Loopback (Future Needs)
-; canManager.c	   789      canMessageCount++;
-; canManager.c	   790      byteNum = 0;
-; canManager.c	   791      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
+; canManager.c	   702      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_HVILTerminationSense.sensorValue >> 8;
+; canManager.c	   703      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   704      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   705      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   706      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   707      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   708      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   709      canMessages[canMessageCount - 1].length = byteNum;
+; canManager.c	   710  
+; canManager.c	   711      //50A: Torque Vectoring Loopback (Future Needs)
+; canManager.c	   712      canMessageCount++;
+; canManager.c	   713      byteNum = 0;
+; canManager.c	   714      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r12,#0x50a
 _3244:
 	movw	r11,[r8+#0x6]
@@ -4630,48 +4553,48 @@ _3255:
 	movw	[r11+#0x98],r13
 _3256:
 
-; canManager.c	   792      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   715      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	[r11+#0x95],rh4
 _3257:
 
-; canManager.c	   793      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   716      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x8c],rh4
 _3258:
 
-; canManager.c	   794      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   717      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x8d],rh4
 _3259:
 
-; canManager.c	   795      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   718      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x8e],rh4
 _3260:
 
-; canManager.c	   796      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   719      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x8f],rh4
 _3261:
 
-; canManager.c	   797      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   720      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x90],rh4
 _3262:
 
-; canManager.c	   798      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   721      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x91],rh4
 _3263:
 
-; canManager.c	   799      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   722      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x92],rh4
 _3264:
 
-; canManager.c	   800      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   723      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x93],rh4
 _3265:
 
-; canManager.c	   801      canMessages[canMessageCount - 1].length = byteNum;
-; canManager.c	   802  
-; canManager.c	   803      //50B: AMK VCU Debug
-; canManager.c	   804      canMessageCount++;
-; canManager.c	   805      byteNum = 0;
-; canManager.c	   806      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
+; canManager.c	   724      canMessages[canMessageCount - 1].length = byteNum;
+; canManager.c	   725  
+; canManager.c	   726      //50B: AMK VCU Debug
+; canManager.c	   727      canMessageCount++;
+; canManager.c	   728      byteNum = 0;
+; canManager.c	   729      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r12,#0x50b
 _3266:
 	movb	[r11+#0x94],rl4
@@ -4680,11 +4603,11 @@ _3267:
 	movw	[r11+#0xa6],r13
 _3268:
 
-; canManager.c	   807      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   730      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	[r11+#0xa3],rh4
 _3269:
 
-; canManager.c	   808      canMessages[canMessageCount - 1].data[byteNum++] = inv1->startUpStage;
+; canManager.c	   731      canMessages[canMessageCount - 1].data[byteNum++] = inv1->startUpStage;
 	movw	r11,[r8+#0x18]
 _2316:
 	movw	r12,[r8+#0x1a]
@@ -4698,7 +4621,7 @@ _2317:
 	movb	[r11+#0x9a],rl5
 _3271:
 
-; canManager.c	   809      canMessages[canMessageCount - 1].data[byteNum++] = inv2->startUpStage;
+; canManager.c	   732      canMessages[canMessageCount - 1].data[byteNum++] = inv2->startUpStage;
 	movw	r11,[r8+#0x1c]
 _2318:
 	movw	r12,[r8+#0x1e]
@@ -4712,39 +4635,39 @@ _2319:
 	movb	[r11+#0x9b],rl5
 _3273:
 
-; canManager.c	   810      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   733      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x9c],rh4
 _3274:
 
-; canManager.c	   811      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   734      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x9d],rh4
 _3275:
 
-; canManager.c	   812      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   735      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x9e],rh4
 _3276:
 
-; canManager.c	   813      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   736      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0x9f],rh4
 _3277:
 
-; canManager.c	   814      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   737      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0xa0],rh4
 _3278:
 
-; canManager.c	   815      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   738      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0xa1],rh4
 _3279:
 
-; canManager.c	   816      canMessages[canMessageCount - 1].length = byteNum;
+; canManager.c	   739      canMessages[canMessageCount - 1].length = byteNum;
 	movb	[r11+#0xa2],rl4
 _3280:
 
-; canManager.c	   817  
-; canManager.c	   818      //50C: SAS (Steering Angle Sensor)
-; canManager.c	   819      canMessageCount++;
-; canManager.c	   820      byteNum = 0;
-; canManager.c	   821      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
+; canManager.c	   740  
+; canManager.c	   741      //50C: SAS (Steering Angle Sensor)
+; canManager.c	   742      canMessageCount++;
+; canManager.c	   743      byteNum = 0;
+; canManager.c	   744      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r11,#0x50c
 _2320:
 	movw	r12,[r8+#0x6]
@@ -4755,11 +4678,11 @@ _2322:
 	movw	[r11+#0xb4],r13
 _3281:
 
-; canManager.c	   822      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   745      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	[r11+#0xb1],rh4
 _3282:
 
-; canManager.c	   823      canMessages[canMessageCount - 1].data[byteNum++] = steering_degrees();
+; canManager.c	   746      canMessages[canMessageCount - 1].data[byteNum++] = steering_degrees();
 	call	_steering_degrees
 _2323:
 	movw	r11,[r8+#0x6]
@@ -4767,21 +4690,21 @@ _2324:
 	movb	[r11+#0xa8],rl2
 _3283:
 
-; canManager.c	   824      canMessages[canMessageCount - 1].data[byteNum++] = steering_degrees() >> 8;
+; canManager.c	   747      canMessages[canMessageCount - 1].data[byteNum++] = steering_degrees() >> 8;
 	call	_steering_degrees
 _2325:
 	movw	r11,[r8+#0x6]
 _2326:
-	ashr	r2,#0x8
+	movb	rl2,rh2
 _3284:
 
-; canManager.c	   825      canMessages[canMessageCount - 1].data[byteNum++] = drs->buttonPressed;
-; canManager.c	   826      canMessages[canMessageCount - 1].data[byteNum++] = drs->currentDRSMode;
-; canManager.c	   827      canMessages[canMessageCount - 1].data[byteNum++] = 0;
-; canManager.c	   828      canMessages[canMessageCount - 1].data[byteNum++] = 0;
-; canManager.c	   829      canMessages[canMessageCount - 1].data[byteNum++] = 0;
-; canManager.c	   830      canMessages[canMessageCount - 1].data[byteNum++] = 0;
-; canManager.c	   831      canMessages[canMessageCount - 1].length = byteNum;
+; canManager.c	   748      canMessages[canMessageCount - 1].data[byteNum++] = drs->buttonPressed;
+; canManager.c	   749      canMessages[canMessageCount - 1].data[byteNum++] = drs->currentDRSMode;
+; canManager.c	   750      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   751      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   752      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   753      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   754      canMessages[canMessageCount - 1].length = byteNum;
 	movb	rl4,#0x8
 _3285:
 	movb	[r11+#0xa9],rl2
@@ -4793,12 +4716,12 @@ _2327:
 	addcw	r12,#0x0
 _3287:
 
-; canManager.c	   832  
-; canManager.c	   833      //50D: BPS1 (TEMPORARY ADDRESS)
-; canManager.c	   834      canMessageCount++;
-; canManager.c	   835      byteNum = 0;
-; canManager.c	   836      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-; canManager.c	   837      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
+; canManager.c	   755  
+; canManager.c	   756      //50D: BPS1 (TEMPORARY ADDRESS)
+; canManager.c	   757      canMessageCount++;
+; canManager.c	   758      byteNum = 0;
+; canManager.c	   759      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   760      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r14,#0x0
 _3288:
 	exts	r12,#0x1
@@ -4841,15 +4764,15 @@ _3300:
 	movw	[r11+#0xc2],r14
 _3301:
 
-; canManager.c	   838      canMessages[canMessageCount - 1].data[byteNum++] = brakePercent; //This should be bps0Percent, but for now bps0Percent = brakePercent
+; canManager.c	   761      canMessages[canMessageCount - 1].data[byteNum++] = brakePercent; //This should be bps0Percent, but for now bps0Percent = brakePercent
 	movb	[r11+#0xb6],rh7
 _3302:
 
-; canManager.c	   839      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   762      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0xb7],rh4
 _3303:
 
-; canManager.c	   840      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_value;
+; canManager.c	   763      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_value;
 	movw	r13,[r8+#0x6]
 _2331:
 	movw	r11,[r8+#0x14]
@@ -4862,7 +4785,7 @@ _3304:
 	movb	[r13+#0xb8],rl5
 _3305:
 
-; canManager.c	   841      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_value >> 8;
+; canManager.c	   764      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_value >> 8;
 	exts	r12,#0x1
 	movw	r5,[r11]
 _3306:
@@ -4873,7 +4796,7 @@ _3307:
 	movb	[r11+#0xb9],rl5
 _3308:
 
-; canManager.c	   842      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_calibMin;
+; canManager.c	   765      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_calibMin;
 	movw	r11,[r8+#0x14]
 _2333:
 	movw	r12,[r8+#0x16]
@@ -4885,7 +4808,7 @@ _2334:
 	movb	[r13+#0xba],rl5
 _2335:
 
-; canManager.c	   843      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_calibMin >> 8;
+; canManager.c	   766      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_calibMin >> 8;
 	exts	r12,#0x1
 	movw	r5,[r11]
 _3309:
@@ -4896,7 +4819,7 @@ _3310:
 	movb	[r11+#0xbb],rl5
 _3311:
 
-; canManager.c	   844      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_calibMax;
+; canManager.c	   767      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_calibMax;
 	movw	r11,[r8+#0x14]
 _2337:
 	movw	r12,[r8+#0x16]
@@ -4909,7 +4832,7 @@ _2340:
 	movb	[r13+#0xbc],rl5
 _2341:
 
-; canManager.c	   845      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_calibMax >> 8;
+; canManager.c	   768      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_calibMax >> 8;
 	exts	r12,#0x1
 	movw	r5,[r11]
 _3312:
@@ -4920,16 +4843,16 @@ _3313:
 	movb	[r11+#0xbd],rl5
 _3314:
 
-; canManager.c	   846      canMessages[canMessageCount - 1].length = byteNum;
+; canManager.c	   769      canMessages[canMessageCount - 1].length = byteNum;
 	movb	[r11+#0xbe],rl4
 _3315:
 
-; canManager.c	   847  
-; canManager.c	   848      
-; canManager.c	   849      //50E: BMS Loopback Test
-; canManager.c	   850      canMessageCount++;
-; canManager.c	   851      byteNum = 0;
-; canManager.c	   852      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
+; canManager.c	   770  
+; canManager.c	   771      
+; canManager.c	   772      //50E: BMS Loopback Test
+; canManager.c	   773      canMessageCount++;
+; canManager.c	   774      byteNum = 0;
+; canManager.c	   775      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r12,[r8+#0x6]
 _2342:
 	movw	r11,#0x50e
@@ -4940,11 +4863,11 @@ _2343:
 	movw	[r11+#0xd0],r14
 _3317:
 
-; canManager.c	   853      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   776      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	[r11+#0xcd],rh4
 _3318:
 
-; canManager.c	   854      canMessages[canMessageCount - 1].data[byteNum++] = BMS_getFaultFlags0(bms);
+; canManager.c	   777      canMessages[canMessageCount - 1].data[byteNum++] = BMS_getFaultFlags0(bms);
 	movw	r2,[r8+#0x22]
 	movw	r3,[r8+#0x20]
 	call	_BMS_getFaultFlags0
@@ -4954,7 +4877,7 @@ _2345:
 	movb	[r11+#0xc4],rl2
 _3319:
 
-; canManager.c	   855      canMessages[canMessageCount - 1].data[byteNum++] = BMS_getFaultFlags1(bms);
+; canManager.c	   778      canMessages[canMessageCount - 1].data[byteNum++] = BMS_getFaultFlags1(bms);
 	movw	r2,[r8+#0x22]
 	movw	r3,[r8+#0x20]
 	call	_BMS_getFaultFlags1
@@ -4964,7 +4887,7 @@ _2347:
 	movb	[r11+#0xc5],rl2
 _3320:
 
-; canManager.c	   856      canMessages[canMessageCount - 1].data[byteNum++] = BMS_getRelayState(bms);
+; canManager.c	   779      canMessages[canMessageCount - 1].data[byteNum++] = BMS_getRelayState(bms);
 	movw	r2,[r8+#0x22]
 	movw	r3,[r8+#0x20]
 	call	_BMS_getRelayState
@@ -4974,7 +4897,7 @@ _2349:
 	movb	[r11+#0xc6],rl2
 _3321:
 
-; canManager.c	   857      canMessages[canMessageCount - 1].data[byteNum++] = BMS_getHighestCellTemp_d_degC(bms);
+; canManager.c	   780      canMessages[canMessageCount - 1].data[byteNum++] = BMS_getHighestCellTemp_d_degC(bms);
 	movw	r2,[r8+#0x22]
 	movw	r3,[r8+#0x20]
 	call	_BMS_getHighestCellTemp_d_degC
@@ -4984,7 +4907,7 @@ _2351:
 	movb	[r11+#0xc7],rl2
 _3322:
 
-; canManager.c	   858      canMessages[canMessageCount - 1].data[byteNum++] = (BMS_getHighestCellTemp_d_degC(bms) >> 8);
+; canManager.c	   781      canMessages[canMessageCount - 1].data[byteNum++] = (BMS_getHighestCellTemp_d_degC(bms) >> 8);
 	movw	r2,[r8+#0x22]
 _2236:
 	movw	r3,[r8+#0x20]
@@ -4996,7 +4919,7 @@ _2354:
 	ashr	r2,#0x8
 _3323:
 
-; canManager.c	   859      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   782      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	rl4,#0x0
 _3324:
 	movb	[r11+#0xc8],rl2
@@ -5004,12 +4927,12 @@ _3325:
 	movb	[r11+#0xc9],rl4
 _3326:
 
-; canManager.c	   860      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   783      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r11+#0xca],rl4
 _3327:
 
-; canManager.c	   861      canMessages[canMessageCount - 1].data[byteNum++] = 0;
-; canManager.c	   862      canMessages[canMessageCount - 1].length = byteNum;
+; canManager.c	   784      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   785      canMessages[canMessageCount - 1].length = byteNum;
 	movb	rh4,#0x8
 _3328:
 	movb	[r11+#0xcb],rl4
@@ -5017,11 +4940,11 @@ _3329:
 	movb	[r11+#0xcc],rh4
 _3330:
 
-; canManager.c	   863  
-; canManager.c	   864      //50F: Power Debug (Need adaption in the future)
-; canManager.c	   865      canMessageCount++;
-; canManager.c	   866      byteNum = 0;
-; canManager.c	   867      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
+; canManager.c	   786  
+; canManager.c	   787      //50F: Power Debug (Need adaption in the future)
+; canManager.c	   788      canMessageCount++;
+; canManager.c	   789      byteNum = 0;
+; canManager.c	   790      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r13,[r8+#0x6]
 _2355:
 	movw	r11,#0x50f
@@ -5033,27 +4956,27 @@ _2356:
 	movw	[r11+#0xde],r12
 _3332:
 
-; canManager.c	   868      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   791      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	[r11+#0xdb],rl4
 _3333:
 
-; canManager.c	   869      canMessages[canMessageCount - 1].data[byteNum++] = 0; //MCM_getPower(mcm);
+; canManager.c	   792      canMessages[canMessageCount - 1].data[byteNum++] = 0; //MCM_getPower(mcm);
 	movb	[r11+#0xd2],rl4
 _3334:
 
-; canManager.c	   870      canMessages[canMessageCount - 1].data[byteNum++] = 0; //(MCM_getPower(mcm) >> 8);
+; canManager.c	   793      canMessages[canMessageCount - 1].data[byteNum++] = 0; //(MCM_getPower(mcm) >> 8);
 	movb	[r11+#0xd3],rl4
 _3335:
 
-; canManager.c	   871      canMessages[canMessageCount - 1].data[byteNum++] = 0; //(MCM_getPower(mcm) >> 16);
+; canManager.c	   794      canMessages[canMessageCount - 1].data[byteNum++] = 0; //(MCM_getPower(mcm) >> 16);
 	movb	[r11+#0xd4],rl4
 _3336:
 
-; canManager.c	   872      canMessages[canMessageCount - 1].data[byteNum++] = 0; //(MCM_getPower(mcm) >> 24);
+; canManager.c	   795      canMessages[canMessageCount - 1].data[byteNum++] = 0; //(MCM_getPower(mcm) >> 24);
 	movb	[r11+#0xd5],rl4
 _3337:
 
-; canManager.c	   873      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getWarnings(sc);
+; canManager.c	   796      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getWarnings(sc);
 	movw	r2,[r8+#0x12]
 	movw	r3,[r8+#0x10]
 	call	_SafetyChecker_getWarnings
@@ -5063,7 +4986,7 @@ _2358:
 	movb	[r11+#0xd6],rl2
 _3338:
 
-; canManager.c	   874      canMessages[canMessageCount - 1].data[byteNum++] = (SafetyChecker_getWarnings(sc) >> 8);
+; canManager.c	   797      canMessages[canMessageCount - 1].data[byteNum++] = (SafetyChecker_getWarnings(sc) >> 8);
 	movw	r2,[r8+#0x12]
 	movw	r3,[r8+#0x10]
 	call	_SafetyChecker_getWarnings
@@ -5075,7 +4998,7 @@ _3339:
 	movb	[r11+#0xd7],rl2
 _3340:
 
-; canManager.c	   875      canMessages[canMessageCount - 1].data[byteNum++] = (SafetyChecker_getWarnings(sc) >> 16);
+; canManager.c	   798      canMessages[canMessageCount - 1].data[byteNum++] = (SafetyChecker_getWarnings(sc) >> 16);
 	movw	r2,[r8+#0x12]
 	movw	r3,[r8+#0x10]
 	call	_SafetyChecker_getWarnings
@@ -5085,7 +5008,7 @@ _2362:
 	movb	[r11+#0xd8],rl3
 _3341:
 
-; canManager.c	   876      canMessages[canMessageCount - 1].data[byteNum++] = (SafetyChecker_getWarnings(sc) >> 24);
+; canManager.c	   799      canMessages[canMessageCount - 1].data[byteNum++] = (SafetyChecker_getWarnings(sc) >> 24);
 	movw	r2,[r8+#0x12]
 _2243:
 	movw	r3,[r8+#0x10]
@@ -5097,7 +5020,7 @@ _2365:
 	shr	r3,#0x8
 _3342:
 
-; canManager.c	   877      canMessages[canMessageCount - 1].length = byteNum;
+; canManager.c	   800      canMessages[canMessageCount - 1].length = byteNum;
 	movb	rh4,#0x8
 _3343:
 	movb	[r11+#0xd9],rl3
@@ -5105,29 +5028,29 @@ _3344:
 	movb	[r11+#0xda],rh4
 _3345:
 
-; canManager.c	   878  
-; canManager.c	   879      //511: SoftBSPD
-; canManager.c	   880      // ubyte1 flags = sc->softBSPD_bpsHigh;
-; canManager.c	   881      // flags |= sc->softBSPD_kwHigh << 1;
-; canManager.c	   882      // canMessageCount++;
-; canManager.c	   883      // byteNum = 0;
-; canManager.c	   884      // canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
-; canManager.c	   885      // canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-; canManager.c	   886      // canMessages[canMessageCount - 1].data[byteNum++] = sc->softBSPD_fault;
-; canManager.c	   887      // canMessages[canMessageCount - 1].data[byteNum++] = flags;
-; canManager.c	   888      // canMessages[canMessageCount - 1].data[byteNum++] = (ubyte1)mcm->kwRequestEstimate;
-; canManager.c	   889      // canMessages[canMessageCount - 1].data[byteNum++] = mcm->kwRequestEstimate >> 8;
-; canManager.c	   890      // canMessages[canMessageCount - 1].length = byteNum;
-; canManager.c	   891  
-; canManager.c	   892      //Inverter 1 FL Command Message
-; canManager.c	   893      canMessageCount++;
-; canManager.c	   894      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   801  
+; canManager.c	   802      //511: SoftBSPD
+; canManager.c	   803      // ubyte1 flags = sc->softBSPD_bpsHigh;
+; canManager.c	   804      // flags |= sc->softBSPD_kwHigh << 1;
+; canManager.c	   805      // canMessageCount++;
+; canManager.c	   806      // byteNum = 0;
+; canManager.c	   807      // canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
+; canManager.c	   808      // canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   809      // canMessages[canMessageCount - 1].data[byteNum++] = sc->softBSPD_fault;
+; canManager.c	   810      // canMessages[canMessageCount - 1].data[byteNum++] = flags;
+; canManager.c	   811      // canMessages[canMessageCount - 1].data[byteNum++] = (ubyte1)mcm->kwRequestEstimate;
+; canManager.c	   812      // canMessages[canMessageCount - 1].data[byteNum++] = mcm->kwRequestEstimate >> 8;
+; canManager.c	   813      // canMessages[canMessageCount - 1].length = byteNum;
+; canManager.c	   814  
+; canManager.c	   815      //Inverter 1 FL Command Message
+; canManager.c	   816      canMessageCount++;
+; canManager.c	   817      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	rl4,#0x0
 _3346:
 	movb	[r11+#0xe9],rl4
 _3347:
 
-; canManager.c	   895      canMessages[canMessageCount - 1].id = 0x184;
+; canManager.c	   818      canMessages[canMessageCount - 1].id = 0x184;
 	movw	r12,#0x184
 _3348:
 	movw	[r11+#0xea],r12
@@ -5138,11 +5061,11 @@ _3349:
 	movw	[r3+#0xec],r14
 _3350:
 
-; canManager.c	   896      canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
+; canManager.c	   819      canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
 	movb	[r3+#0xe0],rl4
 _3351:
 
-; canManager.c	   897      canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv1->AMK_bInverterOn << 0) | (inv1->AMK_bDcOn << 1) | (inv1->AMK_bEnable << 2) | (inv1->AMK_bErrorReset << 3));
+; canManager.c	   820      canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv1->AMK_bInverterOn << 0) | (inv1->AMK_bDcOn << 1) | (inv1->AMK_bEnable << 2) | (inv1->AMK_bErrorReset << 3));
 	movw	r12,[r8+#0x18]
 	movw	r13,[r8+#0x1a]
 	addw	r12,#0x9
@@ -5190,12 +5113,12 @@ _3365:
 	movb	[r3],rh5
 _3366:
 
-; canManager.c	   898      canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
+; canManager.c	   821      canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
 	andb	rh5,#0xf
 	movb	[r3],rh5
 _3367:
 
-; canManager.c	   899      canMessages[canMessageCount - 1].data[2] = inv1->AMK_TorqueSetpoint;
+; canManager.c	   822      canMessages[canMessageCount - 1].data[2] = inv1->AMK_TorqueSetpoint;
 	movw	r13,[r8+#0x6]
 _2367:
 	movw	r11,[r8+#0x18]
@@ -5208,7 +5131,7 @@ _3368:
 	movb	[r13+#0xe2],rl5
 _3369:
 
-; canManager.c	   900      canMessages[canMessageCount - 1].data[3] = inv1->AMK_TorqueSetpoint >> 8;
+; canManager.c	   823      canMessages[canMessageCount - 1].data[3] = inv1->AMK_TorqueSetpoint >> 8;
 	exts	r12,#0x1
 	movw	r5,[r11]
 _3370:
@@ -5219,7 +5142,7 @@ _3371:
 	movb	[r11+#0xe3],rl5
 _3372:
 
-; canManager.c	   901      canMessages[canMessageCount - 1].data[4] = inv1->AMK_TorqueLimitPositiv;
+; canManager.c	   824      canMessages[canMessageCount - 1].data[4] = inv1->AMK_TorqueLimitPositiv;
 	movw	r11,[r8+#0x18]
 _2369:
 	movw	r12,[r8+#0x1a]
@@ -5231,7 +5154,7 @@ _2370:
 	movb	[r13+#0xe4],rl5
 _2371:
 
-; canManager.c	   902      canMessages[canMessageCount - 1].data[5] = inv1->AMK_TorqueLimitPositiv >> 8;
+; canManager.c	   825      canMessages[canMessageCount - 1].data[5] = inv1->AMK_TorqueLimitPositiv >> 8;
 	exts	r12,#0x1
 	movw	r5,[r11]
 _3373:
@@ -5242,7 +5165,7 @@ _3374:
 	movb	[r11+#0xe5],rl5
 _3375:
 
-; canManager.c	   903      canMessages[canMessageCount - 1].data[6] = inv1->AMK_TorqueLimitNegativ;
+; canManager.c	   826      canMessages[canMessageCount - 1].data[6] = inv1->AMK_TorqueLimitNegativ;
 	movw	r11,[r8+#0x18]
 _2240:
 	movw	r12,[r8+#0x1a]
@@ -5254,7 +5177,7 @@ _2373:
 	movb	[r13+#0xe6],rl5
 _2374:
 
-; canManager.c	   904      canMessages[canMessageCount - 1].data[7] = inv1->AMK_TorqueLimitNegativ >> 8;
+; canManager.c	   827      canMessages[canMessageCount - 1].data[7] = inv1->AMK_TorqueLimitNegativ >> 8;
 	exts	r12,#0x1
 	movw	r5,[r11]
 _3376:
@@ -5263,12 +5186,12 @@ _2375:
 	ashr	r5,#0x8
 _3377:
 
-; canManager.c	   905      canMessages[canMessageCount - 1].length = 8;
-; canManager.c	   906  
-; canManager.c	   907      //Inverter 2 FR Command Message
-; canManager.c	   908      canMessageCount++;
-; canManager.c	   909      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-; canManager.c	   910      canMessages[canMessageCount - 1].id = 0x185;
+; canManager.c	   828      canMessages[canMessageCount - 1].length = 8;
+; canManager.c	   829  
+; canManager.c	   830      //Inverter 2 FR Command Message
+; canManager.c	   831      canMessageCount++;
+; canManager.c	   832      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   833      canMessages[canMessageCount - 1].id = 0x185;
 	movw	r12,#0x185
 _3378:
 	movb	[r11+#0xe7],rl5
@@ -5281,13 +5204,13 @@ _3381:
 	movw	[r11+#0xfa],r14
 _3382:
 
-; canManager.c	   911      canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
+; canManager.c	   834      canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
 	movw	r14,[r8+#0x6]
 _2376:
 	movb	[r14+#0xee],rl4
 _3383:
 
-; canManager.c	   912      canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv2->AMK_bInverterOn << 0) | (inv2->AMK_bDcOn << 1) | (inv2->AMK_bEnable << 2) | (inv2->AMK_bErrorReset << 3));
+; canManager.c	   835      canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv2->AMK_bInverterOn << 0) | (inv2->AMK_bDcOn << 1) | (inv2->AMK_bEnable << 2) | (inv2->AMK_bErrorReset << 3));
 	movw	r12,[r8+#0x1c]
 	movw	r13,[r8+#0x1e]
 	addw	r12,#0x9
@@ -5335,12 +5258,12 @@ _3397:
 	movb	[r14],rh5
 _3398:
 
-; canManager.c	   913      canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
+; canManager.c	   836      canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
 	andb	rh5,#0xf
 	movb	[r14],rh5
 _3399:
 
-; canManager.c	   914      canMessages[canMessageCount - 1].data[2] = inv2->AMK_TorqueSetpoint;
+; canManager.c	   837      canMessages[canMessageCount - 1].data[2] = inv2->AMK_TorqueSetpoint;
 	movw	r13,[r8+#0x6]
 _2377:
 	movw	r11,[r8+#0x1c]
@@ -5353,7 +5276,7 @@ _3400:
 	movb	[r13+#0xf0],rl5
 _3401:
 
-; canManager.c	   915      canMessages[canMessageCount - 1].data[3] = inv2->AMK_TorqueSetpoint >> 8;
+; canManager.c	   838      canMessages[canMessageCount - 1].data[3] = inv2->AMK_TorqueSetpoint >> 8;
 	exts	r12,#0x1
 	movw	r5,[r11]
 _3402:
@@ -5364,7 +5287,7 @@ _3403:
 	movb	[r11+#0xf1],rl5
 _3404:
 
-; canManager.c	   916      canMessages[canMessageCount - 1].data[4] = inv2->AMK_TorqueLimitPositiv;
+; canManager.c	   839      canMessages[canMessageCount - 1].data[4] = inv2->AMK_TorqueLimitPositiv;
 	movw	r11,[r8+#0x1c]
 _2379:
 	movw	r12,[r8+#0x1e]
@@ -5376,7 +5299,7 @@ _2380:
 	movb	[r13+#0xf2],rl5
 _2381:
 
-; canManager.c	   917      canMessages[canMessageCount - 1].data[5] = inv2->AMK_TorqueLimitPositiv >> 8;
+; canManager.c	   840      canMessages[canMessageCount - 1].data[5] = inv2->AMK_TorqueLimitPositiv >> 8;
 	exts	r12,#0x1
 	movw	r5,[r11]
 _3405:
@@ -5387,7 +5310,7 @@ _3406:
 	movb	[r11+#0xf3],rl5
 _3407:
 
-; canManager.c	   918      canMessages[canMessageCount - 1].data[6] = inv2->AMK_TorqueLimitNegativ;
+; canManager.c	   841      canMessages[canMessageCount - 1].data[6] = inv2->AMK_TorqueLimitNegativ;
 	movw	r11,[r8+#0x1c]
 _2241:
 	movw	r12,[r8+#0x1e]
@@ -5399,7 +5322,7 @@ _2383:
 	movb	[r13+#0xf4],rl5
 _2384:
 
-; canManager.c	   919      canMessages[canMessageCount - 1].data[7] = inv2->AMK_TorqueLimitNegativ >> 8;
+; canManager.c	   842      canMessages[canMessageCount - 1].data[7] = inv2->AMK_TorqueLimitNegativ >> 8;
 	exts	r12,#0x1
 	movw	r5,[r11]
 _3408:
@@ -5410,17 +5333,17 @@ _3409:
 	movb	[r11+#0xf5],rl5
 _3410:
 
-; canManager.c	   920      canMessages[canMessageCount - 1].length = 8;
+; canManager.c	   843      canMessages[canMessageCount - 1].length = 8;
 	movb	[r11+#0xf6],rh4
 _3411:
 
-; canManager.c	   921      //----------------------------------------------------------------------------
-; canManager.c	   922      //Additional sensors
-; canManager.c	   923      //----------------------------------------------------------------------------
-; canManager.c	   924  
-; canManager.c	   925      //Place the can messsages into the FIFO queue ---------------------------------------------------
-; canManager.c	   926      //IO_CAN_WriteFIFO(canFifoHandle_HiPri_Write, canMessages, canMessageCount);  //Important: Only transmit one message (the MCU message)
-; canManager.c	   927      CanManager_send(me, CAN0_HIPRI, canMessages, canMessageCount);  //Important: Only transmit one message (the MCU message)
+; canManager.c	   844      //----------------------------------------------------------------------------
+; canManager.c	   845      //Additional sensors
+; canManager.c	   846      //----------------------------------------------------------------------------
+; canManager.c	   847  
+; canManager.c	   848      //Place the can messsages into the FIFO queue ---------------------------------------------------
+; canManager.c	   849      //IO_CAN_WriteFIFO(canFifoHandle_HiPri_Write, canMessages, canMessageCount);  //Important: Only transmit one message (the MCU message)
+; canManager.c	   850      CanManager_send(me, CAN0_HIPRI, canMessages, canMessageCount);  //Important: Only transmit one message (the MCU message)
 	movw	r12,r11
 	jmp	cc_z,_121
 	shr	r12,#0xe
@@ -5438,9 +5361,9 @@ _2387:
 	call	_CanManager_send
 _362:
 
-; canManager.c	   928      //IO_CAN_WriteFIFO(canFifoHandle_LoPri_Write, canMessages, canMessageCount);  
-; canManager.c	   929  
-; canManager.c	   930  }
+; canManager.c	   851      //IO_CAN_WriteFIFO(canFifoHandle_LoPri_Write, canMessages, canMessageCount);  
+; canManager.c	   852  
+; canManager.c	   853  }
 	movw	r11,[r8+#0x6]
 _2388:
 	movw	r15,[r11+#0xfffe]
@@ -5469,8 +5392,8 @@ _235:
 code_canOutput_sendDebugMessage1	.section	code, cluster 'canOutput_sendDebugMessage1', new
 	.global	_canOutput_sendDebugMessage1
 
-; canManager.c	   931  
-; canManager.c	   932  void canOutput_sendDebugMessage1(CanManager *me, TorqueEncoder *tps, BrakePressureSensor *bps, InstrumentCluster *ic, BatteryManagementSystem *bms, SafetyChecker *sc, _DAQSensors *d1, _DriveInverter *inv1, _DriveInverter *inv2)
+; canManager.c	   854  
+; canManager.c	   855  void canOutput_sendDebugMessage1(CanManager *me, TorqueEncoder *tps, BrakePressureSensor *bps, InstrumentCluster *ic, BatteryManagementSystem *bms, SafetyChecker *sc, _DAQSensors *d1, _DriveInverter *inv1, _DriveInverter *inv2)
 ; Function _canOutput_sendDebugMessage1
 _196:
 _canOutput_sendDebugMessage1	.proc	far
@@ -5494,8 +5417,8 @@ _2466:
 	movw	r1,r3
 _2731:
 
-; canManager.c	   933  {
-; canManager.c	   934      IO_CAN_DATA_FRAME canMessages[me->can1_write_messageLimit]; 
+; canManager.c	   856  {
+; canManager.c	   857      IO_CAN_DATA_FRAME canMessages[me->can1_write_messageLimit]; 
 	movw	r5,r15
 _2730:
 	movw	[r8],r2
@@ -5529,30 +5452,30 @@ _2728:
 	movw	[r15],r5
 _3420:
 
-; canManager.c	   935      ubyte1 errorCount;
-; canManager.c	   936      float4 tempPedalPercent;   //Pedal percent float (a decimal between 0 and 1
-; canManager.c	   937      ubyte1 tps0Percent;  //Pedal percent int   (a number from 0 to 100)
-; canManager.c	   938      ubyte1 tps1Percent;
-; canManager.c	   939      ubyte2 canMessageCount = 0;
-; canManager.c	   940      ubyte2 canMessageID = 0x500;
-; canManager.c	   941      ubyte1 byteNum;
-; canManager.c	   942  
-; canManager.c	   943      //Inverter 3 RL Command Message
-; canManager.c	   944      canMessageCount++;
-; canManager.c	   945      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   858      ubyte1 errorCount;
+; canManager.c	   859      float4 tempPedalPercent;   //Pedal percent float (a decimal between 0 and 1
+; canManager.c	   860      ubyte1 tps0Percent;  //Pedal percent int   (a number from 0 to 100)
+; canManager.c	   861      ubyte1 tps1Percent;
+; canManager.c	   862      ubyte2 canMessageCount = 0;
+; canManager.c	   863      ubyte2 canMessageID = 0x500;
+; canManager.c	   864      ubyte1 byteNum;
+; canManager.c	   865  
+; canManager.c	   866      //Inverter 3 RL Command Message
+; canManager.c	   867      canMessageCount++;
+; canManager.c	   868      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	rl4,#0x0
 _3421:
 	movb	[r9+#0x9],rl4
 _3422:
 
-; canManager.c	   946      canMessages[canMessageCount - 1].id = 0x188;
+; canManager.c	   869      canMessages[canMessageCount - 1].id = 0x188;
 	movw	r5,#0x188
 _3423:
 	movw	[r9+#0xa],r5
 _3424:
 
-; canManager.c	   947      canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
-; canManager.c	   948      canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv1->AMK_bInverterOn << 0) | (inv1->AMK_bDcOn << 1) | (inv1->AMK_bEnable << 2) | (inv1->AMK_bErrorReset << 3));
+; canManager.c	   870      canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
+; canManager.c	   871      canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv1->AMK_bInverterOn << 0) | (inv1->AMK_bDcOn << 1) | (inv1->AMK_bEnable << 2) | (inv1->AMK_bErrorReset << 3));
 	movw	r5,r11
 	movw	r7,r12
 	addw	r5,#0x9
@@ -5583,8 +5506,8 @@ _3432:
 	addcw	r2,#0x0
 _3433:
 
-; canManager.c	   949      canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
-; canManager.c	   950      canMessages[canMessageCount - 1].data[2] = inv1->AMK_TorqueSetpoint;
+; canManager.c	   872      canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
+; canManager.c	   873      canMessages[canMessageCount - 1].data[2] = inv1->AMK_TorqueSetpoint;
 	movw	r10,r12
 _3434:
 	exts	r2,#0x1
@@ -5600,19 +5523,19 @@ _3437:
 	addcw	r2,#0x0
 _3438:
 
-; canManager.c	   951      canMessages[canMessageCount - 1].data[3] = inv1->AMK_TorqueSetpoint >> 8;
-; canManager.c	   952      canMessages[canMessageCount - 1].data[4] = inv1->AMK_TorqueLimitPositiv;
-; canManager.c	   953      canMessages[canMessageCount - 1].data[5] = inv1->AMK_TorqueLimitPositiv >> 8;
-; canManager.c	   954      canMessages[canMessageCount - 1].data[6] = inv1->AMK_TorqueLimitNegativ;
-; canManager.c	   955      canMessages[canMessageCount - 1].data[7] = inv1->AMK_TorqueLimitNegativ >> 8;
-; canManager.c	   956      canMessages[canMessageCount - 1].length = 8;
-; canManager.c	   957  
-; canManager.c	   958      //Inverter 4 RR Command Message
-; canManager.c	   959      canMessageCount++;
-; canManager.c	   960      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-; canManager.c	   961      canMessages[canMessageCount - 1].id = 0x189;
-; canManager.c	   962      canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
-; canManager.c	   963      canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv2->AMK_bInverterOn << 0) | (inv2->AMK_bDcOn << 1) | (inv2->AMK_bEnable << 2) | (inv2->AMK_bErrorReset << 3));
+; canManager.c	   874      canMessages[canMessageCount - 1].data[3] = inv1->AMK_TorqueSetpoint >> 8;
+; canManager.c	   875      canMessages[canMessageCount - 1].data[4] = inv1->AMK_TorqueLimitPositiv;
+; canManager.c	   876      canMessages[canMessageCount - 1].data[5] = inv1->AMK_TorqueLimitPositiv >> 8;
+; canManager.c	   877      canMessages[canMessageCount - 1].data[6] = inv1->AMK_TorqueLimitNegativ;
+; canManager.c	   878      canMessages[canMessageCount - 1].data[7] = inv1->AMK_TorqueLimitNegativ >> 8;
+; canManager.c	   879      canMessages[canMessageCount - 1].length = 8;
+; canManager.c	   880  
+; canManager.c	   881      //Inverter 4 RR Command Message
+; canManager.c	   882      canMessageCount++;
+; canManager.c	   883      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   884      canMessages[canMessageCount - 1].id = 0x189;
+; canManager.c	   885      canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
+; canManager.c	   886      canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv2->AMK_bInverterOn << 0) | (inv2->AMK_bDcOn << 1) | (inv2->AMK_bEnable << 2) | (inv2->AMK_bErrorReset << 3));
 	movw	r0,r13
 _3439:
 	exts	r2,#0x1
@@ -5729,21 +5652,21 @@ _3479:
 	addcw	r2,#0x0
 _3480:
 
-; canManager.c	   964      canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
-; canManager.c	   965      canMessages[canMessageCount - 1].data[2] = inv2->AMK_TorqueSetpoint;
-; canManager.c	   966      canMessages[canMessageCount - 1].data[3] = inv2->AMK_TorqueSetpoint >> 8;
-; canManager.c	   967      canMessages[canMessageCount - 1].data[4] = inv2->AMK_TorqueLimitPositiv;
-; canManager.c	   968      canMessages[canMessageCount - 1].data[5] = inv2->AMK_TorqueLimitPositiv >> 8;
-; canManager.c	   969      canMessages[canMessageCount - 1].data[6] = inv2->AMK_TorqueLimitNegativ;
-; canManager.c	   970      canMessages[canMessageCount - 1].data[7] = inv2->AMK_TorqueLimitNegativ >> 8;
-; canManager.c	   971      canMessages[canMessageCount - 1].length = 8;
-; canManager.c	   972  
-; canManager.c	   973      //50B: AMK VCU Debug (3/4 Inverters)
-; canManager.c	   974      canMessageCount++;
-; canManager.c	   975      byteNum = 0;
-; canManager.c	   976      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-; canManager.c	   977      canMessages[canMessageCount - 1].id = 0x50B;
-; canManager.c	   978      canMessages[canMessageCount - 1].data[byteNum++] = inv1->startUpStage;
+; canManager.c	   887      canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
+; canManager.c	   888      canMessages[canMessageCount - 1].data[2] = inv2->AMK_TorqueSetpoint;
+; canManager.c	   889      canMessages[canMessageCount - 1].data[3] = inv2->AMK_TorqueSetpoint >> 8;
+; canManager.c	   890      canMessages[canMessageCount - 1].data[4] = inv2->AMK_TorqueLimitPositiv;
+; canManager.c	   891      canMessages[canMessageCount - 1].data[5] = inv2->AMK_TorqueLimitPositiv >> 8;
+; canManager.c	   892      canMessages[canMessageCount - 1].data[6] = inv2->AMK_TorqueLimitNegativ;
+; canManager.c	   893      canMessages[canMessageCount - 1].data[7] = inv2->AMK_TorqueLimitNegativ >> 8;
+; canManager.c	   894      canMessages[canMessageCount - 1].length = 8;
+; canManager.c	   895  
+; canManager.c	   896      //50B: AMK VCU Debug (3/4 Inverters)
+; canManager.c	   897      canMessageCount++;
+; canManager.c	   898      byteNum = 0;
+; canManager.c	   899      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   900      canMessages[canMessageCount - 1].id = 0x50B;
+; canManager.c	   901      canMessages[canMessageCount - 1].data[byteNum++] = inv1->startUpStage;
 	addw	r11,#0x6
 _2732:
 	addcw	r12,#0x0
@@ -5795,7 +5718,7 @@ _3495:
 	addcw	r10,#0x0
 _3496:
 
-; canManager.c	   979      canMessages[canMessageCount - 1].data[byteNum++] = inv2->startUpStage;
+; canManager.c	   902      canMessages[canMessageCount - 1].data[byteNum++] = inv2->startUpStage;
 	addw	r13,#0x6
 _2735:
 	addcw	r14,#0x0
@@ -5836,38 +5759,38 @@ _3511:
 	movb	[r9+#0x1d],rl5
 _3512:
 
-; canManager.c	   980      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   903      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x1e],rl4
 _3513:
 
-; canManager.c	   981      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   904      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x1f],rl4
 _3514:
 
-; canManager.c	   982      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   905      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x20],rl4
 _3515:
 
-; canManager.c	   983      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   906      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x21],rl4
 _3516:
 
-; canManager.c	   984      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   907      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x22],rl4
 _3517:
 
-; canManager.c	   985      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+; canManager.c	   908      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x23],rl4
 _3518:
 
-; canManager.c	   986      canMessages[canMessageCount - 1].length = byteNum;
+; canManager.c	   909      canMessages[canMessageCount - 1].length = byteNum;
 	movb	[r9+#0x24],rh3
 _3519:
 
-; canManager.c	   987  
-; canManager.c	   988      //Place the can messsages into the FIFO queue ---------------------------------------------------
-; canManager.c	   989      //IO_CAN_WriteFIFO(canFifoHandle_HiPri_Write, canMessages, canMessageCount);  //Important: Only transmit one message (the MCU message)
-; canManager.c	   990      CanManager_send(me, CAN1_LOPRI, canMessages, canMessageCount);  //Send messages to CAN1
+; canManager.c	   910  
+; canManager.c	   911      //Place the can messsages into the FIFO queue ---------------------------------------------------
+; canManager.c	   912      //IO_CAN_WriteFIFO(canFifoHandle_HiPri_Write, canMessages, canMessageCount);  //Important: Only transmit one message (the MCU message)
+; canManager.c	   913      CanManager_send(me, CAN1_LOPRI, canMessages, canMessageCount);  //Send messages to CAN1
 	movb	rl4,#0x1
 _3520:
 	movw	r11,r9
@@ -5887,9 +5810,9 @@ _2736:
 	call	_CanManager_send
 _2737:
 
-; canManager.c	   991      //IO_CAN_WriteFIFO(canFifoHandle_LoPri_Write, canMessages, canMessageCount);  
-; canManager.c	   992  
-; canManager.c	   992  }
+; canManager.c	   914      //IO_CAN_WriteFIFO(canFifoHandle_LoPri_Write, canMessages, canMessageCount);  
+; canManager.c	   915  
+; canManager.c	   915  }
 
 	movw	r15,[r9+#0xfffe]
 
@@ -6013,7 +5936,7 @@ _240:
 	.extern	__spf2c : far
 	.debug		.debug_info
 _208:
-	.dl	6010
+	.dl	6036
 	.dw	3
 	.dl	_209
 	.db	4
@@ -6187,62 +6110,63 @@ _298:
 _356:
 	.db	9
 	.db	'float',0,4,4,11
-	.db	'getPercent',0,6,15,8,6
+	.db	'getPercent',0,6,22,8,6
 	.dl	1109
 	.db	1,1,1,1,14
-	.db	'value',0,6,15,26,2
+	.db	'value',0,6,22,26,2
 	.dl	1109
 	.db	14
-	.db	'start',0,6,15,40,2
+	.db	'start',0,6,22,40,2
 	.dl	1109
 	.db	14
-	.db	'end',0,6,15,54,2
+	.db	'end',0,6,22,54,2
 	.dl	1109
 	.db	14
-	.db	'zeroToOneOnly',0,6,15,64,2
+	.db	'zeroToOneOnly',0,6,22,64,2
 	.dl	369
 	.db	0,20
-	.db	'_BatteryManagementSystem',0,7,65,16,1
+	.db	'_BatteryManagementSystem',0,7,72,16,1
 _327:
 	.db	4,5
 	.dl	1209
 	.db	21
-	.db	'BMS_parseCanMessage',0,7,68,6,6,1,1,1,1,14
-	.db	'bms',0,7,68,51,2
+	.db	'BMS_parseCanMessage',0,7,75,6,6,1,1,1,1,14
+	.db	'bms',0,7,75,51,2
 	.dl	1239
 	.db	14
-	.db	'bmsCanMessage',0,7,68,75,2
+	.db	'bmsCanMessage',0,7,75,75,2
 	.dl	773
 	.db	0,11
-	.db	'BMS_getRelayState',0,7,73,6,6
+	.db	'BMS_getRelayState',0,7,80,6,6
 	.dl	369
 	.db	1,1,1,1,14
-	.db	'me',0,7,73,49,2
+	.db	'me',0,7,80,49,2
 	.dl	1239
 	.db	0
 _339:
 	.db	9
 	.db	'int',0,2,5,11
-	.db	'BMS_getHighestCellTemp_d_degC',0,7,82,8,6
+	.db	'BMS_getHighestCellTemp_d_degC',0,7,89,8,6
 	.dl	1355
 	.db	1,1,1,1,14
-	.db	'me',0,7,82,63,2
+	.db	'me',0,7,89,63,2
 	.dl	1239
 	.db	0,11
-	.db	'BMS_getFaultFlags0',0,7,84,8,6
+	.db	'BMS_getFaultFlags0',0,7,91,8,6
 	.dl	369
 	.db	1,1,1,1,14
-	.db	'me',0,7,84,52,2
+	.db	'me',0,7,91,52,2
 	.dl	1239
 	.db	0,11
-	.db	'BMS_getFaultFlags1',0,7,85,8,6
+	.db	'BMS_getFaultFlags1',0,7,92,8,6
 	.dl	369
 	.db	1,1,1,1,14
-	.db	'me',0,7,85,52,2
+	.db	'me',0,7,92,52,2
 	.dl	1239
-	.db	0,22
-	.db	'steering_degrees',0,8,133,1,8,6
-	.dl	1355
+	.db	0,9
+	.db	'long int',0,4,5,22
+	.db	'steering_degrees',0,8,122,8,6
+	.dl	1508
 	.db	1,1,1,18
 	.db	'_Sensor',0,10,126,16,30,19
 	.db	'specMin',0
@@ -6275,17 +6199,17 @@ _339:
 	.db	'ioErr_signalGet',0
 	.dl	254
 	.db	2,2,35,28,0,4,5
-	.dl	1538
+	.dl	1549
 	.db	18
 	.db	'_TorqueEncoder',0,9,10,16,66,19
 	.db	'bench',0
 	.dl	369
 	.db	1,2,35,0,19
 	.db	'tps0',0
-	.dl	1766
+	.dl	1777
 	.db	4,2,35,2,19
 	.db	'tps1',0
-	.dl	1766
+	.dl	1777
 	.db	4,2,35,6,19
 	.db	'tps0_calibMin',0
 	.dl	507
@@ -6340,39 +6264,39 @@ _339:
 	.db	1,2,35,64,0
 _343:
 	.db	4,5
-	.dl	1772
+	.dl	1783
 	.db	4,5
 	.dl	1109
 	.db	21
 	.db	'TorqueEncoder_getIndividualSensorPercent',0,9,42,6,6,1,1,1,1,14
 	.db	'me',0,9,42,62,2
-	.dl	2240
+	.dl	2251
 	.db	14
 	.db	'sensorNumber',0,9,42,73,2
 	.dl	369
 	.db	14
 	.db	'percent',0,9,42,95,2
-	.dl	2246
+	.dl	2257
 	.db	0,21
 	.db	'TorqueEncoder_getPedalTravel',0,9,49,6,6,1,1,1,1,14
 	.db	'me',0,9,49,50,2
-	.dl	2240
+	.dl	2251
 	.db	14
 	.db	'errorCount',0,9,49,62,2
 	.dl	496
 	.db	14
 	.db	'pedalPercent',0,9,49,82,2
-	.dl	2246
+	.dl	2257
 	.db	0,18
-	.db	'_BrakePressureSensor',0,11,10,16,48,19
+	.db	'_BrakePressureSensor',0,11,17,16,48,19
 	.db	'bench',0
 	.dl	369
 	.db	1,2,35,0,19
 	.db	'bps0',0
-	.dl	1766
+	.dl	1777
 	.db	4,2,35,2,19
 	.db	'bps1',0
-	.dl	1766
+	.dl	1777
 	.db	4,2,35,6,19
 	.db	'bps0_calibMin',0
 	.dl	254
@@ -6427,26 +6351,26 @@ _343:
 	.db	1,2,35,47,0
 _345:
 	.db	4,5
-	.dl	2447
+	.dl	2458
 	.db	21
-	.db	'BrakePressureSensor_getPedalTravel',0,11,48,6,6,1,1,1,1,14
-	.db	'me',0,11,48,62,2
-	.dl	2907
+	.db	'BrakePressureSensor_getPedalTravel',0,11,55,6,6,1,1,1,1,14
+	.db	'me',0,11,55,62,2
+	.dl	2918
 	.db	14
-	.db	'errorCount',0,11,48,74,2
+	.db	'errorCount',0,11,55,74,2
 	.dl	496
 	.db	14
-	.db	'pedalPercent',0,11,48,94,2
-	.dl	2246
+	.db	'pedalPercent',0,11,55,94,2
+	.dl	2257
 	.db	0,23
-	.db	'_DI_Location_Address',0,12,39,14,1,24
+	.db	'_DI_Location_Address',0,12,46,14,1,24
 	.db	'FRONT_LEFT',0,1,24
 	.db	'FRONT_RIGHT',0,2,24
 	.db	'REAR_LEFT',0,5,24
 	.db	'REAR_RIGHT',0,6,0,18
-	.db	'_DriveInverter',0,12,46,16,52,19
+	.db	'_DriveInverter',0,12,53,16,52,19
 	.db	'location_address',0
-	.dl	3012
+	.dl	3023
 	.db	1,2,35,0,19
 	.db	'canIdOutgoing',0
 	.dl	254
@@ -6525,46 +6449,46 @@ _345:
 	.db	4,2,35,48,0
 _333:
 	.db	4,5
-	.dl	3091
+	.dl	3102
 	.db	21
-	.db	'DI_parseCanMessage',0,12,89,6,6,1,1,1,1,14
-	.db	'Idv',0,12,89,41,2
-	.dl	3768
+	.db	'DI_parseCanMessage',0,12,96,6,6,1,1,1,1,14
+	.db	'Idv',0,12,96,41,2
+	.dl	3779
 	.db	14
-	.db	'diCanMessage',0,12,89,65,2
+	.db	'diCanMessage',0,12,96,65,2
 	.dl	773
 	.db	0,20
-	.db	'_SafetyChecker',0,13,21,16,1
+	.db	'_SafetyChecker',0,13,20,16,1
 _329:
 	.db	4,5
-	.dl	3838
+	.dl	3849
 	.db	21
-	.db	'SafetyChecker_parseCanMessage',0,13,25,6,6,1,1,1,1,14
-	.db	'me',0,13,25,51,2
-	.dl	3858
+	.db	'SafetyChecker_parseCanMessage',0,13,24,6,6,1,1,1,1,14
+	.db	'me',0,13,24,51,2
+	.dl	3869
 	.db	14
-	.db	'canMessage',0,13,25,74,2
+	.db	'canMessage',0,13,24,74,2
 	.dl	773
 	.db	0,11
-	.db	'SafetyChecker_getFaults',0,13,27,8,6
+	.db	'SafetyChecker_getFaults',0,13,26,8,6
 	.dl	507
 	.db	1,1,1,1,14
-	.db	'me',0,13,27,47,2
-	.dl	3858
+	.db	'me',0,13,26,47,2
+	.dl	3869
 	.db	0,11
-	.db	'SafetyChecker_getWarnings',0,13,28,8,6
+	.db	'SafetyChecker_getWarnings',0,13,27,8,6
 	.dl	507
 	.db	1,1,1,1,14
-	.db	'me',0,13,28,49,2
-	.dl	3858
+	.db	'me',0,13,27,49,2
+	.dl	3869
 	.db	0,11
-	.db	'SafetyChecker_getNotices',0,13,29,8,6
+	.db	'SafetyChecker_getNotices',0,13,28,8,6
 	.dl	507
 	.db	1,1,1,1,14
-	.db	'me',0,13,29,48,2
-	.dl	3858
+	.db	'me',0,13,28,48,2
+	.dl	3869
 	.db	0,18
-	.db	'DAQSensors',0,14,11,16,12,19
+	.db	'DAQSensors',0,14,18,16,12,19
 	.db	'AccelX',0
 	.dl	507
 	.db	4,2,35,0,19
@@ -6576,16 +6500,16 @@ _329:
 	.db	4,2,35,8,0
 _331:
 	.db	4,5
-	.dl	4089
+	.dl	4100
 	.db	21
-	.db	'DAQ_parseCanMessage',0,14,21,6,6,1,1,1,1,14
-	.db	'daq1',0,14,21,39,2
-	.dl	4153
+	.db	'DAQ_parseCanMessage',0,14,28,6,6,1,1,1,1,14
+	.db	'daq1',0,14,28,39,2
+	.dl	4164
 	.db	14
-	.db	'daqCANMessage',0,14,21,64,2
+	.db	'daqCANMessage',0,14,28,64,2
 	.dl	773
 	.db	0,18
-	.db	'AVLNode',0,15,8,16,22,19
+	.db	'AVLNode',0,15,13,16,22,19
 	.db	'data',0
 	.dl	677
 	.db	8,2,35,0,19
@@ -6601,11 +6525,11 @@ _331:
 	.db	'timeBetweenMessages_Max',0
 	.dl	507
 	.db	4,2,35,18,0,4,5
-	.dl	4226
+	.dl	4237
 	.db	16,252,63
-	.dl	4369
+	.dl	4380
 	.db	17,254,15,0,18
-	.db	'_CanManager',0,1,19,8,160,64,19
+	.db	'_CanManager',0,1,26,8,160,64,19
 	.db	'canMessageLimit',0
 	.dl	369
 	.db	1,2,35,0,19
@@ -6673,13 +6597,13 @@ _331:
 	.dl	507
 	.db	4,2,35,32,19
 	.db	'canMessageHistory',0
-	.dl	4375
+	.dl	4386
 	.db	252,63,2,35,36,0
 _246:
 	.db	4,5
-	.dl	4386
+	.dl	4397
 _296:
-	.db	25,16,17,9,1,24
+	.db	25,16,24,9,1,24
 	.db	'CAN0_HIPRI',0,0,24
 	.db	'CAN1_LOPRI',0,1,0
 _303:
@@ -6689,9 +6613,9 @@ _303:
 	.db	'_InstrumentCluster',0,17,12,16,1
 _325:
 	.db	4,5
-	.dl	5077
+	.dl	5088
 	.db	18
-	.db	'_DRS',0,18,17,16,4,19
+	.db	'_DRS',0,18,24,16,4,19
 	.db	'AutoDRSActive',0
 	.dl	369
 	.db	1,2,35,0,19
@@ -6706,11 +6630,11 @@ _325:
 	.db	1,2,35,3,0
 _350:
 	.db	4,5
-	.dl	5107
+	.dl	5118
 	.db	9
 	.db	'unsigned short int',0,2,7,7
 	.db	'__wchar_t',0,1,1,1
-	.dl	5211
+	.dl	5222
 	.db	7
 	.db	'__size_t',0,1,1,1
 	.dl	254
@@ -6718,7 +6642,7 @@ _350:
 	.dl	181
 	.db	7
 	.db	'__prof_adm',0,1,1,1
-	.dl	5268
+	.dl	5279
 	.db	7
 	.db	'__codeptr',0,1,1,1
 	.dl	507
@@ -6738,6 +6662,9 @@ _350:
 	.db	'sbyte2',0,19,26,29
 	.dl	1355
 	.db	7
+	.db	'sbyte4',0,19,27,29
+	.dl	1508
+	.db	7
 	.db	'float4',0,19,29,29
 	.dl	1109
 	.db	7
@@ -6751,41 +6678,41 @@ _350:
 	.dl	686
 	.db	7
 	.db	'Sensor',0,10,145,1,3
-	.dl	1538
+	.dl	1549
 	.db	26
 	.db	'Sensor_TPS0',0,10,154,1,15,5
-	.dl	1538
+	.dl	1549
 	.db	1,1,26
 	.db	'Sensor_HVILTerminationSense',0,10,188,1,15,5
-	.dl	1538
+	.dl	1549
 	.db	1,1,26
 	.db	'Sensor_LVBattery',0,10,192,1,15,5
-	.dl	1538
+	.dl	1549
 	.db	1,1,7
-	.db	'AVLNode',0,15,25,3
-	.dl	4226
+	.db	'AVLNode',0,15,30,3
+	.dl	4237
 	.db	7
 	.db	'InstrumentCluster',0,17,12,35
-	.dl	5077
+	.dl	5088
 	.db	7
 	.db	'_iob_flag_t',0,21,82,25
-	.dl	5211
+	.dl	5222
 	.db	7
-	.db	'BatteryManagementSystem',0,7,65,41
+	.db	'BatteryManagementSystem',0,7,72,41
 	.dl	1209
 	.db	7
 	.db	'TorqueEncoder',0,9,38,3
-	.dl	1772
+	.dl	1783
 	.db	7
-	.db	'BrakePressureSensor',0,11,38,3
-	.dl	2447
+	.db	'BrakePressureSensor',0,11,45,3
+	.dl	2458
 	.db	18
 	.db	'_bl_t_date',0,22,90,16,4,19
 	.db	'date',0
 	.dl	507
 	.db	4,2,35,0,0,7
 	.db	'BL_T_DATE',0,22,93,2
-	.dl	5716
+	.dl	5742
 	.db	18
 	.db	'_bl_t_can_id',0,22,102,16,8,19
 	.db	'extended',0
@@ -6795,33 +6722,33 @@ _350:
 	.dl	507
 	.db	4,2,35,4,0,7
 	.db	'BL_T_CAN_ID',0,22,106,2
-	.dl	5765
+	.dl	5791
 	.db	7
-	.db	'DI_Location_Address',0,12,44,3
-	.dl	3012
+	.db	'DI_Location_Address',0,12,51,3
+	.dl	3023
 	.db	7
-	.db	'_DriveInverter',0,12,81,3
-	.dl	3091
+	.db	'_DriveInverter',0,12,88,3
+	.dl	3102
 	.db	7
-	.db	'SafetyChecker',0,13,21,31
-	.dl	3838
+	.db	'SafetyChecker',0,13,20,31
+	.dl	3849
 	.db	7
-	.db	'_DAQSensors',0,14,17,3
-	.dl	4089
+	.db	'_DAQSensors',0,14,24,3
+	.dl	4100
 	.db	7
-	.db	'DRS',0,18,27,3
-	.dl	5107
+	.db	'DRS',0,18,34,3
+	.dl	5118
 	.db	7
-	.db	'CanChannel',0,16,21,3
-	.dl	5039
+	.db	'CanChannel',0,16,28,3
+	.dl	5050
 	.db	7
-	.db	'CanManager',0,16,25,28
-	.dl	4386
+	.db	'CanManager',0,16,32,28
+	.dl	4397
 	.db	27
 	.dl	369
 	.db	28,0,26
 	.db	'_lc_ub_user_stack',0,1,1,1,2
-	.dl	5977
+	.dl	6003
 	.db	1,1,0
 	; End of section
 
@@ -6878,7 +6805,7 @@ _2739:
 	.debug		.debug_pubnames
 	.dl	633
 	.dw	2
-	.dl	_208,6014,198
+	.dl	_208,6040,198
 	.db	'__free',0
 	.dl	270
 	.db	'__alloc',0
@@ -6910,32 +6837,32 @@ _2739:
 	.db	'BMS_getFaultFlags0',0
 	.dl	1463
 	.db	'BMS_getFaultFlags1',0
-	.dl	1508
+	.dl	1520
 	.db	'steering_degrees',0
-	.dl	2252
+	.dl	2263
 	.db	'TorqueEncoder_getIndividualSensorPercent',0
-	.dl	2354
+	.dl	2365
 	.db	'TorqueEncoder_getPedalTravel',0
-	.dl	2913
+	.dl	2924
 	.db	'BrakePressureSensor_getPedalTravel',0
-	.dl	3774
+	.dl	3785
 	.db	'DI_parseCanMessage',0
-	.dl	3864
+	.dl	3875
 	.db	'SafetyChecker_parseCanMessage',0
-	.dl	3936
+	.dl	3947
 	.db	'SafetyChecker_getFaults',0
-	.dl	3986
+	.dl	3997
 	.db	'SafetyChecker_getWarnings',0
-	.dl	4038
+	.dl	4049
 	.db	'SafetyChecker_getNotices',0
-	.dl	4159
+	.dl	4170
 	.db	'DAQ_parseCanMessage',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'CanManager_new'
 _211:
-	.dl	663
+	.dl	662
 	.dw	3
 	.dl	_212
 	.db	4,1
@@ -6947,70 +6874,70 @@ _211:
 	.db	2
 	.dl	_207
 	.db	3
-	.db	'CanManager_new',0,1,78,13,6
+	.db	'CanManager_new',0,1,71,13,6
 	.dl	_246
 	.db	1,1,1
 	.dl	_124,_215,_123
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'can0_busSpeed',0,1,78,35,2
+	.db	'can0_busSpeed',0,1,71,35,2
 	.dl	_247,_248
 	.db	4
-	.db	'can0_read_messageLimit',0,1,78,57,2
+	.db	'can0_read_messageLimit',0,1,71,57,2
 	.dl	_249,_250
 	.db	4
-	.db	'can0_write_messageLimit',0,1,78,88,2
+	.db	'can0_write_messageLimit',0,1,71,88,2
 	.dl	_249,_251
 	.db	4
-	.db	'can1_busSpeed',0,1,79,35,2
+	.db	'can1_busSpeed',0,1,72,35,2
 	.dl	_247,_252
 	.db	4
-	.db	'can1_read_messageLimit',0,1,79,57,2
+	.db	'can1_read_messageLimit',0,1,72,57,2
 	.dl	_249,_253
 	.db	4
-	.db	'can1_write_messageLimit',0,1,79,88,2
+	.db	'can1_write_messageLimit',0,1,72,88,2
 	.dl	_249,_254
 	.db	4
-	.db	'defaultSendDelayus',0,1,80,35,2
+	.db	'defaultSendDelayus',0,1,73,35,2
 	.dl	_255,_256
 	.db	5
 	.dl	_124,_215
 	.db	6
-	.db	'me',0,1,82,17,2
+	.db	'me',0,1,75,17,2
 	.dl	_246,_257
 	.db	5
 	.dl	_258,_259
 	.db	6
-	.db	'id',0,1,91,17,2
+	.db	'id',0,1,84,17,2
 	.dl	_255,_260
 	.db	0,7
 	.dl	_261
 	.db	6
-	.db	'messageID',0,1,127,12,2
+	.db	'messageID',0,1,116,12,2
 	.dl	_247,_269
 	.db	7
 	.dl	_270
 	.db	6
-	.db	'i',0,1,133,1,17,2
+	.db	'i',0,1,122,17,2
 	.dl	_249,_274
 	.db	0,7
 	.dl	_275
 	.db	6
-	.db	'i',0,1,140,1,17,2
+	.db	'i',0,1,129,1,17,2
 	.dl	_249,_279
 	.db	0,7
 	.dl	_280
 	.db	6
-	.db	'i',0,1,147,1,17,2
+	.db	'i',0,1,136,1,17,2
 	.dl	_249,_284
 	.db	0,7
 	.dl	_285
 	.db	6
-	.db	'i',0,1,154,1,17,2
+	.db	'i',0,1,143,1,17,2
 	.dl	_249,_289
 	.db	0,7
 	.dl	_290
 	.db	6
-	.db	'i',0,1,162,1,21,2
+	.db	'i',0,1,151,1,21,2
 	.dl	_249,_294
 	.db	0,0,0,0,0
 	; End of section
@@ -7034,7 +6961,7 @@ _2744:
 _2745:
 	.db	5,13,7,0,5,2
 	.dl	_124
-	.db	3,205,0,1,5,42,9
+	.db	3,198,0,1,5,42,9
 	.dw	_728-_124
 	.db	3,4,1,5,20,9
 	.dw	_720-_728
@@ -7082,7 +7009,7 @@ _2745:
 	.dw	_733-_2760
 	.db	1,5,26,9
 	.dw	_2761-_733
-	.db	3,9,1,5,45,9
+	.db	3,8,1,5,45,9
 	.dw	_2762-_2761
 	.db	1,5,125,9
 	.dw	_2763-_2762
@@ -7114,23 +7041,23 @@ _2745:
 	.dw	_2772-_2771
 	.db	3,1,1,9
 	.dw	_262-_2772
-	.db	3,14,1,5,26,9
+	.db	3,11,1,5,26,9
 	.dw	_263-_262
-	.db	3,114,1,5,7,9
+	.db	3,117,1,5,7,9
 	.dw	_2773-_263
 	.db	3,1,1,9
 	.dw	_264-_2773
-	.db	3,13,1,5,25,9
+	.db	3,10,1,5,25,9
 	.dw	_265-_264
-	.db	3,115,1,5,7,9
+	.db	3,118,1,5,7,9
 	.dw	_2774-_265
 	.db	3,1,1,9
 	.dw	_266-_2774
-	.db	3,12,1,5,26,9
+	.db	3,9,1,5,26,9
 	.dw	_267-_266
-	.db	3,116,1,9
+	.db	3,119,1,9
 	.dw	_268-_267
-	.db	3,12,1,5,50,9
+	.db	3,9,1,5,50,9
 	.dw	_2775-_268
 	.db	3,2,1,5,26,9
 	.dw	_2776-_2775
@@ -7394,7 +7321,7 @@ _2745:
 	.dw	_2883-_2882
 	.db	3,122,1,5,5,9
 	.dw	_2884-_2883
-	.db	3,220,0,1,5,1,9
+	.db	3,33,1,5,1,9
 	.dw	_2885-_2884
 	.db	3,1,1,9
 	.dw	_215-_2885
@@ -7422,7 +7349,7 @@ _290:
 	.debug		.debug_pubnames
 	.dl	33
 	.dw	2
-	.dl	_211,667,190
+	.dl	_211,666,190
 	.db	'CanManager_new',0
 	.dl	0
 	; End of section
@@ -7441,69 +7368,69 @@ _216:
 	.db	2
 	.dl	_207
 	.db	3
-	.db	'CanManager_send',0,1,136,2,14,6
+	.db	'CanManager_send',0,1,194,1,14,6
 	.dl	_247
 	.db	1,1,1
 	.dl	_136,_220,_135
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,136,2,42,2
+	.db	'me',0,1,194,1,42,2
 	.dl	_246,_295
 	.db	4
-	.db	'channel',0,1,136,2,57,2
+	.db	'channel',0,1,194,1,57,2
 	.dl	_296,_297
 	.db	4
-	.db	'canMessages',0,1,136,2,84,2
+	.db	'canMessages',0,1,194,1,84,2
 	.dl	_298,_299
 	.db	4
-	.db	'canMessageCount',0,1,136,2,106,2
+	.db	'canMessageCount',0,1,194,1,106,2
 	.dl	_249,_300
 	.db	5
 	.dl	_136,_220
 	.db	6
-	.db	'sendMessage',0,1,141,2,10,2
+	.db	'sendMessage',0,1,199,1,10,2
 	.dl	_249,_301
 	.db	6
-	.db	'messagesToSendCount',0,1,142,2,12,2
+	.db	'messagesToSendCount',0,1,200,1,12,2
 	.dl	_249,_302
 	.db	6
-	.db	'messagesToSend',0,1,143,2,23,2
+	.db	'messagesToSend',0,1,201,1,23,2
 	.dl	_303,_304
 	.db	6
-	.db	'messagePosition',0,1,149,2,12,2
+	.db	'messagePosition',0,1,207,1,12,2
 	.dl	_249,_305
 	.db	7
 	.dl	_306
 	.db	6
-	.db	'firstTimeMessage',0,1,152,2,14,2
+	.db	'firstTimeMessage',0,1,210,1,14,2
 	.dl	_249,_310
 	.db	6
-	.db	'dataChanged',0,1,153,2,14,2
+	.db	'dataChanged',0,1,211,1,14,2
 	.dl	_249,_311
 	.db	6
-	.db	'minTimeExceeded',0,1,154,2,14,2
+	.db	'minTimeExceeded',0,1,212,1,14,2
 	.dl	_249,_312
 	.db	6
-	.db	'maxTimeExceeded',0,1,155,2,14,2
+	.db	'maxTimeExceeded',0,1,213,1,14,2
 	.dl	_249,_313
 	.db	6
-	.db	'outboundMessageID',0,1,157,2,16,2
+	.db	'outboundMessageID',0,1,215,1,16,2
 	.dl	_247,_314
 	.db	5
 	.dl	_315,_316
 	.db	6
-	.db	'i',0,1,170,2,25,2
+	.db	'i',0,1,228,1,25,2
 	.dl	_249,_317
 	.db	0,5
 	.dl	_13,_318
 	.db	6
-	.db	'dataPosition',0,1,179,2,21,2
+	.db	'dataPosition',0,1,237,1,21,2
 	.dl	_249,_319
 	.db	8
 	.dl	_15,_16
 	.db	0,0,7
 	.dl	_320
 	.db	6
-	.db	'sendResult',0,1,234,2,18,2
+	.db	'sendResult',0,1,164,2,18,2
 	.dl	_247,_322
 	.db	0,0,0,0
 	; End of section
@@ -7527,7 +7454,7 @@ _2888:
 _2889:
 	.db	5,14,7,0,5,2
 	.dl	_136
-	.db	3,135,2,1,5,53,9
+	.db	3,193,1,1,5,53,9
 	.dw	_2890-_136
 	.db	3,7,1,5,14,9
 	.dw	_2891-_2890
@@ -7784,44 +7711,44 @@ _221:
 	.db	2
 	.dl	_207
 	.db	3
-	.db	'CanManager_read',0,1,144,3,6,6,1,1,1
+	.db	'CanManager_read',0,1,195,2,6,6,1,1,1
 	.dl	_148,_225,_147
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,144,3,34,2
+	.db	'me',0,1,195,2,34,2
 	.dl	_246,_323
 	.db	4
-	.db	'channel',0,1,144,3,49,2
+	.db	'channel',0,1,195,2,49,2
 	.dl	_296,_324
 	.db	4
-	.db	'ic',0,1,144,3,77,2
+	.db	'ic',0,1,195,2,77,2
 	.dl	_325,_326
 	.db	4
-	.db	'bms',0,1,144,3,106,2
+	.db	'bms',0,1,195,2,106,2
 	.dl	_327,_328
 	.db	4
-	.db	'sc',0,1,144,3,126,2
+	.db	'sc',0,1,195,2,126,2
 	.dl	_329,_330
 	.db	4
-	.db	'd1',0,1,144,3,143,1,2
+	.db	'd1',0,1,195,2,143,1,2
 	.dl	_331,_332
 	.db	4
-	.db	'inv1',0,1,144,3,163,1,2
+	.db	'inv1',0,1,195,2,163,1,2
 	.dl	_333,_334
 	.db	4
-	.db	'inv2',0,1,144,3,185,1,2
+	.db	'inv2',0,1,195,2,185,1,2
 	.dl	_333,_335
 	.db	5
 	.dl	_148,_225
 	.db	6
-	.db	'canMessages',0,1,146,3,23,2
+	.db	'canMessages',0,1,197,2,23,2
 	.dl	_303,_336
 	.db	6
-	.db	'canMessageCount',0,1,147,3,12,2
+	.db	'canMessageCount',0,1,198,2,12,2
 	.dl	_249,_337
 	.db	5
 	.dl	_338,_45
 	.db	6
-	.db	'currMessage',0,1,157,3,14,2
+	.db	'currMessage',0,1,208,2,14,2
 	.dl	_339,_340
 	.db	0,0,0,0
 	; End of section
@@ -7845,7 +7772,7 @@ _2960:
 _2961:
 	.db	5,6,7,0,5,2
 	.dl	_148
-	.db	3,143,3,1,5,36,9
+	.db	3,194,2,1,5,36,9
 	.dw	_2962-_148
 	.db	3,2,1,5,62,7,9
 	.dw	_2963-_2962
@@ -7958,10 +7885,10 @@ _226:
 	.db	2
 	.dl	_207
 	.db	3
-	.db	'canOutput_sendSensorMessages',0,1,167,4,6,6,1,1,1
+	.db	'canOutput_sendSensorMessages',0,1,218,3,6,6,1,1,1
 	.dl	_172,_230,_171
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,167,4,47,2
+	.db	'me',0,1,218,3,47,2
 	.dl	_246,_341
 	.db	5
 	.dl	_172,_230
@@ -7987,7 +7914,7 @@ _2983:
 _2984:
 	.db	5,1,7,0,5,2
 	.dl	_172
-	.db	3,169,4,1,7,9
+	.db	3,220,3,1,7,9
 	.dw	_230-_172
 	.db	0,1,1
 _2982:
@@ -8020,66 +7947,66 @@ _231:
 	.db	2
 	.dl	_207
 	.db	3
-	.db	'canOutput_sendDebugMessage0',0,1,176,4,6,6,1,1,1
+	.db	'canOutput_sendDebugMessage0',0,1,227,3,6,6,1,1,1
 	.dl	_184,_235,_183
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,176,4,46,2
+	.db	'me',0,1,227,3,46,2
 	.dl	_246,_342
 	.db	4
-	.db	'tps',0,1,176,4,65,2
+	.db	'tps',0,1,227,3,65,2
 	.dl	_343,_344
 	.db	4
-	.db	'bps',0,1,176,4,91,2
+	.db	'bps',0,1,227,3,91,2
 	.dl	_345,_346
 	.db	4
-	.db	'ic',0,1,176,4,115,2
+	.db	'ic',0,1,227,3,115,2
 	.dl	_325,_347
 	.db	4
-	.db	'bms',0,1,176,4,144,1,2
+	.db	'bms',0,1,227,3,144,1,2
 	.dl	_327,_348
 	.db	4
-	.db	'sc',0,1,176,4,164,1,2
+	.db	'sc',0,1,227,3,164,1,2
 	.dl	_329,_349
 	.db	4
-	.db	'drs',0,1,176,4,173,1,2
+	.db	'drs',0,1,227,3,173,1,2
 	.dl	_350,_351
 	.db	4
-	.db	'inv1',0,1,176,4,194,1,2
+	.db	'inv1',0,1,227,3,194,1,2
 	.dl	_333,_352
 	.db	4
-	.db	'inv2',0,1,176,4,216,1,2
+	.db	'inv2',0,1,227,3,216,1,2
 	.dl	_333,_353
 	.db	5
 	.dl	_184,_235
 	.db	6
-	.db	'canMessages',0,1,178,4,23,2
+	.db	'canMessages',0,1,229,3,23,2
 	.dl	_303,_354
 	.db	6
-	.db	'errorCount',0,1,179,4,12,2
+	.db	'errorCount',0,1,230,3,12,2
 	.dl	_249,_355
 	.db	6
-	.db	'tempPedalPercent',0,1,180,4,12,2
+	.db	'tempPedalPercent',0,1,231,3,12,2
 	.dl	_356,_357
 	.db	6
-	.db	'tps0Percent',0,1,181,4,12,2
+	.db	'tps0Percent',0,1,232,3,12,2
 	.dl	_249,_358
 	.db	6
-	.db	'tps1Percent',0,1,182,4,12,2
+	.db	'tps1Percent',0,1,233,3,12,2
 	.dl	_249,_359
 	.db	7
 	.dl	_360
 	.db	6
-	.db	'throttlePercent',0,1,194,4,12,2
+	.db	'throttlePercent',0,1,245,3,12,2
 	.dl	_249,_364
 	.db	7
 	.dl	_365
 	.db	6
-	.db	'brakePercent',0,1,197,4,12,2
+	.db	'brakePercent',0,1,248,3,12,2
 	.dl	_249,_367
 	.db	7
 	.dl	_368
 	.db	6
-	.db	'LVBatterySOC',0,1,210,5,12,2
+	.db	'LVBatterySOC',0,1,133,5,12,2
 	.dl	_356,_370
 	.db	0,0,0,0,0,0
 	; End of section
@@ -8103,7 +8030,7 @@ _2987:
 _2988:
 	.db	5,6,7,0,5,2
 	.dl	_184
-	.db	3,175,4,1,5,55,9
+	.db	3,226,3,1,5,55,9
 	.dw	_2989-_184
 	.db	3,11,1,5,6,9
 	.dw	_2990-_2989
@@ -9250,39 +9177,39 @@ _236:
 	.db	2
 	.dl	_207
 	.db	3
-	.db	'canOutput_sendDebugMessage1',0,1,164,7,6,6,1,1,1
+	.db	'canOutput_sendDebugMessage1',0,1,215,6,6,6,1,1,1
 	.dl	_196,_240,_195
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,164,7,46,2
+	.db	'me',0,1,215,6,46,2
 	.dl	_246,_371
 	.db	4
-	.db	'tps',0,1,164,7,65,2
+	.db	'tps',0,1,215,6,65,2
 	.dl	_343,_372
 	.db	4
-	.db	'bps',0,1,164,7,91,2
+	.db	'bps',0,1,215,6,91,2
 	.dl	_345,_373
 	.db	4
-	.db	'ic',0,1,164,7,115,2
+	.db	'ic',0,1,215,6,115,2
 	.dl	_325,_374
 	.db	4
-	.db	'bms',0,1,164,7,144,1,2
+	.db	'bms',0,1,215,6,144,1,2
 	.dl	_327,_375
 	.db	4
-	.db	'sc',0,1,164,7,164,1,2
+	.db	'sc',0,1,215,6,164,1,2
 	.dl	_329,_376
 	.db	4
-	.db	'd1',0,1,164,7,181,1,2
+	.db	'd1',0,1,215,6,181,1,2
 	.dl	_331,_377
 	.db	4
-	.db	'inv1',0,1,164,7,201,1,2
+	.db	'inv1',0,1,215,6,201,1,2
 	.dl	_333,_378
 	.db	4
-	.db	'inv2',0,1,164,7,223,1,2
+	.db	'inv2',0,1,215,6,223,1,2
 	.dl	_333,_379
 	.db	5
 	.dl	_196,_240
 	.db	6
-	.db	'canMessages',0,1,166,7,23,2
+	.db	'canMessages',0,1,217,6,23,2
 	.dl	_303,_380
 	.db	0,0,0
 	; End of section
@@ -9306,7 +9233,7 @@ _3414:
 _3415:
 	.db	5,6,7,0,5,2
 	.dl	_196
-	.db	3,163,7,1,5,62,9
+	.db	3,214,6,1,5,62,9
 	.dw	_2731-_196
 	.db	3,2,1,5,6,9
 	.dw	_2730-_2731
@@ -9563,15 +9490,15 @@ _241:
 	.db	2
 	.dl	_207
 	.db	3
-	.db	'CanManager_getReadStatus',0,1,148,4,8,6
+	.db	'CanManager_getReadStatus',0,1,199,3,8,6
 	.dl	_249
 	.db	1,1,1
 	.dl	_160,_245,_159
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,148,4,45,2
+	.db	'me',0,1,199,3,45,2
 	.dl	_246,_381
 	.db	4
-	.db	'channel',0,1,148,4,60,2
+	.db	'channel',0,1,199,3,60,2
 	.dl	_296,_382
 	.db	5
 	.dl	_160,_245
@@ -9597,7 +9524,7 @@ _3523:
 _3524:
 	.db	5,12,7,0,5,2
 	.dl	_160
-	.db	3,149,4,1,5,40,9
+	.db	3,200,3,1,5,40,9
 	.dw	_3525-_160
 	.db	1,5,58,9
 	.dw	_3526-_3525

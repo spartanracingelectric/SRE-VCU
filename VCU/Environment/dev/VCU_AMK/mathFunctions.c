@@ -1,3 +1,10 @@
+/*****************************************************************************
+ * mathFunctions.c - Math functionality
+ * Initial Author: Rusty P
+ ******************************************************************************
+ * Specialized math control functions
+ ****************************************************************************/
+
 #include <stdarg.h>
 #include <math.h>
 #include "mathFunctions.h"

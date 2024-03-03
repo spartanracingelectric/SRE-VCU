@@ -1,3 +1,10 @@
+/*****************************************************************************
+ * readyToDriveSound.c - Buzzer 
+ * Initial Author: Rusty P
+ ******************************************************************************
+ * Control of the rules compliance buzzer
+ ****************************************************************************/
+
 #include <stdlib.h> //Needed for malloc
 
 #include "IO_Driver.h" //Includes datatypes, constants, etc - should be included in every c file
@@ -23,7 +30,6 @@ void RTDS_delete(ReadyToDriveSound *rtds)
 {
     // some implementations pass a Person** to set the reference to 0
     // this implementation requires that the caller sets his own references to 0
-    //free(person->name);
     free(rtds);
 }
 

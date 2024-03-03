@@ -222,8 +222,6 @@ void main(void)
     DRS *drs = DRS_new();
     _DAQSensors *d1 = DAQ_Sensor_new();
 
-    //----------------------------------------------------------------------------
-    // TODO: Additional Initial Power-up functions
     // //----------------------------------------------------------------------------
     // ubyte2 tps0_calibMin = 0xABCD;  //me->tps0->sensorValue;
     // ubyte2 tps0_calibMax = 0x9876;  //me->tps0->sensorValue;
@@ -233,9 +231,6 @@ void main(void)
     ubyte2 tps0_calibMax = 1900; //me->tps0->sensorValue;
     ubyte2 tps1_calibMin = 3000; //me->tps1->sensorValue;
     ubyte2 tps1_calibMax = 4800; //me->tps1->sensorValue;
-    //TODO: Read calibration data from EEPROM?
-    //TODO: Run calibration functions?
-    //TODO: Power-on error checking?
 
     /*******************************************/
     /*       PERIODIC APPLICATION CODE         */

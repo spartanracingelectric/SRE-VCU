@@ -1,3 +1,9 @@
+/*****************************************************************************
+ * bms.c - Battery Management System Parser
+ * Initial Author: Rusty P / Vincent Saw
+ ******************************************************************************
+ * Deals with parsing from BMS and coordinating values in between
+ ****************************************************************************/
 
 #include <stdio.h>
 #include "bms.h"

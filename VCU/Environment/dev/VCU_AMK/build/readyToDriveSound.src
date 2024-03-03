@@ -1,25 +1,32 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc24360a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=1 -DRTS_TTC_FLASH_DATE_DAY=17 -DRTS_TTC_FLASH_DATE_HOUR=13 -DRTS_TTC_FLASH_DATE_MINUTE=38 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\readyToDriveSound.src
+	; Options: -f cc25540a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=3 -DRTS_TTC_FLASH_DATE_DAY=3 -DRTS_TTC_FLASH_DATE_HOUR=12 -DRTS_TTC_FLASH_DATE_MINUTE=6 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\readyToDriveSound.src
 	; Module start
 	.source	'readyToDriveSound.c'
 code_RTDS_new	.section	code, cluster 'RTDS_new', new
 	.global	_RTDS_new
 
-; readyToDriveSound.c	     1  #include <stdlib.h> //Needed for malloc
-; readyToDriveSound.c	     2  
-; readyToDriveSound.c	     3  #include "IO_Driver.h" //Includes datatypes, constants, etc - should be included in every c file
-; readyToDriveSound.c	     4  #include "IO_PWM.h"
-; readyToDriveSound.c	     5  
-; readyToDriveSound.c	     6  #include "readyToDriveSound.h"
+; readyToDriveSound.c	     1  /*****************************************************************************
+; readyToDriveSound.c	     2   * readyToDriveSound.c - Buzzer 
+; readyToDriveSound.c	     3   * Initial Author: Rusty P
+; readyToDriveSound.c	     4   ******************************************************************************
+; readyToDriveSound.c	     5   * Control of the rules compliance buzzer
+; readyToDriveSound.c	     6   ****************************************************************************/
 ; readyToDriveSound.c	     7  
-; readyToDriveSound.c	     8  struct _ReadyToDriveSound
-; readyToDriveSound.c	     9  {
-; readyToDriveSound.c	    10      ubyte4 timeStamp_soundStarted; //from IO_RTC_StartTime(&)
-; readyToDriveSound.c	    11      ubyte4 timeToSound;            //in microseconds: 1000 = 1ms, limit 4294967295 means 4294 sec max = about 71min max
-; readyToDriveSound.c	    12      ubyte2 volumePercent;
-; readyToDriveSound.c	    13  };
+; readyToDriveSound.c	     8  #include <stdlib.h> //Needed for malloc
+; readyToDriveSound.c	     9  
+; readyToDriveSound.c	    10  #include "IO_Driver.h" //Includes datatypes, constants, etc - should be included in every c file
+; readyToDriveSound.c	    11  #include "IO_PWM.h"
+; readyToDriveSound.c	    12  
+; readyToDriveSound.c	    13  #include "readyToDriveSound.h"
 ; readyToDriveSound.c	    14  
-; readyToDriveSound.c	    15  ReadyToDriveSound *RTDS_new(void)
+; readyToDriveSound.c	    15  struct _ReadyToDriveSound
+; readyToDriveSound.c	    16  {
+; readyToDriveSound.c	    17      ubyte4 timeStamp_soundStarted; //from IO_RTC_StartTime(&)
+; readyToDriveSound.c	    18      ubyte4 timeToSound;            //in microseconds: 1000 = 1ms, limit 4294967295 means 4294 sec max = about 71min max
+; readyToDriveSound.c	    19      ubyte2 volumePercent;
+; readyToDriveSound.c	    20  };
+; readyToDriveSound.c	    21  
+; readyToDriveSound.c	    22  ReadyToDriveSound *RTDS_new(void)
 ; Function _RTDS_new
 _5:
 _RTDS_new	.proc	far
@@ -28,8 +35,8 @@ _100:
 	movw	[-r15],r9
 _111:
 
-; readyToDriveSound.c	    16  {
-; readyToDriveSound.c	    17      ReadyToDriveSound *rtds = (ReadyToDriveSound *)malloc(sizeof(struct _ReadyToDriveSound));
+; readyToDriveSound.c	    23  {
+; readyToDriveSound.c	    24      ReadyToDriveSound *rtds = (ReadyToDriveSound *)malloc(sizeof(struct _ReadyToDriveSound));
 	movw	r2,#0xa
 	call	_malloc
 _622:
@@ -37,21 +44,20 @@ _622:
 	movw	r9,r3
 _79:
 
-; readyToDriveSound.c	    18      RTDS_setVolume(rtds, 0, 0);
-; readyToDriveSound.c	    19      return rtds;
-; readyToDriveSound.c	    20  }
-; readyToDriveSound.c	    21  
-; readyToDriveSound.c	    22  void RTDS_delete(ReadyToDriveSound *rtds)
-; readyToDriveSound.c	    23  {
-; readyToDriveSound.c	    24      // some implementations pass a Person** to set the reference to 0
-; readyToDriveSound.c	    25      // this implementation requires that the caller sets his own references to 0
-; readyToDriveSound.c	    26      //free(person->name);
-; readyToDriveSound.c	    27      free(rtds);
-; readyToDriveSound.c	    28  }
-; readyToDriveSound.c	    29  
-; readyToDriveSound.c	    30  void RTDS_setVolume(ReadyToDriveSound *rtds, float4 volumePercent, ubyte4 timeToPlay)
-; readyToDriveSound.c	    31  {
-; readyToDriveSound.c	    32      IO_PWM_SetDuty(IO_PWM_01, 65535 * volumePercent, NULL);
+; readyToDriveSound.c	    25      RTDS_setVolume(rtds, 0, 0);
+; readyToDriveSound.c	    26      return rtds;
+; readyToDriveSound.c	    27  }
+; readyToDriveSound.c	    28  
+; readyToDriveSound.c	    29  void RTDS_delete(ReadyToDriveSound *rtds)
+; readyToDriveSound.c	    30  {
+; readyToDriveSound.c	    31      // some implementations pass a Person** to set the reference to 0
+; readyToDriveSound.c	    32      // this implementation requires that the caller sets his own references to 0
+; readyToDriveSound.c	    33      free(rtds);
+; readyToDriveSound.c	    34  }
+; readyToDriveSound.c	    35  
+; readyToDriveSound.c	    36  void RTDS_setVolume(ReadyToDriveSound *rtds, float4 volumePercent, ubyte4 timeToPlay)
+; readyToDriveSound.c	    37  {
+; readyToDriveSound.c	    38      IO_PWM_SetDuty(IO_PWM_01, 65535 * volumePercent, NULL);
 	movb	rl2,#0x1
 	movw	r3,#0x0
 	movw	r4,#0x0
@@ -59,13 +65,13 @@ _79:
 	call	_IO_PWM_SetDuty
 _623:
 
-; readyToDriveSound.c	    33      IO_RTC_StartTime(&(rtds->timeStamp_soundStarted));
+; readyToDriveSound.c	    39      IO_RTC_StartTime(&(rtds->timeStamp_soundStarted));
 	movw	r2,r8
 	movw	r3,r9
 	call	_IO_RTC_StartTime
 _624:
 
-; readyToDriveSound.c	    34      rtds->timeToSound = timeToPlay;
+; readyToDriveSound.c	    40      rtds->timeToSound = timeToPlay;
 	movw	r11,r8
 	movw	r12,r9
 	addw	r11,#0x4
@@ -159,7 +165,7 @@ _642:
 	movw	[r8],r7
 _643:
 
-; readyToDriveSound.c	    35  }
+; readyToDriveSound.c	    41  }
 	movw	r10,[r15+]
 _250:
 	movw	r9,[r15+]
@@ -180,14 +186,14 @@ _70:
 code_RTDS_shutdownHelper	.section	code, cluster 'RTDS_shutdownHelper', new
 	.global	_RTDS_shutdownHelper
 
-; readyToDriveSound.c	    36  
-; readyToDriveSound.c	    37  void RTDS_shutdownHelper(ReadyToDriveSound *rtds)
+; readyToDriveSound.c	    42  
+; readyToDriveSound.c	    43  void RTDS_shutdownHelper(ReadyToDriveSound *rtds)
 ; Function _RTDS_shutdownHelper
 _41:
 _RTDS_shutdownHelper	.proc	far
 
-; readyToDriveSound.c	    38  {
-; readyToDriveSound.c	    39      if (IO_RTC_GetTimeUS(rtds->timeStamp_soundStarted) > rtds->timeToSound)
+; readyToDriveSound.c	    44  {
+; readyToDriveSound.c	    45      if (IO_RTC_GetTimeUS(rtds->timeStamp_soundStarted) > rtds->timeToSound)
 	movw	r11,r2
 _648:
 	movw	[-r15],r6
@@ -252,10 +258,10 @@ _655:
 	movw	[r10],r11
 _3:
 
-; readyToDriveSound.c	    40      {
-; readyToDriveSound.c	    41          RTDS_setVolume(rtds, 0, 0);
-; readyToDriveSound.c	    42      }
-; readyToDriveSound.c	    42  }
+; readyToDriveSound.c	    46      {
+; readyToDriveSound.c	    47          RTDS_setVolume(rtds, 0, 0);
+; readyToDriveSound.c	    48      }
+; readyToDriveSound.c	    48  }
 
 	movw	r10,[r15+]
 _485:
@@ -316,7 +322,7 @@ _52:
 	.db	2
 	.db	'unsigned long int',0,4,7,2
 	.db	'unsigned int',0,2,7,3
-	.db	'_ReadyToDriveSound',0,1,8,8,10,4
+	.db	'_ReadyToDriveSound',0,1,15,8,10,4
 	.db	'timeStamp_soundStarted',0
 	.dl	188
 	.db	4,2,35,0,4
@@ -333,18 +339,18 @@ _76:
 	.db	'float',0,4,4
 _78:
 	.db	6
-	.db	'RTDS_setVolume',0,1,1,30,6,6,1,1
+	.db	'RTDS_setVolume',0,1,1,36,6,6,1,1
 _81:
 	.db	7
-	.db	'rtds',0,1,30,40,2
+	.db	'rtds',0,1,36,40,2
 	.dl	326
 _83:
 	.db	7
-	.db	'volumePercent',0,1,30,53,2
+	.db	'volumePercent',0,1,36,53,2
 	.dl	332
 _85:
 	.db	7
-	.db	'timeToPlay',0,1,30,75,2
+	.db	'timeToPlay',0,1,36,75,2
 	.dl	188
 _87:
 	.db	8,0,9
@@ -423,7 +429,7 @@ _87:
 	.db	'IO_ErrorType',0,6,150,1,17
 	.dl	209
 	.db	14
-	.db	'ReadyToDriveSound',0,7,7,35
+	.db	'ReadyToDriveSound',0,7,12,35
 	.dl	225
 	.db	0
 	; End of section
@@ -489,14 +495,14 @@ _56:
 	.db	2
 	.dl	_52
 	.db	3
-	.db	'RTDS_new',0,1,15,20,6
+	.db	'RTDS_new',0,1,22,20,6
 	.dl	_76
 	.db	1,1,1
 	.dl	_5,_60,_4
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
 	.dl	_5,_60
 	.db	5
-	.db	'rtds',0,1,17,24,2
+	.db	'rtds',0,1,24,24,2
 	.dl	_76,_77
 	.db	6
 	.dl	_78,_79,_80
@@ -538,13 +544,13 @@ _620:
 _621:
 	.db	5,20,7,0,5,2
 	.dl	_5
-	.db	3,14,1,5,59,9
+	.db	3,21,1,5,59,9
 	.dw	_111-_5
 	.db	3,2,1,5,29,9
 	.dw	_622-_111
 	.db	1,5,54,9
 	.dw	_79-_622
-	.db	3,15,1,5,28,9
+	.db	3,14,1,5,28,9
 	.dw	_623-_79
 	.db	3,1,1,5,9,9
 	.dw	_624-_623
@@ -554,11 +560,11 @@ _621:
 	.dw	_626-_625
 	.db	1,5,5,9
 	.dw	_80-_626
-	.db	3,113,1,5,23,9
+	.db	3,114,1,5,23,9
 	.dw	_89-_80
-	.db	3,15,1,5,5,9
+	.db	3,14,1,5,5,9
 	.dw	_90-_89
-	.db	3,113,1,5,1,9
+	.db	3,114,1,5,1,9
 	.dw	_627-_90
 	.db	3,1,1,9
 	.dw	_60-_627
@@ -595,10 +601,10 @@ _61:
 	.db	2
 	.dl	_52
 	.db	3
-	.db	'RTDS_delete',0,1,22,6,6,1,1,1
+	.db	'RTDS_delete',0,1,29,6,6,1,1,1
 	.dl	_17,_65,_16
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'rtds',0,1,22,37,2
+	.db	'rtds',0,1,29,37,2
 	.dl	_76,_91
 	.db	5
 	.dl	_17,_65
@@ -624,7 +630,7 @@ _630:
 _631:
 	.db	5,10,7,0,5,2
 	.dl	_17
-	.db	3,26,1,5,1,9
+	.db	3,32,1,5,1,9
 	.dw	_65-_17
 	.db	3,1,0,1,1
 _629:
@@ -689,7 +695,7 @@ _634:
 _635:
 	.db	5,6,7,0,5,2
 	.dl	_29
-	.db	3,29,1,5,31,9
+	.db	3,35,1,5,31,9
 	.dw	_439-_29
 	.db	3,2,1,5,37,9
 	.dw	_636-_439
@@ -738,10 +744,10 @@ _71:
 	.db	2
 	.dl	_52
 	.db	3
-	.db	'RTDS_shutdownHelper',0,1,37,6,6,1,1,1
+	.db	'RTDS_shutdownHelper',0,1,43,6,6,1,1,1
 	.dl	_41,_75,_40
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'rtds',0,1,37,45,2
+	.db	'rtds',0,1,43,45,2
 	.dl	_76,_95
 	.db	5
 	.dl	_41,_75
@@ -777,7 +783,7 @@ _646:
 _647:
 	.db	5,30,7,0,5,2
 	.dl	_41
-	.db	3,38,1,5,6,9
+	.db	3,44,1,5,6,9
 	.dw	_648-_41
 	.db	3,126,1,5,62,9
 	.dw	_610-_648

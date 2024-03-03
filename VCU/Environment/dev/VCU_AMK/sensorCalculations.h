@@ -4,20 +4,9 @@
 /*****************************************************************************
 * Output Calculations
 ******************************************************************************
-*
+ * Initial Author: Rusty P 
 ******************************************************************************
-* To-do:
-*
-******************************************************************************
-* Revision history:
-* 2015-11-16 - Rusty Pedrosa -
-*****************************************************************************/
 
-//VCU/C headers
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-#include "IO_Driver.h"  //Includes datatypes, constants, etc - should be included in every c file
 
 #include "sensors.h"
 
@@ -136,37 +125,5 @@ sbyte4 steering_degrees();
 * Doppler speed sensor functions
 *
 ****************************************************************************/
-//Input: Frequency
-//Outputs: ???
-
-/*****************************************************************************
-* Water temp sensor functions
-*
-****************************************************************************/
-//Input: Ohms
-//Outputs: ???
-
-/*****************************************************************************
-* Dash button functions
-*
-****************************************************************************/
-//TCS
-//ECO
-//RTD
-//blablalba
-
-
-
-/*****************************************************************************
-* Error Reporting Stuff
-*
-* TODO: Write error reporting functions
-****************************************************************************/
-//Err.Report(ErrCode, ErrDesc, ErrAction) {
-//Write an error to the log
-//Add error code to dash
-//000 = TPS0 out of range
-//001 = TPS1 out of range
-//}
 
 #endif //  _SENSORCALCULATIONS_H

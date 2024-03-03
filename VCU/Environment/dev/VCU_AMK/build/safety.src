@@ -1,124 +1,130 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc22660a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=2 -DRTS_TTC_FLASH_DATE_DAY=27 -DRTS_TTC_FLASH_DATE_HOUR=17 -DRTS_TTC_FLASH_DATE_MINUTE=18 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\safety.src
+	; Options: -f cc20532a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=3 -DRTS_TTC_FLASH_DATE_DAY=3 -DRTS_TTC_FLASH_DATE_HOUR=12 -DRTS_TTC_FLASH_DATE_MINUTE=6 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\safety.src
 	; Module start
 	.source	'safety.c'
 code_SafetyChecker_new	.section	code, cluster 'SafetyChecker_new', new
 	.global	_SafetyChecker_new
 
-; safety.c	     1  #include <stdlib.h> //malloc
-; safety.c	     2  //#include <math.h>
-; safety.c	     3  #include "IO_Driver.h"
-; safety.c	     4  #include "IO_RTC.h"
-; safety.c	     5  #include "IO_DIO.h"
-; safety.c	     6  #include "IO_CAN.h"
+; safety.c	     1  /*****************************************************************************
+; safety.c	     2   * safety.c - All Vehicle Safety 
+; safety.c	     3   * Initial Author: Rusty P / Vincent Saw
+; safety.c	     4   ******************************************************************************
+; safety.c	     5   * For all torque reductions or safety state changes from external influence
+; safety.c	     6   ****************************************************************************/
 ; safety.c	     7  
-; safety.c	     8  #include "safety.h"
-; safety.c	     9  #include "mathFunctions.h"
-; safety.c	    10  
-; safety.c	    11  #include "sensors.h"
-; safety.c	    12  
-; safety.c	    13  #include "torqueEncoder.h"
-; safety.c	    14  #include "brakePressureSensor.h"
-; safety.c	    15  
-; safety.c	    16  #include "bms.h"
-; safety.c	    17  
-; safety.c	    18  //----------------------------------------------------------------------------
-; safety.c	    19  //Faults
-; safety.c	    20  //last flag is 0x 8000 0000 (32 flags, 8 hex characters)
-; safety.c	    21  //----------------------------------------------------------------------------
-; safety.c	    22  //nibble 1
-; safety.c	    23  static const ubyte4 F_tpsOutOfRange = 1;
-; safety.c	    24  static const ubyte4 F_bpsOutOfRange = 2;
-; safety.c	    25  static const ubyte4 F_tpsPowerFailure = 4;
-; safety.c	    26  static const ubyte4 F_bpsPowerFailure = 8;
-; safety.c	    27  //nibble 2
-; safety.c	    28  static const ubyte4 F_tpsSignalFailure = 0x10;
-; safety.c	    29  static const ubyte4 F_bpsSignalFailure = 0x20;
-; safety.c	    30  static const ubyte4 F_tpsNotCalibrated = 0x40;
-; safety.c	    31  static const ubyte4 F_bpsNotCalibrated = 0x80;
-; safety.c	    32  
-; safety.c	    33  //nibble 3
-; safety.c	    34  static const ubyte4 F_tpsOutOfSync = 0x100;
-; safety.c	    35  static const ubyte4 F_bpsOutOfSync = 0x200; //NOT USED
-; safety.c	    36  static const ubyte4 F_tpsbpsImplausible = 0x400;
-; safety.c	    37  //static const ubyte4 UNUSED = 0x800;
+; safety.c	     8  #include <stdlib.h> //malloc
+; safety.c	     9  #include "IO_Driver.h"
+; safety.c	    10  #include "IO_RTC.h"
+; safety.c	    11  #include "IO_DIO.h"
+; safety.c	    12  #include "IO_CAN.h"
+; safety.c	    13  
+; safety.c	    14  #include "safety.h"
+; safety.c	    15  #include "mathFunctions.h"
+; safety.c	    16  
+; safety.c	    17  #include "sensors.h"
+; safety.c	    18  
+; safety.c	    19  #include "torqueEncoder.h"
+; safety.c	    20  #include "brakePressureSensor.h"
+; safety.c	    21  
+; safety.c	    22  #include "bms.h"
+; safety.c	    23  
+; safety.c	    24  //----------------------------------------------------------------------------
+; safety.c	    25  //Faults
+; safety.c	    26  //last flag is 0x 8000 0000 (32 flags, 8 hex characters)
+; safety.c	    27  //----------------------------------------------------------------------------
+; safety.c	    28  //nibble 1
+; safety.c	    29  static const ubyte4 F_tpsOutOfRange = 1;
+; safety.c	    30  static const ubyte4 F_bpsOutOfRange = 2;
+; safety.c	    31  static const ubyte4 F_tpsPowerFailure = 4;
+; safety.c	    32  static const ubyte4 F_bpsPowerFailure = 8;
+; safety.c	    33  //nibble 2
+; safety.c	    34  static const ubyte4 F_tpsSignalFailure = 0x10;
+; safety.c	    35  static const ubyte4 F_bpsSignalFailure = 0x20;
+; safety.c	    36  static const ubyte4 F_tpsNotCalibrated = 0x40;
+; safety.c	    37  static const ubyte4 F_bpsNotCalibrated = 0x80;
 ; safety.c	    38  
-; safety.c	    39  //nibble 4
-; safety.c	    40  static const ubyte4 F_softBSPDFault = 0x1000;
-; safety.c	    41  //static const ubyte4 F_ = 0x2000;
-; safety.c	    42  //static const ubyte4 F_ = 0x4000;
-; safety.c	    43  //static const ubyte4 F_ = 0x8000;
+; safety.c	    39  //nibble 3
+; safety.c	    40  static const ubyte4 F_tpsOutOfSync = 0x100;
+; safety.c	    41  static const ubyte4 F_bpsOutOfSync = 0x200; //NOT USED
+; safety.c	    42  static const ubyte4 F_tpsbpsImplausible = 0x400;
+; safety.c	    43  //static const ubyte4 UNUSED = 0x800;
 ; safety.c	    44  
-; safety.c	    45  //nibble 5
-; safety.c	    46  static const ubyte4 F_lvsBatteryVeryLow = 0x10000;
-; safety.c	    47  //static const ubyte4 F_ = 0x20000;
-; safety.c	    48  //static const ubyte4 F_ = 0x40000;
-; safety.c	    49  //static const ubyte4 F_ = 0x80000;
+; safety.c	    45  //nibble 4
+; safety.c	    46  static const ubyte4 F_softBSPDFault = 0x1000;
+; safety.c	    47  //static const ubyte4 F_ = 0x2000;
+; safety.c	    48  //static const ubyte4 F_ = 0x4000;
+; safety.c	    49  //static const ubyte4 F_ = 0x8000;
 ; safety.c	    50  
-; safety.c	    51  //nibble 6
-; safety.c	    52  static const ubyte4 F_bmsOverVoltageFault = 0x100000;
-; safety.c	    53  static const ubyte4 F_bmsUnderVoltageFault = 0x200000;
-; safety.c	    54  static const ubyte4 F_bmsOverTemperatureFault = 0x400000;
-; safety.c	    55  //static const ubyte4 F_bmsOtherFault = 0x800000;
+; safety.c	    51  //nibble 5
+; safety.c	    52  static const ubyte4 F_lvsBatteryVeryLow = 0x10000;
+; safety.c	    53  //static const ubyte4 F_ = 0x20000;
+; safety.c	    54  //static const ubyte4 F_ = 0x40000;
+; safety.c	    55  //static const ubyte4 F_ = 0x80000;
 ; safety.c	    56  
-; safety.c	    57  //nibble 7
-; safety.c	    58  static const ubyte4 F_bmsCellMismatchFault = 0x1000000;
-; safety.c	    59  //static const ubyte4 F_ = 0x2000000;
-; safety.c	    60  //static const ubyte4 F_ = 0x4000000;
-; safety.c	    61  //static const ubyte4 F_ = 0x8000000;
+; safety.c	    57  //nibble 6
+; safety.c	    58  static const ubyte4 F_bmsOverVoltageFault = 0x100000;
+; safety.c	    59  static const ubyte4 F_bmsUnderVoltageFault = 0x200000;
+; safety.c	    60  static const ubyte4 F_bmsOverTemperatureFault = 0x400000;
+; safety.c	    61  //static const ubyte4 F_bmsOtherFault = 0x800000;
 ; safety.c	    62  
-; safety.c	    63  //nibble 8
-; safety.c	    64  //                             nibble: 87654321
-; safety.c	    65  static const ubyte4 F_unusedFaults = 0xFFFEF800;
-; safety.c	    66  
-; safety.c	    67  //Warnings -------------------------------------------
-; safety.c	    68  static const ubyte2 W_lvsBatteryLow = 1;
-; safety.c	    69  static const ubyte2 W_hvilOverrideEnabled = 0x40; //This flag indicates HVIL bypass (MCM turn on)
-; safety.c	    70  static const ubyte2 W_safetyBypassEnabled = 0x80; //This flag controls the safety bypass
-; safety.c	    71  static const ubyte2 W_bmsOverVoltageWarning = 0x100; 
-; safety.c	    72  static const ubyte2 W_bmsUnderVoltageWarning = 0x200; 
-; safety.c	    73  static const ubyte2 W_bmsOverTemperatureWarning = 0x400; 
-; safety.c	    74  
-; safety.c	    75  //Notices
-; safety.c	    76  static const ubyte2 N_HVILTermSenseLost = 1;
-; safety.c	    77  
-; safety.c	    78  static const ubyte2 N_Over75kW_BMS = 0x10;
-; safety.c	    79  static const ubyte2 N_Over75kW_MCM = 0x20;
+; safety.c	    63  //nibble 7
+; safety.c	    64  static const ubyte4 F_bmsCellMismatchFault = 0x1000000;
+; safety.c	    65  //static const ubyte4 F_ = 0x2000000;
+; safety.c	    66  //static const ubyte4 F_ = 0x4000000;
+; safety.c	    67  //static const ubyte4 F_ = 0x8000000;
+; safety.c	    68  
+; safety.c	    69  //nibble 8
+; safety.c	    70  //                             nibble: 87654321
+; safety.c	    71  static const ubyte4 F_unusedFaults = 0xFFFEF800;
+; safety.c	    72  
+; safety.c	    73  //Warnings -------------------------------------------
+; safety.c	    74  static const ubyte2 W_lvsBatteryLow = 1;
+; safety.c	    75  static const ubyte2 W_hvilOverrideEnabled = 0x40; //This flag indicates HVIL bypass (MCM turn on)
+; safety.c	    76  static const ubyte2 W_safetyBypassEnabled = 0x80; //This flag controls the safety bypass
+; safety.c	    77  static const ubyte2 W_bmsOverVoltageWarning = 0x100; 
+; safety.c	    78  static const ubyte2 W_bmsUnderVoltageWarning = 0x200; 
+; safety.c	    79  static const ubyte2 W_bmsOverTemperatureWarning = 0x400; 
 ; safety.c	    80  
-; safety.c	    81  ubyte4 timestamp_SoftBSPD = 0;
-; safety.c	    82  
-; safety.c	    83  /*****************************************************************************
-; safety.c	    84  * SafetyChecker object
-; safety.c	    85  ******************************************************************************
-; safety.c	    86  * ToDo: change to ubyte1[8] (64 flags possible)
-; safety.c	    87  * 1 = fault
-; safety.c	    88  * 0 = no fault
-; safety.c	    89  ****************************************************************************/
-; safety.c	    90  struct _SafetyChecker
-; safety.c	    91  {
-; safety.c	    92      //Problems that require motor torque to be disabled
-; safety.c	    93      ubyte4 faults;
-; safety.c	    94      ubyte2 warnings;
-; safety.c	    95      ubyte2 notices;
-; safety.c	    96      ubyte1 maxAmpsCharge;
-; safety.c	    97      ubyte1 maxAmpsDischarge;
-; safety.c	    98  
-; safety.c	    99      bool softBSPD_bpsHigh;
-; safety.c	   100      bool softBSPD_kwHigh;
-; safety.c	   101      bool softBSPD_fault;
-; safety.c	   102  
-; safety.c	   103      bool bypass;
-; safety.c	   104      ubyte4 timestamp_bypassSafetyChecks;
-; safety.c	   105      ubyte4 bypassSafetyChecksTimeout_us;
-; safety.c	   106  };
-; safety.c	   107  
-; safety.c	   108  /*****************************************************************************
-; safety.c	   109  * Torque Encoder (TPS) functions
-; safety.c	   110  * RULE EV2.3.5:
-; safety.c	   111  * If an implausibility occurs between the values of these two sensors the power to the motor(s) must be immediately shut down completely.
-; safety.c	   112  * It is not necessary to completely deactivate the tractive system, the motor controller(s) shutting down the power to the motor(s) is sufficient.
-; safety.c	   113  ****************************************************************************/
-; safety.c	   114  SafetyChecker *SafetyChecker_new(ubyte2 maxChargeAmps, ubyte2 maxDischargeAmps)
+; safety.c	    81  //Notices
+; safety.c	    82  static const ubyte2 N_HVILTermSenseLost = 1;
+; safety.c	    83  
+; safety.c	    84  static const ubyte2 N_Over75kW_BMS = 0x10;
+; safety.c	    85  static const ubyte2 N_Over75kW_MCM = 0x20;
+; safety.c	    86  
+; safety.c	    87  ubyte4 timestamp_SoftBSPD = 0;
+; safety.c	    88  
+; safety.c	    89  /*****************************************************************************
+; safety.c	    90  * SafetyChecker object
+; safety.c	    91  ******************************************************************************
+; safety.c	    92  * ToDo: change to ubyte1[8] (64 flags possible)
+; safety.c	    93  * 1 = fault
+; safety.c	    94  * 0 = no fault
+; safety.c	    95  ****************************************************************************/
+; safety.c	    96  struct _SafetyChecker
+; safety.c	    97  {
+; safety.c	    98      //Problems that require motor torque to be disabled
+; safety.c	    99      ubyte4 faults;
+; safety.c	   100      ubyte2 warnings;
+; safety.c	   101      ubyte2 notices;
+; safety.c	   102      ubyte1 maxAmpsCharge;
+; safety.c	   103      ubyte1 maxAmpsDischarge;
+; safety.c	   104  
+; safety.c	   105      bool softBSPD_bpsHigh;
+; safety.c	   106      bool softBSPD_kwHigh;
+; safety.c	   107      bool softBSPD_fault;
+; safety.c	   108  
+; safety.c	   109      bool bypass;
+; safety.c	   110      ubyte4 timestamp_bypassSafetyChecks;
+; safety.c	   111      ubyte4 bypassSafetyChecksTimeout_us;
+; safety.c	   112  };
+; safety.c	   113  
+; safety.c	   114  /*****************************************************************************
+; safety.c	   115  * Torque Encoder (TPS) functions
+; safety.c	   116  * RULE EV2.3.5:
+; safety.c	   117  * If an implausibility occurs between the values of these two sensors the power to the motor(s) must be immediately shut down completely.
+; safety.c	   118  * It is not necessary to completely deactivate the tractive system, the motor controller(s) shutting down the power to the motor(s) is sufficient.
+; safety.c	   119  ****************************************************************************/
+; safety.c	   120  SafetyChecker *SafetyChecker_new(ubyte2 maxChargeAmps, ubyte2 maxDischargeAmps)
 ; Function _SafetyChecker_new
 _72:
 _SafetyChecker_new	.proc	far
@@ -129,8 +135,8 @@ _266:
 	movw	r6,r2
 _341:
 
-; safety.c	   115  {
-; safety.c	   116      SafetyChecker *me = (SafetyChecker *)malloc(sizeof(struct _SafetyChecker));
+; safety.c	   121  {
+; safety.c	   122      SafetyChecker *me = (SafetyChecker *)malloc(sizeof(struct _SafetyChecker));
 	movw	r2,#0x16
 _339:
 	movw	r8,r3
@@ -138,8 +144,8 @@ _342:
 	call	_malloc
 _340:
 
-; safety.c	   117  
-; safety.c	   118      me->faults = 0;
+; safety.c	   123  
+; safety.c	   124      me->faults = 0;
 	movw	r11,r2
 _1273:
 	movw	r13,#0x0
@@ -151,10 +157,10 @@ _1274:
 	addcw	r12,#0x0
 _1275:
 
-; safety.c	   119      me->warnings = 0;
-; safety.c	   120  
-; safety.c	   121      me->maxAmpsCharge = maxChargeAmps;
-; safety.c	   122      me->maxAmpsDischarge = maxDischargeAmps;
+; safety.c	   125      me->warnings = 0;
+; safety.c	   126  
+; safety.c	   127      me->maxAmpsCharge = maxChargeAmps;
+; safety.c	   128      me->maxAmpsDischarge = maxDischargeAmps;
 	movw	r4,r8
 _343:
 	exts	r12,#0x1
@@ -166,8 +172,8 @@ _1276:
 	addcw	r12,#0x0
 _1277:
 
-; safety.c	   123  
-; safety.c	   124      me->softBSPD_bpsHigh = TRUE;
+; safety.c	   129  
+; safety.c	   130      me->softBSPD_bpsHigh = TRUE;
 	movb	rh4,#0x1
 _344:
 	exts	r12,#0x1
@@ -179,12 +185,12 @@ _1278:
 	addcw	r12,#0x0
 _1279:
 
-; safety.c	   125      me->softBSPD_kwHigh = TRUE;
-; safety.c	   126      me->softBSPD_fault = TRUE;
-; safety.c	   127  
-; safety.c	   128      me->bypass = FALSE;
-; safety.c	   129      me->timestamp_bypassSafetyChecks = 0;
-; safety.c	   130      me->bypassSafetyChecksTimeout_us = 500000; //If safety bypass command is not neceived in this time then safety is re-enabled
+; safety.c	   131      me->softBSPD_kwHigh = TRUE;
+; safety.c	   132      me->softBSPD_fault = TRUE;
+; safety.c	   133  
+; safety.c	   134      me->bypass = FALSE;
+; safety.c	   135      me->timestamp_bypassSafetyChecks = 0;
+; safety.c	   136      me->bypassSafetyChecksTimeout_us = 500000; //If safety bypass command is not neceived in this time then safety is re-enabled
 	movw	r14,#0x7
 _1280:
 	exts	r12,#0x1
@@ -259,9 +265,9 @@ _1296:
 	movw	[r11],r14
 _1297:
 
-; safety.c	   131      //Note: The safety bypass warning flag is the determining factor in bypassing the multiplier.
-; safety.c	   132      return me;
-; safety.c	   133  }
+; safety.c	   137      //Note: The safety bypass warning flag is the determining factor in bypassing the multiplier.
+; safety.c	   138      return me;
+; safety.c	   139  }
 	movw	r8,[r15+]
 _277:
 	movw	r6,[r15+]
@@ -274,16 +280,16 @@ _175:
 code_SafetyChecker_parseCanMessage	.section	code, cluster 'SafetyChecker_parseCanMessage', new
 	.global	_SafetyChecker_parseCanMessage
 
-; safety.c	   134  
-; safety.c	   135  void SafetyChecker_parseCanMessage(SafetyChecker *me, IO_CAN_DATA_FRAME *canMessage)
+; safety.c	   140  
+; safety.c	   141  void SafetyChecker_parseCanMessage(SafetyChecker *me, IO_CAN_DATA_FRAME *canMessage)
 ; Function _SafetyChecker_parseCanMessage
 _84:
 _SafetyChecker_parseCanMessage	.proc	far
 	movw	r11,r5
 _346:
 
-; safety.c	   136  {
-; safety.c	   137      switch (canMessage->id)
+; safety.c	   142  {
+; safety.c	   143      switch (canMessage->id)
 	movw	r12,r4
 	addw	r12,#0xa
 	addcw	r5,#0x0
@@ -300,10 +306,10 @@ _1535:
 	jmp-	cc_ne,_3
 _1536:
 
-; safety.c	   138      {
-; safety.c	   139      case 0x5FF:
-; safety.c	   140          //If the safety bypass code (0xC4) is received on the VCU debug address (0x5FF) at byte 0 (data[0])
-; safety.c	   141          if (canMessage->data[0] == 0xC4)
+; safety.c	   144      {
+; safety.c	   145      case 0x5FF:
+; safety.c	   146          //If the safety bypass code (0xC4) is received on the VCU debug address (0x5FF) at byte 0 (data[0])
+; safety.c	   147          if (canMessage->data[0] == 0xC4)
 	exts	r11,#0x1
 	movb	rh4,[r4]
 _347:
@@ -311,18 +317,18 @@ _347:
 	jmp+	cc_ne,_4
 _1537:
 
-; safety.c	   142          {
-; safety.c	   143              IO_RTC_StartTime(&me->timestamp_bypassSafetyChecks);
+; safety.c	   148          {
+; safety.c	   149              IO_RTC_StartTime(&me->timestamp_bypassSafetyChecks);
 	addw	r2,#0xe
 	addcw	r3,#0x0
 	call	_IO_RTC_StartTime
 _4:
 _3:
 
-; safety.c	   144          }
-; safety.c	   145          break;
-; safety.c	   146      }
-; safety.c	   147  }
+; safety.c	   150          }
+; safety.c	   151          break;
+; safety.c	   152      }
+; safety.c	   153  }
 	ret
 _185:
 	; End of function
@@ -331,9 +337,9 @@ _185:
 code_SafetyChecker_update	.section	code, cluster 'SafetyChecker_update', new
 	.global	_SafetyChecker_update
 
-; safety.c	   148  
-; safety.c	   149  //Updates all values based on sensor readings, safety checks, etc
-; safety.c	   150  void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, TorqueEncoder *tps, BrakePressureSensor *bps, Sensor *HVILTermSense, Sensor *LVBattery)
+; safety.c	   154  
+; safety.c	   155  //Updates all values based on sensor readings, safety checks, etc
+; safety.c	   156  void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, TorqueEncoder *tps, BrakePressureSensor *bps, Sensor *HVILTermSense, Sensor *LVBattery)
 ; Function _SafetyChecker_update
 _96:
 _SafetyChecker_update	.proc	far
@@ -363,25 +369,25 @@ _425:
 	movw	[r15+#0xe0],r14
 _1302:
 
-; safety.c	   151  {
-; safety.c	   152      ubyte1 *message[50]; //For sprintf'ing variables to print in serial
-; safety.c	   153      //SerialManager_send(me->serialMan, "Entered SafetyChecker_update().\n");
-; safety.c	   154      /*****************************************************************************
-; safety.c	   155      * Faults
-; safety.c	   156      ****************************************************************************/
-; safety.c	   157      //===================================================================
-; safety.c	   158      // Get calibration status
-; safety.c	   159      //===================================================================
-; safety.c	   160      //me->faults = 0xFFFF; //Set ALL faults by default.  only clear if truly safe
-; safety.c	   161      me->faults &= ~F_unusedFaults;
+; safety.c	   157  {
+; safety.c	   158      ubyte1 *message[50]; //For sprintf'ing variables to print in serial
+; safety.c	   159      //SerialManager_send(me->serialMan, "Entered SafetyChecker_update().\n");
+; safety.c	   160      /*****************************************************************************
+; safety.c	   161      * Faults
+; safety.c	   162      ****************************************************************************/
+; safety.c	   163      //===================================================================
+; safety.c	   164      // Get calibration status
+; safety.c	   165      //===================================================================
+; safety.c	   166      //me->faults = 0xFFFF; //Set ALL faults by default.  only clear if truly safe
+; safety.c	   167      me->faults &= ~F_unusedFaults;
 	movw	r14,r3
 _897:
 	movw	r5,r3
 _896:
 
-; safety.c	   162  
-; safety.c	   163      //me->faults = 1;
-; safety.c	   164      if (tps->calibrated == FALSE)
+; safety.c	   168  
+; safety.c	   169      //me->faults = 1;
+; safety.c	   170      if (tps->calibrated == FALSE)
 	addw	r11,#0x3a
 _899:
 	addcw	r12,#0x0
@@ -428,17 +434,17 @@ _1310:
 	jmp	cc_ne,_5
 _1311:
 
-; safety.c	   165      {
-; safety.c	   166          me->faults |= F_tpsNotCalibrated;
+; safety.c	   171      {
+; safety.c	   172          me->faults |= F_tpsNotCalibrated;
 	bset	r13.6
 _1312:
 	jmp	_6
 _5:
 
-; safety.c	   167      }
-; safety.c	   168      else
-; safety.c	   169      {
-; safety.c	   170          me->faults &= ~F_tpsNotCalibrated;
+; safety.c	   173      }
+; safety.c	   174      else
+; safety.c	   175      {
+; safety.c	   176          me->faults &= ~F_tpsNotCalibrated;
 	bclr	r13.6
 _6:
 	movw	r11,r7
@@ -451,9 +457,9 @@ _6:
 	movw	[r11],r14
 _1313:
 
-; safety.c	   171      }
-; safety.c	   172      bps->calibrated == TRUE; // Remove later with BPS. Dont keep
-; safety.c	   173      if (bps->calibrated == FALSE)
+; safety.c	   177      }
+; safety.c	   178      bps->calibrated == TRUE; // Remove later with BPS. Dont keep
+; safety.c	   179      if (bps->calibrated == FALSE)
 	movw	r11,[r15+#0xde]
 	movw	r12,[r15+#0xe0]
 	addw	r11,#0x29
@@ -464,12 +470,12 @@ _1314:
 	jmp+	cc_eq,_7
 _1315:
 
-; safety.c	   174      {
-; safety.c	   175          //me->faults |= F_bpsNotCalibrated;
-; safety.c	   176      }
-; safety.c	   177      else
-; safety.c	   178      {
-; safety.c	   179          me->faults &= ~F_bpsNotCalibrated;
+; safety.c	   180      {
+; safety.c	   181          //me->faults |= F_bpsNotCalibrated;
+; safety.c	   182      }
+; safety.c	   183      else
+; safety.c	   184      {
+; safety.c	   185          me->faults &= ~F_bpsNotCalibrated;
 	movw	r11,r7
 	movw	r12,[r15+#0xd0]
 	exts	r12,#0x1
@@ -492,12 +498,12 @@ _1318:
 	movw	[r12],r11
 _7:
 
-; safety.c	   180      }
-; safety.c	   181  
-; safety.c	   182      //===================================================================
-; safety.c	   183      // Check if VCU was able to get a TPS/BPS reading
-; safety.c	   184      //===================================================================
-; safety.c	   185      if (tps->tps0->ioErr_powerInit != IO_E_OK || tps->tps1->ioErr_powerInit != IO_E_OK || tps->tps0->ioErr_powerSet != IO_E_OK || tps->tps1->ioErr_powerSet != IO_E_OK)
+; safety.c	   186      }
+; safety.c	   187  
+; safety.c	   188      //===================================================================
+; safety.c	   189      // Check if VCU was able to get a TPS/BPS reading
+; safety.c	   190      //===================================================================
+; safety.c	   191      if (tps->tps0->ioErr_powerInit != IO_E_OK || tps->tps1->ioErr_powerInit != IO_E_OK || tps->tps0->ioErr_powerSet != IO_E_OK || tps->tps1->ioErr_powerSet != IO_E_OK)
 	movw	r11,r7
 	movw	r12,[r15+#0xd0]
 	exts	r12,#0x1
@@ -568,17 +574,17 @@ _10:
 _9:
 _8:
 
-; safety.c	   186      {
-; safety.c	   187          me->faults |= F_tpsPowerFailure;
+; safety.c	   192      {
+; safety.c	   193          me->faults |= F_tpsPowerFailure;
 	bset	r4.2
 _1330:
 	jmp	_12
 _11:
 
-; safety.c	   188      }
-; safety.c	   189      else
-; safety.c	   190      {
-; safety.c	   191          me->faults &= ~F_tpsPowerFailure;
+; safety.c	   194      }
+; safety.c	   195      else
+; safety.c	   196      {
+; safety.c	   197          me->faults &= ~F_tpsPowerFailure;
 	bclr	r4.2
 _12:
 	movw	r11,r7
@@ -591,9 +597,9 @@ _12:
 	movw	[r11],r13
 _1331:
 
-; safety.c	   192      }
-; safety.c	   193  
-; safety.c	   194      if (tps->tps0->ioErr_signalInit != IO_E_OK || tps->tps1->ioErr_signalInit != IO_E_OK || tps->tps0->ioErr_signalGet != IO_E_OK || tps->tps1->ioErr_signalGet != IO_E_OK)
+; safety.c	   198      }
+; safety.c	   199  
+; safety.c	   200      if (tps->tps0->ioErr_signalInit != IO_E_OK || tps->tps1->ioErr_signalInit != IO_E_OK || tps->tps0->ioErr_signalGet != IO_E_OK || tps->tps1->ioErr_signalGet != IO_E_OK)
 	movw	r11,r7
 	movw	r12,[r15+#0xd0]
 	exts	r12,#0x1
@@ -657,18 +663,18 @@ _15:
 _14:
 _13:
 
-; safety.c	   195      {
-; safety.c	   196          me->faults |= F_tpsSignalFailure;
+; safety.c	   201      {
+; safety.c	   202          me->faults |= F_tpsSignalFailure;
 	bset	r13.4
 _1341:
 	jmp	_17
 _16:
 
-; safety.c	   197          //SerialManager_send(me->serialMan, "TPS signal error\n");
-; safety.c	   198      }
-; safety.c	   199      else
-; safety.c	   200      {
-; safety.c	   201          me->faults &= ~F_tpsSignalFailure;
+; safety.c	   203          //SerialManager_send(me->serialMan, "TPS signal error\n");
+; safety.c	   204      }
+; safety.c	   205      else
+; safety.c	   206      {
+; safety.c	   207          me->faults &= ~F_tpsSignalFailure;
 	bclr	r13.4
 _17:
 	movw	r11,r7
@@ -681,9 +687,9 @@ _17:
 	movw	[r11],r4
 _1342:
 
-; safety.c	   202      }
-; safety.c	   203  
-; safety.c	   204      if (bps->bps0->ioErr_powerInit != IO_E_OK || bps->bps0->ioErr_powerSet != IO_E_OK)
+; safety.c	   208      }
+; safety.c	   209  
+; safety.c	   210      if (bps->bps0->ioErr_powerInit != IO_E_OK || bps->bps0->ioErr_powerSet != IO_E_OK)
 	movw	r11,r7
 	movw	r12,[r15+#0xd0]
 	exts	r12,#0x1
@@ -723,17 +729,17 @@ _1347:
 	jmp	cc_eq,_19
 _18:
 
-; safety.c	   205      {
-; safety.c	   206          me->faults |= F_bpsPowerFailure;
+; safety.c	   211      {
+; safety.c	   212          me->faults |= F_bpsPowerFailure;
 	bset	r2.3
 _1348:
 	jmp	_20
 _19:
 
-; safety.c	   207      }
-; safety.c	   208      else
-; safety.c	   209      {
-; safety.c	   210          me->faults &= ~F_bpsPowerFailure;
+; safety.c	   213      }
+; safety.c	   214      else
+; safety.c	   215      {
+; safety.c	   216          me->faults &= ~F_bpsPowerFailure;
 	bclr	r2.3
 _20:
 	movw	r11,r7
@@ -746,9 +752,9 @@ _20:
 	movw	[r11],r3
 _1349:
 
-; safety.c	   211      }
-; safety.c	   212  
-; safety.c	   213      if (bps->bps0->ioErr_signalInit != IO_E_OK || bps->bps0->ioErr_signalGet != IO_E_OK)
+; safety.c	   217      }
+; safety.c	   218  
+; safety.c	   219      if (bps->bps0->ioErr_signalInit != IO_E_OK || bps->bps0->ioErr_signalGet != IO_E_OK)
 	movw	r11,r7
 	movw	r12,[r15+#0xd0]
 	exts	r12,#0x1
@@ -783,17 +789,17 @@ _1353:
 	jmp	cc_eq,_22
 _21:
 
-; safety.c	   214      {
-; safety.c	   215          me->faults |= F_bpsSignalFailure;
+; safety.c	   220      {
+; safety.c	   221          me->faults |= F_bpsSignalFailure;
 	bset	r2.5
 _1354:
 	jmp	_23
 _22:
 
-; safety.c	   216      }
-; safety.c	   217      else
-; safety.c	   218      {
-; safety.c	   219          me->faults &= ~F_bpsSignalFailure;
+; safety.c	   222      }
+; safety.c	   223      else
+; safety.c	   224      {
+; safety.c	   225          me->faults &= ~F_bpsSignalFailure;
 	bclr	r2.5
 _23:
 	movw	r11,r7
@@ -806,20 +812,20 @@ _23:
 	movw	[r11],r3
 _1355:
 
-; safety.c	   220      }
-; safety.c	   221  
-; safety.c	   222      //===================================================================
-; safety.c	   223      // Make sure raw sensor readings are within operating range
-; safety.c	   224      //===================================================================
-; safety.c	   225      //RULE: EV2.3.10 - signal outside of operating range is considered a failure
-; safety.c	   226      //  This refers to SPEC SHEET values, not calibration values
-; safety.c	   227      //Note: IC cars may continue to drive for up to 100ms until valid readings are restored, but EVs must immediately cut power
-; safety.c	   228      //Note: We need to decide how to report errors and how to perform actions when those errors occur.  For now, I'm calling an imaginary Err.Report function
-; safety.c	   229  
-; safety.c	   230      //-------------------------------------------------------------------
-; safety.c	   231      //Torque Encoder
-; safety.c	   232      //-------------------------------------------------------------------
-; safety.c	   233      if (tps->tps0->sensorValue < tps->tps0->specMin || tps->tps0->sensorValue > tps->tps0->specMax || tps->tps1->sensorValue < tps->tps1->specMin || tps->tps1->sensorValue > tps->tps1->specMax)
+; safety.c	   226      }
+; safety.c	   227  
+; safety.c	   228      //===================================================================
+; safety.c	   229      // Make sure raw sensor readings are within operating range
+; safety.c	   230      //===================================================================
+; safety.c	   231      //RULE: EV2.3.10 - signal outside of operating range is considered a failure
+; safety.c	   232      //  This refers to SPEC SHEET values, not calibration values
+; safety.c	   233      //Note: IC cars may continue to drive for up to 100ms until valid readings are restored, but EVs must immediately cut power
+; safety.c	   234      //Note: We need to decide how to report errors and how to perform actions when those errors occur.  For now, I'm calling an imaginary Err.Report function
+; safety.c	   235  
+; safety.c	   236      //-------------------------------------------------------------------
+; safety.c	   237      //Torque Encoder
+; safety.c	   238      //-------------------------------------------------------------------
+; safety.c	   239      if (tps->tps0->sensorValue < tps->tps0->specMin || tps->tps0->sensorValue > tps->tps0->specMax || tps->tps1->sensorValue < tps->tps1->specMin || tps->tps1->sensorValue > tps->tps1->specMax)
 	exts	r5,#0x1
 	movw	r2,[r14]
 	addw	r14,#0x2
@@ -919,12 +925,12 @@ _1370:
 	jmp+	cc_ugt,_27
 _1371:
 
-; safety.c	   234      {
-; safety.c	   235          //me->faults |= F_tpsOutOfRange;
-; safety.c	   236      }
-; safety.c	   237      else
-; safety.c	   238      {
-; safety.c	   239          me->faults &= ~F_tpsOutOfRange;
+; safety.c	   240      {
+; safety.c	   241          //me->faults |= F_tpsOutOfRange;
+; safety.c	   242      }
+; safety.c	   243      else
+; safety.c	   244      {
+; safety.c	   245          me->faults &= ~F_tpsOutOfRange;
 	movw	r11,r7
 	movw	r12,[r15+#0xd0]
 	exts	r12,#0x1
@@ -950,12 +956,12 @@ _26:
 _25:
 _24:
 
-; safety.c	   240      }
-; safety.c	   241  
-; safety.c	   242      //-------------------------------------------------------------------
-; safety.c	   243      //Brake Pressure Sensor
-; safety.c	   244      //-------------------------------------------------------------------
-; safety.c	   245      if (bps->bps0->sensorValue < bps->bps0->specMin || bps->bps0->sensorValue > bps->bps0->specMax)
+; safety.c	   246      }
+; safety.c	   247  
+; safety.c	   248      //-------------------------------------------------------------------
+; safety.c	   249      //Brake Pressure Sensor
+; safety.c	   250      //-------------------------------------------------------------------
+; safety.c	   251      if (bps->bps0->sensorValue < bps->bps0->specMin || bps->bps0->sensorValue > bps->bps0->specMax)
 	movw	r11,[r15+#0xd6]
 	movw	r12,[r15+#0xd8]
 	exts	r12,#0x1
@@ -1004,12 +1010,12 @@ _1379:
 	jmp+	cc_ugt,_29
 _1380:
 
-; safety.c	   246      {
-; safety.c	   247          //me->faults |= F_bpsOutOfRange;
-; safety.c	   248      }
-; safety.c	   249      else
-; safety.c	   250      {
-; safety.c	   251          me->faults &= ~F_bpsOutOfRange;
+; safety.c	   252      {
+; safety.c	   253          //me->faults |= F_bpsOutOfRange;
+; safety.c	   254      }
+; safety.c	   255      else
+; safety.c	   256      {
+; safety.c	   257          me->faults &= ~F_bpsOutOfRange;
 	movw	r11,r7
 	movw	r12,[r15+#0xd0]
 	exts	r12,#0x1
@@ -1033,24 +1039,24 @@ _1383:
 _29:
 _28:
 
-; safety.c	   252      }
-; safety.c	   253  
-; safety.c	   254      //===================================================================
-; safety.c	   255      // Make sure calibrated TPS readings are in sync with each other
-; safety.c	   256      //===================================================================
-; safety.c	   257      // EV2.3.5 If an implausibility occurs between the values of these two sensors
-; safety.c	   258      //  the power to the motor(s) must be immediately shut down completely. It is not necessary
-; safety.c	   259      //  to completely deactivate the tractive system, the motor controller(s) shutting down the
-; safety.c	   260      //  power to the motor(s) is sufficient.
-; safety.c	   261      // EV2.3.6 Implausibility is defined as a deviation of more than 10 % pedal travel between the sensors.
-; safety.c	   262      //-------------------------------------------------------------------
-; safety.c	   263  
-; safety.c	   264      //Check for implausibility (discrepancy > 10%)
-; safety.c	   265      //RULE: EV2.3.6 Implausibility is defined as a deviation of more than 10% pedal travel between the sensors.
-; safety.c	   266      float4 tps0Percent; //Pedal percent float (a decimal between 0 and 1
-; safety.c	   267      float4 tps1Percent;
-; safety.c	   268  
-; safety.c	   269      TorqueEncoder_getIndividualSensorPercent(tps, 0, &tps0Percent); //borrow the pedal percent variable
+; safety.c	   258      }
+; safety.c	   259  
+; safety.c	   260      //===================================================================
+; safety.c	   261      // Make sure calibrated TPS readings are in sync with each other
+; safety.c	   262      //===================================================================
+; safety.c	   263      // EV2.3.5 If an implausibility occurs between the values of these two sensors
+; safety.c	   264      //  the power to the motor(s) must be immediately shut down completely. It is not necessary
+; safety.c	   265      //  to completely deactivate the tractive system, the motor controller(s) shutting down the
+; safety.c	   266      //  power to the motor(s) is sufficient.
+; safety.c	   267      // EV2.3.6 Implausibility is defined as a deviation of more than 10 % pedal travel between the sensors.
+; safety.c	   268      //-------------------------------------------------------------------
+; safety.c	   269  
+; safety.c	   270      //Check for implausibility (discrepancy > 10%)
+; safety.c	   271      //RULE: EV2.3.6 Implausibility is defined as a deviation of more than 10% pedal travel between the sensors.
+; safety.c	   272      float4 tps0Percent; //Pedal percent float (a decimal between 0 and 1
+; safety.c	   273      float4 tps1Percent;
+; safety.c	   274  
+; safety.c	   275      TorqueEncoder_getIndividualSensorPercent(tps, 0, &tps0Percent); //borrow the pedal percent variable
 	movw	r11,r15
 	addw	r11,#0xcc
 	andw	r11,#0x3fff
@@ -1062,7 +1068,7 @@ _28:
 	call	_TorqueEncoder_getIndividualSensorPercent
 _1384:
 
-; safety.c	   270      TorqueEncoder_getIndividualSensorPercent(tps, 1, &tps1Percent);
+; safety.c	   276      TorqueEncoder_getIndividualSensorPercent(tps, 1, &tps1Percent);
 	movw	r11,r15
 	addw	r11,#0xc8
 	andw	r11,#0x3fff
@@ -1081,8 +1087,8 @@ _1385:
 	addcw	r12,#0x0
 _1386:
 
-; safety.c	   271  
-; safety.c	   272      if ((tps1Percent - tps0Percent) > .1 || (tps1Percent - tps0Percent) < -.1) //Note: Individual TPS readings don't go negative, otherwise this wouldn't work
+; safety.c	   277  
+; safety.c	   278      if ((tps1Percent - tps0Percent) > .1 || (tps1Percent - tps0Percent) < -.1) //Note: Individual TPS readings don't go negative, otherwise this wouldn't work
 	movw	r3,[r15+#0xca]
 _1387:
 	exts	r12,#0x1
@@ -1118,17 +1124,17 @@ _1395:
 	jmp	cc_eq,_31
 _30:
 
-; safety.c	   273      {
-; safety.c	   274          me->faults |= F_tpsOutOfSync;
+; safety.c	   279      {
+; safety.c	   280          me->faults |= F_tpsOutOfSync;
 	bset	r8.8
 _1396:
 	jmp	_32
 _31:
 
-; safety.c	   275      }
-; safety.c	   276      else
-; safety.c	   277      {
-; safety.c	   278          me->faults &= ~F_tpsOutOfSync;
+; safety.c	   281      }
+; safety.c	   282      else
+; safety.c	   283      {
+; safety.c	   284          me->faults &= ~F_tpsOutOfSync;
 	bclr	r8.8
 _32:
 	movw	r11,r7
@@ -1141,10 +1147,10 @@ _32:
 	movw	[r11],r9
 _1397:
 
-; safety.c	   279      }
-; safety.c	   280  
-; safety.c	   281      //Only one BPS right now - this fault doesn't happen
-; safety.c	   282      me->faults &= ~F_bpsOutOfSync;
+; safety.c	   285      }
+; safety.c	   286  
+; safety.c	   287      //Only one BPS right now - this fault doesn't happen
+; safety.c	   288      me->faults &= ~F_bpsOutOfSync;
 	movw	r11,r7
 	movw	r12,[r15+#0xd0]
 	exts	r12,#0x1
@@ -1165,17 +1171,17 @@ _1400:
 	addcw	r14,#0x0
 _234:
 
-; safety.c	   283  
-; safety.c	   284      //===================================================================
-; safety.c	   285      // 2021 EV.5.7 APPS / Brake Pedal Plausibility Check
-; safety.c	   286      //===================================================================
-; safety.c	   287      // EV.5.7.1 The power to the Motor(s) must be immediately and completely shut down when both of the following exist at the same time:
-; safety.c	   288      //     • The mechanical brakes are actuated
-; safety.c	   289      //     • The APPS signals more than 25% pedal travel
-; safety.c	   290      //     This must be demonstrated at Technical Inspection
-; safety.c	   291      // EV.5.7.2 The Motor shut down must remain active until the APPS signals less than 5% pedal travel, with or without brake operation.
-; safety.c	   292      //-------------------------------------------------------------------
-; safety.c	   293      bool tpsAbove25Percent = (tps->travelPercent > .25); //Rules is 25% this is a hack that is made to check
+; safety.c	   289  
+; safety.c	   290      //===================================================================
+; safety.c	   291      // 2021 EV.5.7 APPS / Brake Pedal Plausibility Check
+; safety.c	   292      //===================================================================
+; safety.c	   293      // EV.5.7.1 The power to the Motor(s) must be immediately and completely shut down when both of the following exist at the same time:
+; safety.c	   294      //     • The mechanical brakes are actuated
+; safety.c	   295      //     • The APPS signals more than 25% pedal travel
+; safety.c	   296      //     This must be demonstrated at Technical Inspection
+; safety.c	   297      // EV.5.7.2 The Motor shut down must remain active until the APPS signals less than 5% pedal travel, with or without brake operation.
+; safety.c	   298      //-------------------------------------------------------------------
+; safety.c	   299      bool tpsAbove25Percent = (tps->travelPercent > .25); //Rules is 25% this is a hack that is made to check
 	movw	r13,#0x0
 _235:
 	exts	r14,#0x1
@@ -1206,9 +1212,9 @@ _1405:
 	call	__larger_than_dpf
 _1406:
 
-; safety.c	   294  
-; safety.c	   295      //If mechanical brakes actuated && tps > 25%
-; safety.c	   296      if (bps->brakesAreOn && tpsAbove25Percent)
+; safety.c	   300  
+; safety.c	   301      //If mechanical brakes actuated && tps > 25%
+; safety.c	   302      if (bps->brakesAreOn && tpsAbove25Percent)
 	movw	r11,[r15+#0xde]
 	movw	r12,[r15+#0xe0]
 _902:
@@ -1224,9 +1230,9 @@ _905:
 	jmp+	cc_eq,_34
 _1408:
 
-; safety.c	   297      {
-; safety.c	   298          // Set the TPS/BPS implaisibility VCU fault
-; safety.c	   299          me->faults |= F_tpsbpsImplausible;
+; safety.c	   303      {
+; safety.c	   304          // Set the TPS/BPS implaisibility VCU fault
+; safety.c	   305          me->faults |= F_tpsbpsImplausible;
 	movw	r11,r7
 _903:
 	movw	r12,[r15+#0xd0]
@@ -1244,9 +1250,9 @@ _1411:
 _34:
 _33:
 
-; safety.c	   300          //SerialManager_send(me->serialMan, "TPS BPS implausiblity detected.\n");
-; safety.c	   301      }
-; safety.c	   302      else if (tps->travelPercent < .05) //TPS is reduced to < 5%
+; safety.c	   306          //SerialManager_send(me->serialMan, "TPS BPS implausiblity detected.\n");
+; safety.c	   307      }
+; safety.c	   308      else if (tps->travelPercent < .05) //TPS is reduced to < 5%
 	movw	r11,#0x999a
 _906:
 	movw	r12,#0x9999
@@ -1260,9 +1266,9 @@ _1413:
 	jmp+	cc_eq,_36
 _1414:
 
-; safety.c	   303      {
-; safety.c	   304          // There is no implausibility if TPS is below 5%
-; safety.c	   305          me->faults &= ~(F_tpsbpsImplausible); //turn off the implausibility flag
+; safety.c	   309      {
+; safety.c	   310          // There is no implausibility if TPS is below 5%
+; safety.c	   311          me->faults &= ~(F_tpsbpsImplausible); //turn off the implausibility flag
 	movw	r11,r7
 	movw	r12,[r15+#0xd0]
 	exts	r12,#0x1
@@ -1285,24 +1291,24 @@ _35:
 	movw	[r12],r11
 _36:
 
-; safety.c	   306      }
-; safety.c	   307  
-; safety.c	   308      //===================================================================
-; safety.c	   309      // 2022 EV.8.3 / Accumulator Management System Fault
-; safety.c	   310      //===================================================================
-; safety.c	   311      // EV.8.3.4 The AMS must monitor for:
-; safety.c	   312      //      a. Voltage values outside the allowable range EV.8.4.2              - Yup
-; safety.c	   313      //      b. Voltage sense Overcurrent Protection device(s) blown or tripped  - Yup?
-; safety.c	   314      //      c. Temperature values outside the allowable range EV.8.5.2          - Yup
-; safety.c	   315      //      d. Missing or interrupted voltage or temperature measurements       - Yup?
-; safety.c	   316      //      e. A fault in the AMS                                               - Yup
-; safety.c	   317      // EV.8.3.5 If the AMS detects one or more of the conditions of EV.8.3.4 above, the AMS must:
-; safety.c	   318      //      a. Open the Shutdown Circuit EV.8.2.2 (drive fault IO)              - TODO
-; safety.c	   319      //      b. Turn on the AMS Indicator Light (handled by Shutdown circuit)    - Handled by Shutdown Circuit
-; safety.c	   320      //-------------------------------------------------------------------
-; safety.c	   321  
-; safety.c	   322      //If over voltage fault detected
-; safety.c	   323      if (BMS_getFaultFlags1(bms) & BMS_CELL_OVER_VOLTAGE_FLAG)
+; safety.c	   312      }
+; safety.c	   313  
+; safety.c	   314      //===================================================================
+; safety.c	   315      // 2022 EV.8.3 / Accumulator Management System Fault
+; safety.c	   316      //===================================================================
+; safety.c	   317      // EV.8.3.4 The AMS must monitor for:
+; safety.c	   318      //      a. Voltage values outside the allowable range EV.8.4.2              - Yup
+; safety.c	   319      //      b. Voltage sense Overcurrent Protection device(s) blown or tripped  - Yup?
+; safety.c	   320      //      c. Temperature values outside the allowable range EV.8.5.2          - Yup
+; safety.c	   321      //      d. Missing or interrupted voltage or temperature measurements       - Yup?
+; safety.c	   322      //      e. A fault in the AMS                                               - Yup
+; safety.c	   323      // EV.8.3.5 If the AMS detects one or more of the conditions of EV.8.3.4 above, the AMS must:
+; safety.c	   324      //      a. Open the Shutdown Circuit EV.8.2.2 (drive fault IO)              - TODO
+; safety.c	   325      //      b. Turn on the AMS Indicator Light (handled by Shutdown circuit)    - Handled by Shutdown Circuit
+; safety.c	   326      //-------------------------------------------------------------------
+; safety.c	   327  
+; safety.c	   328      //If over voltage fault detected
+; safety.c	   329      if (BMS_getFaultFlags1(bms) & BMS_CELL_OVER_VOLTAGE_FLAG)
 	movw	r2,[r15+#0xdc]
 	movw	r3,[r15+#0xda]
 	call	_BMS_getFaultFlags1
@@ -1310,13 +1316,13 @@ _1417:
 	jb	r2.0,_37
 _1418:
 
-; safety.c	   324      {
-; safety.c	   325          //me->faults |= F_bmsOverVoltageFault;
-; safety.c	   326          //SerialManager_send(me->serialMan, "BMS over voltage fault detected.\n");
-; safety.c	   327      }
-; safety.c	   328      else
-; safety.c	   329      {
-; safety.c	   330          me->faults &= ~(F_bmsOverVoltageFault);
+; safety.c	   330      {
+; safety.c	   331          //me->faults |= F_bmsOverVoltageFault;
+; safety.c	   332          //SerialManager_send(me->serialMan, "BMS over voltage fault detected.\n");
+; safety.c	   333      }
+; safety.c	   334      else
+; safety.c	   335      {
+; safety.c	   336          me->faults &= ~(F_bmsOverVoltageFault);
 	movw	r11,r7
 	movw	r12,[r15+#0xd0]
 	exts	r12,#0x1
@@ -1339,10 +1345,10 @@ _1421:
 	movw	[r12],r11
 _37:
 
-; safety.c	   331      }
-; safety.c	   332  
-; safety.c	   333      //If under voltage fault detected
-; safety.c	   334      if (BMS_getFaultFlags1(bms) & BMS_CELL_UNDER_VOLTAGE_FLAG)
+; safety.c	   337      }
+; safety.c	   338  
+; safety.c	   339      //If under voltage fault detected
+; safety.c	   340      if (BMS_getFaultFlags1(bms) & BMS_CELL_UNDER_VOLTAGE_FLAG)
 	movw	r2,[r15+#0xdc]
 	movw	r3,[r15+#0xda]
 	call	_BMS_getFaultFlags1
@@ -1350,8 +1356,8 @@ _1422:
 	jnb	r2.1,_38
 _1423:
 
-; safety.c	   335      {
-; safety.c	   336          me->faults |= F_bmsUnderVoltageFault;
+; safety.c	   341      {
+; safety.c	   342          me->faults |= F_bmsUnderVoltageFault;
 	movw	r11,r7
 	movw	r12,[r15+#0xd0]
 	exts	r12,#0x1
@@ -1366,11 +1372,11 @@ _1425:
 	jmp	_39
 _38:
 
-; safety.c	   337          //SerialManager_send(me->serialMan, "BMS under voltage fault detected.\n");
-; safety.c	   338      }
-; safety.c	   339      else
-; safety.c	   340      {
-; safety.c	   341          me->faults &= ~(F_bmsUnderVoltageFault);
+; safety.c	   343          //SerialManager_send(me->serialMan, "BMS under voltage fault detected.\n");
+; safety.c	   344      }
+; safety.c	   345      else
+; safety.c	   346      {
+; safety.c	   347          me->faults &= ~(F_bmsUnderVoltageFault);
 	movw	r11,r7
 	movw	r12,[r15+#0xd0]
 	exts	r12,#0x1
@@ -1392,10 +1398,10 @@ _39:
 	movw	[r12],r11
 _1427:
 
-; safety.c	   342      }
-; safety.c	   343  
-; safety.c	   344      //If over temperature fault detected
-; safety.c	   345      if (BMS_getFaultFlags1(bms) & BMS_CELL_OVER_TEMPERATURE_FLAG)
+; safety.c	   348      }
+; safety.c	   349  
+; safety.c	   350      //If over temperature fault detected
+; safety.c	   351      if (BMS_getFaultFlags1(bms) & BMS_CELL_OVER_TEMPERATURE_FLAG)
 	movw	r2,[r15+#0xdc]
 	movw	r3,[r15+#0xda]
 	call	_BMS_getFaultFlags1
@@ -1403,8 +1409,8 @@ _1428:
 	jnb	r2.2,_40
 _1429:
 
-; safety.c	   346      {
-; safety.c	   347          me->faults |= F_bmsOverTemperatureFault;
+; safety.c	   352      {
+; safety.c	   353          me->faults |= F_bmsOverTemperatureFault;
 	movw	r11,r7
 	movw	r12,[r15+#0xd0]
 	exts	r12,#0x1
@@ -1419,11 +1425,11 @@ _1431:
 	jmp	_41
 _40:
 
-; safety.c	   348          //SerialManager_send(me->serialMan, "BMS over temperature fault detected.\n");
-; safety.c	   349      }
-; safety.c	   350      else
-; safety.c	   351      {
-; safety.c	   352          me->faults &= ~(F_bmsOverTemperatureFault);
+; safety.c	   354          //SerialManager_send(me->serialMan, "BMS over temperature fault detected.\n");
+; safety.c	   355      }
+; safety.c	   356      else
+; safety.c	   357      {
+; safety.c	   358          me->faults &= ~(F_bmsOverTemperatureFault);
 	movw	r11,r7
 	movw	r12,[r15+#0xd0]
 	exts	r12,#0x1
@@ -1445,11 +1451,11 @@ _41:
 	movw	[r12],r11
 _1433:
 
-; safety.c	   353      }
-; safety.c	   354  
-; safety.c	   355      //If mismatch greater than specified mismatch value
-; safety.c	   356      //BMS cell voltage data members are in mV, 
-; safety.c	   357      if ( (BMS_getHighestCellVoltage_mV(bms)-BMS_getLowestCellVoltage_mV(bms)) > (BMS_MAX_CELL_MISMATCH_V*1000) )
+; safety.c	   359      }
+; safety.c	   360  
+; safety.c	   361      //If mismatch greater than specified mismatch value
+; safety.c	   362      //BMS cell voltage data members are in mV, 
+; safety.c	   363      if ( (BMS_getHighestCellVoltage_mV(bms)-BMS_getLowestCellVoltage_mV(bms)) > (BMS_MAX_CELL_MISMATCH_V*1000) )
 	movw	r2,[r15+#0xdc]
 	movw	r3,[r15+#0xda]
 	call	_BMS_getHighestCellVoltage_mV
@@ -1477,13 +1483,13 @@ _1440:
 	jmp+	cc_ne,_42
 _1441:
 
-; safety.c	   358      {
-; safety.c	   359          //me->faults |= F_bmsCellMismatchFault;
-; safety.c	   360          //SerialManager_send(me->serialMan, "BMS cell mismatch fault detected.\n");
-; safety.c	   361      }
-; safety.c	   362      else
-; safety.c	   363      {
-; safety.c	   364          me->faults &= ~(F_bmsCellMismatchFault);
+; safety.c	   364      {
+; safety.c	   365          //me->faults |= F_bmsCellMismatchFault;
+; safety.c	   366          //SerialManager_send(me->serialMan, "BMS cell mismatch fault detected.\n");
+; safety.c	   367      }
+; safety.c	   368      else
+; safety.c	   369      {
+; safety.c	   370          me->faults &= ~(F_bmsCellMismatchFault);
 	movw	r11,r7
 	movw	r12,[r15+#0xd0]
 	exts	r12,#0x1
@@ -1506,33 +1512,33 @@ _1444:
 	movw	[r12],r11
 _42:
 
-; safety.c	   365      }
-; safety.c	   366  
-; safety.c	   367      //If any sort of BMS fault detected (assuming 8.3.4 fulfilled by BMS)
-; safety.c	   368      //if (BMS_getFaultFlags0(bms) || BMS_getFaultFlags1(bms))
-; safety.c	   369      //{
-; safety.c	   370      //    me->faults |= F_anyBmsFault;
-; safety.c	   371      //    SerialManager_send(me->serialMan, "BMS fault detected.\n");
-; safety.c	   372      //}
-; safety.c	   373      //Else, BMS reported faults over CAN are empty
-; safety.c	   374      //else
+; safety.c	   371      }
+; safety.c	   372  
+; safety.c	   373      //If any sort of BMS fault detected (assuming 8.3.4 fulfilled by BMS)
+; safety.c	   374      //if (BMS_getFaultFlags0(bms) || BMS_getFaultFlags1(bms))
 ; safety.c	   375      //{
-; safety.c	   376      //    me->faults &= ~(F_anyBmsFault);
-; safety.c	   377      //}
-; safety.c	   378  
-; safety.c	   379  
-; safety.c	   380  
-; safety.c	   381      //SerialManager_send(me->serialMan, "\n");
-; safety.c	   382  
-; safety.c	   383      /*****************************************************************************
-; safety.c	   384      * Warnings
-; safety.c	   385      ****************************************************************************/
-; safety.c	   386      //===================================================================
-; safety.c	   387      // LVS Battery Check - FAULTS LATCH UNTIL RETURN TO PREVIOUS STAGE
-; safety.c	   388      //===================================================================
-; safety.c	   389      //  IO_ADC_UBAT: 0..40106  (0V..40.106V)
-; safety.c	   390      //-------------------------------------------------------------------
-; safety.c	   391      if (LVBattery->sensorValue <= 9200) //12730 = 10% SOC but hard to tell under load. 9200 = empty
+; safety.c	   376      //    me->faults |= F_anyBmsFault;
+; safety.c	   377      //    SerialManager_send(me->serialMan, "BMS fault detected.\n");
+; safety.c	   378      //}
+; safety.c	   379      //Else, BMS reported faults over CAN are empty
+; safety.c	   380      //else
+; safety.c	   381      //{
+; safety.c	   382      //    me->faults &= ~(F_anyBmsFault);
+; safety.c	   383      //}
+; safety.c	   384  
+; safety.c	   385  
+; safety.c	   386  
+; safety.c	   387      //SerialManager_send(me->serialMan, "\n");
+; safety.c	   388  
+; safety.c	   389      /*****************************************************************************
+; safety.c	   390      * Warnings
+; safety.c	   391      ****************************************************************************/
+; safety.c	   392      //===================================================================
+; safety.c	   393      // LVS Battery Check - FAULTS LATCH UNTIL RETURN TO PREVIOUS STAGE
+; safety.c	   394      //===================================================================
+; safety.c	   395      //  IO_ADC_UBAT: 0..40106  (0V..40.106V)
+; safety.c	   396      //-------------------------------------------------------------------
+; safety.c	   397      if (LVBattery->sensorValue <= 9200) //12730 = 10% SOC but hard to tell under load. 9200 = empty
 	movw	r4,[r15+#0xe2]
 _895:
 	movw	r5,[r15+#0xe4]
@@ -1542,9 +1548,9 @@ _895:
 	movw	r12,r5
 _1445:
 
-; safety.c	   392      {
-; safety.c	   393          me->faults |= F_lvsBatteryVeryLow;
-; safety.c	   394          me->warnings |= W_lvsBatteryLow;
+; safety.c	   398      {
+; safety.c	   399          me->faults |= F_lvsBatteryVeryLow;
+; safety.c	   400          me->warnings |= W_lvsBatteryLow;
 	movw	r8,r7
 	movw	r9,[r15+#0xd0]
 _1446:
@@ -1594,7 +1600,7 @@ _1456:
 	movw	[r8],r14
 _1457:
 
-; safety.c	   395          sprintf(message, "LVS battery %.03fV EXTREMELY LOW!\n", (float4)LVBattery->sensorValue / 1000);
+; safety.c	   401          sprintf(message, "LVS battery %.03fV EXTREMELY LOW!\n", (float4)LVBattery->sensorValue / 1000);
 	exts	r5,#0x1
 	movw	r2,[r4]
 	addw	r4,#0x2
@@ -1631,16 +1637,16 @@ _480:
 	jmp	_44
 _43:
 
-; safety.c	   396          //SerialManager_send(me->serialMan, message);
-; safety.c	   397      }
-; safety.c	   398      else if (LVBattery->sensorValue <= 12730) //13100 = Recharge percentage, per Shorai
+; safety.c	   402          //SerialManager_send(me->serialMan, message);
+; safety.c	   403      }
+; safety.c	   404      else if (LVBattery->sensorValue <= 12730) //13100 = Recharge percentage, per Shorai
 	cmpw	r13,#0x31ba
 	subcw	r11,#0x0
 	jmp+	cc_ugt,_45
 _1462:
 
-; safety.c	   399      {
-; safety.c	   400          me->faults &= ~F_lvsBatteryVeryLow;
+; safety.c	   405      {
+; safety.c	   406          me->faults &= ~F_lvsBatteryVeryLow;
 	movw	r11,r7
 	movw	r12,[r15+#0xd0]
 	exts	r12,#0x1
@@ -1661,7 +1667,7 @@ _1465:
 	addcw	r2,#0x0
 _1466:
 
-; safety.c	   401          me->warnings |= W_lvsBatteryLow;
+; safety.c	   407          me->warnings |= W_lvsBatteryLow;
 	bset	r14.0
 _1467:
 	exts	r2,#0x1
@@ -1671,7 +1677,7 @@ _1468:
 	movw	[r8],r14
 _1469:
 
-; safety.c	   402          sprintf(message, "LVS battery %.03fV LOW.\n", (float4)LVBattery->sensorValue / 1000);
+; safety.c	   408          sprintf(message, "LVS battery %.03fV LOW.\n", (float4)LVBattery->sensorValue / 1000);
 	exts	r5,#0x1
 	movw	r2,[r4]
 	addw	r4,#0x2
@@ -1708,12 +1714,12 @@ _535:
 	jmp	_46
 _45:
 
-; safety.c	   403          //SerialManager_send(me->serialMan, message);
-; safety.c	   404      }
-; safety.c	   405      else
-; safety.c	   406      {
-; safety.c	   407          me->warnings &= ~F_lvsBatteryVeryLow;
-; safety.c	   408          me->warnings &= ~W_lvsBatteryLow;
+; safety.c	   409          //SerialManager_send(me->serialMan, message);
+; safety.c	   410      }
+; safety.c	   411      else
+; safety.c	   412      {
+; safety.c	   413          me->warnings &= ~F_lvsBatteryVeryLow;
+; safety.c	   414          me->warnings &= ~W_lvsBatteryLow;
 	bclr	r14.0
 _1474:
 	exts	r9,#0x1
@@ -1721,30 +1727,30 @@ _1474:
 _46:
 _44:
 
-; safety.c	   409          //sprintf(message, "LVS battery %.03fV good.\n", (float4)LVBattery->sensorValue / 1000);
-; safety.c	   410      }
-; safety.c	   411  
-; safety.c	   412      
-; safety.c	   413      //===================================================================
-; safety.c	   414      // softBSPD - Software implementation of Brake System Plausibility Device
-; safety.c	   415      //===================================================================
-; safety.c	   416      // Danny (e-tech judge) suggested implementing a BSPD check in software as
-; safety.c	   417      // an alternative to making a hardware adjustment to the BSPD requiring us to re-tech.
-; safety.c	   418      // By tripping a software BSPD slightly before the actual BSPD would trip, we can avoid
-; safety.c	   419      // the BSPD actually shutting down the car and ending our run.
-; safety.c	   420      // 2021 BSPD looks for 2.75V from BPS
-; safety.c	   421      // and ?? kW (approximation from a current sensor assuming nominal pack voltage)
-; safety.c	   422      // We will use 2.0V (TBD) BPS voltage and even the tiniest amount of torque command
-; safety.c	   423      
-; safety.c	   424      // Formula for relating kW to Nm:
-; safety.c	   425      //(kW) = torque (Nm) x speed (RPM) / 9.5488
-; safety.c	   426      
-; safety.c	   427      // MCM readings <--> REQUESTED torque * rpm / 9.5488
-; safety.c	   428      // 259*158 = 225 * 2556 / 9.5488
-; safety.c	   429      // 40922 = 60227 <-- This discrepancy is because we don't get all of the requested torque 
-; safety.c	   430  
-; safety.c	   431  
-; safety.c	   432      me->softBSPD_bpsHigh = bps->bps0->sensorValue > 1900;
+; safety.c	   415          //sprintf(message, "LVS battery %.03fV good.\n", (float4)LVBattery->sensorValue / 1000);
+; safety.c	   416      }
+; safety.c	   417  
+; safety.c	   418      
+; safety.c	   419      //===================================================================
+; safety.c	   420      // softBSPD - Software implementation of Brake System Plausibility Device
+; safety.c	   421      //===================================================================
+; safety.c	   422      // Danny (e-tech judge) suggested implementing a BSPD check in software as
+; safety.c	   423      // an alternative to making a hardware adjustment to the BSPD requiring us to re-tech.
+; safety.c	   424      // By tripping a software BSPD slightly before the actual BSPD would trip, we can avoid
+; safety.c	   425      // the BSPD actually shutting down the car and ending our run.
+; safety.c	   426      // 2021 BSPD looks for 2.75V from BPS
+; safety.c	   427      // and ?? kW (approximation from a current sensor assuming nominal pack voltage)
+; safety.c	   428      // We will use 2.0V (TBD) BPS voltage and even the tiniest amount of torque command
+; safety.c	   429      
+; safety.c	   430      // Formula for relating kW to Nm:
+; safety.c	   431      //(kW) = torque (Nm) x speed (RPM) / 9.5488
+; safety.c	   432      
+; safety.c	   433      // MCM readings <--> REQUESTED torque * rpm / 9.5488
+; safety.c	   434      // 259*158 = 225 * 2556 / 9.5488
+; safety.c	   435      // 40922 = 60227 <-- This discrepancy is because we don't get all of the requested torque 
+; safety.c	   436  
+; safety.c	   437  
+; safety.c	   438      me->softBSPD_bpsHigh = bps->bps0->sensorValue > 1900;
 	movw	r13,[r15+#0xd6]
 	movw	r14,[r15+#0xd8]
 	exts	r14,#0x1
@@ -1783,7 +1789,7 @@ _47:
 	movb	[r11],rh4
 _1483:
 
-; safety.c	   433      me->softBSPD_kwHigh = FALSE; //SRE-7 Update: MCM_getPower(mcm) > 4000;
+; safety.c	   439      me->softBSPD_kwHigh = FALSE; //SRE-7 Update: MCM_getPower(mcm) > 4000;
 	movw	r11,r7
 	movw	r12,[r15+#0xd0]
 	addw	r11,#0xb
@@ -1795,16 +1801,16 @@ _1485:
 	movb	[r11],rh4
 _1486:
 
-; safety.c	   434  
-; safety.c	   435      // Note: this is using the FUTURE torque request with the PREVIOUS RPM
-; safety.c	   436      if (me->softBSPD_bpsHigh && me->softBSPD_kwHigh)
-; safety.c	   437      {
-; safety.c	   438          IO_RTC_StartTime(&timestamp_SoftBSPD);
-; safety.c	   439          me->softBSPD_fault = FALSE;
-; safety.c	   440          //me->faults |= F_softBSPDFault;
-; safety.c	   441          // Light_set(Light_dashEco, 1);  // For testing only
-; safety.c	   442      }
-; safety.c	   443      else if (IO_RTC_GetTimeUS(timestamp_SoftBSPD) >= 500000 || IO_RTC_GetTimeUS(timestamp_SoftBSPD) == 0)
+; safety.c	   440  
+; safety.c	   441      // Note: this is using the FUTURE torque request with the PREVIOUS RPM
+; safety.c	   442      if (me->softBSPD_bpsHigh && me->softBSPD_kwHigh)
+; safety.c	   443      {
+; safety.c	   444          IO_RTC_StartTime(&timestamp_SoftBSPD);
+; safety.c	   445          me->softBSPD_fault = FALSE;
+; safety.c	   446          //me->faults |= F_softBSPDFault;
+; safety.c	   447          // Light_set(Light_dashEco, 1);  // For testing only
+; safety.c	   448      }
+; safety.c	   449      else if (IO_RTC_GetTimeUS(timestamp_SoftBSPD) >= 500000 || IO_RTC_GetTimeUS(timestamp_SoftBSPD) == 0)
 	exts	#@seg(_timestamp_SoftBSPD),#0x1
 	movw	r2,@sof(_timestamp_SoftBSPD)
 	exts	#@seg(_timestamp_SoftBSPD+0x2),#0x1
@@ -1825,9 +1831,9 @@ _1489:
 	jmp+	cc_ne,_49
 _48:
 
-; safety.c	   444      {
-; safety.c	   445          timestamp_SoftBSPD = 0;
-; safety.c	   446          me->softBSPD_fault = FALSE;
+; safety.c	   450      {
+; safety.c	   451          timestamp_SoftBSPD = 0;
+; safety.c	   452          me->softBSPD_fault = FALSE;
 	movw	r11,r7
 	movw	r12,[r15+#0xd0]
 	addw	r11,#0xc
@@ -1844,7 +1850,7 @@ _1492:
 	movb	[r11],rh4
 _1493:
 
-; safety.c	   447          me->faults &= ~F_softBSPDFault;
+; safety.c	   453          me->faults &= ~F_softBSPDFault;
 	movw	r11,r7
 	movw	r12,[r15+#0xd0]
 	exts	r12,#0x1
@@ -1867,18 +1873,18 @@ _1496:
 	movw	[r12],r11
 _49:
 
-; safety.c	   448          // Light_set(Light_dashEco, 0);  // For testing only
-; safety.c	   449      }
-; safety.c	   450  
-; safety.c	   451  
-; safety.c	   452      //===================================================================
-; safety.c	   453      // Safety checker bypass
-; safety.c	   454      //===================================================================
-; safety.c	   455      // The safety checker should only be bypassed by a CAN message sent by
-; safety.c	   456      // the PCAN Explorer dashboard.  This is only used during debugging.
-; safety.c	   457      //-------------------------------------------------------------------
-; safety.c	   458      //In case CAN communication is lost, the bypass should be disabled after some time,
-; safety.c	   459      if (IO_RTC_GetTimeUS(me->timestamp_bypassSafetyChecks) < me->bypassSafetyChecksTimeout_us)
+; safety.c	   454          // Light_set(Light_dashEco, 0);  // For testing only
+; safety.c	   455      }
+; safety.c	   456  
+; safety.c	   457  
+; safety.c	   458      //===================================================================
+; safety.c	   459      // Safety checker bypass
+; safety.c	   460      //===================================================================
+; safety.c	   461      // The safety checker should only be bypassed by a CAN message sent by
+; safety.c	   462      // the PCAN Explorer dashboard.  This is only used during debugging.
+; safety.c	   463      //-------------------------------------------------------------------
+; safety.c	   464      //In case CAN communication is lost, the bypass should be disabled after some time,
+; safety.c	   465      if (IO_RTC_GetTimeUS(me->timestamp_bypassSafetyChecks) < me->bypassSafetyChecksTimeout_us)
 	movw	r11,r7
 	movw	r12,[r15+#0xd0]
 	addw	r11,#0xe
@@ -1907,8 +1913,8 @@ _1498:
 	jmp	cc_uge,_50
 _1499:
 
-; safety.c	   460      {
-; safety.c	   461          me->warnings |= W_safetyBypassEnabled;
+; safety.c	   466      {
+; safety.c	   467          me->warnings |= W_safetyBypassEnabled;
 	exts	r9,#0x1
 	movw	r11,[r8]
 _1500:
@@ -1917,10 +1923,10 @@ _1501:
 	jmp	_51
 _50:
 
-; safety.c	   462      }
-; safety.c	   463      else
-; safety.c	   464      {
-; safety.c	   465          me->warnings &= ~W_safetyBypassEnabled;
+; safety.c	   468      }
+; safety.c	   469      else
+; safety.c	   470      {
+; safety.c	   471          me->warnings &= ~W_safetyBypassEnabled;
 	exts	r9,#0x1
 	movw	r11,[r8]
 _1502:
@@ -1930,26 +1936,26 @@ _51:
 	movw	[r8],r11
 _1503:
 
-; safety.c	   466      }
-; safety.c	   467  
-; safety.c	   468      //===================================================================
-; safety.c	   469      // HVIL Override (Needs to be adapted for Future Inverters Control)
-; safety.c	   470      //===================================================================
-; safety.c	   471      //if (MCM_getHvilOverrideStatus(mcm) == TRUE)
-; safety.c	   472      //{
-; safety.c	   473      //    me->warnings |= W_hvilOverrideEnabled;
-; safety.c	   474      //}
-; safety.c	   475      //else
-; safety.c	   476      //{
-; safety.c	   477      //    me->warnings &= ~W_hvilOverrideEnabled;
-; safety.c	   478      //}
-; safety.c	   479  
-; safety.c	   480      //===================================================================
-; safety.c	   481      // 2022 EV.8.3 / Accumulator Management System Warning
-; safety.c	   482      //===================================================================
-; safety.c	   483  
-; safety.c	   484      //If under voltage fault detected
-; safety.c	   485      if (BMS_getLowestCellVoltage_mV(bms) < (BMS_MIN_CELL_VOLTAGE_WARNING*BMS_VOLTAGE_SCALE))
+; safety.c	   472      }
+; safety.c	   473  
+; safety.c	   474      //===================================================================
+; safety.c	   475      // HVIL Override (Needs to be adapted for Future Inverters Control)
+; safety.c	   476      //===================================================================
+; safety.c	   477      //if (MCM_getHvilOverrideStatus(mcm) == TRUE)
+; safety.c	   478      //{
+; safety.c	   479      //    me->warnings |= W_hvilOverrideEnabled;
+; safety.c	   480      //}
+; safety.c	   481      //else
+; safety.c	   482      //{
+; safety.c	   483      //    me->warnings &= ~W_hvilOverrideEnabled;
+; safety.c	   484      //}
+; safety.c	   485  
+; safety.c	   486      //===================================================================
+; safety.c	   487      // 2022 EV.8.3 / Accumulator Management System Warning
+; safety.c	   488      //===================================================================
+; safety.c	   489  
+; safety.c	   490      //If under voltage fault detected
+; safety.c	   491      if (BMS_getLowestCellVoltage_mV(bms) < (BMS_MIN_CELL_VOLTAGE_WARNING*BMS_VOLTAGE_SCALE))
 	movw	r2,[r15+#0xdc]
 	movw	r3,[r15+#0xda]
 	call	_BMS_getLowestCellVoltage_mV
@@ -1965,13 +1971,13 @@ _1507:
 	jmp	cc_ne,_52
 _1508:
 
-; safety.c	   486      {
-; safety.c	   487          me->warnings |= W_bmsUnderVoltageWarning;
-; safety.c	   488          //SerialManager_send(me->serialMan, "BMS under voltage warning detected.\n");
-; safety.c	   489      }
-; safety.c	   490      else
-; safety.c	   491      {
-; safety.c	   492          me->warnings &= ~(W_bmsUnderVoltageWarning);
+; safety.c	   492      {
+; safety.c	   493          me->warnings |= W_bmsUnderVoltageWarning;
+; safety.c	   494          //SerialManager_send(me->serialMan, "BMS under voltage warning detected.\n");
+; safety.c	   495      }
+; safety.c	   496      else
+; safety.c	   497      {
+; safety.c	   498          me->warnings &= ~(W_bmsUnderVoltageWarning);
 	exts	r9,#0x1
 	movw	r11,[r8]
 _1509:
@@ -1988,10 +1994,10 @@ _53:
 	movw	[r8],r11
 _1512:
 
-; safety.c	   493      }
-; safety.c	   494  
-; safety.c	   495      //If over temperature fault detected
-; safety.c	   496      if (BMS_getHighestCellTemp_d_degC(bms) > (BMS_MAX_CELL_TEMPERATURE_WARNING*BMS_TEMPERATURE_SCALE))
+; safety.c	   499      }
+; safety.c	   500  
+; safety.c	   501      //If over temperature fault detected
+; safety.c	   502      if (BMS_getHighestCellTemp_d_degC(bms) > (BMS_MAX_CELL_TEMPERATURE_WARNING*BMS_TEMPERATURE_SCALE))
 	movw	r2,[r15+#0xdc]
 	movw	r3,[r15+#0xda]
 	call	_BMS_getHighestCellTemp_d_degC
@@ -2007,13 +2013,13 @@ _1516:
 	jmp	cc_ne,_54
 _1517:
 
-; safety.c	   497      {
-; safety.c	   498          me->warnings |= W_bmsOverTemperatureWarning;
-; safety.c	   499          //SerialManager_send(me->serialMan, "BMS over temperature warning detected.\n");
-; safety.c	   500      }
-; safety.c	   501      else
-; safety.c	   502      {
-; safety.c	   503          me->warnings &= ~(W_bmsOverTemperatureWarning);
+; safety.c	   503      {
+; safety.c	   504          me->warnings |= W_bmsOverTemperatureWarning;
+; safety.c	   505          //SerialManager_send(me->serialMan, "BMS over temperature warning detected.\n");
+; safety.c	   506      }
+; safety.c	   507      else
+; safety.c	   508      {
+; safety.c	   509          me->warnings &= ~(W_bmsOverTemperatureWarning);
 	exts	r9,#0x1
 	movw	r11,[r8]
 _1518:
@@ -2030,19 +2036,19 @@ _55:
 	movw	[r8],r11
 _1521:
 
-; safety.c	   504      }
-; safety.c	   505  
-; safety.c	   506      /*****************************************************************************
-; safety.c	   507      * Notices
-; safety.c	   508      ****************************************************************************/
-; safety.c	   509  
-; safety.c	   510      //===================================================================
-; safety.c	   511      // HVIL Term Sense Check
-; safety.c	   512      //===================================================================
-; safety.c	   513      // If HVIL term sense goes low (because HV went down), motor torque
-; safety.c	   514      // command should be set to zero before turning off the controller
-; safety.c	   515      //-------------------------------------------------------------------
-; safety.c	   516      if (HVILTermSense->sensorValue == FALSE)
+; safety.c	   510      }
+; safety.c	   511  
+; safety.c	   512      /*****************************************************************************
+; safety.c	   513      * Notices
+; safety.c	   514      ****************************************************************************/
+; safety.c	   515  
+; safety.c	   516      //===================================================================
+; safety.c	   517      // HVIL Term Sense Check
+; safety.c	   518      //===================================================================
+; safety.c	   519      // If HVIL term sense goes low (because HV went down), motor torque
+; safety.c	   520      // command should be set to zero before turning off the controller
+; safety.c	   521      //-------------------------------------------------------------------
+; safety.c	   522      if (HVILTermSense->sensorValue == FALSE)
 	movw	r12,[r15+#0xe6]
 _894:
 	movw	r13,[r15+#0xe8]
@@ -2051,8 +2057,8 @@ _907:
 	addcw	r13,#0x0
 _1522:
 
-; safety.c	   517      {
-; safety.c	   518          me->notices |= N_HVILTermSenseLost;
+; safety.c	   523      {
+; safety.c	   524          me->notices |= N_HVILTermSenseLost;
 	movw	r8,[r15+#0xd0]
 	addw	r7,#0x6
 	addcw	r8,#0x0
@@ -2076,19 +2082,19 @@ _1527:
 	jmp	_57
 _56:
 
-; safety.c	   519      }
-; safety.c	   520      else
-; safety.c	   521      {
-; safety.c	   522          me->notices &= ~N_HVILTermSenseLost;
+; safety.c	   525      }
+; safety.c	   526      else
+; safety.c	   527      {
+; safety.c	   528          me->notices &= ~N_HVILTermSenseLost;
 	bclr	r11.0
 _57:
 	exts	r8,#0x1
 	movw	[r7],r11
 _1528:
 
-; safety.c	   523      }
-; safety.c	   524  
-; safety.c	   525      if (BMS_getPower_W(bms) > 75000)
+; safety.c	   529      }
+; safety.c	   530  
+; safety.c	   531      if (BMS_getPower_W(bms) > 75000)
 	movw	r2,[r15+#0xdc]
 	movw	r3,[r15+#0xda]
 _909:
@@ -2099,12 +2105,12 @@ _910:
 	jmp+	cc_sgt,_58
 _1529:
 
-; safety.c	   526      {
-; safety.c	   527          //me->notices |= N_Over75kW_BMS;
-; safety.c	   528      }
-; safety.c	   529      else
-; safety.c	   530      {
-; safety.c	   531          me->notices &= ~N_Over75kW_BMS;
+; safety.c	   532      {
+; safety.c	   533          //me->notices |= N_Over75kW_BMS;
+; safety.c	   534      }
+; safety.c	   535      else
+; safety.c	   536      {
+; safety.c	   537          me->notices &= ~N_Over75kW_BMS;
 	exts	r8,#0x1
 	movw	r11,[r7]
 _1530:
@@ -2113,18 +2119,18 @@ _1530:
 	movw	[r7],r11
 _58:
 
-; safety.c	   532      }
-; safety.c	   533  
-; safety.c	   534      //SRE-7 Update: Need to find power to make sure it is limited
-; safety.c	   535      //if (MCM_getPower(mcm) > 75000)
-; safety.c	   536      //{
-; safety.c	   537      //    me->notices |= N_Over75kW_MCM;
-; safety.c	   538      //}
-; safety.c	   539      //else
-; safety.c	   540      //{
-; safety.c	   541      //    me->notices &= ~N_Over75kW_MCM;
-; safety.c	   542      //}
-; safety.c	   543  }
+; safety.c	   538      }
+; safety.c	   539  
+; safety.c	   540      //SRE-7 Update: Need to find power to make sure it is limited
+; safety.c	   541      //if (MCM_getPower(mcm) > 75000)
+; safety.c	   542      //{
+; safety.c	   543      //    me->notices |= N_Over75kW_MCM;
+; safety.c	   544      //}
+; safety.c	   545      //else
+; safety.c	   546      //{
+; safety.c	   547      //    me->notices &= ~N_Over75kW_MCM;
+; safety.c	   548      //}
+; safety.c	   549  }
 	addw	r15,#0xea
 _546:
 	movw	r10,[r15+]
@@ -2149,15 +2155,15 @@ _180:
 code_SafetyChecker_allSafe	.section	code, cluster 'SafetyChecker_allSafe', new
 	.global	_SafetyChecker_allSafe
 
-; safety.c	   544  
-; safety.c	   545  //Updates all values based on sensor readings, safety checks, etc
-; safety.c	   546  bool SafetyChecker_allSafe(SafetyChecker *me)
+; safety.c	   550  
+; safety.c	   551  //Updates all values based on sensor readings, safety checks, etc
+; safety.c	   552  bool SafetyChecker_allSafe(SafetyChecker *me)
 ; Function _SafetyChecker_allSafe
 _108:
 _SafetyChecker_allSafe	.proc	far
 
-; safety.c	   547  {
-; safety.c	   548      return (me->faults == 0);
+; safety.c	   553  {
+; safety.c	   554      return (me->faults == 0);
 	exts	r3,#0x1
 	movw	r11,[r2]
 	addw	r2,#0x2
@@ -2172,7 +2178,7 @@ _911:
 	movb	rl2,#0x1
 _59:
 
-; safety.c	   549  }
+; safety.c	   555  }
 	ret
 _190:
 	; End of function
@@ -2181,15 +2187,15 @@ _190:
 code_SafetyChecker_getFaults	.section	code, cluster 'SafetyChecker_getFaults', new
 	.global	_SafetyChecker_getFaults
 
-; safety.c	   550  
-; safety.c	   551  //Updates all values based on sensor readings, safety checks, etc
-; safety.c	   552  ubyte4 SafetyChecker_getFaults(SafetyChecker *me)
+; safety.c	   556  
+; safety.c	   557  //Updates all values based on sensor readings, safety checks, etc
+; safety.c	   558  ubyte4 SafetyChecker_getFaults(SafetyChecker *me)
 ; Function _SafetyChecker_getFaults
 _120:
 _SafetyChecker_getFaults	.proc	far
 
-; safety.c	   553  {
-; safety.c	   554      return (me->faults);
+; safety.c	   559  {
+; safety.c	   560      return (me->faults);
 	movw	r11,r2
 	exts	r3,#0x1
 	movw	r2,[r11]
@@ -2200,7 +2206,7 @@ _912:
 	movw	r3,[r11]
 _1547:
 
-; safety.c	   555  }
+; safety.c	   561  }
 	ret
 _195:
 	; End of function
@@ -2209,15 +2215,15 @@ _195:
 code_SafetyChecker_getWarnings	.section	code, cluster 'SafetyChecker_getWarnings', new
 	.global	_SafetyChecker_getWarnings
 
-; safety.c	   556  
-; safety.c	   557  //Updates all values based on sensor readings, safety checks, etc
-; safety.c	   558  ubyte4 SafetyChecker_getWarnings(SafetyChecker *me)
+; safety.c	   562  
+; safety.c	   563  //Updates all values based on sensor readings, safety checks, etc
+; safety.c	   564  ubyte4 SafetyChecker_getWarnings(SafetyChecker *me)
 ; Function _SafetyChecker_getWarnings
 _132:
 _SafetyChecker_getWarnings	.proc	far
 
-; safety.c	   559  {
-; safety.c	   560      return (me->warnings);
+; safety.c	   565  {
+; safety.c	   566      return (me->warnings);
 	addw	r2,#0x4
 _913:
 	addcw	r3,#0x0
@@ -2227,7 +2233,7 @@ _1552:
 	movw	r3,#0x0
 _1553:
 
-; safety.c	   561  }
+; safety.c	   567  }
 	ret
 _200:
 	; End of function
@@ -2236,15 +2242,15 @@ _200:
 code_SafetyChecker_getNotices	.section	code, cluster 'SafetyChecker_getNotices', new
 	.global	_SafetyChecker_getNotices
 
-; safety.c	   562  
-; safety.c	   563  //Updates all values based on sensor readings, safety checks, etc
-; safety.c	   564  ubyte4 SafetyChecker_getNotices(SafetyChecker *me)
+; safety.c	   568  
+; safety.c	   569  //Updates all values based on sensor readings, safety checks, etc
+; safety.c	   570  ubyte4 SafetyChecker_getNotices(SafetyChecker *me)
 ; Function _SafetyChecker_getNotices
 _144:
 _SafetyChecker_getNotices	.proc	far
 
-; safety.c	   565  {
-; safety.c	   566      return (me->notices);
+; safety.c	   571  {
+; safety.c	   572      return (me->notices);
 	addw	r2,#0x6
 _914:
 	addcw	r3,#0x0
@@ -2254,7 +2260,7 @@ _1558:
 	movw	r3,#0x0
 _1559:
 
-; safety.c	   567  }
+; safety.c	   573  }
 	ret
 _205:
 	; End of function
@@ -2263,8 +2269,8 @@ _205:
 code_SafetyChecker_reduceTorque	.section	code, cluster 'SafetyChecker_reduceTorque', new
 	.global	_SafetyChecker_reduceTorque
 
-; safety.c	   568  
-; safety.c	   569  void SafetyChecker_reduceTorque(SafetyChecker *me, BatteryManagementSystem *bms, _DriveInverter *in1, _DriveInverter *in2, _DriveInverter *in3, _DriveInverter *in4)
+; safety.c	   574  
+; safety.c	   575  void SafetyChecker_reduceTorque(SafetyChecker *me, BatteryManagementSystem *bms, _DriveInverter *in1, _DriveInverter *in2, _DriveInverter *in3, _DriveInverter *in4)
 ; Function _SafetyChecker_reduceTorque
 _156:
 _SafetyChecker_reduceTorque	.proc	far
@@ -2299,29 +2305,29 @@ _1252:
 	movw	[r15+#0x6],r11
 _1564:
 
-; safety.c	   570  {
-; safety.c	   571      float4 multiplier = 1;
-; safety.c	   572      //float4 tempMultiplier = 1;
-; safety.c	   573      //Get ground speed in KPH using only FL WSS
-; safety.c	   574      //sbyte1 groundSpeedKPH = (sbyte1)WheelSpeeds_getGroundSpeedKPH(wss, 1);
-; safety.c	   575      //sbyte2 groundSpeedKPH = MCM_getGroundSpeedKPH(mcm);
-; safety.c	   576  
-; safety.c	   577  
-; safety.c	   578      //-------------------------------------------------------------------
-; safety.c	   579      // Critical conditions - set 0 torque
-; safety.c	   580      //-------------------------------------------------------------------
-; safety.c	   581  
-; safety.c	   582      //if ((me->warnings & W_bmsOverTemperatureWarning) > 0)
-; safety.c	   583      //{
-; safety.c	   584      //   multiplier = 0.80;
-; safety.c	   585      //}
-; safety.c	   586  
-; safety.c	   587      //if ((me->warnings & W_bmsUnderVoltageWarning) > 0)
-; safety.c	   588      //{
-; safety.c	   589      //   multiplier = 0.70;
-; safety.c	   590      //}
-; safety.c	   591  
-; safety.c	   592      if (me->faults > 0) //Any VCU fault exists
+; safety.c	   576  {
+; safety.c	   577      float4 multiplier = 1;
+; safety.c	   578      //float4 tempMultiplier = 1;
+; safety.c	   579      //Get ground speed in KPH using only FL WSS
+; safety.c	   580      //sbyte1 groundSpeedKPH = (sbyte1)WheelSpeeds_getGroundSpeedKPH(wss, 1);
+; safety.c	   581      //sbyte2 groundSpeedKPH = MCM_getGroundSpeedKPH(mcm);
+; safety.c	   582  
+; safety.c	   583  
+; safety.c	   584      //-------------------------------------------------------------------
+; safety.c	   585      // Critical conditions - set 0 torque
+; safety.c	   586      //-------------------------------------------------------------------
+; safety.c	   587  
+; safety.c	   588      //if ((me->warnings & W_bmsOverTemperatureWarning) > 0)
+; safety.c	   589      //{
+; safety.c	   590      //   multiplier = 0.80;
+; safety.c	   591      //}
+; safety.c	   592  
+; safety.c	   593      //if ((me->warnings & W_bmsUnderVoltageWarning) > 0)
+; safety.c	   594      //{
+; safety.c	   595      //   multiplier = 0.70;
+; safety.c	   596      //}
+; safety.c	   597  
+; safety.c	   598      if (me->faults > 0) //Any VCU fault exists
 	movw	r11,r2
 	movw	r12,r3
 	exts	r12,#0x1
@@ -2342,15 +2348,15 @@ _1567:
 	jmp+	cc_eq,_64
 _1568:
 
-; safety.c	   593      {
-; safety.c	   594          multiplier = 0;
+; safety.c	   599      {
+; safety.c	   600          multiplier = 0;
 	movw	r7,r10
 _64:
 
-; safety.c	   595      }
-; safety.c	   596      
-; safety.c	   597      // If HVIL is open, we must command 0 torque before opening the motor controller relay
-; safety.c	   598      if ((me->notices & N_HVILTermSenseLost) > 0)
+; safety.c	   601      }
+; safety.c	   602      
+; safety.c	   603      // If HVIL is open, we must command 0 torque before opening the motor controller relay
+; safety.c	   604      if ((me->notices & N_HVILTermSenseLost) > 0)
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x6
@@ -2361,18 +2367,18 @@ _1569:
 	jnb	r11.0,_65
 _1570:
 
-; safety.c	   599      {
-; safety.c	   600         multiplier = 0;
+; safety.c	   605      {
+; safety.c	   606         multiplier = 0;
 	movw	r10,#0x0
 	movw	r7,#0x0
 _65:
 
-; safety.c	   601         //SerialManager_send(me->serialMan, "HVIL term sense low\n");
-; safety.c	   602      }
-; safety.c	   603  
-; safety.c	   604      //If any AMK motor runs into issues we want to set them all to 0 to prevent driver spin
-; safety.c	   605  
-; safety.c	   606      if(in1->AMK_bError == TRUE || in2->AMK_bError == TRUE || in3->AMK_bError == TRUE || in4->AMK_bError == TRUE)
+; safety.c	   607         //SerialManager_send(me->serialMan, "HVIL term sense low\n");
+; safety.c	   608      }
+; safety.c	   609  
+; safety.c	   610      //If any AMK motor runs into issues we want to set them all to 0 to prevent driver spin
+; safety.c	   611  
+; safety.c	   612      if(in1->AMK_bError == TRUE || in2->AMK_bError == TRUE || in3->AMK_bError == TRUE || in4->AMK_bError == TRUE)
 	movw	r11,r8
 	movw	r12,r9
 	addw	r11,#0x13
@@ -2416,79 +2422,79 @@ _68:
 _67:
 _66:
 
-; safety.c	   607      {
-; safety.c	   608          multiplier = 0;
+; safety.c	   613      {
+; safety.c	   614          multiplier = 0;
 	movw	r10,#0x0
 	movw	r7,#0x0
 _69:
 
-; safety.c	   609      }
-; safety.c	   610      
-; safety.c	   611  
-; safety.c	   612      //-------------------------------------------------------------------
-; safety.c	   613      // Other limits (% reduction) - set torque to the lowest of all these
-; safety.c	   614      // IMPORTANT: Be aware of direction-sensitive situations (accel/regen)
-; safety.c	   615      //-------------------------------------------------------------------
-; safety.c	   616      //80kW limit ---------------------------------
-; safety.c	   617      // if either the bms or mcm goes over 75kw, limit torque
-; safety.c	   618      //////////if ((BMS_getPower(bms) > 75000) || (MCM_getPower(mcm) > 75000))
-; safety.c	   619      //////////{
-; safety.c	   620      //////////    // using bmsPower since closer to e-meter
-; safety.c	   621      //////////    tempMultiplier = 1 - getPercent(max(BMS_getPower(bms), MCM_getPower(mcm)), 75000, 80000, TRUE);
-; safety.c	   622      //////////    SerialManager_send(me->serialMan, "SC.Mult: 80kW\n");
-; safety.c	   623      //////////}
-; safety.c	   624      //////////if (tempMultiplier < multiplier) { multiplier = tempMultiplier; }
-; safety.c	   625  
-; safety.c	   626      //CCL/DCL from BMS --------------------------------
-; safety.c	   627      //why the DCL/CCL could be limited:
-; safety.c	   628      //0: No limit
-; safety.c	   629      //1 : Pack voltage too low
-; safety.c	   630      //2 : Pack voltage high
-; safety.c	   631      //3 : Cell voltage low
-; safety.c	   632      //4 : Cell voltage high
-; safety.c	   633      //5 : Temperature high for charging
-; safety.c	   634      //6 : Temperature too low for charging
-; safety.c	   635      //7 : Temperature high for discharging
-; safety.c	   636      //8 : Temperature too low for discharging
-; safety.c	   637      //9 : Charging current peak lasted too long
-; safety.c	   638      //10 = A : Discharging current peak lasted too long
-; safety.c	   639      //11 = B : Power up delay(Charge testing)
-; safety.c	   640      //12 = C : Fault
-; safety.c	   641      //13 = D : Contactors are off
-; safety.c	   642      ////////if (MCM_commands/*_getTorque(mcm) >= 0)
-; safety.c	   643      ////////{*/
-; safety.c	   644      ///////////*tempMultiplier = getPercent(BMS_getDCL(bms), 0, me->maxAmpsDischarge, TRUE);
-; safety.c	   645      //////////if (tempMultiplier < 1)
-; safety.c	   646      //////////{
-; safety.c	   647      //////////    SerialManager_send(me->serialMan, "SC.Mult: DCL\n");
-; safety.c	   648      //////////}*/
-; safety.c	   649      //////////}
-; safety.c	   650      //////////else //regen - Pick the lowest of CCL and speed reductions
-; safety.c	   651      //////////{
-; safety.c	   652      //////////    tempMultiplier = getPercent(BMS_getCCL(bms), 0, me->maxAmpsCharge, TRUE);
-; safety.c	   653      //////////    if (tempMultiplier < 1)
-; safety.c	   654      //////////    {
-; safety.c	   655      //////////        SerialManager_send(me->serialMan, "SC.Mult: CCL\n");
-; safety.c	   656      //////////    }
-; safety.c	   657      //////////    //Also, regen should be ramped down as speed approaches minimum
-; safety.c	   658      
-; safety.c	   659      
-; safety.c	   660      //////////        if (tempMultiplier < 1) { SerialManager_send(me->serialMan, "SC.Mult: Regen < 15kph\n"); }
-; safety.c	   661      //////////    }
-; safety.c	   662      ////////if (tempMultiplier < multiplier) { multiplier = tempMultiplier; }
-; safety.c	   663  
-; safety.c	   664     /* if ( groundSpeedKPH < MCM_getRegenRampdownStartSpeed(mcm))
-; safety.c	   665      {
-; safety.c	   666          float4 regenMultiplier = 1 - getPercent(groundSpeedKPH, MCM_getRegenMinSpeed(mcm), MCM_getRegenRampdownStartSpeed(mcm), TRUE);
-; safety.c	   667          //float4 regenMultiplier = 1 - getPercent(WheelSpeeds_getGroundSpeed(wss), MCM_getRegenMinSpeed(mcm), MCM_getRegenRampdownStartSpeed(mcm), TRUE);
-; safety.c	   668              //USE FOR WHEEL SPEEDS TO DETECT RAMP DOWN
-; safety.c	   669          if (regenMultiplier < multiplier ) { multiplier = regenMultiplier; } // Use regenMultiplier if it is lower
-; safety.c	   670      }
-; safety.c	   671      */
-; safety.c	   672      //Reduce the torque command.  Multiplier should be a percent value (between 0 and 1)
-; safety.c	   673  
-; safety.c	   674      //If the safety bypass is enabled, then override the multiplier to 100% (no reduction)
-; safety.c	   675      if ((me->warnings & W_safetyBypassEnabled) == W_safetyBypassEnabled)
+; safety.c	   615      }
+; safety.c	   616      
+; safety.c	   617  
+; safety.c	   618      //-------------------------------------------------------------------
+; safety.c	   619      // Other limits (% reduction) - set torque to the lowest of all these
+; safety.c	   620      // IMPORTANT: Be aware of direction-sensitive situations (accel/regen)
+; safety.c	   621      //-------------------------------------------------------------------
+; safety.c	   622      //80kW limit ---------------------------------
+; safety.c	   623      // if either the bms or mcm goes over 75kw, limit torque
+; safety.c	   624      //////////if ((BMS_getPower(bms) > 75000) || (MCM_getPower(mcm) > 75000))
+; safety.c	   625      //////////{
+; safety.c	   626      //////////    // using bmsPower since closer to e-meter
+; safety.c	   627      //////////    tempMultiplier = 1 - getPercent(max(BMS_getPower(bms), MCM_getPower(mcm)), 75000, 80000, TRUE);
+; safety.c	   628      //////////    SerialManager_send(me->serialMan, "SC.Mult: 80kW\n");
+; safety.c	   629      //////////}
+; safety.c	   630      //////////if (tempMultiplier < multiplier) { multiplier = tempMultiplier; }
+; safety.c	   631  
+; safety.c	   632      //CCL/DCL from BMS --------------------------------
+; safety.c	   633      //why the DCL/CCL could be limited:
+; safety.c	   634      //0: No limit
+; safety.c	   635      //1 : Pack voltage too low
+; safety.c	   636      //2 : Pack voltage high
+; safety.c	   637      //3 : Cell voltage low
+; safety.c	   638      //4 : Cell voltage high
+; safety.c	   639      //5 : Temperature high for charging
+; safety.c	   640      //6 : Temperature too low for charging
+; safety.c	   641      //7 : Temperature high for discharging
+; safety.c	   642      //8 : Temperature too low for discharging
+; safety.c	   643      //9 : Charging current peak lasted too long
+; safety.c	   644      //10 = A : Discharging current peak lasted too long
+; safety.c	   645      //11 = B : Power up delay(Charge testing)
+; safety.c	   646      //12 = C : Fault
+; safety.c	   647      //13 = D : Contactors are off
+; safety.c	   648      ////////if (MCM_commands/*_getTorque(mcm) >= 0)
+; safety.c	   649      ////////{*/
+; safety.c	   650      ///////////*tempMultiplier = getPercent(BMS_getDCL(bms), 0, me->maxAmpsDischarge, TRUE);
+; safety.c	   651      //////////if (tempMultiplier < 1)
+; safety.c	   652      //////////{
+; safety.c	   653      //////////    SerialManager_send(me->serialMan, "SC.Mult: DCL\n");
+; safety.c	   654      //////////}*/
+; safety.c	   655      //////////}
+; safety.c	   656      //////////else //regen - Pick the lowest of CCL and speed reductions
+; safety.c	   657      //////////{
+; safety.c	   658      //////////    tempMultiplier = getPercent(BMS_getCCL(bms), 0, me->maxAmpsCharge, TRUE);
+; safety.c	   659      //////////    if (tempMultiplier < 1)
+; safety.c	   660      //////////    {
+; safety.c	   661      //////////        SerialManager_send(me->serialMan, "SC.Mult: CCL\n");
+; safety.c	   662      //////////    }
+; safety.c	   663      //////////    //Also, regen should be ramped down as speed approaches minimum
+; safety.c	   664      
+; safety.c	   665      
+; safety.c	   666      //////////        if (tempMultiplier < 1) { SerialManager_send(me->serialMan, "SC.Mult: Regen < 15kph\n"); }
+; safety.c	   667      //////////    }
+; safety.c	   668      ////////if (tempMultiplier < multiplier) { multiplier = tempMultiplier; }
+; safety.c	   669  
+; safety.c	   670     /* if ( groundSpeedKPH < MCM_getRegenRampdownStartSpeed(mcm))
+; safety.c	   671      {
+; safety.c	   672          float4 regenMultiplier = 1 - getPercent(groundSpeedKPH, MCM_getRegenMinSpeed(mcm), MCM_getRegenRampdownStartSpeed(mcm), TRUE);
+; safety.c	   673          //float4 regenMultiplier = 1 - getPercent(WheelSpeeds_getGroundSpeed(wss), MCM_getRegenMinSpeed(mcm), MCM_getRegenRampdownStartSpeed(mcm), TRUE);
+; safety.c	   674              //USE FOR WHEEL SPEEDS TO DETECT RAMP DOWN
+; safety.c	   675          if (regenMultiplier < multiplier ) { multiplier = regenMultiplier; } // Use regenMultiplier if it is lower
+; safety.c	   676      }
+; safety.c	   677      */
+; safety.c	   678      //Reduce the torque command.  Multiplier should be a percent value (between 0 and 1)
+; safety.c	   679  
+; safety.c	   680      //If the safety bypass is enabled, then override the multiplier to 100% (no reduction)
+; safety.c	   681      if ((me->warnings & W_safetyBypassEnabled) == W_safetyBypassEnabled)
 	addw	r2,#0x4
 _1256:
 	addcw	r3,#0x0
@@ -2498,16 +2504,16 @@ _1577:
 	jnb	r11.7,_70
 _1578:
 
-; safety.c	   676      {
-; safety.c	   677          multiplier = 1;
+; safety.c	   682      {
+; safety.c	   683          multiplier = 1;
 	movw	r10,#0x0
 	movw	r7,#0x3f80
 _70:
 
-; safety.c	   678      }
-; safety.c	   679  
-; safety.c	   680      //MCM_commands_setTorqueDNm(mcm, MCM_commands_getTorque(mcm) * multiplier);
-; safety.c	   681      DI_commandTorque(in1, DI_getCommandedTorque(in1) * multiplier);
+; safety.c	   684      }
+; safety.c	   685  
+; safety.c	   686      //MCM_commands_setTorqueDNm(mcm, MCM_commands_getTorque(mcm) * multiplier);
+; safety.c	   687      DI_commandTorque(in1, DI_getCommandedTorque(in1) * multiplier);
 	movw	r2,r8
 	movw	r3,r9
 	call	_DI_getCommandedTorque
@@ -2524,7 +2530,7 @@ _1580:
 	call	_DI_commandTorque
 _1581:
 
-; safety.c	   682      DI_commandTorque(in2, DI_getCommandedTorque(in1) * multiplier);
+; safety.c	   688      DI_commandTorque(in2, DI_getCommandedTorque(in1) * multiplier);
 	movw	r2,r8
 	movw	r3,r9
 	call	_DI_getCommandedTorque
@@ -2542,7 +2548,7 @@ _1259:
 	call	_DI_commandTorque
 _1260:
 
-; safety.c	   683      DI_commandTorque(in3, DI_getCommandedTorque(in1) * multiplier);
+; safety.c	   689      DI_commandTorque(in3, DI_getCommandedTorque(in1) * multiplier);
 	movw	r2,r8
 	movw	r3,r9
 	call	_DI_getCommandedTorque
@@ -2561,7 +2567,7 @@ _1261:
 	call	_DI_commandTorque
 _1262:
 
-; safety.c	   684      DI_commandTorque(in4, DI_getCommandedTorque(in1) * multiplier); 
+; safety.c	   690      DI_commandTorque(in4, DI_getCommandedTorque(in1) * multiplier); 
 	movw	r2,r8
 	movw	r3,r9
 	call	_DI_getCommandedTorque
@@ -2580,7 +2586,7 @@ _1263:
 	call	_DI_commandTorque
 _1264:
 
-; safety.c	   685  }
+; safety.c	   691  }
 	addw	r15,#0xa
 _1003:
 	movw	r10,[r15+]
@@ -2919,47 +2925,47 @@ _221:
 	.dl	1248
 	.db	13,5,150,1,67,0,4
 	.db	'long int',0,4,5,14
-	.db	'_BatteryManagementSystem',0,6,65,16,1
+	.db	'_BatteryManagementSystem',0,6,72,16,1
 _219:
 	.db	3,5
 	.dl	1313
 	.db	5
-	.db	'BMS_getPower_W',0,6,77,8,6
+	.db	'BMS_getPower_W',0,6,84,8,6
 	.dl	1301
 	.db	1,1,1,1,8
-	.db	'me',0,6,77,48,2
+	.db	'me',0,6,84,48,2
 	.dl	1343
 	.db	0,5
-	.db	'BMS_getHighestCellVoltage_mV',0,6,80,8,6
+	.db	'BMS_getHighestCellVoltage_mV',0,6,87,8,6
 	.dl	235
 	.db	1,1,1,1,8
-	.db	'me',0,6,80,62,2
+	.db	'me',0,6,87,62,2
 	.dl	1343
 	.db	0,5
-	.db	'BMS_getLowestCellVoltage_mV',0,6,81,8,6
+	.db	'BMS_getLowestCellVoltage_mV',0,6,88,8,6
 	.dl	189
 	.db	1,1,1,1,8
-	.db	'me',0,6,81,61,2
+	.db	'me',0,6,88,61,2
 	.dl	1343
 	.db	0,5
-	.db	'BMS_getHighestCellTemp_d_degC',0,6,82,8,6
+	.db	'BMS_getHighestCellTemp_d_degC',0,6,89,8,6
 	.dl	1211
 	.db	1,1,1,1,8
-	.db	'me',0,6,82,63,2
+	.db	'me',0,6,89,63,2
 	.dl	1343
 	.db	0,5
-	.db	'BMS_getFaultFlags1',0,6,85,8,6
+	.db	'BMS_getFaultFlags1',0,6,92,8,6
 	.dl	369
 	.db	1,1,1,1,8
-	.db	'me',0,6,85,52,2
+	.db	'me',0,6,92,52,2
 	.dl	1343
 	.db	0,15
-	.db	'_DI_Location_Address',0,7,39,14,1,16
+	.db	'_DI_Location_Address',0,7,46,14,1,16
 	.db	'FRONT_LEFT',0,1,16
 	.db	'FRONT_RIGHT',0,2,16
 	.db	'REAR_LEFT',0,5,16
 	.db	'REAR_RIGHT',0,6,0,9
-	.db	'_DriveInverter',0,7,46,16,52,10
+	.db	'_DriveInverter',0,7,53,16,52,10
 	.db	'location_address',0
 	.dl	1600
 	.db	1,2,35,0,10
@@ -3042,20 +3048,20 @@ _249:
 	.db	3,5
 	.dl	1679
 	.db	11
-	.db	'DI_commandTorque',0,7,91,6,6,1,1,1,1,8
-	.db	'Idv',0,7,91,39,2
+	.db	'DI_commandTorque',0,7,98,6,6,1,1,1,1,8
+	.db	'Idv',0,7,98,39,2
 	.dl	2356
 	.db	8
-	.db	'newTorque',0,7,91,51,2
+	.db	'newTorque',0,7,98,51,2
 	.dl	1211
 	.db	0,5
-	.db	'DI_getCommandedTorque',0,7,93,8,6
+	.db	'DI_getCommandedTorque',0,7,100,8,6
 	.dl	1211
 	.db	1,1,1,1,8
-	.db	'Idv',0,7,93,46,2
+	.db	'Idv',0,7,100,46,2
 	.dl	2356
 	.db	0,9
-	.db	'_SafetyChecker',0,8,90,8,22,10
+	.db	'_SafetyChecker',0,8,96,8,22,10
 	.db	'faults',0
 	.dl	235
 	.db	4,2,35,0,10
@@ -3093,7 +3099,7 @@ _213:
 	.db	3,5
 	.dl	2470
 	.db	9
-	.db	'_BrakePressureSensor',0,9,10,16,48,10
+	.db	'_BrakePressureSensor',0,9,17,16,48,10
 	.db	'bench',0
 	.dl	369
 	.db	1,2,35,0,10
@@ -3233,13 +3239,13 @@ _240:
 	.db	'TorqueEncoder',0,3,38,3
 	.dl	629
 	.db	19
-	.db	'BrakePressureSensor',0,9,38,3
+	.db	'BrakePressureSensor',0,9,45,3
 	.dl	2764
 	.db	19
 	.db	'_iob_flag_t',0,5,82,25
 	.dl	3348
 	.db	19
-	.db	'BatteryManagementSystem',0,6,65,41
+	.db	'BatteryManagementSystem',0,6,72,41
 	.dl	1313
 	.db	9
 	.db	'_bl_t_date',0,13,90,16,4,10
@@ -3259,13 +3265,13 @@ _240:
 	.db	'BL_T_CAN_ID',0,13,106,2
 	.dl	3782
 	.db	19
-	.db	'DI_Location_Address',0,7,44,3
+	.db	'DI_Location_Address',0,7,51,3
 	.dl	1600
 	.db	19
-	.db	'_DriveInverter',0,7,81,3
+	.db	'_DriveInverter',0,7,88,3
 	.dl	1679
 	.db	19
-	.db	'SafetyChecker',0,14,21,31
+	.db	'SafetyChecker',0,14,20,31
 	.dl	2470
 	.db	20
 	.dl	369
@@ -3359,20 +3365,20 @@ _171:
 	.db	2
 	.dl	_167
 	.db	3
-	.db	'SafetyChecker_new',0,1,114,16,6
+	.db	'SafetyChecker_new',0,1,120,16,6
 	.dl	_213
 	.db	1,1,1
 	.dl	_72,_175,_71
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'maxChargeAmps',0,1,114,41,2
+	.db	'maxChargeAmps',0,1,120,41,2
 	.dl	_214,_215
 	.db	4
-	.db	'maxDischargeAmps',0,1,114,63,2
+	.db	'maxDischargeAmps',0,1,120,63,2
 	.dl	_214,_216
 	.db	5
 	.dl	_72,_175
 	.db	6
-	.db	'me',0,1,116,20,2
+	.db	'me',0,1,122,20,2
 	.dl	_213,_217
 	.db	0,0,0
 	; End of section
@@ -3396,7 +3402,7 @@ _1271:
 _1272:
 	.db	5,16,7,0,5,2
 	.dl	_72
-	.db	3,241,0,1,5,49,9
+	.db	3,247,0,1,5,49,9
 	.dw	_341-_72
 	.db	3,2,1,5,16,9
 	.dw	_339-_341
@@ -3491,43 +3497,43 @@ _176:
 	.db	2
 	.dl	_167
 	.db	3
-	.db	'SafetyChecker_update',0,1,150,1,6,6,1,1,1
+	.db	'SafetyChecker_update',0,1,156,1,6,6,1,1,1
 	.dl	_96,_180,_95
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,150,1,42,2
+	.db	'me',0,1,156,1,42,2
 	.dl	_213,_218
 	.db	4
-	.db	'bms',0,1,150,1,71,2
+	.db	'bms',0,1,156,1,71,2
 	.dl	_219,_220
 	.db	4
-	.db	'tps',0,1,150,1,91,2
+	.db	'tps',0,1,156,1,91,2
 	.dl	_221,_222
 	.db	4
-	.db	'bps',0,1,150,1,117,2
+	.db	'bps',0,1,156,1,117,2
 	.dl	_223,_224
 	.db	4
-	.db	'HVILTermSense',0,1,150,1,130,1,2
+	.db	'HVILTermSense',0,1,156,1,130,1,2
 	.dl	_225,_226
 	.db	4
-	.db	'LVBattery',0,1,150,1,153,1,2
+	.db	'LVBattery',0,1,156,1,153,1,2
 	.dl	_225,_227
 	.db	5
 	.dl	_96,_180
 	.db	6
-	.db	'message',0,1,152,1,13,2
+	.db	'message',0,1,158,1,13,2
 	.dl	_228,_229
 	.db	5
 	.dl	_28,_180
 	.db	6
-	.db	'tps0Percent',0,1,138,2,12,2
+	.db	'tps0Percent',0,1,144,2,12,2
 	.dl	_230,_231
 	.db	6
-	.db	'tps1Percent',0,1,139,2,12,2
+	.db	'tps1Percent',0,1,145,2,12,2
 	.dl	_230,_232
 	.db	7
 	.dl	_233
 	.db	6
-	.db	'tpsAbove25Percent',0,1,165,2,10,2
+	.db	'tpsAbove25Percent',0,1,171,2,10,2
 	.dl	_237,_238
 	.db	0,0,0,0,0
 	; End of section
@@ -3551,7 +3557,7 @@ _1300:
 _1301:
 	.db	5,6,7,0,5,2
 	.dl	_96
-	.db	3,149,1,1,5,7,9
+	.db	3,155,1,1,5,7,9
 	.dw	_1302-_96
 	.db	3,11,1,5,16,9
 	.dw	_897-_1302
@@ -4132,13 +4138,13 @@ _181:
 	.db	2
 	.dl	_167
 	.db	3
-	.db	'SafetyChecker_parseCanMessage',0,1,135,1,6,6,1,1,1
+	.db	'SafetyChecker_parseCanMessage',0,1,141,1,6,6,1,1,1
 	.dl	_84,_185,_83
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,135,1,51,2
+	.db	'me',0,1,141,1,51,2
 	.dl	_213,_239
 	.db	4
-	.db	'canMessage',0,1,135,1,74,2
+	.db	'canMessage',0,1,141,1,74,2
 	.dl	_240,_241
 	.db	5
 	.dl	_84,_185
@@ -4164,7 +4170,7 @@ _1533:
 _1534:
 	.db	5,6,7,0,5,2
 	.dl	_84
-	.db	3,134,1,1,5,23,9
+	.db	3,140,1,1,5,23,9
 	.dw	_346-_84
 	.db	3,2,1,5,5,9
 	.dw	_1535-_346
@@ -4209,12 +4215,12 @@ _186:
 	.db	2
 	.dl	_167
 	.db	3
-	.db	'SafetyChecker_allSafe',0,1,162,4,6,6
+	.db	'SafetyChecker_allSafe',0,1,168,4,6,6
 	.dl	_237
 	.db	1,1,1
 	.dl	_108,_190,_107
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,162,4,43,2
+	.db	'me',0,1,168,4,43,2
 	.dl	_213,_242
 	.db	5
 	.dl	_108,_190
@@ -4240,7 +4246,7 @@ _1540:
 _1541:
 	.db	5,15,7,0,5,2
 	.dl	_108
-	.db	3,163,4,1,5,24,9
+	.db	3,169,4,1,5,24,9
 	.dw	_1542-_108
 	.db	1,5,1,9
 	.dw	_59-_1542
@@ -4277,12 +4283,12 @@ _191:
 	.db	2
 	.dl	_167
 	.db	3
-	.db	'SafetyChecker_getFaults',0,1,168,4,8,6
+	.db	'SafetyChecker_getFaults',0,1,174,4,8,6
 	.dl	_243
 	.db	1,1,1
 	.dl	_120,_195,_119
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,168,4,47,2
+	.db	'me',0,1,174,4,47,2
 	.dl	_213,_244
 	.db	5
 	.dl	_120,_195
@@ -4308,7 +4314,7 @@ _1545:
 _1546:
 	.db	5,15,7,0,5,2
 	.dl	_120
-	.db	3,169,4,1,5,1,9
+	.db	3,175,4,1,5,1,9
 	.dw	_1547-_120
 	.db	3,1,1,7,9
 	.dw	_195-_1547
@@ -4343,12 +4349,12 @@ _196:
 	.db	2
 	.dl	_167
 	.db	3
-	.db	'SafetyChecker_getWarnings',0,1,174,4,8,6
+	.db	'SafetyChecker_getWarnings',0,1,180,4,8,6
 	.dl	_243
 	.db	1,1,1
 	.dl	_132,_200,_131
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,174,4,49,2
+	.db	'me',0,1,180,4,49,2
 	.dl	_213,_245
 	.db	5
 	.dl	_132,_200
@@ -4374,7 +4380,7 @@ _1550:
 _1551:
 	.db	5,15,7,0,5,2
 	.dl	_132
-	.db	3,175,4,1,5,5,9
+	.db	3,181,4,1,5,5,9
 	.dw	_1552-_132
 	.db	1,5,1,9
 	.dw	_1553-_1552
@@ -4411,12 +4417,12 @@ _201:
 	.db	2
 	.dl	_167
 	.db	3
-	.db	'SafetyChecker_getNotices',0,1,180,4,8,6
+	.db	'SafetyChecker_getNotices',0,1,186,4,8,6
 	.dl	_243
 	.db	1,1,1
 	.dl	_144,_205,_143
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,180,4,48,2
+	.db	'me',0,1,186,4,48,2
 	.dl	_213,_246
 	.db	5
 	.dl	_144,_205
@@ -4442,7 +4448,7 @@ _1556:
 _1557:
 	.db	5,15,7,0,5,2
 	.dl	_144
-	.db	3,181,4,1,5,5,9
+	.db	3,187,4,1,5,5,9
 	.dw	_1558-_144
 	.db	1,5,1,9
 	.dw	_1559-_1558
@@ -4479,30 +4485,30 @@ _206:
 	.db	2
 	.dl	_167
 	.db	3
-	.db	'SafetyChecker_reduceTorque',0,1,185,4,6,6,1,1,1
+	.db	'SafetyChecker_reduceTorque',0,1,191,4,6,6,1,1,1
 	.dl	_156,_210,_155
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,185,4,48,2
+	.db	'me',0,1,191,4,48,2
 	.dl	_213,_247
 	.db	4
-	.db	'bms',0,1,185,4,77,2
+	.db	'bms',0,1,191,4,77,2
 	.dl	_219,_248
 	.db	4
-	.db	'in1',0,1,185,4,98,2
+	.db	'in1',0,1,191,4,98,2
 	.dl	_249,_250
 	.db	4
-	.db	'in2',0,1,185,4,119,2
+	.db	'in2',0,1,191,4,119,2
 	.dl	_249,_251
 	.db	4
-	.db	'in3',0,1,185,4,140,1,2
+	.db	'in3',0,1,191,4,140,1,2
 	.dl	_249,_252
 	.db	4
-	.db	'in4',0,1,185,4,161,1,2
+	.db	'in4',0,1,191,4,161,1,2
 	.dl	_249,_253
 	.db	5
 	.dl	_156,_210
 	.db	6
-	.db	'multiplier',0,1,187,4,12,2
+	.db	'multiplier',0,1,193,4,12,2
 	.dl	_230,_254
 	.db	0,0,0
 	; End of section
@@ -4526,7 +4532,7 @@ _1562:
 _1563:
 	.db	5,6,7,0,5,2
 	.dl	_156
-	.db	3,184,4,1,5,11,9
+	.db	3,190,4,1,5,11,9
 	.dw	_1564-_156
 	.db	3,23,1,5,6,9
 	.dw	_1565-_1564
@@ -4625,7 +4631,7 @@ _211:
 	.db	12,1,2
 	.dl	_167
 	.db	3
-	.db	'timestamp_SoftBSPD',0,8,81,8,5
+	.db	'timestamp_SoftBSPD',0,8,87,8,5
 	.dl	_243
 	.db	1,5,3
 	.dl	_timestamp_SoftBSPD
@@ -7725,24 +7731,24 @@ _1244:
 	; End of section
 
 
-; safety.c	   686  
-; safety.c	   687  //-------------------------------------------------------------------
-; safety.c	   688  // 80kW Limit Check
-; safety.c	   689  //-------------------------------------------------------------------
-; safety.c	   690  //Change this to return a multiplier instead of torque value
-; safety.c	   691  //ubyte2 checkPowerDraw(BatteryManagementSystem* bms, MotorController* mcm)
-; safety.c	   692  //{
-; safety.c	   693  //    ubyte2 torqueThrottle = 0;
-; safety.c	   694  //
-; safety.c	   695  //    // if either the bms or mcm goes over 75kw, limit torque
-; safety.c	   696  //    if ((BMS_getPower(bms) > 75000) || (MCM_getPower(mcm) > 75000))
-; safety.c	   697  //    {
-; safety.c	   698  //        // using bmsPower since closer to e-meter
-; safety.c	   699  //        torqueThrottle = MCM_getCommandedTorque(mcm) - (((BMS_getPower(bms) - 80000) / 80000) * MCM_getCommandedTorque(mcm));
-; safety.c	   700  //    }
-; safety.c	   701  //
-; safety.c	   702  //    return torqueThrottle;
-; safety.c	   703  //}
+; safety.c	   692  
+; safety.c	   693  //-------------------------------------------------------------------
+; safety.c	   694  // 80kW Limit Check
+; safety.c	   695  //-------------------------------------------------------------------
+; safety.c	   696  //Change this to return a multiplier instead of torque value
+; safety.c	   697  //ubyte2 checkPowerDraw(BatteryManagementSystem* bms, MotorController* mcm)
+; safety.c	   698  //{
+; safety.c	   699  //    ubyte2 torqueThrottle = 0;
+; safety.c	   700  //
+; safety.c	   701  //    // if either the bms or mcm goes over 75kw, limit torque
+; safety.c	   702  //    if ((BMS_getPower(bms) > 75000) || (MCM_getPower(mcm) > 75000))
+; safety.c	   703  //    {
+; safety.c	   704  //        // using bmsPower since closer to e-meter
+; safety.c	   705  //        torqueThrottle = MCM_getCommandedTorque(mcm) - (((BMS_getPower(bms) - 80000) / 80000) * MCM_getCommandedTorque(mcm));
+; safety.c	   706  //    }
+; safety.c	   707  //
+; safety.c	   708  //    return torqueThrottle;
+; safety.c	   709  //}
 
 	; Module end
 	.end

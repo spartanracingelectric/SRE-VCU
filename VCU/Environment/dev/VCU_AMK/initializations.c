@@ -1,4 +1,13 @@
-//VCU initializations
+//----------------------------------------------------------------------------
+// VCU Subsystem Initializations
+//----------------------------------------------------------------------------
+// This is where we turn on the VCU's internal power supplies and sensors.
+//
+// The supplies/sensors and their parameters are defined in IO_ADC.h.
+// Each sensor/ADC channel/etc has different parameters, so make sure to
+// check the .h files, the examples, and the documentation!
+//----------------------------------------------------------------------------
+
 //Object (sensors, controllers, etc) instantiations
 //ONLY THIS FILE should have "true" version of object variables
 //Everything else should have "extern" declarations of variables
@@ -11,7 +20,6 @@
 
 #include "sensors.h"
 #include "initializations.h"
-//#include "can.h"
 
 /*****************************************************************************
 * ADC

@@ -1,3 +1,10 @@
+/*****************************************************************************
+ * brakePressureSensor.c - Brake Sensor
+ * Initial Author: Rusty P 
+ ******************************************************************************
+ * Works with calculation of the brake sensors and getting appropriate values
+ ****************************************************************************/
+
 #include <stdlib.h> //Needed for malloc
 #include <math.h>
 #include "IO_RTC.h"
@@ -6,26 +13,19 @@
 #include "mathFunctions.h"
 
 #include "sensors.h"
-//extern Sensor Sensor_BPS0;
-//extern Sensor Sensor_BenchTPS1;
 
 /*****************************************************************************
 * Brake Pressure Sensor (BPS) functions
 ****************************************************************************/
 
-// TODO: #94 Make this CAN configurable and store in EEPROM
 // This value is used for controlling the brake light and triggering the TPS-BPS implausibility fault
 #define BRAKES_ON_PERCENT .08
 
 BrakePressureSensor *BrakePressureSensor_new(void)
 {
     BrakePressureSensor *me = (BrakePressureSensor *)malloc(sizeof(struct _BrakePressureSensor));
-    //me->bench = benchMode;
 
-    //TODO: Make sure the main loop is running before doing this
     me->bps0 = &Sensor_BPS0;
-    //me->bps1 = &Sensor_BPS1;
-    //me->tps1 = (benchMode == TRUE) ? &Sensor_BenchTPS1 : &Sensor_TPS1;
 
     // Max/min values from the datasheet, including inaccuracy (important since our BPS sits slightly below 0.5V but still within range)
     // If voltage exceeds these values, a fault is thrown in safety.c.
@@ -135,15 +135,6 @@ void BrakePressureSensor_startCalibration(BrakePressureSensor *me, ubyte1 second
     }
 }
 
-/*-------------------------------------------------------------------
-* CalibrateTPS
-* Description: Records TPS minimum/maximum voltages (when?) and stores them (where?), or flags that calibration is complete
-* Parameters:
-* Inputs:
-* Returns:
-* Notes:
-* Throws:
--------------------------------------------------------------------*/
 // Physical pedal travel will only occur across the center (about 1/2) of the actual sensor's range of travel
 // The rules (especially EV2.3.6) are written about % of PEDAL travel, not percent of sensor range, so we must calculate pedal travel by recording the min/max voltages at min/max throttle positions
 void BrakePressureSensor_calibrationCycle(BrakePressureSensor *me, ubyte1 *errorCount)
@@ -188,25 +179,11 @@ void BrakePressureSensor_calibrationCycle(BrakePressureSensor *me, ubyte1 *error
         }
     }
     else
-    {
-        //TODO: Throw warning: calibrationCycle helper function was called but calibration should not be running
-    }
-
-    //TODO: Write calibration data to EEPROM
-
-    //TODO: Check for valid/reasonable calibration data
-
-    //TODO: Do something on the display to show that voltages are being recorded
-
-    //Idea: Display "bars" filling up on right segment (for gas pedal) _=E=_=E...
-    //      Once calibration data makes sense, show pedal location (0-10%, 10-90%, 90-100%) with bars
+    {}
 }
 
 void BrakePressureSensor_getIndividualSensorPercent(BrakePressureSensor *me, ubyte1 sensorNumber, float4 *percent)
 {
-    //Sensor* bps;
-    //ubyte2 calMin;
-    //ubyte2 calMax;
 
     switch (sensorNumber)
     {
@@ -240,16 +217,4 @@ void BrakePressureSensor_getPedalTravel(BrakePressureSensor *me, ubyte1 *errorCo
 {
     *pedalPercent = me->percent;
 
-    //What about other error states?
-    //Voltage outside of calibration range
-    //Voltages off center
-
-    //    if (errorCount > 0)
-    //    {
-    //        return 0;
-    //    }
-    //    else
-    //    {
-    //return (TPS0PedalPercent + TPS1PedalPercent) / 2;
-    //    }
 }

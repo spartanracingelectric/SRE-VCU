@@ -1,3 +1,10 @@
+/*****************************************************************************
+ * bms.h - Battery Management System Parser
+ * Initial Author: Rusty P / Vincent Saw
+ ******************************************************************************
+ * Deals with parsing from BMS and coordinating values in between
+ ****************************************************************************/
+
 #ifndef _BATTERYMANAGEMENTSYSTEM_H
 #define _BATTERYMANAGEMENTSYSTEM_H
 

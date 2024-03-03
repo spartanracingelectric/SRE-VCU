@@ -1,44 +1,51 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc23320a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=1 -DRTS_TTC_FLASH_DATE_DAY=17 -DRTS_TTC_FLASH_DATE_HOUR=13 -DRTS_TTC_FLASH_DATE_MINUTE=38 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\drs.src
+	; Options: -f cc19888a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=3 -DRTS_TTC_FLASH_DATE_DAY=3 -DRTS_TTC_FLASH_DATE_HOUR=12 -DRTS_TTC_FLASH_DATE_MINUTE=6 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\drs.src
 	; Module start
 	.source	'drs.c'
 code_DRS_new	.section	code, cluster 'DRS_new', new
 	.global	_DRS_new
 
-; drs.c	     1  #include <stdlib.h>
-; drs.c	     2  #include "IO_Driver.h"
-; drs.c	     3  #include "IO_DIO.h"
-; drs.c	     4  
-; drs.c	     5  #include "drs.h"
-; drs.c	     6  #include "sensors.h"
-; drs.c	     7  #include "brakePressureSensor.h"
-; drs.c	     8  #include "torqueEncoder.h"
-; drs.c	     9  #include "sensorCalculations.h"
-; drs.c	    10  
-; drs.c	    11  extern Sensor Sensor_DRSButton; 
-; drs.c	    12  extern Sensor Sensor_DRSKnob;
-; drs.c	    13  
-; drs.c	    14  DRS *DRS_new() 
+; drs.c	     1  /*****************************************************************************
+; drs.c	     2   * drs.c - Drag Reduction System 
+; drs.c	     3   * Initial Author: Mehul W
+; drs.c	     4   ******************************************************************************
+; drs.c	     5   * Control of the DRS actuation through manual and automatic
+; drs.c	     6   ****************************************************************************/
+; drs.c	     7  
+; drs.c	     8  #include <stdlib.h>
+; drs.c	     9  #include "IO_Driver.h"
+; drs.c	    10  #include "IO_DIO.h"
+; drs.c	    11  
+; drs.c	    12  #include "drs.h"
+; drs.c	    13  #include "sensors.h"
+; drs.c	    14  #include "brakePressureSensor.h"
+; drs.c	    15  #include "torqueEncoder.h"
+; drs.c	    16  #include "sensorCalculations.h"
+; drs.c	    17  
+; drs.c	    18  extern Sensor Sensor_DRSButton; 
+; drs.c	    19  extern Sensor Sensor_DRSKnob;
+; drs.c	    20  
+; drs.c	    21  DRS *DRS_new() 
 ; Function _DRS_new
 _19:
 _DRS_new	.proc	far
 
-; drs.c	    15  {
-; drs.c	    16      DRS *me = (DRS *)malloc(sizeof(struct _DRS));
+; drs.c	    22  {
+; drs.c	    23      DRS *me = (DRS *)malloc(sizeof(struct _DRS));
 	movw	r2,#0x4
 	call	_malloc
 _732:
 
-; drs.c	    17  
-; drs.c	    18      //flags
-; drs.c	    19      me->AutoDRSActive = TRUE;
+; drs.c	    24  
+; drs.c	    25      //flags
+; drs.c	    26      me->AutoDRSActive = TRUE;
 	movb	rh4,#0x1
 _733:
 	exts	r3,#0x1
 	movb	[r2],rh4
 _734:
 
-; drs.c	    20      me->currentDRSMode = MANUAL; 
+; drs.c	    27      me->currentDRSMode = MANUAL; 
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x1
@@ -50,7 +57,7 @@ _736:
 	movb	[r11],rh4
 _737:
 
-; drs.c	    21      me->drsFlap = 0;
+; drs.c	    28      me->drsFlap = 0;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x3
@@ -62,9 +69,9 @@ _739:
 	movb	[r11],rh4
 _740:
 
-; drs.c	    22  
-; drs.c	    23      return me;
-; drs.c	    24  }
+; drs.c	    29  
+; drs.c	    30      return me;
+; drs.c	    31  }
 	ret
 _98:
 	; End of function
@@ -73,29 +80,29 @@ _98:
 code_DRS_update	.section	code, cluster 'DRS_update', new
 	.global	_DRS_update
 
-; drs.c	    25  
-; drs.c	    26  //----------------------------------------------------------------------
-; drs.c	    27  // Drag reduction system calculations.
-; drs.c	    28  // First, check the mode indicated by the driver rotary switch
-; drs.c	    29  //      Mode 0 - Always off
-; drs.c	    30  //      Mode 1 - Always on
-; drs.c	    31  //      Mode 2 - Driver controlled
-; drs.c	    32  //      Mode 3 - Auto (sensor controlled)
-; drs.c	    33  // Second, set AutoDRSActive flag
-; drs.c	    34  // **DOES NOT** physically activate the wing
-; drs.c	    35  //
-; drs.c	    36  // Auto Params:
-; drs.c	    37  //    Enable: 
-; drs.c	    38  //      Throttle Position > 80%
-; drs.c	    39  //      Wheel Speed > 30 mph
-; drs.c	    40  //      Steering Angle < 5% off 0 degrees
-; drs.c	    41  //      
-; drs.c	    42  //    Disable:
-; drs.c	    43  //      Brake Pressure 
-; drs.c	    44  //----------------------------------------------------------------------
-; drs.c	    45  
-; drs.c	    46  
-; drs.c	    47  void DRS_update(DRS *me, TorqueEncoder *tps, BrakePressureSensor *bps, ubyte1 pot_DRS_LC) {
+; drs.c	    32  
+; drs.c	    33  //----------------------------------------------------------------------
+; drs.c	    34  // Drag reduction system calculations.
+; drs.c	    35  // First, check the mode indicated by the driver rotary switch
+; drs.c	    36  //      Mode 0 - Always off
+; drs.c	    37  //      Mode 1 - Always on
+; drs.c	    38  //      Mode 2 - Driver controlled
+; drs.c	    39  //      Mode 3 - Auto (sensor controlled)
+; drs.c	    40  // Second, set AutoDRSActive flag
+; drs.c	    41  // **DOES NOT** physically activate the wing
+; drs.c	    42  //
+; drs.c	    43  // Auto Params:
+; drs.c	    44  //    Enable: 
+; drs.c	    45  //      Throttle Position > 80%
+; drs.c	    46  //      Wheel Speed > 30 mph
+; drs.c	    47  //      Steering Angle < 5% off 0 degrees
+; drs.c	    48  //      
+; drs.c	    49  //    Disable:
+; drs.c	    50  //      Brake Pressure 
+; drs.c	    51  //----------------------------------------------------------------------
+; drs.c	    52  
+; drs.c	    53  
+; drs.c	    54  void DRS_update(DRS *me, TorqueEncoder *tps, BrakePressureSensor *bps, ubyte1 pot_DRS_LC) {
 ; Function _DRS_update
 _31:
 _DRS_update	.proc	far
@@ -109,10 +116,10 @@ _249:
 	movb	rh4,[r15+#0x4]
 _248:
 
-; drs.c	    48  
-; drs.c	    49      // .sensorvalue true/false are switched to account for Pull Up
-; drs.c	    50      if(pot_DRS_LC == 1) {
-; drs.c	    51          me->currentDRSMode = AUTO;
+; drs.c	    55  
+; drs.c	    56      // .sensorvalue true/false are switched to account for Pull Up
+; drs.c	    57      if(pot_DRS_LC == 1) {
+; drs.c	    58          me->currentDRSMode = AUTO;
 	addw	r2,#0x1
 _246:
 	addcw	r3,#0x0
@@ -128,12 +135,12 @@ _747:
 	exts	r3,#0x2
 	movb	[r2],rl4
 
-; drs.c	    52      } else {
-; drs.c	    53          //update_knob(me); Change to when we have a working rotary
-; drs.c	    54          me->currentDRSMode = MANUAL;
-; drs.c	    55      }
-; drs.c	    56  
-; drs.c	    57      switch(me->currentDRSMode)
+; drs.c	    59      } else {
+; drs.c	    60          //update_knob(me); Change to when we have a working rotary
+; drs.c	    61          me->currentDRSMode = MANUAL;
+; drs.c	    62      }
+; drs.c	    63  
+; drs.c	    64      switch(me->currentDRSMode)
 	movb	rh4,[r2]
 _250:
 	movbz	r11,rh4
@@ -154,18 +161,18 @@ _$1$swt	.label	word
 
 code_DRS_update	.section	code, cluster 'DRS_update'
 
-; drs.c	    58          {
-; drs.c	    59              case STAY_CLOSED:
-; drs.c	    60                  DRS_close(me);
-; drs.c	    61                  break;
-; drs.c	    62              case STAY_OPEN:
-; drs.c	    63                  DRS_open(me);           
-; drs.c	    64                  break;
-; drs.c	    65              case MANUAL:
+; drs.c	    65          {
+; drs.c	    66              case STAY_CLOSED:
+; drs.c	    67                  DRS_close(me);
+; drs.c	    68                  break;
+; drs.c	    69              case STAY_OPEN:
+; drs.c	    70                  DRS_open(me);           
+; drs.c	    71                  break;
+; drs.c	    72              case MANUAL:
 _4:
 
-; drs.c	    66                  if(Sensor_DRSButton.sensorValue == FALSE) {
-; drs.c	    67                      me->buttonPressed = TRUE;
+; drs.c	    73                  if(Sensor_DRSButton.sensorValue == FALSE) {
+; drs.c	    74                      me->buttonPressed = TRUE;
 	movw	r11,r8
 	movw	r12,r9
 	addw	r11,#0x2
@@ -185,50 +192,50 @@ _751:
 	movb	[r11],rh2
 _134:
 
-; drs.c	    68                      DRS_open(me);
-; drs.c	    69                  } else {
-; drs.c	    70                      me->buttonPressed = FALSE;
-; drs.c	    71                      DRS_close(me);
-; drs.c	    72                  }
-; drs.c	    73                  break;
-; drs.c	    74              case AUTO:
-; drs.c	    75                  runAuto(me, tps, bps);
-; drs.c	    76                  break;
-; drs.c	    77              default:
-; drs.c	    78                  break;
-; drs.c	    79          }
-; drs.c	    80      
-; drs.c	    81  
-; drs.c	    82  }
-; drs.c	    83  
-; drs.c	    84  void runAuto(DRS *me, TorqueEncoder *tps, BrakePressureSensor *bps) {
-; drs.c	    85      sbyte2 vehicle_speed_mph = 0.62 * 0;// SRE-7 Replace: MCM_getGroundSpeedKPH(mcm); // >30mph
-; drs.c	    86      sbyte2 curr_steer_angle = steering_degrees(); // < +-15 deg
-; drs.c	    87      float4 brake_travel = bps->percent; // > 50%
-; drs.c	    88      float4 throttle_travel = tps->travelPercent; // > 90%
-; drs.c	    89  
-; drs.c	    90      if (vehicle_speed_mph > 5 && throttle_travel > .75 && curr_steer_angle > -15 && curr_steer_angle < 15 && brake_travel < .10) {
-; drs.c	    91          DRS_open(me);
-; drs.c	    92      } else {
-; drs.c	    93          DRS_close(me);
-; drs.c	    94      }
-; drs.c	    95  }
+; drs.c	    75                      DRS_open(me);
+; drs.c	    76                  } else {
+; drs.c	    77                      me->buttonPressed = FALSE;
+; drs.c	    78                      DRS_close(me);
+; drs.c	    79                  }
+; drs.c	    80                  break;
+; drs.c	    81              case AUTO:
+; drs.c	    82                  runAuto(me, tps, bps);
+; drs.c	    83                  break;
+; drs.c	    84              default:
+; drs.c	    85                  break;
+; drs.c	    86          }
+; drs.c	    87      
+; drs.c	    88  
+; drs.c	    89  }
+; drs.c	    90  
+; drs.c	    91  void runAuto(DRS *me, TorqueEncoder *tps, BrakePressureSensor *bps) {
+; drs.c	    92      sbyte2 vehicle_speed_mph = 0.62 * 0;// SRE-7 Replace: MCM_getGroundSpeedKPH(mcm); // >30mph
+; drs.c	    93      sbyte2 curr_steer_angle = steering_degrees(); // < +-15 deg
+; drs.c	    94      float4 brake_travel = bps->percent; // > 50%
+; drs.c	    95      float4 throttle_travel = tps->travelPercent; // > 90%
 ; drs.c	    96  
-; drs.c	    97  void DRS_open(DRS *me) {
-; drs.c	    98      IO_DO_Set(IO_DO_06, TRUE);
+; drs.c	    97      if (vehicle_speed_mph > 5 && throttle_travel > .75 && curr_steer_angle > -15 && curr_steer_angle < 15 && brake_travel < .10) {
+; drs.c	    98          DRS_open(me);
+; drs.c	    99      } else {
+; drs.c	   100          DRS_close(me);
+; drs.c	   101      }
+; drs.c	   102  }
+; drs.c	   103  
+; drs.c	   104  void DRS_open(DRS *me) {
+; drs.c	   105      IO_DO_Set(IO_DO_06, TRUE);
 	movb	rl2,#0x1e
 _752:
 	call	_IO_DO_Set
 _753:
 
-; drs.c	    99      IO_DO_Set(IO_DO_07, FALSE);
+; drs.c	   106      IO_DO_Set(IO_DO_07, FALSE);
 	movb	rl2,#0x1f
 _754:
 	movb	rh2,#0x0
 	call	_IO_DO_Set
 _755:
 
-; drs.c	   100      me->drsFlap = 1;
+; drs.c	   107      me->drsFlap = 1;
 	addw	r8,#0x3
 	addcw	r9,#0x0
 _756:
@@ -246,23 +253,23 @@ _5:
 	call	_steering_degrees
 _8:
 
-; drs.c	   101  }
-; drs.c	   102  void DRS_close(DRS *me) {
-; drs.c	   103      IO_DO_Set(IO_DO_06, FALSE);
+; drs.c	   108  }
+; drs.c	   109  void DRS_close(DRS *me) {
+; drs.c	   110      IO_DO_Set(IO_DO_06, FALSE);
 	movb	rl2,#0x1e
 _759:
 	movb	rh2,#0x0
 	call	_IO_DO_Set
 _760:
 
-; drs.c	   104      IO_DO_Set(IO_DO_07, TRUE);
+; drs.c	   111      IO_DO_Set(IO_DO_07, TRUE);
 	movb	rl2,#0x1f
 _761:
 	movb	rh2,#0x1
 	call	_IO_DO_Set
 _762:
 
-; drs.c	   105      me->drsFlap = 0;
+; drs.c	   112      me->drsFlap = 0;
 	addw	r8,#0x3
 	addcw	r9,#0x0
 _763:
@@ -391,8 +398,8 @@ _792:
 	movb	[r8],rh4
 _793:
 
-; drs.c	   106  
-; drs.c	   107  }
+; drs.c	   113  
+; drs.c	   114  }
 	movw	r9,[r15+]
 _444:
 	movw	r8,[r15+]
@@ -405,9 +412,9 @@ _118:
 code_update_knob	.section	code, cluster 'update_knob', new
 	.global	_update_knob
 
-; drs.c	   108  
-; drs.c	   109  //Change to future regarding rotary voltage values
-; drs.c	   110  void update_knob(DRS *me) {
+; drs.c	   115  
+; drs.c	   116  //Change to future regarding rotary voltage values
+; drs.c	   117  void update_knob(DRS *me) {
 ; Function _update_knob
 _79:
 _update_knob	.proc	far
@@ -425,7 +432,7 @@ _552:
 	movw	r9,r3
 _719:
 
-; drs.c	   111          if (Sensor_DRSKnob.sensorValue == 0)
+; drs.c	   118          if (Sensor_DRSKnob.sensorValue == 0)
 	exts	#@seg(_Sensor_DRSKnob+0x8),#0x1
 	movw	r2,@sof(_Sensor_DRSKnob+0x8)
 _718:
@@ -437,8 +444,8 @@ _798:
 	jmp-	cc_eq,_10
 _799:
 
-; drs.c	   112          {    me->currentDRSMode = STAY_CLOSED;}
-; drs.c	   113          else if (Sensor_DRSKnob.sensorValue <= 1.1)
+; drs.c	   119          {    me->currentDRSMode = STAY_CLOSED;}
+; drs.c	   120          else if (Sensor_DRSKnob.sensorValue <= 1.1)
 	call	__ul2dpf
 	movw	r10,r2
 _800:
@@ -453,7 +460,7 @@ _802:
 	jmp+	cc_eq,_11
 _803:
 
-; drs.c	   114          {    me->currentDRSMode = MANUAL;}
+; drs.c	   121          {    me->currentDRSMode = MANUAL;}
 	addw	r8,#0x1
 _720:
 	addcw	r9,#0x0
@@ -463,7 +470,7 @@ _805:
 	jmp	_12
 _11:
 
-; drs.c	   115          else if (Sensor_DRSKnob.sensorValue <= 2.2)
+; drs.c	   122          else if (Sensor_DRSKnob.sensorValue <= 2.2)
 	movw	r11,#0x999a
 	movw	r12,#0x9999
 	movw	r14,#0x4001
@@ -476,7 +483,7 @@ _807:
 	jmp+	cc_eq,_13
 _808:
 
-; drs.c	   116          {    me->currentDRSMode = AUTO;}
+; drs.c	   123          {    me->currentDRSMode = AUTO;}
 	addw	r8,#0x1
 _721:
 	addcw	r9,#0x0
@@ -486,7 +493,7 @@ _810:
 	jmp	_14
 _13:
 
-; drs.c	   117          else if (Sensor_DRSKnob.sensorValue <= 3.3)
+; drs.c	   124          else if (Sensor_DRSKnob.sensorValue <= 3.3)
 	movw	r11,#0x6666
 	movw	r14,#0x400a
 _811:
@@ -499,7 +506,7 @@ _812:
 	jmp+	cc_eq,_15
 _813:
 
-; drs.c	   118          {    me->currentDRSMode = STAY_OPEN;}
+; drs.c	   125          {    me->currentDRSMode = STAY_OPEN;}
 	addw	r8,#0x1
 _722:
 	addcw	r9,#0x0
@@ -509,7 +516,7 @@ _815:
 	jmp	_16
 _15:
 
-; drs.c	   119          else if (Sensor_DRSKnob.sensorValue > 3.3)
+; drs.c	   126          else if (Sensor_DRSKnob.sensorValue > 3.3)
 	movw	r11,#0x6666
 	movw	r14,#0x400a
 _816:
@@ -522,7 +529,7 @@ _817:
 	jmp+	cc_eq,_17
 _10:
 
-; drs.c	   120          {    me->currentDRSMode = STAY_CLOSED;}
+; drs.c	   127          {    me->currentDRSMode = STAY_CLOSED;}
 	addw	r8,#0x1
 _723:
 	addcw	r9,#0x0
@@ -535,7 +542,7 @@ _16:
 	movb	[r8],rh4
 _17:
 
-; drs.c	   121  }
+; drs.c	   128  }
 	movw	r10,[r15+]
 _563:
 	movw	r9,[r15+]
@@ -577,7 +584,7 @@ _123:
 	.extern	__larger_than_dpf : far
 	.debug		.debug_info
 _91:
-	.dl	2154
+	.dl	2138
 	.dw	3
 	.dl	_92
 	.db	4
@@ -591,7 +598,7 @@ _90:
 _131:
 	.db	2
 	.db	'unsigned char',0,1,8,3
-	.db	'_DRS',0,2,17,16,4,4
+	.db	'_DRS',0,2,24,16,4,4
 	.db	'AutoDRSActive',0
 	.dl	174
 	.db	1,2,35,0,4
@@ -709,7 +716,7 @@ _127:
 	.db	5,5
 	.dl	575
 	.db	3
-	.db	'_BrakePressureSensor',0,5,10,16,48,4
+	.db	'_BrakePressureSensor',0,5,17,16,48,4
 	.db	'bench',0
 	.dl	174
 	.db	1,2,35,0,4
@@ -775,36 +782,36 @@ _129:
 	.dl	1049
 _139:
 	.db	6
-	.db	'runAuto',0,1,1,84,6,6,1,1
+	.db	'runAuto',0,1,1,91,6,6,1,1
 _141:
 	.db	7
-	.db	'me',0,1,84,19,2
+	.db	'me',0,1,91,19,2
 	.dl	289
 _143:
 	.db	7
-	.db	'tps',0,1,84,38,2
+	.db	'tps',0,1,91,38,2
 	.dl	1043
 _145:
 	.db	7
-	.db	'bps',0,1,84,64,2
+	.db	'bps',0,1,91,64,2
 	.dl	1509
 _147:
 	.db	8,0
 _133:
 	.db	6
-	.db	'DRS_open',0,1,1,97,6,6,1,1
+	.db	'DRS_open',0,1,1,104,6,6,1,1
 _136:
 	.db	7
-	.db	'me',0,1,97,20,2
+	.db	'me',0,1,104,20,2
 	.dl	289
 _138:
 	.db	8,0
 _148:
 	.db	6
-	.db	'DRS_close',0,1,1,102,6,6,1,1
+	.db	'DRS_close',0,1,1,109,6,6,1,1
 _149:
 	.db	7
-	.db	'me',0,1,102,21,2
+	.db	'me',0,1,109,21,2
 	.dl	289
 _151:
 	.db	8,0,9
@@ -825,13 +832,13 @@ _151:
 	.db	'do_value',0,7,142,2,30,2
 	.dl	174
 	.db	0,2
-	.db	'int',0,2,5,12
-	.db	'steering_degrees',0,8,133,1,8,6
+	.db	'long int',0,4,5,12
+	.db	'steering_degrees',0,8,122,8,6
 	.dl	1741
 	.db	1,1,1,2
 	.db	'unsigned short int',0,2,7,13
 	.db	'__wchar_t',0,1,1,1
-	.dl	1778
+	.dl	1782
 	.db	13
 	.db	'__size_t',0,1,1,1
 	.dl	316
@@ -839,7 +846,7 @@ _151:
 	.dl	1634
 	.db	13
 	.db	'__prof_adm',0,1,1,1
-	.dl	1835
+	.dl	1839
 	.db	13
 	.db	'__codeptr',0,1,1,1
 	.dl	295
@@ -856,7 +863,7 @@ _151:
 	.db	'ubyte4',0,9,23,29
 	.dl	295
 	.db	13
-	.db	'sbyte2',0,9,26,29
+	.db	'sbyte4',0,9,27,29
 	.dl	1741
 	.db	13
 	.db	'float4',0,9,29,29
@@ -877,16 +884,13 @@ _151:
 	.db	'Sensor_DRSKnob',0,4,184,1,15,5
 	.dl	332
 	.db	1,1,13
-	.db	'BrakePressureSensor',0,5,38,3
+	.db	'BrakePressureSensor',0,5,45,3
 	.dl	1049
 	.db	13
 	.db	'TorqueEncoder',0,3,38,3
 	.dl	575
 	.db	13
-	.db	'_iob_flag_t',0,11,82,25
-	.dl	1778
-	.db	13
-	.db	'DRS',0,2,27,3
+	.db	'DRS',0,2,34,3
 	.dl	191
 	.db	0
 	; End of section
@@ -920,8 +924,7 @@ _726:
 	.db	'IO_DIO.h',0,2,0,0
 	.db	'sensorCalculations.h',0,0,0,0
 	.db	'ptypes_xe167.h',0,2,0,0
-	.db	'IO_Constants.h',0,2,0,0
-	.db	'stdio.h',0,1,0,0,0
+	.db	'IO_Constants.h',0,2,0,0,0
 _727:
 _725:
 	; End of section
@@ -929,11 +932,11 @@ _725:
 	.debug		.debug_pubnames
 	.dl	60
 	.dw	2
-	.dl	_91,2158,1646
+	.dl	_91,2142,1646
 	.db	'malloc',0
 	.dl	1676
 	.db	'IO_DO_Set',0
-	.dl	1748
+	.dl	1753
 	.db	'steering_degrees',0
 	.dl	0
 	; End of section
@@ -952,14 +955,14 @@ _94:
 	.db	2
 	.dl	_90
 	.db	3
-	.db	'DRS_new',0,1,14,6,6
+	.db	'DRS_new',0,1,21,6,6
 	.dl	_124
 	.db	1,1
 	.dl	_19,_98,_18
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
 	.dl	_19,_98
 	.db	5
-	.db	'me',0,1,16,10,2
+	.db	'me',0,1,23,10,2
 	.dl	_124,_125
 	.db	0,0,0
 	; End of section
@@ -983,7 +986,7 @@ _730:
 _731:
 	.db	5,29,7,0,5,2
 	.dl	_19
-	.db	3,15,1,5,25,9
+	.db	3,22,1,5,25,9
 	.dw	_732-_19
 	.db	3,3,1,5,23,9
 	.dw	_733-_732
@@ -1034,19 +1037,19 @@ _99:
 	.db	2
 	.dl	_90
 	.db	3
-	.db	'DRS_update',0,1,47,6,6,1,1,1
+	.db	'DRS_update',0,1,54,6,6,1,1,1
 	.dl	_31,_103,_30
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,47,22,2
+	.db	'me',0,1,54,22,2
 	.dl	_124,_126
 	.db	4
-	.db	'tps',0,1,47,41,2
+	.db	'tps',0,1,54,41,2
 	.dl	_127,_128
 	.db	4
-	.db	'bps',0,1,47,67,2
+	.db	'bps',0,1,54,67,2
 	.dl	_129,_130
 	.db	4
-	.db	'pot_DRS_LC',0,1,47,79,2
+	.db	'pot_DRS_LC',0,1,54,79,2
 	.dl	_131,_132
 	.db	5
 	.dl	_31,_103
@@ -1095,7 +1098,7 @@ _743:
 _744:
 	.db	5,6,7,0,5,2
 	.dl	_31
-	.db	3,46,1,5,11,9
+	.db	3,53,1,5,11,9
 	.dw	_248-_31
 	.db	3,4,1,5,19,9
 	.dw	_745-_248
@@ -1225,7 +1228,7 @@ _766:
 _767:
 	.db	5,6,7,0,5,2
 	.dl	_43
-	.db	3,211,0,1,5,47,9
+	.db	3,218,0,1,5,47,9
 	.dw	_335-_43
 	.db	3,2,1,5,15,9
 	.dw	_155-_335
@@ -1296,7 +1299,7 @@ _776:
 _777:
 	.db	5,6,7,0,5,2
 	.dl	_55
-	.db	3,224,0,1,5,15,9
+	.db	3,231,0,1,5,15,9
 	.dw	_421-_55
 	.db	3,1,1,5,25,9
 	.dw	_420-_421
@@ -1365,7 +1368,7 @@ _786:
 _787:
 	.db	5,6,7,0,5,2
 	.dl	_67
-	.db	3,229,0,1,5,15,9
+	.db	3,236,0,1,5,15,9
 	.dw	_507-_67
 	.db	3,1,1,5,25,9
 	.dw	_506-_507
@@ -1406,10 +1409,10 @@ _119:
 	.db	2
 	.dl	_90
 	.db	3
-	.db	'update_knob',0,1,110,6,6,1,1,1
+	.db	'update_knob',0,1,117,6,6,1,1,1
 	.dl	_79,_123,_78
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,110,23,2
+	.db	'me',0,1,117,23,2
 	.dl	_124,_160
 	.db	5
 	.dl	_79,_123
@@ -1435,7 +1438,7 @@ _796:
 _797:
 	.db	5,6,7,0,5,2
 	.dl	_79
-	.db	3,237,0,1,5,27,9
+	.db	3,244,0,1,5,27,9
 	.dw	_719-_79
 	.db	3,1,1,5,9,9
 	.dw	_798-_719

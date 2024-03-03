@@ -1,3 +1,10 @@
+/*****************************************************************************
+ * cooling.h - Cooling infrastructure
+ * Initial Author: Vincent S
+ ******************************************************************************
+ * Integrates cooling control and driving pins
+ ****************************************************************************/
+
 #ifndef _COOLING_H
 #define _COOLING_H
 

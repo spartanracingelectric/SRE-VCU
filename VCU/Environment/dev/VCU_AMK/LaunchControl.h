@@ -1,3 +1,10 @@
+/*****************************************************************************
+ * launchControl.h - Traction Control / Drag  
+ * Initial Author: Shinika B
+ ******************************************************************************
+ * Control of the Launch Algorithm and Object
+ ****************************************************************************/
+
 #ifndef _LAUNCHCONTROL_H
 #define _LAUNCHCONTROL_H
 

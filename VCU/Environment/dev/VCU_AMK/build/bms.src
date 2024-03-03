@@ -1,148 +1,154 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc12372a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=1 -DRTS_TTC_FLASH_DATE_DAY=17 -DRTS_TTC_FLASH_DATE_HOUR=13 -DRTS_TTC_FLASH_DATE_MINUTE=38 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\bms.src
+	; Options: -f cc17496a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=3 -DRTS_TTC_FLASH_DATE_DAY=3 -DRTS_TTC_FLASH_DATE_HOUR=12 -DRTS_TTC_FLASH_DATE_MINUTE=6 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\bms.src
 	; Module start
 	.source	'bms.c'
 code_BMS_new	.section	code, cluster 'BMS_new', new
 	.global	_BMS_new
 
-; bms.c	     1  
-; bms.c	     2  #include <stdio.h>
-; bms.c	     3  #include "bms.h"
-; bms.c	     4  #include <stdlib.h>
-; bms.c	     5  #include "IO_Driver.h"
-; bms.c	     6  #include "IO_RTC.h"
-; bms.c	     7  #include "IO_DIO.h"
-; bms.c	     8  #include "mathFunctions.h"
-; bms.c	     9  
-; bms.c	    10  /*********************************************************
-; bms.c	    11   *            *********** CAUTION ***********            *
-; bms.c	    12   * MULTI-BYTE VALUES FOR THE STAFL BMS ARE LITTLE-ENDIAN *
-; bms.c	    13   *                                                       *
-; bms.c	    14   *********************************************************/
+; bms.c	     1  /*****************************************************************************
+; bms.c	     2   * bms.c - Battery Management System Parser
+; bms.c	     3   * Initial Author: Rusty P / Vincent Saw
+; bms.c	     4   ******************************************************************************
+; bms.c	     5   * Deals with parsing from BMS and coordinating values in between
+; bms.c	     6   ****************************************************************************/
+; bms.c	     7  
+; bms.c	     8  #include <stdio.h>
+; bms.c	     9  #include "bms.h"
+; bms.c	    10  #include <stdlib.h>
+; bms.c	    11  #include "IO_Driver.h"
+; bms.c	    12  #include "IO_RTC.h"
+; bms.c	    13  #include "IO_DIO.h"
+; bms.c	    14  #include "mathFunctions.h"
 ; bms.c	    15  
-; bms.c	    16  struct _BatteryManagementSystem
-; bms.c	    17  {
-; bms.c	    18  
-; bms.c	    19      ubyte2 canMessageBaseId;
-; bms.c	    20  
-; bms.c	    21      //BMS Member Variable format:
-; bms.c	    22      //byte(s), scaling, add'l comments
-; bms.c	    23  
-; bms.c	    24      // BMS_MASTER_FAULTS //
-; bms.c	    25      //ubyte1 reserved;                          //3
-; bms.c	    26      ubyte1 imminentContactorOpenWarning;        //2
-; bms.c	    27      ubyte1 faultFlags1;                         //1
-; bms.c	    28      ubyte1 faultFlags0;                         //0
+; bms.c	    16  /*********************************************************
+; bms.c	    17   *            *********** CAUTION ***********            *
+; bms.c	    18   * MULTI-BYTE VALUES FOR THE STAFL BMS ARE LITTLE-ENDIAN *
+; bms.c	    19   *                                                       *
+; bms.c	    20   *********************************************************/
+; bms.c	    21  
+; bms.c	    22  struct _BatteryManagementSystem
+; bms.c	    23  {
+; bms.c	    24  
+; bms.c	    25      ubyte2 canMessageBaseId;
+; bms.c	    26  
+; bms.c	    27      //BMS Member Variable format:
+; bms.c	    28      //byte(s), scaling, add'l comments
 ; bms.c	    29  
-; bms.c	    30      // BMS_MASTER_WARNINGS //
+; bms.c	    30      // BMS_MASTER_FAULTS //
 ; bms.c	    31      //ubyte1 reserved;                          //3
-; bms.c	    32      //ubyte1 reserved;                          //2
-; bms.c	    33      //ubyte1 reserved;                          //1
-; bms.c	    34      ubyte1 warningFlags0;                       //0
+; bms.c	    32      ubyte1 imminentContactorOpenWarning;        //2
+; bms.c	    33      ubyte1 faultFlags1;                         //1
+; bms.c	    34      ubyte1 faultFlags0;                         //0
 ; bms.c	    35  
-; bms.c	    36      // BMS_MASTER_SYSTEM_STATUS //
-; bms.c	    37      //ubyte1 reserved;                          //7
-; bms.c	    38      ubyte1 state;                               //6
-; bms.c	    39      ubyte1 numMonitorBoards;                    //5
-; bms.c	    40      ubyte1 monitorBoardCommErrFlags;            //4
-; bms.c	    41      ubyte1 statusFlags1;                        //3
-; bms.c	    42      ubyte1 statusFlags2;                        //2
-; bms.c	    43      ubyte1 numFailedThermistors;                //1
-; bms.c	    44      //ubyte1 reserved;                          //0
-; bms.c	    45  
-; bms.c	    46      // BMS_PACK_SAFE_OPERATING_ENVELOPE //
-; bms.c	    47      //ubyte2 reserved;                          //7:6
-; bms.c	    48      ubyte2 chargerConstVoltageSetPoint;         //5:4
-; bms.c	    49      ubyte2 maxDischargeCurrentAllowed;          //3:2
-; bms.c	    50      ubyte2 maxChargeCurrentAllowed;             //1:0
+; bms.c	    36      // BMS_MASTER_WARNINGS //
+; bms.c	    37      //ubyte1 reserved;                          //3
+; bms.c	    38      //ubyte1 reserved;                          //2
+; bms.c	    39      //ubyte1 reserved;                          //1
+; bms.c	    40      ubyte1 warningFlags0;                       //0
+; bms.c	    41  
+; bms.c	    42      // BMS_MASTER_SYSTEM_STATUS //
+; bms.c	    43      //ubyte1 reserved;                          //7
+; bms.c	    44      ubyte1 state;                               //6
+; bms.c	    45      ubyte1 numMonitorBoards;                    //5
+; bms.c	    46      ubyte1 monitorBoardCommErrFlags;            //4
+; bms.c	    47      ubyte1 statusFlags1;                        //3
+; bms.c	    48      ubyte1 statusFlags2;                        //2
+; bms.c	    49      ubyte1 numFailedThermistors;                //1
+; bms.c	    50      //ubyte1 reserved;                          //0
 ; bms.c	    51  
-; bms.c	    52      // BMS_MASTER_LOCAL_BOARD_MEASUREMENTS //
-; bms.c	    53      sbyte2 boardTemperature;                    //7:6
-; bms.c	    54      ubyte2 powerInputSense_12V_24V;             //5:4
-; bms.c	    55      ubyte2 powerInputSense_HVIL;                //3:2
-; bms.c	    56      ubyte2 internalRailSense_5V;                //1:0
+; bms.c	    52      // BMS_PACK_SAFE_OPERATING_ENVELOPE //
+; bms.c	    53      //ubyte2 reserved;                          //7:6
+; bms.c	    54      ubyte2 chargerConstVoltageSetPoint;         //5:4
+; bms.c	    55      ubyte2 maxDischargeCurrentAllowed;          //3:2
+; bms.c	    56      ubyte2 maxChargeCurrentAllowed;             //1:0
 ; bms.c	    57  
-; bms.c	    58      // BMS_DIGITAL_INPUTS_AND_OUTPUTS //
-; bms.c	    59      ubyte1 digitalOutputStatus;                 //1
-; bms.c	    60      ubyte1 digitalInputStatus;                  //0
-; bms.c	    61  
-; bms.c	    62      // BMS_PACK_LEVEL_MEASUREMENTS_1 //
-; bms.c	    63      ubyte4 packVoltage;                         //7:4, V*1000
-; bms.c	    64      sbyte4 packCurrent;                         //3:0, A*1000, charging=positive discharging=negative
-; bms.c	    65  
-; bms.c	    66      // BMS_PACK_LEVEL_MEASUREMENTS_2 //
-; bms.c	    67      ubyte2 packStateOfCharge;                   //7:6, %*10
-; bms.c	    68      ubyte2 packStateOfHealth;                   //5:4, %*10
-; bms.c	    69      ubyte2 packAmpHoursRemaining;               //3:2, Ah*10
-; bms.c	    70      //ubyte2 reserved                           //1:0
+; bms.c	    58      // BMS_MASTER_LOCAL_BOARD_MEASUREMENTS //
+; bms.c	    59      sbyte2 boardTemperature;                    //7:6
+; bms.c	    60      ubyte2 powerInputSense_12V_24V;             //5:4
+; bms.c	    61      ubyte2 powerInputSense_HVIL;                //3:2
+; bms.c	    62      ubyte2 internalRailSense_5V;                //1:0
+; bms.c	    63  
+; bms.c	    64      // BMS_DIGITAL_INPUTS_AND_OUTPUTS //
+; bms.c	    65      ubyte1 digitalOutputStatus;                 //1
+; bms.c	    66      ubyte1 digitalInputStatus;                  //0
+; bms.c	    67  
+; bms.c	    68      // BMS_PACK_LEVEL_MEASUREMENTS_1 //
+; bms.c	    69      ubyte4 packVoltage;                         //7:4, V*1000
+; bms.c	    70      sbyte4 packCurrent;                         //3:0, A*1000, charging=positive discharging=negative
 ; bms.c	    71  
-; bms.c	    72      // BMS_CELL_VOLTAGE_SUMMARY //
-; bms.c	    73      ubyte4 highestCellVoltage;                  //7:6, V*1000
-; bms.c	    74      ubyte2 lowestCellVoltage;                   //5:4, V*1000
-; bms.c	    75      ubyte2 highestCellVoltagePos;               //3:2, 1-N
-; bms.c	    76      ubyte2 lowestCellVoltagePos;                //1:0, 1-N
+; bms.c	    72      // BMS_PACK_LEVEL_MEASUREMENTS_2 //
+; bms.c	    73      ubyte2 packStateOfCharge;                   //7:6, %*10
+; bms.c	    74      ubyte2 packStateOfHealth;                   //5:4, %*10
+; bms.c	    75      ubyte2 packAmpHoursRemaining;               //3:2, Ah*10
+; bms.c	    76      //ubyte2 reserved                           //1:0
 ; bms.c	    77  
-; bms.c	    78      // BMS_CELL_TEMPERATURE_SUMMARY //
-; bms.c	    79      sbyte2 highestCellTemperature;              //7:6, degC*10
-; bms.c	    80      sbyte2 lowestCellTemperature;               //5:4, degC*10
-; bms.c	    81      ubyte2 highestCellTemperaturePos;           //3:2, 1-N
-; bms.c	    82      ubyte2 lowestCellTemperaturePos;            //1:0, 1-N
+; bms.c	    78      // BMS_CELL_VOLTAGE_SUMMARY //
+; bms.c	    79      ubyte4 highestCellVoltage;                  //7:6, V*1000
+; bms.c	    80      ubyte2 lowestCellVoltage;                   //5:4, V*1000
+; bms.c	    81      ubyte2 highestCellVoltagePos;               //3:2, 1-N
+; bms.c	    82      ubyte2 lowestCellVoltagePos;                //1:0, 1-N
 ; bms.c	    83  
-; bms.c	    84      // BMS_PACK_LEVEL_MEASUREMENTS_3 //
-; bms.c	    85      ubyte4 sumOfCellVoltages;                   //7:4, V*1000
-; bms.c	    86      ubyte4 preChargeVoltage;                    //3:0, V*1000
-; bms.c	    87  
-; bms.c	    88      // BMS_CELL_VOLTAGE_DATA //
-; bms.c	    89      // Use these variables as temporary buffers for now
-; bms.c	    90      // Maybe transfer to array in future?
-; bms.c	    91      ubyte2 cellVoltage_4X_1;                    //7:6, V*1000, X from 0 to 63 (targeted cell group voltage)
-; bms.c	    92      ubyte2 cellVoltage_4X_2;                    //5:4, V*1000, X from 0 to 63 (targeted cell group voltage)
-; bms.c	    93      ubyte2 cellVoltage_4X_3;                    //3:2, V*1000, X from 0 to 63 (targeted cell group voltage)
-; bms.c	    94      ubyte2 cellVoltage_4X_4;                    //1:0, V*1000, X from 0 to 63 (targeted cell group voltage)
-; bms.c	    95  
-; bms.c	    96      // BMS_CELL_TEMPERATURE_DATA //
-; bms.c	    97      // Use these variables as temporary buffers for now
-; bms.c	    98      // Maybe transfer to array in future?
-; bms.c	    99      ubyte2 cellTemperature_4X_1;                //7:6, degC*10, X from 0 to 63 (targeted cell group voltage)
-; bms.c	   100      ubyte2 cellTemperature_4X_2;                //5:4, degC*10, X from 0 to 63 (targeted cell group voltage)
-; bms.c	   101      ubyte2 cellTemperature_4X_3;                //3:2, degC*10, X from 0 to 63 (targeted cell group voltage)
-; bms.c	   102      ubyte2 cellTemperature_4X_4;                //1:0, degC*10, X from 0 to 63 (targeted cell group voltage)
-; bms.c	   103  
-; bms.c	   104      // BMS_CELL_SHUNTING_STATUS_1 //
-; bms.c	   105      //No ubyte8 exists, so we need to split it into two ubyte4
-; bms.c	   106      ubyte4 cellShuntingStatusArray1_0;          //7:4, , bit0=1 - shunting active for cell 1 | bit31=1 - shunting active for cell 32 
-; bms.c	   107      ubyte4 cellShuntingStatusArray1_1;          //3:0, , bit0=1 - shunting active for cell 33 | bit31=1 - shunting active for cell 64 
-; bms.c	   108  
-; bms.c	   109      // BMS_CELL_SHUNTING_STATUS_2 //
-; bms.c	   110      ubyte4 cellShuntingStatusArray2_0;          //7:4, , bit0=1 - shunting active for cell 65 | bit31=1 - shunting active for cell 96 
-; bms.c	   111      ubyte4 cellShuntingStatusArray2_1;          //3:0, , bit0=1 - shunting active for cell 97 | bit31=1 - shunting active for cell 128 
-; bms.c	   112  
-; bms.c	   113      // BMS_CELL_SHUNTING_STATUS_3 //
-; bms.c	   114      ubyte4 cellShuntingStatusArray3_0;          //7:4, , bit0=1 - shunting active for cell 129 | bit31=1 - shunting active for cell 160 
-; bms.c	   115      ubyte4 cellShuntingStatusArray3_1;          //3:0, , bit0=1 - shunting active for cell 161 | bit31=1 - shunting active for cell 192
-; bms.c	   116  
-; bms.c	   117      // BMS_CELL_SHUNTING_STATUS_4 //
-; bms.c	   118      ubyte4 cellShuntingStatusArray4_0;          //7:4, , bit0=1 - shunting active for cell 193 | bit31=1 - shunting active for cell 224
-; bms.c	   119      ubyte4 cellShuntingStatusArray4_1;          //3:0, , bit0=1 - shunting active for cell 225 | bit31=1 - shunting active for cell 256 
-; bms.c	   120  
-; bms.c	   121      // BMS_CONFIGUATION_INFORMATION //
-; bms.c	   122      //ubyte2 reserved;                          //7:6
-; bms.c	   123      //ubyte2 reserved;                          //5:4
-; bms.c	   124      ubyte2 numSeriesCells;                      //3:2
-; bms.c	   125      ubyte2 numThermistors;                      //1:0
+; bms.c	    84      // BMS_CELL_TEMPERATURE_SUMMARY //
+; bms.c	    85      sbyte2 highestCellTemperature;              //7:6, degC*10
+; bms.c	    86      sbyte2 lowestCellTemperature;               //5:4, degC*10
+; bms.c	    87      ubyte2 highestCellTemperaturePos;           //3:2, 1-N
+; bms.c	    88      ubyte2 lowestCellTemperaturePos;            //1:0, 1-N
+; bms.c	    89  
+; bms.c	    90      // BMS_PACK_LEVEL_MEASUREMENTS_3 //
+; bms.c	    91      ubyte4 sumOfCellVoltages;                   //7:4, V*1000
+; bms.c	    92      ubyte4 preChargeVoltage;                    //3:0, V*1000
+; bms.c	    93  
+; bms.c	    94      // BMS_CELL_VOLTAGE_DATA //
+; bms.c	    95      // Use these variables as temporary buffers for now
+; bms.c	    96      // Maybe transfer to array in future?
+; bms.c	    97      ubyte2 cellVoltage_4X_1;                    //7:6, V*1000, X from 0 to 63 (targeted cell group voltage)
+; bms.c	    98      ubyte2 cellVoltage_4X_2;                    //5:4, V*1000, X from 0 to 63 (targeted cell group voltage)
+; bms.c	    99      ubyte2 cellVoltage_4X_3;                    //3:2, V*1000, X from 0 to 63 (targeted cell group voltage)
+; bms.c	   100      ubyte2 cellVoltage_4X_4;                    //1:0, V*1000, X from 0 to 63 (targeted cell group voltage)
+; bms.c	   101  
+; bms.c	   102      // BMS_CELL_TEMPERATURE_DATA //
+; bms.c	   103      // Use these variables as temporary buffers for now
+; bms.c	   104      // Maybe transfer to array in future?
+; bms.c	   105      ubyte2 cellTemperature_4X_1;                //7:6, degC*10, X from 0 to 63 (targeted cell group voltage)
+; bms.c	   106      ubyte2 cellTemperature_4X_2;                //5:4, degC*10, X from 0 to 63 (targeted cell group voltage)
+; bms.c	   107      ubyte2 cellTemperature_4X_3;                //3:2, degC*10, X from 0 to 63 (targeted cell group voltage)
+; bms.c	   108      ubyte2 cellTemperature_4X_4;                //1:0, degC*10, X from 0 to 63 (targeted cell group voltage)
+; bms.c	   109  
+; bms.c	   110      // BMS_CELL_SHUNTING_STATUS_1 //
+; bms.c	   111      //No ubyte8 exists, so we need to split it into two ubyte4
+; bms.c	   112      ubyte4 cellShuntingStatusArray1_0;          //7:4, , bit0=1 - shunting active for cell 1 | bit31=1 - shunting active for cell 32 
+; bms.c	   113      ubyte4 cellShuntingStatusArray1_1;          //3:0, , bit0=1 - shunting active for cell 33 | bit31=1 - shunting active for cell 64 
+; bms.c	   114  
+; bms.c	   115      // BMS_CELL_SHUNTING_STATUS_2 //
+; bms.c	   116      ubyte4 cellShuntingStatusArray2_0;          //7:4, , bit0=1 - shunting active for cell 65 | bit31=1 - shunting active for cell 96 
+; bms.c	   117      ubyte4 cellShuntingStatusArray2_1;          //3:0, , bit0=1 - shunting active for cell 97 | bit31=1 - shunting active for cell 128 
+; bms.c	   118  
+; bms.c	   119      // BMS_CELL_SHUNTING_STATUS_3 //
+; bms.c	   120      ubyte4 cellShuntingStatusArray3_0;          //7:4, , bit0=1 - shunting active for cell 129 | bit31=1 - shunting active for cell 160 
+; bms.c	   121      ubyte4 cellShuntingStatusArray3_1;          //3:0, , bit0=1 - shunting active for cell 161 | bit31=1 - shunting active for cell 192
+; bms.c	   122  
+; bms.c	   123      // BMS_CELL_SHUNTING_STATUS_4 //
+; bms.c	   124      ubyte4 cellShuntingStatusArray4_0;          //7:4, , bit0=1 - shunting active for cell 193 | bit31=1 - shunting active for cell 224
+; bms.c	   125      ubyte4 cellShuntingStatusArray4_1;          //3:0, , bit0=1 - shunting active for cell 225 | bit31=1 - shunting active for cell 256 
 ; bms.c	   126  
-; bms.c	   127      // BMS_FIRMWARE_VERSION_INFORMATION //
-; bms.c	   128      //ubyte1 reserved;                          //3
-; bms.c	   129      ubyte1 fwMajorVerNum;                       //2, , X.0.0
-; bms.c	   130      ubyte1 fwMinorVerNum;                       //1, , 0.X.0
-; bms.c	   131      ubyte1 fwRevNum;                            //0, , 0.0.X
+; bms.c	   127      // BMS_CONFIGUATION_INFORMATION //
+; bms.c	   128      //ubyte2 reserved;                          //7:6
+; bms.c	   129      //ubyte2 reserved;                          //5:4
+; bms.c	   130      ubyte2 numSeriesCells;                      //3:2
+; bms.c	   131      ubyte2 numThermistors;                      //1:0
 ; bms.c	   132  
-; bms.c	   133      bool relayState;
-; bms.c	   134  
-; bms.c	   135      // signed = 2's complement: 0XfFF = -1, 0x00 = 0, 0x01 = 1
-; bms.c	   136  };
-; bms.c	   137  
-; bms.c	   138  BatteryManagementSystem *BMS_new(ubyte2 canMessageBaseID)
+; bms.c	   133      // BMS_FIRMWARE_VERSION_INFORMATION //
+; bms.c	   134      //ubyte1 reserved;                          //3
+; bms.c	   135      ubyte1 fwMajorVerNum;                       //2, , X.0.0
+; bms.c	   136      ubyte1 fwMinorVerNum;                       //1, , 0.X.0
+; bms.c	   137      ubyte1 fwRevNum;                            //0, , 0.0.X
+; bms.c	   138  
+; bms.c	   139      bool relayState;
+; bms.c	   140  
+; bms.c	   141      // signed = 2's complement: 0XfFF = -1, 0x00 = 0, 0x01 = 1
+; bms.c	   142  };
+; bms.c	   143  
+; bms.c	   144  BatteryManagementSystem *BMS_new(ubyte2 canMessageBaseID)
 ; Function _BMS_new
 _56:
 _BMS_new	.proc	far
@@ -151,23 +157,23 @@ _310:
 	movw	r8,r2
 _353:
 
-; bms.c	   139  {
-; bms.c	   140  
-; bms.c	   141      BatteryManagementSystem *me = (BatteryManagementSystem *)malloc(sizeof(struct _BatteryManagementSystem));
+; bms.c	   145  {
+; bms.c	   146  
+; bms.c	   147      BatteryManagementSystem *me = (BatteryManagementSystem *)malloc(sizeof(struct _BatteryManagementSystem));
 	movw	r2,#0x7c
 _352:
 	call	_malloc
 _1291:
 
-; bms.c	   142  
-; bms.c	   143      me->canMessageBaseId = canMessageBaseID;
+; bms.c	   148  
+; bms.c	   149      me->canMessageBaseId = canMessageBaseID;
 	exts	r3,#0x1
 	movw	[r2],r8
 _1292:
 
-; bms.c	   144      //me->maxTemp = 99;
-; bms.c	   145  
-; bms.c	   146      me->packCurrent = 0;
+; bms.c	   150      //me->maxTemp = 99;
+; bms.c	   151  
+; bms.c	   152      me->packCurrent = 0;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x20
@@ -183,7 +189,7 @@ _1294:
 	movw	[r11],r13
 _1295:
 
-; bms.c	   147      me->packVoltage = 0;
+; bms.c	   153      me->packVoltage = 0;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x1c
@@ -197,8 +203,8 @@ _1296:
 	movw	[r11],r13
 _1297:
 
-; bms.c	   148      //Repick a new value, maybe 0xFFFF?
-; bms.c	   149      me->highestCellVoltage = 0;
+; bms.c	   154      //Repick a new value, maybe 0xFFFF?
+; bms.c	   155      me->highestCellVoltage = 0;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x2a
@@ -212,7 +218,7 @@ _1298:
 	movw	[r11],r13
 _1299:
 
-; bms.c	   150      me->lowestCellVoltage = 9999;
+; bms.c	   156      me->lowestCellVoltage = 9999;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x2e
@@ -224,7 +230,7 @@ _1301:
 	movw	[r11],r14
 _1302:
 
-; bms.c	   151      me->highestCellTemperature = 0;
+; bms.c	   157      me->highestCellTemperature = 0;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x34
@@ -234,8 +240,8 @@ _1303:
 	movw	[r11],r13
 _1304:
 
-; bms.c	   152  
-; bms.c	   153      me->faultFlags0 = 0;
+; bms.c	   158  
+; bms.c	   159      me->faultFlags0 = 0;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x4
@@ -247,7 +253,7 @@ _1306:
 	movb	[r11],rh4
 _1307:
 
-; bms.c	   154      me->faultFlags1 = 0;
+; bms.c	   160      me->faultFlags1 = 0;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x3
@@ -257,10 +263,10 @@ _1308:
 	movb	[r11],rh4
 _1309:
 
-; bms.c	   155      //me->faultFlags0 = 0xFF;
-; bms.c	   156      //me->faultFlags1 = 0xFF;
-; bms.c	   157  
-; bms.c	   158      me->relayState = FALSE;
+; bms.c	   161      //me->faultFlags0 = 0xFF;
+; bms.c	   162      //me->faultFlags1 = 0xFF;
+; bms.c	   163  
+; bms.c	   164      me->relayState = FALSE;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x7b
@@ -270,9 +276,9 @@ _1310:
 	movb	[r11],rh4
 _1311:
 
-; bms.c	   159  
-; bms.c	   160      return me;
-; bms.c	   161  }
+; bms.c	   165  
+; bms.c	   166      return me;
+; bms.c	   167  }
 	movw	r8,[r15+]
 _321:
 	ret
@@ -283,8 +289,8 @@ _219:
 code_BMS_parseCanMessage	.section	code, cluster 'BMS_parseCanMessage', new
 	.global	_BMS_parseCanMessage
 
-; bms.c	   162  
-; bms.c	   163  void BMS_parseCanMessage(BatteryManagementSystem *bms, IO_CAN_DATA_FRAME *bmsCanMessage)
+; bms.c	   168  
+; bms.c	   169  void BMS_parseCanMessage(BatteryManagementSystem *bms, IO_CAN_DATA_FRAME *bmsCanMessage)
 ; Function _BMS_parseCanMessage
 _68:
 _BMS_parseCanMessage	.proc	far
@@ -308,15 +314,15 @@ _651:
 	movw	r9,r5
 _655:
 
-; bms.c	   164  {
-; bms.c	   165      ubyte2 utemp16;
-; bms.c	   166      //    sbyte1  temp16;
-; bms.c	   167      ubyte4 utemp32;
-; bms.c	   168  
-; bms.c	   169      //Subtract BMS Base CAN ID from incoming BMS CAN message ID to get offset
-; bms.c	   170      //Byte extraction DOES NOT INCLUDE SCALING
-; bms.c	   171      //Ex: (bmsCanMessage->id+BMS_MASTER_FAULTS) - bms->canMessageBaseId = BMS_MASTER_FAULTS
-; bms.c	   172      switch (bmsCanMessage->id - bms->canMessageBaseId)
+; bms.c	   170  {
+; bms.c	   171      ubyte2 utemp16;
+; bms.c	   172      //    sbyte1  temp16;
+; bms.c	   173      ubyte4 utemp32;
+; bms.c	   174  
+; bms.c	   175      //Subtract BMS Base CAN ID from incoming BMS CAN message ID to get offset
+; bms.c	   176      //Byte extraction DOES NOT INCLUDE SCALING
+; bms.c	   177      //Ex: (bmsCanMessage->id+BMS_MASTER_FAULTS) - bms->canMessageBaseId = BMS_MASTER_FAULTS
+; bms.c	   178      switch (bmsCanMessage->id - bms->canMessageBaseId)
 	addw	r4,#0xa
 _652:
 	addcw	r5,#0x0
@@ -608,11 +614,11 @@ _$3$swt	.label	word
 
 code_BMS_parseCanMessage	.section	code, cluster 'BMS_parseCanMessage'
 
-; bms.c	   173      {
-; bms.c	   174          case BMS_MASTER_FAULTS:
+; bms.c	   179      {
+; bms.c	   180          case BMS_MASTER_FAULTS:
 _4:
 
-; bms.c	   175              bms->imminentContactorOpenWarning = bmsCanMessage->data[2];
+; bms.c	   181              bms->imminentContactorOpenWarning = bmsCanMessage->data[2];
 	movw	r13,r2
 	movw	r14,r9
 _1321:
@@ -629,7 +635,7 @@ _1324:
 	movb	rh4,[r13]
 _1325:
 
-; bms.c	   176              bms->faultFlags1                  = bmsCanMessage->data[1];
+; bms.c	   182              bms->faultFlags1                  = bmsCanMessage->data[1];
 	movw	r13,r2
 	movw	r14,r9
 _1326:
@@ -652,30 +658,30 @@ _1331:
 	movb	[r11],rh4
 _1332:
 
-; bms.c	   177              bms->faultFlags0                  = bmsCanMessage->data[0];
+; bms.c	   183              bms->faultFlags0                  = bmsCanMessage->data[0];
 	addw	r8,#0x4
 _656:
 
-; bms.c	   178              break;
+; bms.c	   184              break;
 	jmp	_23
 
-; bms.c	   179  
-; bms.c	   180          case BMS_MASTER_WARNINGS:
+; bms.c	   185  
+; bms.c	   186          case BMS_MASTER_WARNINGS:
 _5:
 
-; bms.c	   181              bms->warningFlags0                = bmsCanMessage->data[0];
+; bms.c	   187              bms->warningFlags0                = bmsCanMessage->data[0];
 	addw	r8,#0x5
 _658:
 
-; bms.c	   182              break;
+; bms.c	   188              break;
 	jmp	_24
 
-; bms.c	   183  
-; bms.c	   184          case BMS_MASTER_SYSTEM_STATUS:
+; bms.c	   189  
+; bms.c	   190          case BMS_MASTER_SYSTEM_STATUS:
 _6:
 
-; bms.c	   185              //bms->reserved                   = bmsCanMessage->data[7];
-; bms.c	   186              bms->state                        = bmsCanMessage->data[6];
+; bms.c	   191              //bms->reserved                   = bmsCanMessage->data[7];
+; bms.c	   192              bms->state                        = bmsCanMessage->data[6];
 	movw	r13,r2
 	movw	r14,r9
 _1333:
@@ -692,7 +698,7 @@ _1336:
 	movb	rh4,[r13]
 _1337:
 
-; bms.c	   187              bms->numMonitorBoards             = bmsCanMessage->data[5];
+; bms.c	   193              bms->numMonitorBoards             = bmsCanMessage->data[5];
 	movw	r13,r2
 	movw	r14,r9
 _1338:
@@ -712,7 +718,7 @@ _1342:
 	movb	rh4,[r13]
 _1343:
 
-; bms.c	   188              bms->monitorBoardCommErrFlags     = bmsCanMessage->data[4];
+; bms.c	   194              bms->monitorBoardCommErrFlags     = bmsCanMessage->data[4];
 	movw	r13,r2
 	movw	r14,r9
 _1344:
@@ -732,7 +738,7 @@ _1348:
 	movb	rh4,[r13]
 _1349:
 
-; bms.c	   189              bms->statusFlags1                 = bmsCanMessage->data[3];
+; bms.c	   195              bms->statusFlags1                 = bmsCanMessage->data[3];
 	movw	r13,r2
 	movw	r14,r9
 _1350:
@@ -752,7 +758,7 @@ _1354:
 	movb	rh4,[r13]
 _1355:
 
-; bms.c	   190              bms->statusFlags2                 = bmsCanMessage->data[2];
+; bms.c	   196              bms->statusFlags2                 = bmsCanMessage->data[2];
 	movw	r13,r2
 	movw	r14,r9
 _1356:
@@ -775,7 +781,7 @@ _1361:
 	movb	[r11],rh4
 _1362:
 
-; bms.c	   191              bms->numFailedThermistors         = bmsCanMessage->data[1];
+; bms.c	   197              bms->numFailedThermistors         = bmsCanMessage->data[1];
 	addw	r8,#0xb
 _659:
 	addcw	r3,#0x0
@@ -785,15 +791,15 @@ _657:
 	addcw	r9,#0x0
 _1364:
 
-; bms.c	   192              //bms->reserved                   = bmsCanMessage->data[0];
-; bms.c	   193              break;
+; bms.c	   198              //bms->reserved                   = bmsCanMessage->data[0];
+; bms.c	   199              break;
 	jmp	_25
 
-; bms.c	   194  
-; bms.c	   195          case BMS_PACK_SAFE_OPERATING_ENVELOPE:
+; bms.c	   200  
+; bms.c	   201          case BMS_PACK_SAFE_OPERATING_ENVELOPE:
 _7:
 
-; bms.c	   196              bms->chargerConstVoltageSetPoint  = ( ((ubyte2)bmsCanMessage->data[5] << 8)
+; bms.c	   202              bms->chargerConstVoltageSetPoint  = ( ((ubyte2)bmsCanMessage->data[5] << 8)
 	movw	r13,r2
 	movw	r14,r9
 _1365:
@@ -808,7 +814,7 @@ _1368:
 	movbz	r13,rh4
 _1369:
 
-; bms.c	   197                                                  | ((ubyte2)bmsCanMessage->data[4])
+; bms.c	   203                                                  | ((ubyte2)bmsCanMessage->data[4])
 	movw	r14,r2
 	movw	r4,r9
 _1370:
@@ -832,8 +838,8 @@ _1376:
 	movw	[r11],r13
 _1377:
 
-; bms.c	   198                                                  );
-; bms.c	   199              bms->maxDischargeCurrentAllowed   = ( ((ubyte2)bmsCanMessage->data[3] << 8)
+; bms.c	   204                                                  );
+; bms.c	   205              bms->maxDischargeCurrentAllowed   = ( ((ubyte2)bmsCanMessage->data[3] << 8)
 	movw	r13,r2
 	movw	r14,r9
 _1378:
@@ -848,7 +854,7 @@ _1381:
 	movbz	r13,rh4
 _1382:
 
-; bms.c	   200                                                  | ((ubyte2)bmsCanMessage->data[2])
+; bms.c	   206                                                  | ((ubyte2)bmsCanMessage->data[2])
 	movw	r14,r2
 	movw	r4,r9
 _1383:
@@ -872,8 +878,8 @@ _1389:
 	movw	[r11],r13
 _1390:
 
-; bms.c	   201                                                  );
-; bms.c	   202              bms->maxChargeCurrentAllowed      = ( ((ubyte2)bmsCanMessage->data[1] << 8)
+; bms.c	   207                                                  );
+; bms.c	   208              bms->maxChargeCurrentAllowed      = ( ((ubyte2)bmsCanMessage->data[1] << 8)
 	movw	r11,r2
 	movw	r12,r9
 _1391:
@@ -892,7 +898,7 @@ _1395:
 	shl	r11,#0x8
 _1396:
 
-; bms.c	   203                                                  | ((ubyte2)bmsCanMessage->data[0])
+; bms.c	   209                                                  | ((ubyte2)bmsCanMessage->data[0])
 	exts	r9,#0x1
 	movb	rh4,[r2]
 _1397:
@@ -904,15 +910,15 @@ _1399:
 	movw	[r8],r11
 _1400:
 
-; bms.c	   204                                                  );
-; bms.c	   205              break;
+; bms.c	   210                                                  );
+; bms.c	   211              break;
 	jmp	_26
 
-; bms.c	   206  
-; bms.c	   207          case BMS_MASTER_LOCAL_BOARD_MEASUREMENTS:
+; bms.c	   212  
+; bms.c	   213          case BMS_MASTER_LOCAL_BOARD_MEASUREMENTS:
 _8:
 
-; bms.c	   208              bms->boardTemperature             = ( ((ubyte2)bmsCanMessage->data[7] << 8)
+; bms.c	   214              bms->boardTemperature             = ( ((ubyte2)bmsCanMessage->data[7] << 8)
 	movw	r13,r2
 	movw	r14,r9
 _1401:
@@ -927,7 +933,7 @@ _1404:
 	movbz	r13,rh4
 _1405:
 
-; bms.c	   209                                                  | ((ubyte2)bmsCanMessage->data[6])
+; bms.c	   215                                                  | ((ubyte2)bmsCanMessage->data[6])
 	movw	r14,r2
 	movw	r4,r9
 _1406:
@@ -951,8 +957,8 @@ _1412:
 	movw	[r11],r13
 _1413:
 
-; bms.c	   210                                                  );
-; bms.c	   211              bms->powerInputSense_12V_24V      = ( ((ubyte2)bmsCanMessage->data[5] << 8)
+; bms.c	   216                                                  );
+; bms.c	   217              bms->powerInputSense_12V_24V      = ( ((ubyte2)bmsCanMessage->data[5] << 8)
 	movw	r13,r2
 	movw	r14,r9
 _1414:
@@ -967,7 +973,7 @@ _1417:
 	movbz	r13,rh4
 _1418:
 
-; bms.c	   212                                                  | ((ubyte2)bmsCanMessage->data[4])
+; bms.c	   218                                                  | ((ubyte2)bmsCanMessage->data[4])
 	movw	r14,r2
 	movw	r4,r9
 _1419:
@@ -991,8 +997,8 @@ _1425:
 	movw	[r11],r13
 _1426:
 
-; bms.c	   213                                                  );
-; bms.c	   214              bms->powerInputSense_HVIL         = ( ((ubyte2)bmsCanMessage->data[3] << 8)
+; bms.c	   219                                                  );
+; bms.c	   220              bms->powerInputSense_HVIL         = ( ((ubyte2)bmsCanMessage->data[3] << 8)
 	movw	r13,r2
 	movw	r14,r9
 _1427:
@@ -1007,7 +1013,7 @@ _1430:
 	movbz	r13,rh4
 _1431:
 
-; bms.c	   215                                                  | ((ubyte2)bmsCanMessage->data[2])
+; bms.c	   221                                                  | ((ubyte2)bmsCanMessage->data[2])
 	movw	r14,r2
 	movw	r4,r9
 _1432:
@@ -1031,8 +1037,8 @@ _1438:
 	movw	[r11],r13
 _1439:
 
-; bms.c	   216                                                  );
-; bms.c	   217              bms->internalRailSense_5V         = ( ((ubyte2)bmsCanMessage->data[1] << 8)
+; bms.c	   222                                                  );
+; bms.c	   223              bms->internalRailSense_5V         = ( ((ubyte2)bmsCanMessage->data[1] << 8)
 	movw	r11,r2
 	movw	r12,r9
 _1440:
@@ -1051,7 +1057,7 @@ _1444:
 	shl	r11,#0x8
 _1445:
 
-; bms.c	   218                                                  | ((ubyte2)bmsCanMessage->data[0])
+; bms.c	   224                                                  | ((ubyte2)bmsCanMessage->data[0])
 	exts	r9,#0x1
 	movb	rh4,[r2]
 _1446:
@@ -1063,15 +1069,15 @@ _1448:
 	movw	[r8],r11
 _1449:
 
-; bms.c	   219                                                  );
-; bms.c	   220              break;
+; bms.c	   225                                                  );
+; bms.c	   226              break;
 	jmp	_27
 
-; bms.c	   221  
-; bms.c	   222          case BMS_DIGITAL_INPUTS_AND_OUTPUTS:
+; bms.c	   227  
+; bms.c	   228          case BMS_DIGITAL_INPUTS_AND_OUTPUTS:
 _9:
 
-; bms.c	   223              bms->digitalOutputStatus          = bmsCanMessage->data[1];
+; bms.c	   229              bms->digitalOutputStatus          = bmsCanMessage->data[1];
 	movw	r13,r2
 	movw	r14,r9
 _1450:
@@ -1091,18 +1097,18 @@ _1454:
 	movb	[r11],rh4
 _1455:
 
-; bms.c	   224              bms->digitalInputStatus           = bmsCanMessage->data[0];
+; bms.c	   230              bms->digitalInputStatus           = bmsCanMessage->data[0];
 	addw	r8,#0x1b
 _663:
 
-; bms.c	   225              break;
+; bms.c	   231              break;
 	jmp	_28
 
-; bms.c	   226  
-; bms.c	   227          case BMS_PACK_LEVEL_MEASUREMENTS_1:
+; bms.c	   232  
+; bms.c	   233          case BMS_PACK_LEVEL_MEASUREMENTS_1:
 _10:
 
-; bms.c	   228              bms->packVoltage                  = ( ((ubyte4)bmsCanMessage->data[7] << 24)
+; bms.c	   234              bms->packVoltage                  = ( ((ubyte4)bmsCanMessage->data[7] << 24)
 	movw	r11,r2
 	movw	r12,r9
 _1456:
@@ -1110,8 +1116,8 @@ _1456:
 	addcw	r12,#0x0
 _1457:
 
-; bms.c	   229                                                  | ((ubyte4)bmsCanMessage->data[6] << 16)
-; bms.c	   230                                                  | ((ubyte4)bmsCanMessage->data[5] << 8)
+; bms.c	   235                                                  | ((ubyte4)bmsCanMessage->data[6] << 16)
+; bms.c	   236                                                  | ((ubyte4)bmsCanMessage->data[5] << 8)
 	movw	r10,#0x0
 _1458:
 	exts	r12,#0x1
@@ -1149,7 +1155,7 @@ _1470:
 	CoLOAD	r11,r10
 _1471:
 
-; bms.c	   231                                                  | ((ubyte4)bmsCanMessage->data[4])
+; bms.c	   237                                                  | ((ubyte4)bmsCanMessage->data[4])
 	movw	r11,r2
 	movw	r12,r9
 _1472:
@@ -1179,8 +1185,8 @@ _1480:
 	addcw	r14,#0x0
 _1481:
 
-; bms.c	   232                                                  ) ;
-; bms.c	   233              bms->packCurrent                  = ( ((ubyte4)bmsCanMessage->data[3] << 24)
+; bms.c	   238                                                  ) ;
+; bms.c	   239              bms->packCurrent                  = ( ((ubyte4)bmsCanMessage->data[3] << 24)
 	movw	r11,r2
 	movw	r12,r9
 _1482:
@@ -1194,7 +1200,7 @@ _1484:
 	movb	rh4,[r11]
 _1485:
 
-; bms.c	   234                                                  | ((ubyte4)bmsCanMessage->data[2] << 16)
+; bms.c	   240                                                  | ((ubyte4)bmsCanMessage->data[2] << 16)
 	movw	r11,r2
 	movw	r12,r9
 _1486:
@@ -1213,7 +1219,7 @@ _1491:
 	orw	r13,r11
 _1492:
 
-; bms.c	   235                                                  | ((ubyte4)bmsCanMessage->data[1] << 8)
+; bms.c	   241                                                  | ((ubyte4)bmsCanMessage->data[1] << 8)
 	movw	r11,r2
 	movw	r12,r9
 _1493:
@@ -1233,7 +1239,7 @@ _1497:
 	CoSHL	#0x8
 _1498:
 
-; bms.c	   236                                                  | ((ubyte4)bmsCanMessage->data[0])
+; bms.c	   242                                                  | ((ubyte4)bmsCanMessage->data[0])
 	exts	r9,#0x1
 	movb	rh4,[r2]
 _1499:
@@ -1253,15 +1259,15 @@ _1503:
 	movw	[r8],r13
 _1504:
 
-; bms.c	   237                                                  );  
-; bms.c	   238              break;
+; bms.c	   243                                                  );  
+; bms.c	   244              break;
 	jmp	_29
 
-; bms.c	   239  
-; bms.c	   240          case BMS_PACK_LEVEL_MEASUREMENTS_2:
+; bms.c	   245  
+; bms.c	   246          case BMS_PACK_LEVEL_MEASUREMENTS_2:
 _11:
 
-; bms.c	   241              bms->packStateOfCharge            = ( ((ubyte2)bmsCanMessage->data[7] << 8)
+; bms.c	   247              bms->packStateOfCharge            = ( ((ubyte2)bmsCanMessage->data[7] << 8)
 	movw	r13,r2
 	movw	r14,r9
 _1505:
@@ -1276,7 +1282,7 @@ _1508:
 	movbz	r13,rh4
 _1509:
 
-; bms.c	   242                                                  | ((ubyte2)bmsCanMessage->data[6])
+; bms.c	   248                                                  | ((ubyte2)bmsCanMessage->data[6])
 	movw	r14,r2
 	movw	r4,r9
 _1510:
@@ -1300,8 +1306,8 @@ _1516:
 	movw	[r11],r13
 _1517:
 
-; bms.c	   243                                                  );
-; bms.c	   244              bms->packStateOfHealth            = ( ((ubyte2)bmsCanMessage->data[5] << 8)
+; bms.c	   249                                                  );
+; bms.c	   250              bms->packStateOfHealth            = ( ((ubyte2)bmsCanMessage->data[5] << 8)
 	movw	r13,r2
 	movw	r14,r9
 _1518:
@@ -1316,7 +1322,7 @@ _1521:
 	movbz	r13,rh4
 _1522:
 
-; bms.c	   245                                                  | ((ubyte2)bmsCanMessage->data[4])
+; bms.c	   251                                                  | ((ubyte2)bmsCanMessage->data[4])
 	movw	r14,r2
 	movw	r4,r9
 _1523:
@@ -1340,8 +1346,8 @@ _1529:
 	movw	[r11],r13
 _1530:
 
-; bms.c	   246                                                  );
-; bms.c	   247              bms->packAmpHoursRemaining        = ( ((ubyte2)bmsCanMessage->data[3] << 8)
+; bms.c	   252                                                  );
+; bms.c	   253              bms->packAmpHoursRemaining        = ( ((ubyte2)bmsCanMessage->data[3] << 8)
 	movw	r11,r2
 	movw	r12,r9
 _1531:
@@ -1349,7 +1355,7 @@ _1531:
 	addcw	r12,#0x0
 _1532:
 
-; bms.c	   248                                                  | ((ubyte2)bmsCanMessage->data[2])
+; bms.c	   254                                                  | ((ubyte2)bmsCanMessage->data[2])
 	addw	r2,#0x2
 _661:
 	addcw	r9,#0x0
@@ -1376,18 +1382,18 @@ _1540:
 	movw	[r8],r11
 _1541:
 
-; bms.c	   249                                                  );
-; bms.c	   250              //bms->reserved                   = ( ((ubyte2)bmsCanMessage->data[1] << 8)
-; bms.c	   251              //                                  | ((ubyte2)bmsCanMessage->data[0])
-; bms.c	   252              //                                  );
-; bms.c	   253              break;
+; bms.c	   255                                                  );
+; bms.c	   256              //bms->reserved                   = ( ((ubyte2)bmsCanMessage->data[1] << 8)
+; bms.c	   257              //                                  | ((ubyte2)bmsCanMessage->data[0])
+; bms.c	   258              //                                  );
+; bms.c	   259              break;
 	jmp	_30
 
-; bms.c	   254          
-; bms.c	   255          case BMS_CELL_VOLTAGE_SUMMARY:
+; bms.c	   260          
+; bms.c	   261          case BMS_CELL_VOLTAGE_SUMMARY:
 _12:
 
-; bms.c	   256              bms->highestCellVoltage           = ( ((ubyte2)bmsCanMessage->data[7] << 8)
+; bms.c	   262              bms->highestCellVoltage           = ( ((ubyte2)bmsCanMessage->data[7] << 8)
 	movw	r11,r2
 	movw	r12,r9
 _1542:
@@ -1395,7 +1401,7 @@ _1542:
 	addcw	r12,#0x0
 _1543:
 
-; bms.c	   257                                                  | ((ubyte2)bmsCanMessage->data[6])
+; bms.c	   263                                                  | ((ubyte2)bmsCanMessage->data[6])
 	movw	r13,r9
 _1544:
 	exts	r12,#0x1
@@ -1433,8 +1439,8 @@ _1555:
 	movw	[r14],r12
 _1556:
 
-; bms.c	   258                                                  );
-; bms.c	   259              bms->lowestCellVoltage            = ( ((ubyte2)bmsCanMessage->data[5] << 8)
+; bms.c	   264                                                  );
+; bms.c	   265              bms->lowestCellVoltage            = ( ((ubyte2)bmsCanMessage->data[5] << 8)
 	movw	r13,r2
 	movw	r14,r9
 _1557:
@@ -1449,7 +1455,7 @@ _1560:
 	movbz	r13,rh4
 _1561:
 
-; bms.c	   260                                                  | ((ubyte2)bmsCanMessage->data[4])
+; bms.c	   266                                                  | ((ubyte2)bmsCanMessage->data[4])
 	movw	r14,r2
 	movw	r4,r9
 _1562:
@@ -1473,8 +1479,8 @@ _1568:
 	movw	[r11],r13
 _1569:
 
-; bms.c	   261                                                  );
-; bms.c	   262              bms->highestCellVoltagePos        = ( ((ubyte2)bmsCanMessage->data[3] << 8)
+; bms.c	   267                                                  );
+; bms.c	   268              bms->highestCellVoltagePos        = ( ((ubyte2)bmsCanMessage->data[3] << 8)
 	movw	r13,r2
 	movw	r14,r9
 _1570:
@@ -1489,7 +1495,7 @@ _1573:
 	movbz	r13,rh4
 _1574:
 
-; bms.c	   263                                                  | ((ubyte2)bmsCanMessage->data[2])
+; bms.c	   269                                                  | ((ubyte2)bmsCanMessage->data[2])
 	movw	r14,r2
 	movw	r4,r9
 _1575:
@@ -1513,8 +1519,8 @@ _1581:
 	movw	[r11],r13
 _1582:
 
-; bms.c	   264                                                  );
-; bms.c	   265              bms->lowestCellVoltagePos         = ( ((ubyte2)bmsCanMessage->data[1] << 8)
+; bms.c	   270                                                  );
+; bms.c	   271              bms->lowestCellVoltagePos         = ( ((ubyte2)bmsCanMessage->data[1] << 8)
 	movw	r11,r2
 	movw	r12,r9
 _1583:
@@ -1533,7 +1539,7 @@ _1587:
 	shl	r11,#0x8
 _1588:
 
-; bms.c	   266                                                  | ((ubyte2)bmsCanMessage->data[0])
+; bms.c	   272                                                  | ((ubyte2)bmsCanMessage->data[0])
 	exts	r9,#0x1
 	movb	rh4,[r2]
 _1589:
@@ -1545,15 +1551,15 @@ _1591:
 	movw	[r8],r11
 _1592:
 
-; bms.c	   267                                                  );
-; bms.c	   268              break;
+; bms.c	   273                                                  );
+; bms.c	   274              break;
 	jmp	_31
 
-; bms.c	   269  
-; bms.c	   270          case BMS_CELL_TEMPERATURE_SUMMARY:
+; bms.c	   275  
+; bms.c	   276          case BMS_CELL_TEMPERATURE_SUMMARY:
 _13:
 
-; bms.c	   271              bms->highestCellTemperature       = ( ((ubyte2)bmsCanMessage->data[7] << 8)
+; bms.c	   277              bms->highestCellTemperature       = ( ((ubyte2)bmsCanMessage->data[7] << 8)
 	movw	r13,r2
 	movw	r14,r9
 _1593:
@@ -1568,7 +1574,7 @@ _1596:
 	movbz	r13,rh4
 _1597:
 
-; bms.c	   272                                                  | ((ubyte2)bmsCanMessage->data[6])
+; bms.c	   278                                                  | ((ubyte2)bmsCanMessage->data[6])
 	movw	r14,r2
 	movw	r4,r9
 _1598:
@@ -1592,8 +1598,8 @@ _1604:
 	movw	[r11],r13
 _1605:
 
-; bms.c	   273                                                  );
-; bms.c	   274              bms->lowestCellTemperature        = ( ((ubyte2)bmsCanMessage->data[5] << 8)
+; bms.c	   279                                                  );
+; bms.c	   280              bms->lowestCellTemperature        = ( ((ubyte2)bmsCanMessage->data[5] << 8)
 	movw	r13,r2
 	movw	r14,r9
 _1606:
@@ -1608,7 +1614,7 @@ _1609:
 	movbz	r13,rh4
 _1610:
 
-; bms.c	   275                                                  | ((ubyte2)bmsCanMessage->data[4])
+; bms.c	   281                                                  | ((ubyte2)bmsCanMessage->data[4])
 	movw	r14,r2
 	movw	r4,r9
 _1611:
@@ -1632,8 +1638,8 @@ _1617:
 	movw	[r11],r13
 _1618:
 
-; bms.c	   276                                                  );
-; bms.c	   277              bms->highestCellTemperaturePos    = ( ((ubyte2)bmsCanMessage->data[3] << 8)
+; bms.c	   282                                                  );
+; bms.c	   283              bms->highestCellTemperaturePos    = ( ((ubyte2)bmsCanMessage->data[3] << 8)
 	movw	r13,r2
 	movw	r14,r9
 _1619:
@@ -1648,7 +1654,7 @@ _1622:
 	movbz	r13,rh4
 _1623:
 
-; bms.c	   278                                                  | ((ubyte2)bmsCanMessage->data[2])
+; bms.c	   284                                                  | ((ubyte2)bmsCanMessage->data[2])
 	movw	r14,r2
 	movw	r4,r9
 _1624:
@@ -1672,8 +1678,8 @@ _1630:
 	movw	[r11],r13
 _1631:
 
-; bms.c	   279                                                  );
-; bms.c	   280              bms->lowestCellTemperaturePos     = ( ((ubyte2)bmsCanMessage->data[1] << 8)
+; bms.c	   285                                                  );
+; bms.c	   286              bms->lowestCellTemperaturePos     = ( ((ubyte2)bmsCanMessage->data[1] << 8)
 	movw	r11,r2
 	movw	r12,r9
 _1632:
@@ -1692,7 +1698,7 @@ _1636:
 	shl	r11,#0x8
 _1637:
 
-; bms.c	   281                                                  | ((ubyte2)bmsCanMessage->data[0])
+; bms.c	   287                                                  | ((ubyte2)bmsCanMessage->data[0])
 	exts	r9,#0x1
 	movb	rh4,[r2]
 _1638:
@@ -1704,15 +1710,15 @@ _1640:
 	movw	[r8],r11
 _1641:
 
-; bms.c	   282                                                  );
-; bms.c	   283              break;
+; bms.c	   288                                                  );
+; bms.c	   289              break;
 	jmp	_32
 
-; bms.c	   284          
-; bms.c	   285          case BMS_PACK_LEVEL_MEASUREMENTS_3:
+; bms.c	   290          
+; bms.c	   291          case BMS_PACK_LEVEL_MEASUREMENTS_3:
 _14:
 
-; bms.c	   286              bms->sumOfCellVoltages            = ( ((ubyte4)bmsCanMessage->data[7] << 24)
+; bms.c	   292              bms->sumOfCellVoltages            = ( ((ubyte4)bmsCanMessage->data[7] << 24)
 	movw	r11,r2
 	movw	r12,r9
 _1642:
@@ -1720,8 +1726,8 @@ _1642:
 	addcw	r12,#0x0
 _1643:
 
-; bms.c	   287                                                  | ((ubyte4)bmsCanMessage->data[6] << 16)
-; bms.c	   288                                                  | ((ubyte4)bmsCanMessage->data[5] << 8)
+; bms.c	   293                                                  | ((ubyte4)bmsCanMessage->data[6] << 16)
+; bms.c	   294                                                  | ((ubyte4)bmsCanMessage->data[5] << 8)
 	movw	r10,#0x0
 _1644:
 	exts	r12,#0x1
@@ -1759,7 +1765,7 @@ _1656:
 	CoLOAD	r11,r10
 _1657:
 
-; bms.c	   289                                                  | ((ubyte4)bmsCanMessage->data[4])
+; bms.c	   295                                                  | ((ubyte4)bmsCanMessage->data[4])
 	movw	r11,r2
 	movw	r12,r9
 _1658:
@@ -1789,8 +1795,8 @@ _1666:
 	addcw	r14,#0x0
 _1667:
 
-; bms.c	   290                                                  );
-; bms.c	   291              bms->preChargeVoltage             = ( ((ubyte4)bmsCanMessage->data[3] << 24)
+; bms.c	   296                                                  );
+; bms.c	   297              bms->preChargeVoltage             = ( ((ubyte4)bmsCanMessage->data[3] << 24)
 	movw	r11,r2
 	movw	r12,r9
 _1668:
@@ -1804,7 +1810,7 @@ _1670:
 	movb	rh4,[r11]
 _1671:
 
-; bms.c	   292                                                  | ((ubyte4)bmsCanMessage->data[2] << 16)
+; bms.c	   298                                                  | ((ubyte4)bmsCanMessage->data[2] << 16)
 	movw	r11,r2
 	movw	r12,r9
 _1672:
@@ -1823,7 +1829,7 @@ _1677:
 	orw	r13,r11
 _1678:
 
-; bms.c	   293                                                  | ((ubyte4)bmsCanMessage->data[1] << 8)
+; bms.c	   299                                                  | ((ubyte4)bmsCanMessage->data[1] << 8)
 	movw	r11,r2
 	movw	r12,r9
 _1679:
@@ -1843,7 +1849,7 @@ _1683:
 	CoSHL	#0x8
 _1684:
 
-; bms.c	   294                                                  | ((ubyte4)bmsCanMessage->data[0])
+; bms.c	   300                                                  | ((ubyte4)bmsCanMessage->data[0])
 	exts	r9,#0x1
 	movb	rh4,[r2]
 _1685:
@@ -1863,15 +1869,15 @@ _1689:
 	movw	[r8],r13
 _1690:
 
-; bms.c	   295                                                  );
-; bms.c	   296              break;
+; bms.c	   301                                                  );
+; bms.c	   302              break;
 	jmp	_33
 
-; bms.c	   297              
-; bms.c	   298          case BMS_CELL_VOLTAGE_DATA:
+; bms.c	   303              
+; bms.c	   304          case BMS_CELL_VOLTAGE_DATA:
 _15:
 
-; bms.c	   299              bms->cellVoltage_4X_1             = ( ((ubyte2)bmsCanMessage->data[7] << 8)
+; bms.c	   305              bms->cellVoltage_4X_1             = ( ((ubyte2)bmsCanMessage->data[7] << 8)
 	movw	r13,r2
 	movw	r14,r9
 _1691:
@@ -1886,7 +1892,7 @@ _1694:
 	movbz	r13,rh4
 _1695:
 
-; bms.c	   300                                                  | ((ubyte2)bmsCanMessage->data[6])
+; bms.c	   306                                                  | ((ubyte2)bmsCanMessage->data[6])
 	movw	r14,r2
 	movw	r4,r9
 _1696:
@@ -1910,8 +1916,8 @@ _1702:
 	movw	[r11],r13
 _1703:
 
-; bms.c	   301                                                  );
-; bms.c	   302              bms->cellVoltage_4X_2             = ( ((ubyte2)bmsCanMessage->data[5] << 8)
+; bms.c	   307                                                  );
+; bms.c	   308              bms->cellVoltage_4X_2             = ( ((ubyte2)bmsCanMessage->data[5] << 8)
 	movw	r13,r2
 	movw	r14,r9
 _1704:
@@ -1926,7 +1932,7 @@ _1707:
 	movbz	r13,rh4
 _1708:
 
-; bms.c	   303                                                  | ((ubyte2)bmsCanMessage->data[4])
+; bms.c	   309                                                  | ((ubyte2)bmsCanMessage->data[4])
 	movw	r14,r2
 	movw	r4,r9
 _1709:
@@ -1950,8 +1956,8 @@ _1715:
 	movw	[r11],r13
 _1716:
 
-; bms.c	   304                                                  );
-; bms.c	   305              bms->cellVoltage_4X_3             = ( ((ubyte2)bmsCanMessage->data[3] << 8)
+; bms.c	   310                                                  );
+; bms.c	   311              bms->cellVoltage_4X_3             = ( ((ubyte2)bmsCanMessage->data[3] << 8)
 	movw	r13,r2
 	movw	r14,r9
 _1717:
@@ -1966,7 +1972,7 @@ _1720:
 	movbz	r13,rh4
 _1721:
 
-; bms.c	   306                                                  | ((ubyte2)bmsCanMessage->data[2])
+; bms.c	   312                                                  | ((ubyte2)bmsCanMessage->data[2])
 	movw	r14,r2
 	movw	r4,r9
 _1722:
@@ -1990,8 +1996,8 @@ _1728:
 	movw	[r11],r13
 _1729:
 
-; bms.c	   307                                                  );
-; bms.c	   308              bms->cellVoltage_4X_4             = ( ((ubyte2)bmsCanMessage->data[1] << 8)
+; bms.c	   313                                                  );
+; bms.c	   314              bms->cellVoltage_4X_4             = ( ((ubyte2)bmsCanMessage->data[1] << 8)
 	movw	r11,r2
 	movw	r12,r9
 _1730:
@@ -2010,7 +2016,7 @@ _1734:
 	shl	r11,#0x8
 _1735:
 
-; bms.c	   309                                                  | ((ubyte2)bmsCanMessage->data[0])
+; bms.c	   315                                                  | ((ubyte2)bmsCanMessage->data[0])
 	exts	r9,#0x1
 	movb	rh4,[r2]
 _1736:
@@ -2022,15 +2028,15 @@ _1738:
 	movw	[r8],r11
 _1739:
 
-; bms.c	   310                                                  );
-; bms.c	   311              break;
+; bms.c	   316                                                  );
+; bms.c	   317              break;
 	jmp	_34
 
-; bms.c	   312              
-; bms.c	   313          case BMS_CELL_TEMPERATURE_DATA:
+; bms.c	   318              
+; bms.c	   319          case BMS_CELL_TEMPERATURE_DATA:
 _16:
 
-; bms.c	   314              bms->cellTemperature_4X_1         = ( ((ubyte2)bmsCanMessage->data[7] << 8)
+; bms.c	   320              bms->cellTemperature_4X_1         = ( ((ubyte2)bmsCanMessage->data[7] << 8)
 	movw	r13,r2
 	movw	r14,r9
 _1740:
@@ -2045,7 +2051,7 @@ _1743:
 	movbz	r13,rh4
 _1744:
 
-; bms.c	   315                                                  | ((ubyte2)bmsCanMessage->data[6])
+; bms.c	   321                                                  | ((ubyte2)bmsCanMessage->data[6])
 	movw	r14,r2
 	movw	r4,r9
 _1745:
@@ -2069,8 +2075,8 @@ _1751:
 	movw	[r11],r13
 _1752:
 
-; bms.c	   316                                                  );
-; bms.c	   317              bms->cellTemperature_4X_2         = ( ((ubyte2)bmsCanMessage->data[5] << 8)
+; bms.c	   322                                                  );
+; bms.c	   323              bms->cellTemperature_4X_2         = ( ((ubyte2)bmsCanMessage->data[5] << 8)
 	movw	r13,r2
 	movw	r14,r9
 _1753:
@@ -2085,7 +2091,7 @@ _1756:
 	movbz	r13,rh4
 _1757:
 
-; bms.c	   318                                                  | ((ubyte2)bmsCanMessage->data[4])
+; bms.c	   324                                                  | ((ubyte2)bmsCanMessage->data[4])
 	movw	r14,r2
 	movw	r4,r9
 _1758:
@@ -2109,8 +2115,8 @@ _1764:
 	movw	[r11],r13
 _1765:
 
-; bms.c	   319                                                  );
-; bms.c	   320              bms->cellTemperature_4X_3         = ( ((ubyte2)bmsCanMessage->data[3] << 8)
+; bms.c	   325                                                  );
+; bms.c	   326              bms->cellTemperature_4X_3         = ( ((ubyte2)bmsCanMessage->data[3] << 8)
 	movw	r13,r2
 	movw	r14,r9
 _1766:
@@ -2125,7 +2131,7 @@ _1769:
 	movbz	r13,rh4
 _1770:
 
-; bms.c	   321                                                  | ((ubyte2)bmsCanMessage->data[2])
+; bms.c	   327                                                  | ((ubyte2)bmsCanMessage->data[2])
 	movw	r14,r2
 	movw	r4,r9
 _1771:
@@ -2149,8 +2155,8 @@ _1777:
 	movw	[r11],r13
 _1778:
 
-; bms.c	   322                                                  );
-; bms.c	   323              bms->cellTemperature_4X_4         = ( ((ubyte2)bmsCanMessage->data[1] << 8)
+; bms.c	   328                                                  );
+; bms.c	   329              bms->cellTemperature_4X_4         = ( ((ubyte2)bmsCanMessage->data[1] << 8)
 	movw	r11,r2
 	movw	r12,r9
 _1779:
@@ -2169,7 +2175,7 @@ _1783:
 	shl	r11,#0x8
 _1784:
 
-; bms.c	   324                                                  | ((ubyte2)bmsCanMessage->data[0])
+; bms.c	   330                                                  | ((ubyte2)bmsCanMessage->data[0])
 	exts	r9,#0x1
 	movb	rh4,[r2]
 _1785:
@@ -2181,15 +2187,15 @@ _1787:
 	movw	[r8],r11
 _1788:
 
-; bms.c	   325                                                  );
-; bms.c	   326              break;
+; bms.c	   331                                                  );
+; bms.c	   332              break;
 	jmp	_35
 
-; bms.c	   327              
-; bms.c	   328          case BMS_CELL_SHUNTING_STATUS_1:
+; bms.c	   333              
+; bms.c	   334          case BMS_CELL_SHUNTING_STATUS_1:
 _17:
 
-; bms.c	   329              bms->cellShuntingStatusArray1_0   = ( ((ubyte4)bmsCanMessage->data[7] << 24)
+; bms.c	   335              bms->cellShuntingStatusArray1_0   = ( ((ubyte4)bmsCanMessage->data[7] << 24)
 	movw	r11,r2
 	movw	r12,r9
 _1789:
@@ -2197,8 +2203,8 @@ _1789:
 	addcw	r12,#0x0
 _1790:
 
-; bms.c	   330                                                  | ((ubyte4)bmsCanMessage->data[6] << 16)
-; bms.c	   331                                                  | ((ubyte4)bmsCanMessage->data[5] << 8)
+; bms.c	   336                                                  | ((ubyte4)bmsCanMessage->data[6] << 16)
+; bms.c	   337                                                  | ((ubyte4)bmsCanMessage->data[5] << 8)
 	movw	r10,#0x0
 _1791:
 	exts	r12,#0x1
@@ -2236,7 +2242,7 @@ _1803:
 	CoLOAD	r11,r10
 _1804:
 
-; bms.c	   332                                                  | ((ubyte4)bmsCanMessage->data[4])
+; bms.c	   338                                                  | ((ubyte4)bmsCanMessage->data[4])
 	movw	r11,r2
 	movw	r12,r9
 _1805:
@@ -2266,8 +2272,8 @@ _1813:
 	addcw	r14,#0x0
 _1814:
 
-; bms.c	   333                                                  );
-; bms.c	   334              bms->cellShuntingStatusArray1_1   = ( ((ubyte4)bmsCanMessage->data[3] << 24)
+; bms.c	   339                                                  );
+; bms.c	   340              bms->cellShuntingStatusArray1_1   = ( ((ubyte4)bmsCanMessage->data[3] << 24)
 	movw	r11,r2
 	movw	r12,r9
 _1815:
@@ -2281,7 +2287,7 @@ _1817:
 	movb	rh4,[r11]
 _1818:
 
-; bms.c	   335                                                  | ((ubyte4)bmsCanMessage->data[2] << 16)
+; bms.c	   341                                                  | ((ubyte4)bmsCanMessage->data[2] << 16)
 	movw	r11,r2
 	movw	r12,r9
 _1819:
@@ -2300,7 +2306,7 @@ _1824:
 	orw	r13,r11
 _1825:
 
-; bms.c	   336                                                  | ((ubyte4)bmsCanMessage->data[1] << 8)
+; bms.c	   342                                                  | ((ubyte4)bmsCanMessage->data[1] << 8)
 	movw	r11,r2
 	movw	r12,r9
 _1826:
@@ -2320,7 +2326,7 @@ _1830:
 	CoSHL	#0x8
 _1831:
 
-; bms.c	   337                                                  | ((ubyte4)bmsCanMessage->data[0])
+; bms.c	   343                                                  | ((ubyte4)bmsCanMessage->data[0])
 	exts	r9,#0x1
 	movb	rh4,[r2]
 _1832:
@@ -2340,15 +2346,15 @@ _1836:
 	movw	[r8],r13
 _1837:
 
-; bms.c	   338                                                  );
-; bms.c	   339              break;
+; bms.c	   344                                                  );
+; bms.c	   345              break;
 	jmp	_36
 
-; bms.c	   340              
-; bms.c	   341          case BMS_CELL_SHUNTING_STATUS_2:
+; bms.c	   346              
+; bms.c	   347          case BMS_CELL_SHUNTING_STATUS_2:
 _18:
 
-; bms.c	   342              bms->cellShuntingStatusArray2_0   = ( ((ubyte4)bmsCanMessage->data[7] << 24)
+; bms.c	   348              bms->cellShuntingStatusArray2_0   = ( ((ubyte4)bmsCanMessage->data[7] << 24)
 	movw	r11,r2
 	movw	r12,r9
 _1838:
@@ -2356,8 +2362,8 @@ _1838:
 	addcw	r12,#0x0
 _1839:
 
-; bms.c	   343                                                  | ((ubyte4)bmsCanMessage->data[6] << 16)
-; bms.c	   344                                                  | ((ubyte4)bmsCanMessage->data[5] << 8)
+; bms.c	   349                                                  | ((ubyte4)bmsCanMessage->data[6] << 16)
+; bms.c	   350                                                  | ((ubyte4)bmsCanMessage->data[5] << 8)
 	movw	r10,#0x0
 _1840:
 	exts	r12,#0x1
@@ -2395,7 +2401,7 @@ _1852:
 	CoLOAD	r11,r10
 _1853:
 
-; bms.c	   345                                                  | ((ubyte4)bmsCanMessage->data[4])
+; bms.c	   351                                                  | ((ubyte4)bmsCanMessage->data[4])
 	movw	r11,r2
 	movw	r12,r9
 _1854:
@@ -2425,8 +2431,8 @@ _1862:
 	addcw	r14,#0x0
 _1863:
 
-; bms.c	   346                                                  );
-; bms.c	   347              bms->cellShuntingStatusArray2_1   = ( ((ubyte4)bmsCanMessage->data[3] << 24)
+; bms.c	   352                                                  );
+; bms.c	   353              bms->cellShuntingStatusArray2_1   = ( ((ubyte4)bmsCanMessage->data[3] << 24)
 	movw	r11,r2
 	movw	r12,r9
 _1864:
@@ -2440,7 +2446,7 @@ _1866:
 	movb	rh4,[r11]
 _1867:
 
-; bms.c	   348                                                  | ((ubyte4)bmsCanMessage->data[2] << 16)
+; bms.c	   354                                                  | ((ubyte4)bmsCanMessage->data[2] << 16)
 	movw	r11,r2
 	movw	r12,r9
 _1868:
@@ -2459,7 +2465,7 @@ _1873:
 	orw	r13,r11
 _1874:
 
-; bms.c	   349                                                  | ((ubyte4)bmsCanMessage->data[1] << 8)
+; bms.c	   355                                                  | ((ubyte4)bmsCanMessage->data[1] << 8)
 	movw	r11,r2
 	movw	r12,r9
 _1875:
@@ -2479,7 +2485,7 @@ _1879:
 	CoSHL	#0x8
 _1880:
 
-; bms.c	   350                                                  | ((ubyte4)bmsCanMessage->data[0])
+; bms.c	   356                                                  | ((ubyte4)bmsCanMessage->data[0])
 	exts	r9,#0x1
 	movb	rh4,[r2]
 _1881:
@@ -2499,15 +2505,15 @@ _1885:
 	movw	[r8],r13
 _1886:
 
-; bms.c	   351                                                  );
-; bms.c	   352              break;
+; bms.c	   357                                                  );
+; bms.c	   358              break;
 	jmp	_37
 
-; bms.c	   353              
-; bms.c	   354          case BMS_CELL_SHUNTING_STATUS_3:
+; bms.c	   359              
+; bms.c	   360          case BMS_CELL_SHUNTING_STATUS_3:
 _19:
 
-; bms.c	   355              bms->cellShuntingStatusArray3_0   = ( ((ubyte4)bmsCanMessage->data[7] << 24)
+; bms.c	   361              bms->cellShuntingStatusArray3_0   = ( ((ubyte4)bmsCanMessage->data[7] << 24)
 	movw	r11,r2
 	movw	r12,r9
 _1887:
@@ -2515,8 +2521,8 @@ _1887:
 	addcw	r12,#0x0
 _1888:
 
-; bms.c	   356                                                  | ((ubyte4)bmsCanMessage->data[6] << 16)
-; bms.c	   357                                                  | ((ubyte4)bmsCanMessage->data[5] << 8)
+; bms.c	   362                                                  | ((ubyte4)bmsCanMessage->data[6] << 16)
+; bms.c	   363                                                  | ((ubyte4)bmsCanMessage->data[5] << 8)
 	movw	r10,#0x0
 _1889:
 	exts	r12,#0x1
@@ -2554,7 +2560,7 @@ _1901:
 	CoLOAD	r11,r10
 _1902:
 
-; bms.c	   358                                                  | ((ubyte4)bmsCanMessage->data[4])
+; bms.c	   364                                                  | ((ubyte4)bmsCanMessage->data[4])
 	movw	r11,r2
 	movw	r12,r9
 _1903:
@@ -2584,8 +2590,8 @@ _1911:
 	addcw	r14,#0x0
 _1912:
 
-; bms.c	   359                                                  );
-; bms.c	   360              bms->cellShuntingStatusArray3_1   = ( ((ubyte4)bmsCanMessage->data[3] << 24)
+; bms.c	   365                                                  );
+; bms.c	   366              bms->cellShuntingStatusArray3_1   = ( ((ubyte4)bmsCanMessage->data[3] << 24)
 	movw	r11,r2
 	movw	r12,r9
 _1913:
@@ -2599,7 +2605,7 @@ _1915:
 	movb	rh4,[r11]
 _1916:
 
-; bms.c	   361                                                  | ((ubyte4)bmsCanMessage->data[2] << 16)
+; bms.c	   367                                                  | ((ubyte4)bmsCanMessage->data[2] << 16)
 	movw	r11,r2
 	movw	r12,r9
 _1917:
@@ -2618,7 +2624,7 @@ _1922:
 	orw	r13,r11
 _1923:
 
-; bms.c	   362                                                  | ((ubyte4)bmsCanMessage->data[1] << 8)
+; bms.c	   368                                                  | ((ubyte4)bmsCanMessage->data[1] << 8)
 	movw	r11,r2
 	movw	r12,r9
 _1924:
@@ -2638,7 +2644,7 @@ _1928:
 	CoSHL	#0x8
 _1929:
 
-; bms.c	   363                                                  | ((ubyte4)bmsCanMessage->data[0])
+; bms.c	   369                                                  | ((ubyte4)bmsCanMessage->data[0])
 	exts	r9,#0x1
 	movb	rh4,[r2]
 _1930:
@@ -2658,15 +2664,15 @@ _1934:
 	movw	[r8],r13
 _1935:
 
-; bms.c	   364                                                  );
-; bms.c	   365              break;
+; bms.c	   370                                                  );
+; bms.c	   371              break;
 	jmp	_38
 
-; bms.c	   366              
-; bms.c	   367          case BMS_CELL_SHUNTING_STATUS_4:
+; bms.c	   372              
+; bms.c	   373          case BMS_CELL_SHUNTING_STATUS_4:
 _20:
 
-; bms.c	   368              bms->cellShuntingStatusArray4_0   = ( ((ubyte4)bmsCanMessage->data[7] << 24)
+; bms.c	   374              bms->cellShuntingStatusArray4_0   = ( ((ubyte4)bmsCanMessage->data[7] << 24)
 	movw	r11,r2
 	movw	r12,r9
 _1936:
@@ -2674,8 +2680,8 @@ _1936:
 	addcw	r12,#0x0
 _1937:
 
-; bms.c	   369                                                  | ((ubyte4)bmsCanMessage->data[6] << 16)
-; bms.c	   370                                                  | ((ubyte4)bmsCanMessage->data[5] << 8)
+; bms.c	   375                                                  | ((ubyte4)bmsCanMessage->data[6] << 16)
+; bms.c	   376                                                  | ((ubyte4)bmsCanMessage->data[5] << 8)
 	movw	r10,#0x0
 _1938:
 	exts	r12,#0x1
@@ -2713,7 +2719,7 @@ _1950:
 	CoLOAD	r11,r10
 _1951:
 
-; bms.c	   371                                                  | ((ubyte4)bmsCanMessage->data[4])
+; bms.c	   377                                                  | ((ubyte4)bmsCanMessage->data[4])
 	movw	r11,r2
 	movw	r12,r9
 _1952:
@@ -2743,8 +2749,8 @@ _1960:
 	addcw	r14,#0x0
 _1961:
 
-; bms.c	   372                                                  );
-; bms.c	   373              bms->cellShuntingStatusArray4_1   = ( ((ubyte4)bmsCanMessage->data[3] << 24)
+; bms.c	   378                                                  );
+; bms.c	   379              bms->cellShuntingStatusArray4_1   = ( ((ubyte4)bmsCanMessage->data[3] << 24)
 	movw	r11,r2
 	movw	r12,r9
 _1962:
@@ -2758,7 +2764,7 @@ _1964:
 	movb	rh4,[r11]
 _1965:
 
-; bms.c	   374                                                  | ((ubyte4)bmsCanMessage->data[2] << 16)
+; bms.c	   380                                                  | ((ubyte4)bmsCanMessage->data[2] << 16)
 	movw	r11,r2
 	movw	r12,r9
 _1966:
@@ -2777,7 +2783,7 @@ _1971:
 	orw	r13,r11
 _1972:
 
-; bms.c	   375                                                  | ((ubyte4)bmsCanMessage->data[1] << 8)
+; bms.c	   381                                                  | ((ubyte4)bmsCanMessage->data[1] << 8)
 	movw	r11,r2
 	movw	r12,r9
 _1973:
@@ -2797,7 +2803,7 @@ _1977:
 	CoSHL	#0x8
 _1978:
 
-; bms.c	   376                                                  | ((ubyte4)bmsCanMessage->data[0])
+; bms.c	   382                                                  | ((ubyte4)bmsCanMessage->data[0])
 	exts	r9,#0x1
 	movb	rh4,[r2]
 _1979:
@@ -2817,21 +2823,21 @@ _1983:
 	movw	[r8],r13
 _1984:
 
-; bms.c	   377                                                  );
-; bms.c	   378              break;
+; bms.c	   383                                                  );
+; bms.c	   384              break;
 	jmp	_39
 
-; bms.c	   379              
-; bms.c	   380          case BMS_CONFIGUATION_INFORMATION:
+; bms.c	   385              
+; bms.c	   386          case BMS_CONFIGUATION_INFORMATION:
 _21:
 
-; bms.c	   381              //bms->reserved                   = ( ((ubyte2)bmsCanMessage->data[7] << 8)
-; bms.c	   382              //                                  | ((ubyte2)bmsCanMessage->data[6])
-; bms.c	   383              //                                  );
-; bms.c	   384              //bms->reserved                   = ( ((ubyte2)bmsCanMessage->data[5] << 8)
-; bms.c	   385              //                                  | ((ubyte2)bmsCanMessage->data[4])
-; bms.c	   386              //                                  );
-; bms.c	   387              bms->numSeriesCells               = ( ((ubyte2)bmsCanMessage->data[3] << 8)
+; bms.c	   387              //bms->reserved                   = ( ((ubyte2)bmsCanMessage->data[7] << 8)
+; bms.c	   388              //                                  | ((ubyte2)bmsCanMessage->data[6])
+; bms.c	   389              //                                  );
+; bms.c	   390              //bms->reserved                   = ( ((ubyte2)bmsCanMessage->data[5] << 8)
+; bms.c	   391              //                                  | ((ubyte2)bmsCanMessage->data[4])
+; bms.c	   392              //                                  );
+; bms.c	   393              bms->numSeriesCells               = ( ((ubyte2)bmsCanMessage->data[3] << 8)
 	movw	r13,r2
 	movw	r14,r9
 _1985:
@@ -2846,7 +2852,7 @@ _1988:
 	movbz	r13,rh4
 _1989:
 
-; bms.c	   388                                                  | ((ubyte2)bmsCanMessage->data[2])
+; bms.c	   394                                                  | ((ubyte2)bmsCanMessage->data[2])
 	movw	r14,r2
 	movw	r4,r9
 _1990:
@@ -2870,8 +2876,8 @@ _1996:
 	movw	[r11],r13
 _1997:
 
-; bms.c	   389                                                  );
-; bms.c	   390              bms->numThermistors               = ( ((ubyte2)bmsCanMessage->data[1] << 8)
+; bms.c	   395                                                  );
+; bms.c	   396              bms->numThermistors               = ( ((ubyte2)bmsCanMessage->data[1] << 8)
 	movw	r11,r2
 	movw	r12,r9
 _1998:
@@ -2890,7 +2896,7 @@ _2002:
 	shl	r11,#0x8
 _2003:
 
-; bms.c	   391                                                  | ((ubyte2)bmsCanMessage->data[0])
+; bms.c	   397                                                  | ((ubyte2)bmsCanMessage->data[0])
 	exts	r9,#0x1
 	movb	rh4,[r2]
 _2004:
@@ -2902,16 +2908,16 @@ _2006:
 	movw	[r8],r11
 _2007:
 
-; bms.c	   392                                                  );
-; bms.c	   393              break;
+; bms.c	   398                                                  );
+; bms.c	   399              break;
 	jmp	_40
 
-; bms.c	   394              
-; bms.c	   395          case BMS_FIRMWARE_VERSION_INFORMATION:
+; bms.c	   400              
+; bms.c	   401          case BMS_FIRMWARE_VERSION_INFORMATION:
 _22:
 
-; bms.c	   396              //bms->reserved                   = bmsCanMessage->data[3]
-; bms.c	   397              bms->fwMajorVerNum                = bmsCanMessage->data[2];
+; bms.c	   402              //bms->reserved                   = bmsCanMessage->data[3]
+; bms.c	   403              bms->fwMajorVerNum                = bmsCanMessage->data[2];
 	movw	r13,r2
 	movw	r14,r9
 _2008:
@@ -2928,7 +2934,7 @@ _2011:
 	movb	rh4,[r13]
 _2012:
 
-; bms.c	   398              bms->fwMinorVerNum                = bmsCanMessage->data[1];
+; bms.c	   404              bms->fwMinorVerNum                = bmsCanMessage->data[1];
 	movw	r13,r2
 	movw	r14,r9
 _2013:
@@ -2951,12 +2957,12 @@ _2018:
 	movb	[r11],rh4
 _2019:
 
-; bms.c	   399              bms->fwRevNum                     = bmsCanMessage->data[0];
+; bms.c	   405              bms->fwRevNum                     = bmsCanMessage->data[0];
 	addw	r8,#0x7a
 
-; bms.c	   400              break;
-; bms.c	   401      }
-; bms.c	   402  }
+; bms.c	   406              break;
+; bms.c	   407      }
+; bms.c	   408  }
 _23:
 _24:
 _28:
@@ -3010,106 +3016,106 @@ _224:
 code_BMS_relayControl	.section	code, cluster 'BMS_relayControl', new
 	.global	_BMS_relayControl
 
-; bms.c	   403  
-; bms.c	   404  IO_ErrorType BMS_relayControl(BatteryManagementSystem *me)
+; bms.c	   409  
+; bms.c	   410  IO_ErrorType BMS_relayControl(BatteryManagementSystem *me)
 ; Function _BMS_relayControl
 _80:
 _BMS_relayControl	.proc	far
 
-; bms.c	   405  {
-; bms.c	   406      //////////////////////////////////////////////////////////////
-; bms.c	   407      // Digital output to drive a signal to the Shutdown signal  //
-; bms.c	   408      // based on AMS fault detection                             //
-; bms.c	   409      //////////////////////////////////////////////////////////////
-; bms.c	   410      IO_ErrorType err;
-; bms.c	   411      //There is a fault
-; bms.c	   412      if (BMS_getFaultFlags0(me) || BMS_getFaultFlags1(me))
-; bms.c	   413      {
-; bms.c	   414          me->relayState = TRUE;
-; bms.c	   415          err = IO_DO_Set(IO_DO_01, TRUE); //Drive BMS relay true (HIGH)
-; bms.c	   416      }
-; bms.c	   417      //There is no fault
-; bms.c	   418      else
+; bms.c	   411  {
+; bms.c	   412      //////////////////////////////////////////////////////////////
+; bms.c	   413      // Digital output to drive a signal to the Shutdown signal  //
+; bms.c	   414      // based on AMS fault detection                             //
+; bms.c	   415      //////////////////////////////////////////////////////////////
+; bms.c	   416      IO_ErrorType err;
+; bms.c	   417      //There is a fault
+; bms.c	   418      if (BMS_getFaultFlags0(me) || BMS_getFaultFlags1(me))
 ; bms.c	   419      {
-; bms.c	   420          me->relayState = FALSE;
-; bms.c	   421          err = IO_DO_Set(IO_DO_01, FALSE); //Drive BMS relay false (LOW)
+; bms.c	   420          me->relayState = TRUE;
+; bms.c	   421          err = IO_DO_Set(IO_DO_01, TRUE); //Drive BMS relay true (HIGH)
 ; bms.c	   422      }
-; bms.c	   423      return err;
-; bms.c	   424  }
-; bms.c	   425  
-; bms.c	   426  /*
-; bms.c	   427  sbyte1 BMS_getAvgTemp(BatteryManagementSystem *me)
-; bms.c	   428  {
-; bms.c	   429      char buffer[32];
-; bms.c	   430      sprintf(buffer, "AvgPackTemp: %i\n", me->avgTemp);
-; bms.c	   431      return (me->avgTemp);
-; bms.c	   432  }
-; bms.c	   433  */
-; bms.c	   434  
-; bms.c	   435  ubyte4 BMS_getHighestCellVoltage_mV(BatteryManagementSystem *me)
-; bms.c	   436  {
-; bms.c	   437      return (me->highestCellVoltage);
+; bms.c	   423      //There is no fault
+; bms.c	   424      else
+; bms.c	   425      {
+; bms.c	   426          me->relayState = FALSE;
+; bms.c	   427          err = IO_DO_Set(IO_DO_01, FALSE); //Drive BMS relay false (LOW)
+; bms.c	   428      }
+; bms.c	   429      return err;
+; bms.c	   430  }
+; bms.c	   431  
+; bms.c	   432  /*
+; bms.c	   433  sbyte1 BMS_getAvgTemp(BatteryManagementSystem *me)
+; bms.c	   434  {
+; bms.c	   435      char buffer[32];
+; bms.c	   436      sprintf(buffer, "AvgPackTemp: %i\n", me->avgTemp);
+; bms.c	   437      return (me->avgTemp);
 ; bms.c	   438  }
-; bms.c	   439  
-; bms.c	   440  ubyte2 BMS_getLowestCellVoltage_mV(BatteryManagementSystem *me)
-; bms.c	   441  {
-; bms.c	   442      return (me->lowestCellVoltage);
-; bms.c	   443  }
-; bms.c	   444  
-; bms.c	   445  ubyte4 BMS_getPackVoltage(BatteryManagementSystem *me)
-; bms.c	   446  {
-; bms.c	   447      return (me->packVoltage); 
-; bms.c	   448  }
-; bms.c	   449  
-; bms.c	   450  //Split into
-; bms.c	   451  sbyte2 BMS_getHighestCellTemp_d_degC(BatteryManagementSystem *me)
+; bms.c	   439  */
+; bms.c	   440  
+; bms.c	   441  ubyte4 BMS_getHighestCellVoltage_mV(BatteryManagementSystem *me)
+; bms.c	   442  {
+; bms.c	   443      return (me->highestCellVoltage);
+; bms.c	   444  }
+; bms.c	   445  
+; bms.c	   446  ubyte2 BMS_getLowestCellVoltage_mV(BatteryManagementSystem *me)
+; bms.c	   447  {
+; bms.c	   448      return (me->lowestCellVoltage);
+; bms.c	   449  }
+; bms.c	   450  
+; bms.c	   451  ubyte4 BMS_getPackVoltage(BatteryManagementSystem *me)
 ; bms.c	   452  {
-; bms.c	   453      char buffer[32];
-; bms.c	   454      sprintf(buffer, "highestCellTemp (degC*10): %i\n", (me->highestCellTemperature));
+; bms.c	   453      return (me->packVoltage); 
+; bms.c	   454  }
 ; bms.c	   455  
-; bms.c	   456      //Need to divide by BMS_TEMPERATURE_SCALE at usage to get deciCelsius value into Celsius
-; bms.c	   457      return (me->highestCellTemperature);
-; bms.c	   458  }
-; bms.c	   459  
-; bms.c	   460  sbyte2 BMS_getHighestCellTemp_degC(BatteryManagementSystem *me)
-; bms.c	   461  {
-; bms.c	   462      char buffer[32];
-; bms.c	   463      sprintf(buffer, "highestCellTemp (degC): %i\n", (me->highestCellTemperature/BMS_TEMPERATURE_SCALE));
-; bms.c	   464  
-; bms.c	   465      //Need to divide by BMS_TEMPERATURE_SCALE at usage to get deciCelsius value into Celsius
-; bms.c	   466      return (me->highestCellTemperature/BMS_TEMPERATURE_SCALE);
-; bms.c	   467  }
-; bms.c	   468  
-; bms.c	   469  // ***NOTE: packCurrent and and packVoltage are SIGNED variables and the return type for BMS_getPower is signed
-; bms.c	   470  sbyte4 BMS_getPower_uW(BatteryManagementSystem *me)
-; bms.c	   471  {
-; bms.c	   472      //char buffer[32];
-; bms.c	   473      //sprintf(buffer, "power (uW): %f\n", (me->packCurrent * me->packVoltage));
+; bms.c	   456  //Split into
+; bms.c	   457  sbyte2 BMS_getHighestCellTemp_d_degC(BatteryManagementSystem *me)
+; bms.c	   458  {
+; bms.c	   459      char buffer[32];
+; bms.c	   460      sprintf(buffer, "highestCellTemp (degC*10): %i\n", (me->highestCellTemperature));
+; bms.c	   461  
+; bms.c	   462      //Need to divide by BMS_TEMPERATURE_SCALE at usage to get deciCelsius value into Celsius
+; bms.c	   463      return (me->highestCellTemperature);
+; bms.c	   464  }
+; bms.c	   465  
+; bms.c	   466  sbyte2 BMS_getHighestCellTemp_degC(BatteryManagementSystem *me)
+; bms.c	   467  {
+; bms.c	   468      char buffer[32];
+; bms.c	   469      sprintf(buffer, "highestCellTemp (degC): %i\n", (me->highestCellTemperature/BMS_TEMPERATURE_SCALE));
+; bms.c	   470  
+; bms.c	   471      //Need to divide by BMS_TEMPERATURE_SCALE at usage to get deciCelsius value into Celsius
+; bms.c	   472      return (me->highestCellTemperature/BMS_TEMPERATURE_SCALE);
+; bms.c	   473  }
 ; bms.c	   474  
-; bms.c	   475      //Need to divide by BMS_POWER_SCALE at usage to get microWatt value into Watts
-; bms.c	   476      return (me->packCurrent * me->packVoltage);
-; bms.c	   477  }
-; bms.c	   478  
-; bms.c	   479  // ***NOTE: packCurrent and and packVoltage are SIGNED variables and the return type for BMS_getPower is signed
-; bms.c	   480  sbyte4 BMS_getPower_W(BatteryManagementSystem *me)
-; bms.c	   481  {
-; bms.c	   482      //char buffer[32];
-; bms.c	   483      //sprintf(buffer, "power (W): %f\n", ((me->packCurrent * me->packVoltage)/BMS_POWER_SCALE));
+; bms.c	   475  // ***NOTE: packCurrent and and packVoltage are SIGNED variables and the return type for BMS_getPower is signed
+; bms.c	   476  sbyte4 BMS_getPower_uW(BatteryManagementSystem *me)
+; bms.c	   477  {
+; bms.c	   478      //char buffer[32];
+; bms.c	   479      //sprintf(buffer, "power (uW): %f\n", (me->packCurrent * me->packVoltage));
+; bms.c	   480  
+; bms.c	   481      //Need to divide by BMS_POWER_SCALE at usage to get microWatt value into Watts
+; bms.c	   482      return (me->packCurrent * me->packVoltage);
+; bms.c	   483  }
 ; bms.c	   484  
-; bms.c	   485      //Need to divide by BMS_POWER_SCALE at usage to get microWatt value into Watts
-; bms.c	   486      return ((me->packCurrent * me->packVoltage)/BMS_POWER_SCALE);
-; bms.c	   487  }
-; bms.c	   488  
-; bms.c	   489  ubyte1 BMS_getFaultFlags0(BatteryManagementSystem *me) {
-; bms.c	   490      //Flag 0x01: Isolation Leakage Fault
-; bms.c	   491      //Flag 0x02: BMS Monitor Communication Fault
-; bms.c	   492      //Flag 0x04: Pre-charge Fault
-; bms.c	   493      //Flag 0x08: Pack Discharge Operating Envelope Exceeded
-; bms.c	   494      //Flag 0x10: Pack Charge Operating Envelope Exceeded
-; bms.c	   495      //Flag 0x20: Failed Thermistor Fault
-; bms.c	   496      //Flag 0x40: HVIL Fault
-; bms.c	   497      //Flag 0x80: Emergency Stop Fault
-; bms.c	   498      return me->faultFlags0;
+; bms.c	   485  // ***NOTE: packCurrent and and packVoltage are SIGNED variables and the return type for BMS_getPower is signed
+; bms.c	   486  sbyte4 BMS_getPower_W(BatteryManagementSystem *me)
+; bms.c	   487  {
+; bms.c	   488      //char buffer[32];
+; bms.c	   489      //sprintf(buffer, "power (W): %f\n", ((me->packCurrent * me->packVoltage)/BMS_POWER_SCALE));
+; bms.c	   490  
+; bms.c	   491      //Need to divide by BMS_POWER_SCALE at usage to get microWatt value into Watts
+; bms.c	   492      return ((me->packCurrent * me->packVoltage)/BMS_POWER_SCALE);
+; bms.c	   493  }
+; bms.c	   494  
+; bms.c	   495  ubyte1 BMS_getFaultFlags0(BatteryManagementSystem *me) {
+; bms.c	   496      //Flag 0x01: Isolation Leakage Fault
+; bms.c	   497      //Flag 0x02: BMS Monitor Communication Fault
+; bms.c	   498      //Flag 0x04: Pre-charge Fault
+; bms.c	   499      //Flag 0x08: Pack Discharge Operating Envelope Exceeded
+; bms.c	   500      //Flag 0x10: Pack Charge Operating Envelope Exceeded
+; bms.c	   501      //Flag 0x20: Failed Thermistor Fault
+; bms.c	   502      //Flag 0x40: HVIL Fault
+; bms.c	   503      //Flag 0x80: Emergency Stop Fault
+; bms.c	   504      return me->faultFlags0;
 	movw	r14,r2
 _2025:
 	movw	r11,r3
@@ -3129,18 +3135,18 @@ _2028:
 	jmp-	cc_ne,_41
 _2029:
 
-; bms.c	   499  }
-; bms.c	   500  
-; bms.c	   501  ubyte1 BMS_getFaultFlags1(BatteryManagementSystem *me) {
-; bms.c	   502      //Flag 0x01: Cell Over-Voltage Fault
-; bms.c	   503      //Flag 0x02: Cell Under-Voltage Fault
-; bms.c	   504      //Flag 0x04: Cell Over-Temperature Fault
-; bms.c	   505      //Flag 0x08: Cell Under-Temperature Fault
-; bms.c	   506      //Flag 0x10: Pack Over-Voltage Fault
-; bms.c	   507      //Flag 0x20: Pack Under-Voltage Fault
-; bms.c	   508      //Flag 0x40: Over-Current Discharge Fault
-; bms.c	   509      //Flag 0x80: Over-Current Charge Fault
-; bms.c	   510      return me->faultFlags1;
+; bms.c	   505  }
+; bms.c	   506  
+; bms.c	   507  ubyte1 BMS_getFaultFlags1(BatteryManagementSystem *me) {
+; bms.c	   508      //Flag 0x01: Cell Over-Voltage Fault
+; bms.c	   509      //Flag 0x02: Cell Under-Voltage Fault
+; bms.c	   510      //Flag 0x04: Cell Over-Temperature Fault
+; bms.c	   511      //Flag 0x08: Cell Under-Temperature Fault
+; bms.c	   512      //Flag 0x10: Pack Over-Voltage Fault
+; bms.c	   513      //Flag 0x20: Pack Under-Voltage Fault
+; bms.c	   514      //Flag 0x40: Over-Current Discharge Fault
+; bms.c	   515      //Flag 0x80: Over-Current Charge Fault
+; bms.c	   516      return me->faultFlags1;
 	addw	r2,#0x3
 	addcw	r11,#0x0
 	exts	r11,#0x1
@@ -3484,7 +3490,7 @@ _1281:
 	movb	rl2,[r2]
 _2100:
 
-; bms.c	   511  }
+; bms.c	   517  }
 	ret
 _274:
 	; End of function
@@ -3493,14 +3499,14 @@ _274:
 code_BMS_getRelayState	.section	code, cluster 'BMS_getRelayState', new
 	.global	_BMS_getRelayState
 
-; bms.c	   512  
-; bms.c	   513  bool BMS_getRelayState(BatteryManagementSystem *me) {
+; bms.c	   518  
+; bms.c	   519  bool BMS_getRelayState(BatteryManagementSystem *me) {
 ; Function _BMS_getRelayState
 _200:
 _BMS_getRelayState	.proc	far
 
-; bms.c	   514      //Return state of shutdown board relay
-; bms.c	   515      return me->relayState;
+; bms.c	   520      //Return state of shutdown board relay
+; bms.c	   521      return me->relayState;
 	addw	r2,#0x7b
 _1282:
 	addcw	r3,#0x0
@@ -3508,7 +3514,7 @@ _1282:
 	movb	rl2,[r2]
 _2037:
 
-; bms.c	   516  }
+; bms.c	   522  }
 	ret
 _234:
 	; End of function
@@ -3633,7 +3639,7 @@ _294:
 _291:
 	.db	2
 	.db	'long int',0,4,5,3
-	.db	'_BatteryManagementSystem',0,1,16,8,124,4
+	.db	'_BatteryManagementSystem',0,1,22,8,124,4
 	.db	'canMessageBaseId',0
 	.dl	191
 	.db	2,2,35,0,4
@@ -3810,22 +3816,22 @@ _280:
 	.dl	247
 _303:
 	.db	6
-	.db	'BMS_getFaultFlags0',0,1,1,233,3,8,6
+	.db	'BMS_getFaultFlags0',0,1,1,239,3,8,6
 	.dl	174
 	.db	1,1
 _304:
 	.db	7
-	.db	'me',0,1,233,3,52,2
+	.db	'me',0,1,239,3,52,2
 	.dl	1910
 	.db	8,0
 _306:
 	.db	6
-	.db	'BMS_getFaultFlags1',0,1,1,245,3,8,6
+	.db	'BMS_getFaultFlags1',0,1,1,251,3,8,6
 	.dl	174
 	.db	1,1
 _307:
 	.db	7
-	.db	'me',0,1,245,3,52,2
+	.db	'me',0,1,251,3,52,2
 	.dl	1910
 	.db	8,0,2
 	.db	'char',0,1,6,5,5
@@ -3930,7 +3936,7 @@ _299:
 	.db	'IO_CAN_DATA_FRAME',0,3,215,2,3
 	.dl	2102
 	.db	17
-	.db	'BatteryManagementSystem',0,8,65,41
+	.db	'BatteryManagementSystem',0,8,72,41
 	.dl	247
 	.db	18
 	.dl	174
@@ -3999,17 +4005,17 @@ _215:
 	.db	2
 	.dl	_211
 	.db	3
-	.db	'BMS_new',0,1,138,1,26,6
+	.db	'BMS_new',0,1,144,1,26,6
 	.dl	_280
 	.db	1,1,1
 	.dl	_56,_219,_55
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'canMessageBaseID',0,1,138,1,41,2
+	.db	'canMessageBaseID',0,1,144,1,41,2
 	.dl	_281,_282
 	.db	5
 	.dl	_56,_219
 	.db	6
-	.db	'me',0,1,141,1,30,2
+	.db	'me',0,1,147,1,30,2
 	.dl	_280,_283
 	.db	0,0,0
 	; End of section
@@ -4033,7 +4039,7 @@ _1289:
 _1290:
 	.db	5,26,7,0,5,2
 	.dl	_56
-	.db	3,137,1,1,5,69,9
+	.db	3,143,1,1,5,69,9
 	.dw	_353-_56
 	.db	3,3,1,5,26,9
 	.dw	_1291-_353
@@ -4110,13 +4116,13 @@ _220:
 	.db	2
 	.dl	_211
 	.db	3
-	.db	'BMS_parseCanMessage',0,1,163,1,6,6,1,1,1
+	.db	'BMS_parseCanMessage',0,1,169,1,6,6,1,1,1
 	.dl	_68,_224,_67
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'bms',0,1,163,1,51,2
+	.db	'bms',0,1,169,1,51,2
 	.dl	_280,_284
 	.db	4
-	.db	'bmsCanMessage',0,1,163,1,75,2
+	.db	'bmsCanMessage',0,1,169,1,75,2
 	.dl	_285,_286
 	.db	5
 	.dl	_68,_224
@@ -4142,7 +4148,7 @@ _1314:
 _1315:
 	.db	5,6,7,0,5,2
 	.dl	_68
-	.db	3,162,1,1,5,26,9
+	.db	3,168,1,1,5,26,9
 	.dw	_655-_68
 	.db	3,9,1,5,6,9
 	.dw	_1316-_655
@@ -5637,17 +5643,17 @@ _225:
 	.db	2
 	.dl	_211
 	.db	3
-	.db	'BMS_relayControl',0,1,148,3,14,6
+	.db	'BMS_relayControl',0,1,154,3,14,6
 	.dl	_281
 	.db	1,1,1
 	.dl	_80,_229,_79
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,148,3,56,2
+	.db	'me',0,1,154,3,56,2
 	.dl	_280,_287
 	.db	5
 	.dl	_80,_229
 	.db	6
-	.db	'err',0,1,154,3,18,2
+	.db	'err',0,1,160,3,18,2
 	.dl	_281,_288
 	.db	0,0,0
 	; End of section
@@ -5671,7 +5677,7 @@ _2023:
 _2024:
 	.db	5,14,7,0,5,2
 	.dl	_80
-	.db	3,241,3,1,9
+	.db	3,247,3,1,9
 	.dw	_2025-_80
 	.db	3,162,127,1,5,11,9
 	.dw	_677-_2025
@@ -5732,12 +5738,12 @@ _230:
 	.db	2
 	.dl	_211
 	.db	3
-	.db	'BMS_getRelayState',0,1,129,4,6,6
+	.db	'BMS_getRelayState',0,1,135,4,6,6
 	.dl	_289
 	.db	1,1,1
 	.dl	_200,_234,_199
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,129,4,49,2
+	.db	'me',0,1,135,4,49,2
 	.dl	_280,_290
 	.db	5
 	.dl	_200,_234
@@ -5763,7 +5769,7 @@ _2035:
 _2036:
 	.db	5,14,7,0,5,2
 	.dl	_200
-	.db	3,130,4,1,5,1,9
+	.db	3,136,4,1,5,1,9
 	.dw	_2037-_200
 	.db	3,1,1,7,9
 	.dw	_234-_2037
@@ -5798,12 +5804,12 @@ _235:
 	.db	2
 	.dl	_211
 	.db	3
-	.db	'BMS_getPower_uW',0,1,214,3,8,6
+	.db	'BMS_getPower_uW',0,1,220,3,8,6
 	.dl	_291
 	.db	1,1,1
 	.dl	_152,_239,_151
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,214,3,49,2
+	.db	'me',0,1,220,3,49,2
 	.dl	_280,_292
 	.db	5
 	.dl	_152,_239
@@ -5829,7 +5835,7 @@ _2040:
 _2041:
 	.db	5,8,7,0,5,2
 	.dl	_152
-	.db	3,213,3,1,5,15,9
+	.db	3,219,3,1,5,15,9
 	.dw	_978-_152
 	.db	3,6,1,5,33,9
 	.dw	_2042-_978
@@ -5876,12 +5882,12 @@ _240:
 	.db	2
 	.dl	_211
 	.db	3
-	.db	'BMS_getPower_W',0,1,224,3,8,6
+	.db	'BMS_getPower_W',0,1,230,3,8,6
 	.dl	_291
 	.db	1,1,1
 	.dl	_164,_244,_163
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,224,3,48,2
+	.db	'me',0,1,230,3,48,2
 	.dl	_280,_293
 	.db	5
 	.dl	_164,_244
@@ -5907,7 +5913,7 @@ _2050:
 _2051:
 	.db	5,8,7,0,5,2
 	.dl	_164
-	.db	3,223,3,1,5,16,9
+	.db	3,229,3,1,5,16,9
 	.dw	_1108-_164
 	.db	3,6,1,5,34,9
 	.dw	_2052-_1108
@@ -5964,12 +5970,12 @@ _245:
 	.db	2
 	.dl	_211
 	.db	3
-	.db	'BMS_getHighestCellVoltage_mV',0,1,179,3,8,6
+	.db	'BMS_getHighestCellVoltage_mV',0,1,185,3,8,6
 	.dl	_294
 	.db	1,1,1
 	.dl	_92,_249,_91
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,179,3,62,2
+	.db	'me',0,1,185,3,62,2
 	.dl	_280,_295
 	.db	5
 	.dl	_92,_249
@@ -5995,7 +6001,7 @@ _2063:
 _2064:
 	.db	5,15,7,0,5,2
 	.dl	_92
-	.db	3,180,3,1,5,1,9
+	.db	3,186,3,1,5,1,9
 	.dw	_2065-_92
 	.db	3,1,1,7,9
 	.dw	_249-_2065
@@ -6030,12 +6036,12 @@ _250:
 	.db	2
 	.dl	_211
 	.db	3
-	.db	'BMS_getLowestCellVoltage_mV',0,1,184,3,8,6
+	.db	'BMS_getLowestCellVoltage_mV',0,1,190,3,8,6
 	.dl	_281
 	.db	1,1,1
 	.dl	_104,_254,_103
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,184,3,61,2
+	.db	'me',0,1,190,3,61,2
 	.dl	_280,_296
 	.db	5
 	.dl	_104,_254
@@ -6061,7 +6067,7 @@ _2068:
 _2069:
 	.db	5,15,7,0,5,2
 	.dl	_104
-	.db	3,185,3,1,5,1,9
+	.db	3,191,3,1,5,1,9
 	.dw	_2070-_104
 	.db	3,1,1,7,9
 	.dw	_254-_2070
@@ -6096,17 +6102,17 @@ _255:
 	.db	2
 	.dl	_211
 	.db	3
-	.db	'BMS_getHighestCellTemp_d_degC',0,1,195,3,8,6
+	.db	'BMS_getHighestCellTemp_d_degC',0,1,201,3,8,6
 	.dl	_297
 	.db	1,1,1
 	.dl	_128,_259,_127
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,195,3,63,2
+	.db	'me',0,1,201,3,63,2
 	.dl	_280,_298
 	.db	5
 	.dl	_128,_259
 	.db	6
-	.db	'buffer',0,1,197,3,10,2
+	.db	'buffer',0,1,203,3,10,2
 	.dl	_299,_300
 	.db	0,0,0
 	; End of section
@@ -6130,7 +6136,7 @@ _2073:
 _2074:
 	.db	5,8,7,0,5,2
 	.dl	_128
-	.db	3,194,3,1,5,59,9
+	.db	3,200,3,1,5,59,9
 	.dw	_704-_128
 	.db	3,3,1,5,13,9
 	.dw	_715-_704
@@ -6173,17 +6179,17 @@ _260:
 	.db	2
 	.dl	_211
 	.db	3
-	.db	'BMS_getHighestCellTemp_degC',0,1,204,3,8,6
+	.db	'BMS_getHighestCellTemp_degC',0,1,210,3,8,6
 	.dl	_297
 	.db	1,1,1
 	.dl	_140,_264,_139
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,204,3,61,2
+	.db	'me',0,1,210,3,61,2
 	.dl	_280,_301
 	.db	5
 	.dl	_140,_264
 	.db	6
-	.db	'buffer',0,1,206,3,10,2
+	.db	'buffer',0,1,212,3,10,2
 	.dl	_299,_302
 	.db	0,0,0
 	; End of section
@@ -6207,7 +6213,7 @@ _2079:
 _2080:
 	.db	5,8,7,0,5,2
 	.dl	_140
-	.db	3,203,3,1,5,56,9
+	.db	3,209,3,1,5,56,9
 	.dw	_841-_140
 	.db	3,3,1,5,81,9
 	.dw	_2081-_841
@@ -6300,7 +6306,7 @@ _2093:
 _2094:
 	.db	5,14,7,0,5,2
 	.dl	_176
-	.db	3,241,3,1,5,1,9
+	.db	3,247,3,1,5,1,9
 	.dw	_2095-_176
 	.db	3,1,1,7,9
 	.dw	_269-_2095
@@ -6355,7 +6361,7 @@ _2098:
 _2099:
 	.db	5,14,7,0,5,2
 	.dl	_188
-	.db	3,253,3,1,5,1,9
+	.db	3,131,4,1,5,1,9
 	.dw	_2100-_188
 	.db	3,1,1,7,9
 	.dw	_274-_2100
@@ -6382,12 +6388,12 @@ _275:
 	.db	2
 	.dl	_211
 	.db	3
-	.db	'BMS_getPackVoltage',0,1,189,3,8,6
+	.db	'BMS_getPackVoltage',0,1,195,3,8,6
 	.dl	_294
 	.db	1,1,1
 	.dl	_116,_279,_115
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,189,3,52,2
+	.db	'me',0,1,195,3,52,2
 	.dl	_280,_309
 	.db	5
 	.dl	_116,_279
@@ -6413,7 +6419,7 @@ _2103:
 _2104:
 	.db	5,15,7,0,5,2
 	.dl	_116
-	.db	3,190,3,1,5,1,9
+	.db	3,196,3,1,5,1,9
 	.dw	_2105-_116
 	.db	3,1,1,7,9
 	.dw	_279-_2105
@@ -9579,15 +9585,15 @@ _1272:
 	; End of section
 
 
-; bms.c	   517  
-; bms.c	   518  /*
-; bms.c	   519  ubyte2 BMS_getPackTemp(BatteryManagementSystem *me)
-; bms.c	   520  {
-; bms.c	   521      char buffer[32];
-; bms.c	   522      sprintf(buffer, "PackTemp: %i\n", me->packTemp);
-; bms.c	   523      return (me->packTemp);
-; bms.c	   524  }
-; bms.c	   525  */
+; bms.c	   523  
+; bms.c	   524  /*
+; bms.c	   525  ubyte2 BMS_getPackTemp(BatteryManagementSystem *me)
+; bms.c	   526  {
+; bms.c	   527      char buffer[32];
+; bms.c	   528      sprintf(buffer, "PackTemp: %i\n", me->packTemp);
+; bms.c	   529      return (me->packTemp);
+; bms.c	   530  }
+; bms.c	   531  */
 
 	; Module end
 	.end

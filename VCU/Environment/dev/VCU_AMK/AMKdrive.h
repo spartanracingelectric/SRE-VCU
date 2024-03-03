@@ -1,3 +1,10 @@
+/*****************************************************************************
+ * AMKDrive.h - Drive Inverter (DI)
+ * Initial Author: Shinika Balasundar
+ ******************************************************************************
+ * Calculated initial Torque to AMKs, Sends values to AMKs, and parses messages from AMKs
+ ****************************************************************************/
+
 #ifndef _AMKDRIVE_H
 #define _AMKDRIVE_H
 

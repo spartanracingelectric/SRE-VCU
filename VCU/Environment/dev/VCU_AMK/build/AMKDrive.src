@@ -1,5 +1,5 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc13040a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=2 -DRTS_TTC_FLASH_DATE_DAY=27 -DRTS_TTC_FLASH_DATE_HOUR=17 -DRTS_TTC_FLASH_DATE_MINUTE=18 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\AMKDrive.src
+	; Options: -f cc17692a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=3 -DRTS_TTC_FLASH_DATE_DAY=3 -DRTS_TTC_FLASH_DATE_HOUR=12 -DRTS_TTC_FLASH_DATE_MINUTE=6 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\AMKDrive.src
 	; Module start
 	.source	'AMKDrive.c'
 code_AmkDriver_new	.section	code, cluster 'AmkDriver_new', new
@@ -7,34 +7,35 @@ code_AmkDriver_new	.section	code, cluster 'AmkDriver_new', new
 
 ; AMKDrive.c	     1  /*****************************************************************************
 ; AMKDrive.c	     2   * AMKDrive.c - Drive Inverter (DI)
-; AMKDrive.c	     3   ******************************************************************************
-; AMKDrive.c	     4   * Stores data from / commands going to AMK drive inverters.
-; AMKDrive.c	     5   ****************************************************************************/
-; AMKDrive.c	     6  
-; AMKDrive.c	     7  #include <stdlib.h>
-; AMKDrive.c	     8  #include <math.h>
-; AMKDrive.c	     9  #include "IO_RTC.h"
-; AMKDrive.c	    10  #include "IO_DIO.h"
-; AMKDrive.c	    11  #include "IO_Driver.h"
-; AMKDrive.c	    12  #include "IO_CAN.h"
-; AMKDrive.c	    13  
-; AMKDrive.c	    14  #include "AMKDrive.h"
-; AMKDrive.c	    15  #include "wheelSpeeds.h"
-; AMKDrive.c	    16  #include "mathFunctions.h"
-; AMKDrive.c	    17  #include "initializations.h"
-; AMKDrive.c	    18  #include "sensors.h"
-; AMKDrive.c	    19  #include "torqueEncoder.h"
-; AMKDrive.c	    20  #include "brakePressureSensor.h"
-; AMKDrive.c	    21  #include "sensorCalculations.h"
-; AMKDrive.c	    22  #include "readyToDriveSound.h"
-; AMKDrive.c	    23  
-; AMKDrive.c	    24  extern Sensor Sensor_RTDButton;
-; AMKDrive.c	    25  extern Sensor Sensor_HVILTerminationSense;
-; AMKDrive.c	    26  
-; AMKDrive.c	    27  ubyte4 timestamp_Precharge = 0;
-; AMKDrive.c	    28  bool prevHVILState = FALSE;
-; AMKDrive.c	    29  
-; AMKDrive.c	    30  _DriveInverter* AmkDriver_new(DI_Location_Address location_address)
+; AMKDrive.c	     3   * Initial Author: Shinika Balasundar
+; AMKDrive.c	     4   ******************************************************************************
+; AMKDrive.c	     5   * Calculated initial Torque to AMKs, Sends values to AMKs, and parses messages from AMKs
+; AMKDrive.c	     6   ****************************************************************************/
+; AMKDrive.c	     7  
+; AMKDrive.c	     8  #include <stdlib.h>
+; AMKDrive.c	     9  #include <math.h>
+; AMKDrive.c	    10  #include "IO_RTC.h"
+; AMKDrive.c	    11  #include "IO_DIO.h"
+; AMKDrive.c	    12  #include "IO_Driver.h"
+; AMKDrive.c	    13  #include "IO_CAN.h"
+; AMKDrive.c	    14  
+; AMKDrive.c	    15  #include "AMKDrive.h"
+; AMKDrive.c	    16  #include "wheelSpeeds.h"
+; AMKDrive.c	    17  #include "mathFunctions.h"
+; AMKDrive.c	    18  #include "initializations.h"
+; AMKDrive.c	    19  #include "sensors.h"
+; AMKDrive.c	    20  #include "torqueEncoder.h"
+; AMKDrive.c	    21  #include "brakePressureSensor.h"
+; AMKDrive.c	    22  #include "sensorCalculations.h"
+; AMKDrive.c	    23  #include "readyToDriveSound.h"
+; AMKDrive.c	    24  
+; AMKDrive.c	    25  extern Sensor Sensor_RTDButton;
+; AMKDrive.c	    26  extern Sensor Sensor_HVILTerminationSense;
+; AMKDrive.c	    27  
+; AMKDrive.c	    28  ubyte4 timestamp_Precharge = 0;
+; AMKDrive.c	    29  bool prevHVILState = FALSE;
+; AMKDrive.c	    30  
+; AMKDrive.c	    31  _DriveInverter* AmkDriver_new(DI_Location_Address location_address)
 ; Function _AmkDriver_new
 _42:
 _AmkDriver_new	.proc	far
@@ -43,21 +44,21 @@ _189:
 	movb	rh6,rl2
 _232:
 
-; AMKDrive.c	    31  {
-; AMKDrive.c	    32      _DriveInverter* me = (_DriveInverter*)malloc(sizeof(_DriveInverter));
+; AMKDrive.c	    32  {
+; AMKDrive.c	    33      _DriveInverter* me = (_DriveInverter*)malloc(sizeof(_DriveInverter));
 	movw	r2,#0x34
 _231:
 	call	_malloc
 _1053:
 
-; AMKDrive.c	    33   
-; AMKDrive.c	    34          me->location_address = location_address;
+; AMKDrive.c	    34   
+; AMKDrive.c	    35          me->location_address = location_address;
 	exts	r3,#0x1
 	movb	[r2],rh6
 _1054:
 
-; AMKDrive.c	    35  
-; AMKDrive.c	    36          me->canIdOutgoing = DI_BASE_CAN_ID_OUTGOING + me->location_address;
+; AMKDrive.c	    36  
+; AMKDrive.c	    37          me->canIdOutgoing = DI_BASE_CAN_ID_OUTGOING + me->location_address;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x2
@@ -71,7 +72,7 @@ _233:
 	movw	[r11],r13
 _1056:
 
-; AMKDrive.c	    37          me->canIdIncoming = DI_BASE_CAN_ID_INCOMING + me->location_address;
+; AMKDrive.c	    38          me->canIdIncoming = DI_BASE_CAN_ID_INCOMING + me->location_address;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x4
@@ -87,11 +88,11 @@ _1058:
 	movw	[r11],r13
 _155:
 
-; AMKDrive.c	    38  
-; AMKDrive.c	    39          int startUpStage = 0;
-; AMKDrive.c	    40  
-; AMKDrive.c	    41          // Setpoints (commands, outgoing: 0x183 + offset)
-; AMKDrive.c	    42          me->AMK_bInverterOn = FALSE;
+; AMKDrive.c	    39  
+; AMKDrive.c	    40          int startUpStage = 0;
+; AMKDrive.c	    41  
+; AMKDrive.c	    42          // Setpoints (commands, outgoing: 0x183 + offset)
+; AMKDrive.c	    43          me->AMK_bInverterOn = FALSE;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x8
@@ -103,7 +104,7 @@ _1060:
 	movb	[r11],rh4
 _1061:
 
-; AMKDrive.c	    43          me->AMK_bDcOn = FALSE;
+; AMKDrive.c	    44          me->AMK_bDcOn = FALSE;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x9
@@ -113,7 +114,7 @@ _1062:
 	movb	[r11],rh4
 _1063:
 
-; AMKDrive.c	    44          me->AMK_bEnable = FALSE;
+; AMKDrive.c	    45          me->AMK_bEnable = FALSE;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0xa
@@ -123,7 +124,7 @@ _1064:
 	movb	[r11],rh4
 _1065:
 
-; AMKDrive.c	    45          me->AMK_bErrorReset = FALSE;
+; AMKDrive.c	    46          me->AMK_bErrorReset = FALSE;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0xb
@@ -133,7 +134,7 @@ _1066:
 	movb	[r11],rh4
 _1067:
 
-; AMKDrive.c	    46          me->AMK_TorqueSetpoint = 0;
+; AMKDrive.c	    47          me->AMK_TorqueSetpoint = 0;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0xc
@@ -145,7 +146,7 @@ _1069:
 	movw	[r11],r13
 _1070:
 
-; AMKDrive.c	    47          me->AMK_TorqueLimitPositiv = 0;
+; AMKDrive.c	    48          me->AMK_TorqueLimitPositiv = 0;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0xe
@@ -155,7 +156,7 @@ _1071:
 	movw	[r11],r13
 _1072:
 
-; AMKDrive.c	    48          me->AMK_TorqueLimitNegativ = 0;
+; AMKDrive.c	    49          me->AMK_TorqueLimitNegativ = 0;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x10
@@ -165,9 +166,9 @@ _1073:
 	movw	[r11],r13
 _1074:
 
-; AMKDrive.c	    49  
-; AMKDrive.c	    50          // Actual Values 1 (incoming: 0x282 + offset)
-; AMKDrive.c	    51          me->AMK_bSystemReady = FALSE;
+; AMKDrive.c	    50  
+; AMKDrive.c	    51          // Actual Values 1 (incoming: 0x282 + offset)
+; AMKDrive.c	    52          me->AMK_bSystemReady = FALSE;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x12
@@ -177,7 +178,7 @@ _1075:
 	movb	[r11],rh4
 _1076:
 
-; AMKDrive.c	    52          me->AMK_bError = FALSE;
+; AMKDrive.c	    53          me->AMK_bError = FALSE;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x13
@@ -187,7 +188,7 @@ _1077:
 	movb	[r11],rh4
 _1078:
 
-; AMKDrive.c	    53          me->AMK_bWarn = FALSE;
+; AMKDrive.c	    54          me->AMK_bWarn = FALSE;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x14
@@ -197,7 +198,7 @@ _1079:
 	movb	[r11],rh4
 _1080:
 
-; AMKDrive.c	    54          me->AMK_bQuitDcOn = FALSE;
+; AMKDrive.c	    55          me->AMK_bQuitDcOn = FALSE;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x15
@@ -207,7 +208,7 @@ _1081:
 	movb	[r11],rh4
 _1082:
 
-; AMKDrive.c	    55          me->AMK_bDcOnVal = FALSE;
+; AMKDrive.c	    56          me->AMK_bDcOnVal = FALSE;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x16
@@ -217,7 +218,7 @@ _1083:
 	movb	[r11],rh4
 _1084:
 
-; AMKDrive.c	    56          me->AMK_bQuitInverterOnVal = FALSE;
+; AMKDrive.c	    57          me->AMK_bQuitInverterOnVal = FALSE;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x17
@@ -227,7 +228,7 @@ _1085:
 	movb	[r11],rh4
 _1086:
 
-; AMKDrive.c	    57          me->AMK_bInverterOnVal = FALSE;
+; AMKDrive.c	    58          me->AMK_bInverterOnVal = FALSE;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x18
@@ -237,7 +238,7 @@ _1087:
 	movb	[r11],rh4
 _1088:
 
-; AMKDrive.c	    58          me->AMK_bDerating = FALSE;
+; AMKDrive.c	    59          me->AMK_bDerating = FALSE;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x19
@@ -247,7 +248,7 @@ _1089:
 	movb	[r11],rh4
 _1090:
 
-; AMKDrive.c	    59          me->AMK_ActualVelocity = 0.0;
+; AMKDrive.c	    60          me->AMK_ActualVelocity = 0.0;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x1a
@@ -261,7 +262,7 @@ _1091:
 	movw	[r11],r13
 _1092:
 
-; AMKDrive.c	    60          me->AMK_TorqueCurrent = 0.0;
+; AMKDrive.c	    61          me->AMK_TorqueCurrent = 0.0;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x1e
@@ -275,7 +276,7 @@ _1093:
 	movw	[r11],r13
 _1094:
 
-; AMKDrive.c	    61          me->AMK_MagnetizingCurrent = 0.0;
+; AMKDrive.c	    62          me->AMK_MagnetizingCurrent = 0.0;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x22
@@ -289,9 +290,9 @@ _1095:
 	movw	[r11],r13
 _1096:
 
-; AMKDrive.c	    62  
-; AMKDrive.c	    63          // Actual Values 2 (incoming: 0x284 + offset)
-; AMKDrive.c	    64          me->AMK_TempMotor = 0.0; // 0.1degC
+; AMKDrive.c	    63  
+; AMKDrive.c	    64          // Actual Values 2 (incoming: 0x284 + offset)
+; AMKDrive.c	    65          me->AMK_TempMotor = 0.0; // 0.1degC
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x26
@@ -305,7 +306,7 @@ _1097:
 	movw	[r11],r13
 _1098:
 
-; AMKDrive.c	    65          me->AMK_TempInverter = 0.0;
+; AMKDrive.c	    66          me->AMK_TempInverter = 0.0;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x2a
@@ -319,7 +320,7 @@ _1099:
 	movw	[r11],r13
 _1100:
 
-; AMKDrive.c	    66          me->AMK_ErrorInfo = 0.0;
+; AMKDrive.c	    67          me->AMK_ErrorInfo = 0.0;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x2e
@@ -329,7 +330,7 @@ _1101:
 	movw	[r11],r13
 _1102:
 
-; AMKDrive.c	    67          me->AMK_TorqueFeedback = 0.0; // % 0.1 Nm
+; AMKDrive.c	    68          me->AMK_TorqueFeedback = 0.0; // % 0.1 Nm
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x30
@@ -343,9 +344,9 @@ _1103:
 	movw	[r11],r13
 _1104:
 
-; AMKDrive.c	    68  
-; AMKDrive.c	    69      return me;
-; AMKDrive.c	    70  }
+; AMKDrive.c	    69  
+; AMKDrive.c	    70      return me;
+; AMKDrive.c	    71  }
 	movw	r6,[r15+]
 _200:
 	ret
@@ -356,18 +357,18 @@ _121:
 code_DI_calculateCommands	.section	code, cluster 'DI_calculateCommands', new
 	.global	_DI_calculateCommands
 
-; AMKDrive.c	    71  
-; AMKDrive.c	    72  enum InverterStatus {
-; AMKDrive.c	    73      RELAY_OFF = 0,
-; AMKDrive.c	    74      RELAY_ON_SENDING_CAN = 1,
-; AMKDrive.c	    75      PRECHARGE_DC_ENABLE = 2,
-; AMKDrive.c	    76      DRIVER_ENABLE = 3,
-; AMKDrive.c	    77      READY_TO_DRIVE_INVERTER_ON = 4,
-; AMKDrive.c	    78      TORQUE_LIMIT_SET = 5,
-; AMKDrive.c	    79      TORQUE_SETPOINTS_ACTIVE = 6
-; AMKDrive.c	    80  };
-; AMKDrive.c	    81  
-; AMKDrive.c	    82  void DI_calculateCommands(_DriveInverter* me, TorqueEncoder *tps, BrakePressureSensor *bps){
+; AMKDrive.c	    72  
+; AMKDrive.c	    73  enum InverterStatus {
+; AMKDrive.c	    74      RELAY_OFF = 0,
+; AMKDrive.c	    75      RELAY_ON_SENDING_CAN = 1,
+; AMKDrive.c	    76      PRECHARGE_DC_ENABLE = 2,
+; AMKDrive.c	    77      DRIVER_ENABLE = 3,
+; AMKDrive.c	    78      READY_TO_DRIVE_INVERTER_ON = 4,
+; AMKDrive.c	    79      TORQUE_LIMIT_SET = 5,
+; AMKDrive.c	    80      TORQUE_SETPOINTS_ACTIVE = 6
+; AMKDrive.c	    81  };
+; AMKDrive.c	    82  
+; AMKDrive.c	    83  void DI_calculateCommands(_DriveInverter* me, TorqueEncoder *tps, BrakePressureSensor *bps){
 ; Function _DI_calculateCommands
 _54:
 _DI_calculateCommands	.proc	far
@@ -391,26 +392,26 @@ _313:
 	movw	r9,r3
 _1240:
 
-; AMKDrive.c	    83  //SRE-7 Update: CAN has a scaling of 0.1. So send 214% of 9.8nm (nominal) to get 21nm. So 0.25 is 25% of 9.8 and 2.14 is 214% of 9.8. 
-; AMKDrive.c	    84  
-; AMKDrive.c	    85      sbyte2 torqueOutput = 0;
-; AMKDrive.c	    86      sbyte2 appsTorque = 0;
-; AMKDrive.c	    87      sbyte2 bpsTorque = 0;
-; AMKDrive.c	    88  
-; AMKDrive.c	    89      float4 appsOutputPercent;
-; AMKDrive.c	    90  
-; AMKDrive.c	    91      /*
-; AMKDrive.c	    92      TorqueEncoder_getOutputPercent(tps, &appsOutputPercent);
-; AMKDrive.c	    93  
-; AMKDrive.c	    94      sbyte2 torqueMax = (me->AMK_TorqueLimitPositiv / 100); // this should give 21 or the max value 
-; AMKDrive.c	    95      torqueMax = torqueMax / 9.8; //Needs to be divided by the nominal torque and give 2.14 as max since 2.14 is 214% of 9.8. Should scale to any max value
-; AMKDrive.c	    96  
-; AMKDrive.c	    97      appsTorque = torqueMax * getPercent(appsOutputPercent, 0, 1, TRUE) - 0 * getPercent(appsOutputPercent, 0, 0, TRUE);
-; AMKDrive.c	    98      bpsTorque = 0 - (0 - 0) * getPercent(bps->percent, 0, 0, TRUE);
-; AMKDrive.c	    99      */ 
-; AMKDrive.c	   100  
-; AMKDrive.c	   101      //Vehicle Testing works on Test-Bench
-; AMKDrive.c	   102      TorqueEncoder_getIndividualSensorPercent(tps, 0, &appsOutputPercent);
+; AMKDrive.c	    84  //SRE-7 Update: CAN has a scaling of 0.1. So send 214% of 9.8nm (nominal) to get 21nm. So 0.25 is 25% of 9.8 and 2.14 is 214% of 9.8. 
+; AMKDrive.c	    85  
+; AMKDrive.c	    86      sbyte2 torqueOutput = 0;
+; AMKDrive.c	    87      sbyte2 appsTorque = 0;
+; AMKDrive.c	    88      sbyte2 bpsTorque = 0;
+; AMKDrive.c	    89  
+; AMKDrive.c	    90      float4 appsOutputPercent;
+; AMKDrive.c	    91  
+; AMKDrive.c	    92      /*
+; AMKDrive.c	    93      TorqueEncoder_getOutputPercent(tps, &appsOutputPercent);
+; AMKDrive.c	    94  
+; AMKDrive.c	    95      sbyte2 torqueMax = (me->AMK_TorqueLimitPositiv / 100); // this should give 21 or the max value 
+; AMKDrive.c	    96      torqueMax = torqueMax / 9.8; //Needs to be divided by the nominal torque and give 2.14 as max since 2.14 is 214% of 9.8. Should scale to any max value
+; AMKDrive.c	    97  
+; AMKDrive.c	    98      appsTorque = torqueMax * getPercent(appsOutputPercent, 0, 1, TRUE) - 0 * getPercent(appsOutputPercent, 0, 0, TRUE);
+; AMKDrive.c	    99      bpsTorque = 0 - (0 - 0) * getPercent(bps->percent, 0, 0, TRUE);
+; AMKDrive.c	   100      */ 
+; AMKDrive.c	   101  
+; AMKDrive.c	   102      //Vehicle Testing works on Test-Bench
+; AMKDrive.c	   103      TorqueEncoder_getIndividualSensorPercent(tps, 0, &appsOutputPercent);
 	movw	r11,r15
 _572:
 	andw	r11,#0x3fff
@@ -424,7 +425,7 @@ _574:
 	call	_TorqueEncoder_getIndividualSensorPercent
 _1241:
 
-; AMKDrive.c	   103      appsOutputPercent = appsOutputPercent * 10000;
+; AMKDrive.c	   104      appsOutputPercent = appsOutputPercent * 10000;
 	movw	r3,[r15+#0x2]
 	movw	r2,[r15]
 _1242:
@@ -437,15 +438,15 @@ _1244:
 	movw	[r15+#0x2],r3
 _170:
 
-; AMKDrive.c	   104  
-; AMKDrive.c	   105      //float4 torqueMax = ((21 / 9.8) / 100.0);
-; AMKDrive.c	   106      float4 torqueMax = (((float4)me->AMK_TorqueSetpoint / 10.0 / 9.8) / 100.0);
+; AMKDrive.c	   105  
+; AMKDrive.c	   106      //float4 torqueMax = ((21 / 9.8) / 100.0);
+; AMKDrive.c	   107      float4 torqueMax = (((float4)me->AMK_TorqueSetpoint / 10.0 / 9.8) / 100.0);
 	addw	r8,#0xc
 	addcw	r9,#0x0
 _1245:
 
-; AMKDrive.c	   107  
-; AMKDrive.c	   108      torqueOutput = appsOutputPercent * torqueMax; 
+; AMKDrive.c	   108  
+; AMKDrive.c	   109      torqueOutput = appsOutputPercent * torqueMax; 
 	movw	[r15+#0x4],r3
 	movw	r7,r2
 _1246:
@@ -483,178 +484,178 @@ _1254:
 	call	__spf2s
 _1255:
 
-; AMKDrive.c	   109  
-; AMKDrive.c	   110      DI_commandTorque(me, torqueOutput);
-; AMKDrive.c	   111      DI_getCommandedTorque(me);
-; AMKDrive.c	   112  
-; AMKDrive.c	   113  }
-; AMKDrive.c	   114  
-; AMKDrive.c	   115  void DI_calculateInverterControl(_DriveInverter* me, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds){
-; AMKDrive.c	   116       switch (me->startUpStage){ 
-; AMKDrive.c	   117          case RELAY_OFF:
-; AMKDrive.c	   118              if(Sensor_RTDButton.sensorValue == FALSE){
-; AMKDrive.c	   119                  IO_DO_Set(IO_DO_00, TRUE);
-; AMKDrive.c	   120                  me->startUpStage = 1;
-; AMKDrive.c	   121              } else {
-; AMKDrive.c	   122                  IO_DO_Set(IO_DO_00, FALSE);
-; AMKDrive.c	   123                  me->startUpStage = 0;
-; AMKDrive.c	   124              }
-; AMKDrive.c	   125          break;
-; AMKDrive.c	   126          //MCM relay on, we can now start sending safe CAN messages
-; AMKDrive.c	   127          case RELAY_ON_SENDING_CAN:
-; AMKDrive.c	   128              me->AMK_bInverterOn = FALSE;
-; AMKDrive.c	   129              me->AMK_bDcOn = FALSE;
-; AMKDrive.c	   130              me->AMK_bEnable = FALSE;
-; AMKDrive.c	   131              me->AMK_bErrorReset = FALSE;
-; AMKDrive.c	   132              me->AMK_TorqueSetpoint = 0;
-; AMKDrive.c	   133              me->AMK_TorqueLimitPositiv = 0;
-; AMKDrive.c	   134              me->AMK_TorqueLimitNegativ = 0; 
-; AMKDrive.c	   135              if(me->AMK_bSystemReady == TRUE && me->AMK_bError == FALSE){ 
-; AMKDrive.c	   136                  timestamp_Precharge = 0;
-; AMKDrive.c	   137                  me->startUpStage = 2;
-; AMKDrive.c	   138              }
-; AMKDrive.c	   139          break;
-; AMKDrive.c	   140          //Precharge needs to have occured to now send the new message 
-; AMKDrive.c	   141          case PRECHARGE_DC_ENABLE:
-; AMKDrive.c	   142              if (HVILTermSense->sensorValue == TRUE && timestamp_Precharge == 0){
-; AMKDrive.c	   143                  IO_RTC_StartTime(&timestamp_Precharge);
-; AMKDrive.c	   144              } 
-; AMKDrive.c	   145              //Compare BMS voltage with HV sensing voltage and if TRUE: 
-; AMKDrive.c	   146              if(HVILTermSense->sensorValue == TRUE && IO_RTC_GetTimeUS(timestamp_Precharge) >= 10000000){ // After 10 Seconds
-; AMKDrive.c	   147                  me->AMK_bInverterOn = FALSE;
-; AMKDrive.c	   148                  me->AMK_bDcOn = TRUE;
-; AMKDrive.c	   149                  me->AMK_bEnable = FALSE;
-; AMKDrive.c	   150                  me->AMK_bErrorReset = FALSE;
-; AMKDrive.c	   151                  me->AMK_TorqueSetpoint = 0;
-; AMKDrive.c	   152                  me->AMK_TorqueLimitPositiv = 0;
-; AMKDrive.c	   153                  me->AMK_TorqueLimitNegativ = 0;
-; AMKDrive.c	   154              }  
-; AMKDrive.c	   155              /* Need validation regarding switch to 1
-; AMKDrive.c	   156              if(me->AMK_bQuitDcOn == FALSE && HVILTermSense->sensorValue == FALSE){
-; AMKDrive.c	   157                  timestamp_Precharge = 0;
-; AMKDrive.c	   158                  me->AMK_bErrorReset = TRUE;
-; AMKDrive.c	   159                  if(IO_RTC_GetTimeUS(timestamp_Precharge) >= 5000000) // After 5 Seconds)
-; AMKDrive.c	   160                  {
-; AMKDrive.c	   161                      me->AMK_bErrorReset = FALSE; //We need to retry the sequence
-; AMKDrive.c	   162                      me->startUpStage = 1; //Jump after LV
-; AMKDrive.c	   163                  }
-; AMKDrive.c	   164              }
-; AMKDrive.c	   165              */
-; AMKDrive.c	   166              if(me->AMK_bDcOnVal == TRUE && me->AMK_bQuitDcOn == TRUE){
-; AMKDrive.c	   167                  me->startUpStage = 3;
-; AMKDrive.c	   168                  //Main contactor close code here (look at old MCM relay logic)
-; AMKDrive.c	   169                  //Open precharge relay code here (look at old MCM relay logic)
-; AMKDrive.c	   170              }
-; AMKDrive.c	   171          break;
-; AMKDrive.c	   172          case DRIVER_ENABLE: 
-; AMKDrive.c	   173              if(Sensor_RTDButton.sensorValue == TRUE && tps->calibrated == TRUE /*Uncomment in the future: && tps->travelPercent < .05*/){
-; AMKDrive.c	   174                  me->AMK_bInverterOn = FALSE;
-; AMKDrive.c	   175                  me->AMK_bDcOn = TRUE;
-; AMKDrive.c	   176                  me->AMK_bEnable = TRUE;
-; AMKDrive.c	   177                  me->AMK_bErrorReset = FALSE;
-; AMKDrive.c	   178                  me->AMK_TorqueSetpoint = 0;
-; AMKDrive.c	   179                  me->AMK_TorqueLimitPositiv = 0;
-; AMKDrive.c	   180                  me->AMK_TorqueLimitNegativ = 0;
-; AMKDrive.c	   181                  me->startUpStage = 4;
-; AMKDrive.c	   182              }
-; AMKDrive.c	   183          break;
-; AMKDrive.c	   184          case READY_TO_DRIVE_INVERTER_ON:
-; AMKDrive.c	   185              if(Sensor_RTDButton.sensorValue == FALSE && me->AMK_bEnable == TRUE){
-; AMKDrive.c	   186                  me->AMK_bInverterOn = TRUE;
-; AMKDrive.c	   187                  me->AMK_bDcOn = TRUE;
-; AMKDrive.c	   188                  me->AMK_bEnable = TRUE;
-; AMKDrive.c	   189                  me->AMK_TorqueSetpoint = 0;
-; AMKDrive.c	   190                  me->AMK_TorqueLimitPositiv = 0;
-; AMKDrive.c	   191                  me->AMK_TorqueLimitNegativ = 0;
-; AMKDrive.c	   192              }
-; AMKDrive.c	   193              if(me->AMK_bInverterOnVal == TRUE && me->AMK_bQuitInverterOnVal == TRUE){
-; AMKDrive.c	   194                  RTDS_setVolume(rtds, 1, 1500000);
-; AMKDrive.c	   195                  me->startUpStage = 5;
-; AMKDrive.c	   196              } 
-; AMKDrive.c	   197          break;
-; AMKDrive.c	   198          case TORQUE_LIMIT_SET: 
-; AMKDrive.c	   199              me->AMK_bInverterOn = TRUE;
-; AMKDrive.c	   200              me->AMK_bDcOn = TRUE;
-; AMKDrive.c	   201              me->AMK_bEnable = TRUE;
-; AMKDrive.c	   202              me->AMK_TorqueSetpoint = 0;
-; AMKDrive.c	   203              me->AMK_TorqueLimitPositiv = 21 * 10; // 25Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
-; AMKDrive.c	   204              me->AMK_TorqueLimitNegativ = 0;
-; AMKDrive.c	   205              if(me->AMK_bError == FALSE){
-; AMKDrive.c	   206                  me->startUpStage = 6;
-; AMKDrive.c	   207              }
-; AMKDrive.c	   208          break;
-; AMKDrive.c	   209          case TORQUE_SETPOINTS_ACTIVE:
-; AMKDrive.c	   210              me->AMK_bInverterOn = TRUE;
-; AMKDrive.c	   211              me->AMK_bDcOn = TRUE;
-; AMKDrive.c	   212              me->AMK_bEnable = TRUE;
-; AMKDrive.c	   213              me->AMK_TorqueLimitPositiv = 21 * 10; // SRE-7 Update: 21Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
-; AMKDrive.c	   214              me->AMK_TorqueLimitNegativ = 0; //SRE-7 Update: Make -21 for Regen
-; AMKDrive.c	   215              if(me->AMK_bError == TRUE || HVILTermSense->sensorValue == FALSE){
-; AMKDrive.c	   216                  me->startUpStage = 1; 
-; AMKDrive.c	   217              }
-; AMKDrive.c	   218          break;
-; AMKDrive.c	   219  
-; AMKDrive.c	   220          default:
-; AMKDrive.c	   221          //We lost track of the sequence
-; AMKDrive.c	   222          me->startUpStage = 0;
-; AMKDrive.c	   223          break;
-; AMKDrive.c	   224       }
-; AMKDrive.c	   225  }  
-; AMKDrive.c	   226  
-; AMKDrive.c	   227  void DI_parseCanMessage(_DriveInverter* me, IO_CAN_DATA_FRAME* diCanMessage){
-; AMKDrive.c	   228  
-; AMKDrive.c	   229      //safety.c ubyte4 flags merge together -> enhancement
-; AMKDrive.c	   230  
-; AMKDrive.c	   231      int address1 = me->canIdIncoming;
-; AMKDrive.c	   232      int address2 = me->canIdIncoming + 2;
-; AMKDrive.c	   233  
-; AMKDrive.c	   234      ubyte1 systemReadyBitMask = 1;
-; AMKDrive.c	   235      ubyte1 errorBitMask = 2;
-; AMKDrive.c	   236      ubyte1 warningBitMask = 4;
-; AMKDrive.c	   237      ubyte1 quitDcOnBitMask = 8;
-; AMKDrive.c	   238      ubyte1 quitDcOnValBitMask = 0x10;
-; AMKDrive.c	   239      ubyte1 quitInverterOnBitMask = 0x20;
-; AMKDrive.c	   240      ubyte1 inverterOnBitMask = 0x40;
-; AMKDrive.c	   241      ubyte1 deratingBitMask = 0x80;
-; AMKDrive.c	   242  
-; AMKDrive.c	   243      if(diCanMessage->id == address1) {
-; AMKDrive.c	   244          // System ready status
-; AMKDrive.c	   245          me->AMK_bSystemReady = ((diCanMessage->data[1] & systemReadyBitMask) > 0);
-; AMKDrive.c	   246          // Error status
-; AMKDrive.c	   247          me->AMK_bError = ((diCanMessage->data[1] & errorBitMask) > 0);
-; AMKDrive.c	   248          // Warnings status
-; AMKDrive.c	   249          me->AMK_bWarn = ((diCanMessage->data[1] & warningBitMask) > 0);
-; AMKDrive.c	   250          // Quit DC on status
-; AMKDrive.c	   251          me->AMK_bQuitDcOn = ((diCanMessage->data[1] & quitDcOnBitMask) > 0);
-; AMKDrive.c	   252          // DC on status
-; AMKDrive.c	   253          me->AMK_bDcOnVal = ((diCanMessage->data[1] & quitDcOnValBitMask) > 0);
-; AMKDrive.c	   254          // Quit inverter on status
-; AMKDrive.c	   255          me->AMK_bQuitInverterOnVal = ((diCanMessage->data[1] & quitInverterOnBitMask) > 0);
-; AMKDrive.c	   256          // Inverter on status
-; AMKDrive.c	   257          me->AMK_bInverterOnVal = ((diCanMessage->data[1] & inverterOnBitMask) > 0);
-; AMKDrive.c	   258          // Derating value
-; AMKDrive.c	   259          me->AMK_bDerating = ((diCanMessage->data[1] & deratingBitMask) > 0);
-; AMKDrive.c	   260          // Speed value
-; AMKDrive.c	   261          me->AMK_ActualVelocity = (diCanMessage->data[3] << 8 | diCanMessage->data[2]);
-; AMKDrive.c	   262          // Torque current
-; AMKDrive.c	   263          me->AMK_TorqueCurrent = (diCanMessage->data[5] << 8 | diCanMessage->data[4]);
-; AMKDrive.c	   264          // Magnetized current
-; AMKDrive.c	   265          me->AMK_MagnetizingCurrent = (diCanMessage->data[7] << 8 | diCanMessage->data[6]);
-; AMKDrive.c	   266          
-; AMKDrive.c	   267      } else if(diCanMessage->id == address2) {
-; AMKDrive.c	   268           // Motor temperature
-; AMKDrive.c	   269          me->AMK_TempMotor = (float4)(diCanMessage->data[1] << 8 | diCanMessage->data[0]);
-; AMKDrive.c	   270          // Inverter temperature
-; AMKDrive.c	   271          me->AMK_TempInverter = (float4)(diCanMessage->data[3] << 8 | diCanMessage->data[2]);
-; AMKDrive.c	   272          // Diagnostic number
-; AMKDrive.c	   273          me->AMK_ErrorInfo = (ubyte2)(diCanMessage->data[5] << 8 | diCanMessage->data[4]);
-; AMKDrive.c	   274          // Torque feedback
-; AMKDrive.c	   275          me->AMK_TorqueFeedback = (float4)(diCanMessage->data[7] << 8 | diCanMessage->data[6]);
-; AMKDrive.c	   276      }
-; AMKDrive.c	   277  }
-; AMKDrive.c	   278  
-; AMKDrive.c	   279  void DI_commandTorque(_DriveInverter* me, sbyte2 newTorque){
-; AMKDrive.c	   280       me->AMK_TorqueSetpoint = newTorque;
+; AMKDrive.c	   110  
+; AMKDrive.c	   111      DI_commandTorque(me, torqueOutput);
+; AMKDrive.c	   112      DI_getCommandedTorque(me);
+; AMKDrive.c	   113  
+; AMKDrive.c	   114  }
+; AMKDrive.c	   115  
+; AMKDrive.c	   116  void DI_calculateInverterControl(_DriveInverter* me, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds){
+; AMKDrive.c	   117       switch (me->startUpStage){ 
+; AMKDrive.c	   118          case RELAY_OFF:
+; AMKDrive.c	   119              if(Sensor_RTDButton.sensorValue == FALSE){
+; AMKDrive.c	   120                  IO_DO_Set(IO_DO_00, TRUE);
+; AMKDrive.c	   121                  me->startUpStage = 1;
+; AMKDrive.c	   122              } else {
+; AMKDrive.c	   123                  IO_DO_Set(IO_DO_00, FALSE);
+; AMKDrive.c	   124                  me->startUpStage = 0;
+; AMKDrive.c	   125              }
+; AMKDrive.c	   126          break;
+; AMKDrive.c	   127          //MCM relay on, we can now start sending safe CAN messages
+; AMKDrive.c	   128          case RELAY_ON_SENDING_CAN:
+; AMKDrive.c	   129              me->AMK_bInverterOn = FALSE;
+; AMKDrive.c	   130              me->AMK_bDcOn = FALSE;
+; AMKDrive.c	   131              me->AMK_bEnable = FALSE;
+; AMKDrive.c	   132              me->AMK_bErrorReset = FALSE;
+; AMKDrive.c	   133              me->AMK_TorqueSetpoint = 0;
+; AMKDrive.c	   134              me->AMK_TorqueLimitPositiv = 0;
+; AMKDrive.c	   135              me->AMK_TorqueLimitNegativ = 0; 
+; AMKDrive.c	   136              if(me->AMK_bSystemReady == TRUE && me->AMK_bError == FALSE){ 
+; AMKDrive.c	   137                  timestamp_Precharge = 0;
+; AMKDrive.c	   138                  me->startUpStage = 2;
+; AMKDrive.c	   139              }
+; AMKDrive.c	   140          break;
+; AMKDrive.c	   141          //Precharge needs to have occured to now send the new message 
+; AMKDrive.c	   142          case PRECHARGE_DC_ENABLE:
+; AMKDrive.c	   143              if (HVILTermSense->sensorValue == TRUE && timestamp_Precharge == 0){
+; AMKDrive.c	   144                  IO_RTC_StartTime(&timestamp_Precharge);
+; AMKDrive.c	   145              } 
+; AMKDrive.c	   146              //Compare BMS voltage with HV sensing voltage and if TRUE: 
+; AMKDrive.c	   147              if(HVILTermSense->sensorValue == TRUE && IO_RTC_GetTimeUS(timestamp_Precharge) >= 10000000){ // After 10 Seconds
+; AMKDrive.c	   148                  me->AMK_bInverterOn = FALSE;
+; AMKDrive.c	   149                  me->AMK_bDcOn = TRUE;
+; AMKDrive.c	   150                  me->AMK_bEnable = FALSE;
+; AMKDrive.c	   151                  me->AMK_bErrorReset = FALSE;
+; AMKDrive.c	   152                  me->AMK_TorqueSetpoint = 0;
+; AMKDrive.c	   153                  me->AMK_TorqueLimitPositiv = 0;
+; AMKDrive.c	   154                  me->AMK_TorqueLimitNegativ = 0;
+; AMKDrive.c	   155              }  
+; AMKDrive.c	   156              /* Need validation regarding switch to 1
+; AMKDrive.c	   157              if(me->AMK_bQuitDcOn == FALSE && HVILTermSense->sensorValue == FALSE){
+; AMKDrive.c	   158                  timestamp_Precharge = 0;
+; AMKDrive.c	   159                  me->AMK_bErrorReset = TRUE;
+; AMKDrive.c	   160                  if(IO_RTC_GetTimeUS(timestamp_Precharge) >= 5000000) // After 5 Seconds)
+; AMKDrive.c	   161                  {
+; AMKDrive.c	   162                      me->AMK_bErrorReset = FALSE; //We need to retry the sequence
+; AMKDrive.c	   163                      me->startUpStage = 1; //Jump after LV
+; AMKDrive.c	   164                  }
+; AMKDrive.c	   165              }
+; AMKDrive.c	   166              */
+; AMKDrive.c	   167              if(me->AMK_bDcOnVal == TRUE && me->AMK_bQuitDcOn == TRUE){
+; AMKDrive.c	   168                  me->startUpStage = 3;
+; AMKDrive.c	   169                  //Main contactor close code here (look at old MCM relay logic)
+; AMKDrive.c	   170                  //Open precharge relay code here (look at old MCM relay logic)
+; AMKDrive.c	   171              }
+; AMKDrive.c	   172          break;
+; AMKDrive.c	   173          case DRIVER_ENABLE: 
+; AMKDrive.c	   174              if(Sensor_RTDButton.sensorValue == TRUE && tps->calibrated == TRUE /*Uncomment in the future: && tps->travelPercent < .05*/){
+; AMKDrive.c	   175                  me->AMK_bInverterOn = FALSE;
+; AMKDrive.c	   176                  me->AMK_bDcOn = TRUE;
+; AMKDrive.c	   177                  me->AMK_bEnable = TRUE;
+; AMKDrive.c	   178                  me->AMK_bErrorReset = FALSE;
+; AMKDrive.c	   179                  me->AMK_TorqueSetpoint = 0;
+; AMKDrive.c	   180                  me->AMK_TorqueLimitPositiv = 0;
+; AMKDrive.c	   181                  me->AMK_TorqueLimitNegativ = 0;
+; AMKDrive.c	   182                  me->startUpStage = 4;
+; AMKDrive.c	   183              }
+; AMKDrive.c	   184          break;
+; AMKDrive.c	   185          case READY_TO_DRIVE_INVERTER_ON:
+; AMKDrive.c	   186              if(Sensor_RTDButton.sensorValue == FALSE && me->AMK_bEnable == TRUE /*Add in brakes being pressed*/){
+; AMKDrive.c	   187                  me->AMK_bInverterOn = TRUE;
+; AMKDrive.c	   188                  me->AMK_bDcOn = TRUE;
+; AMKDrive.c	   189                  me->AMK_bEnable = TRUE;
+; AMKDrive.c	   190                  me->AMK_TorqueSetpoint = 0;
+; AMKDrive.c	   191                  me->AMK_TorqueLimitPositiv = 0;
+; AMKDrive.c	   192                  me->AMK_TorqueLimitNegativ = 0;
+; AMKDrive.c	   193              }
+; AMKDrive.c	   194              if(me->AMK_bInverterOnVal == TRUE && me->AMK_bQuitInverterOnVal == TRUE){
+; AMKDrive.c	   195                  RTDS_setVolume(rtds, 1, 1500000);
+; AMKDrive.c	   196                  me->startUpStage = 5;
+; AMKDrive.c	   197              } 
+; AMKDrive.c	   198          break;
+; AMKDrive.c	   199          case TORQUE_LIMIT_SET: 
+; AMKDrive.c	   200              me->AMK_bInverterOn = TRUE;
+; AMKDrive.c	   201              me->AMK_bDcOn = TRUE;
+; AMKDrive.c	   202              me->AMK_bEnable = TRUE;
+; AMKDrive.c	   203              me->AMK_TorqueSetpoint = 0;
+; AMKDrive.c	   204              me->AMK_TorqueLimitPositiv = 21 * 10; // 25Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
+; AMKDrive.c	   205              me->AMK_TorqueLimitNegativ = 0;
+; AMKDrive.c	   206              if(me->AMK_bError == FALSE){
+; AMKDrive.c	   207                  me->startUpStage = 6;
+; AMKDrive.c	   208              }
+; AMKDrive.c	   209          break;
+; AMKDrive.c	   210          case TORQUE_SETPOINTS_ACTIVE:
+; AMKDrive.c	   211              me->AMK_bInverterOn = TRUE;
+; AMKDrive.c	   212              me->AMK_bDcOn = TRUE;
+; AMKDrive.c	   213              me->AMK_bEnable = TRUE;
+; AMKDrive.c	   214              me->AMK_TorqueLimitPositiv = 21 * 10; // SRE-7 Update: 21Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
+; AMKDrive.c	   215              me->AMK_TorqueLimitNegativ = 0; //SRE-7 Update: Make -21 for Regen
+; AMKDrive.c	   216              if(me->AMK_bError == TRUE || HVILTermSense->sensorValue == FALSE){
+; AMKDrive.c	   217                  me->startUpStage = 1; 
+; AMKDrive.c	   218              }
+; AMKDrive.c	   219          break;
+; AMKDrive.c	   220  
+; AMKDrive.c	   221          default:
+; AMKDrive.c	   222          //We lost track of the sequence
+; AMKDrive.c	   223          me->startUpStage = 0;
+; AMKDrive.c	   224          break;
+; AMKDrive.c	   225       }
+; AMKDrive.c	   226  }  
+; AMKDrive.c	   227  
+; AMKDrive.c	   228  void DI_parseCanMessage(_DriveInverter* me, IO_CAN_DATA_FRAME* diCanMessage){
+; AMKDrive.c	   229  
+; AMKDrive.c	   230      //safety.c ubyte4 flags merge together -> enhancement
+; AMKDrive.c	   231  
+; AMKDrive.c	   232      int address1 = me->canIdIncoming;
+; AMKDrive.c	   233      int address2 = me->canIdIncoming + 2;
+; AMKDrive.c	   234  
+; AMKDrive.c	   235      ubyte1 systemReadyBitMask = 1;
+; AMKDrive.c	   236      ubyte1 errorBitMask = 2;
+; AMKDrive.c	   237      ubyte1 warningBitMask = 4;
+; AMKDrive.c	   238      ubyte1 quitDcOnBitMask = 8;
+; AMKDrive.c	   239      ubyte1 quitDcOnValBitMask = 0x10;
+; AMKDrive.c	   240      ubyte1 quitInverterOnBitMask = 0x20;
+; AMKDrive.c	   241      ubyte1 inverterOnBitMask = 0x40;
+; AMKDrive.c	   242      ubyte1 deratingBitMask = 0x80;
+; AMKDrive.c	   243  
+; AMKDrive.c	   244      if(diCanMessage->id == address1) {
+; AMKDrive.c	   245          // System ready status
+; AMKDrive.c	   246          me->AMK_bSystemReady = ((diCanMessage->data[1] & systemReadyBitMask) > 0);
+; AMKDrive.c	   247          // Error status
+; AMKDrive.c	   248          me->AMK_bError = ((diCanMessage->data[1] & errorBitMask) > 0);
+; AMKDrive.c	   249          // Warnings status
+; AMKDrive.c	   250          me->AMK_bWarn = ((diCanMessage->data[1] & warningBitMask) > 0);
+; AMKDrive.c	   251          // Quit DC on status
+; AMKDrive.c	   252          me->AMK_bQuitDcOn = ((diCanMessage->data[1] & quitDcOnBitMask) > 0);
+; AMKDrive.c	   253          // DC on status
+; AMKDrive.c	   254          me->AMK_bDcOnVal = ((diCanMessage->data[1] & quitDcOnValBitMask) > 0);
+; AMKDrive.c	   255          // Quit inverter on status
+; AMKDrive.c	   256          me->AMK_bQuitInverterOnVal = ((diCanMessage->data[1] & quitInverterOnBitMask) > 0);
+; AMKDrive.c	   257          // Inverter on status
+; AMKDrive.c	   258          me->AMK_bInverterOnVal = ((diCanMessage->data[1] & inverterOnBitMask) > 0);
+; AMKDrive.c	   259          // Derating value
+; AMKDrive.c	   260          me->AMK_bDerating = ((diCanMessage->data[1] & deratingBitMask) > 0);
+; AMKDrive.c	   261          // Speed value
+; AMKDrive.c	   262          me->AMK_ActualVelocity = (diCanMessage->data[3] << 8 | diCanMessage->data[2]);
+; AMKDrive.c	   263          // Torque current
+; AMKDrive.c	   264          me->AMK_TorqueCurrent = (diCanMessage->data[5] << 8 | diCanMessage->data[4]);
+; AMKDrive.c	   265          // Magnetized current
+; AMKDrive.c	   266          me->AMK_MagnetizingCurrent = (diCanMessage->data[7] << 8 | diCanMessage->data[6]);
+; AMKDrive.c	   267          
+; AMKDrive.c	   268      } else if(diCanMessage->id == address2) {
+; AMKDrive.c	   269           // Motor temperature
+; AMKDrive.c	   270          me->AMK_TempMotor = (float4)(diCanMessage->data[1] << 8 | diCanMessage->data[0]);
+; AMKDrive.c	   271          // Inverter temperature
+; AMKDrive.c	   272          me->AMK_TempInverter = (float4)(diCanMessage->data[3] << 8 | diCanMessage->data[2]);
+; AMKDrive.c	   273          // Diagnostic number
+; AMKDrive.c	   274          me->AMK_ErrorInfo = (ubyte2)(diCanMessage->data[5] << 8 | diCanMessage->data[4]);
+; AMKDrive.c	   275          // Torque feedback
+; AMKDrive.c	   276          me->AMK_TorqueFeedback = (float4)(diCanMessage->data[7] << 8 | diCanMessage->data[6]);
+; AMKDrive.c	   277      }
+; AMKDrive.c	   278  }
+; AMKDrive.c	   279  
+; AMKDrive.c	   280  void DI_commandTorque(_DriveInverter* me, sbyte2 newTorque){
+; AMKDrive.c	   281       me->AMK_TorqueSetpoint = newTorque;
 	exts	r9,#0x1
 	movw	[r8],r2
 _172:
@@ -1787,7 +1788,7 @@ _1381:
 	movw	[r2],r4
 _1382:
 
-; AMKDrive.c	   281  }
+; AMKDrive.c	   282  }
 	ret
 _141:
 	; End of function
@@ -1796,13 +1797,13 @@ _141:
 code_DI_getCommandedTorque	.section	code, cluster 'DI_getCommandedTorque', new
 	.global	_DI_getCommandedTorque
 
-; AMKDrive.c	   282  
-; AMKDrive.c	   283  sbyte2 DI_getCommandedTorque(_DriveInverter* me){
+; AMKDrive.c	   283  
+; AMKDrive.c	   284  sbyte2 DI_getCommandedTorque(_DriveInverter* me){
 ; Function _DI_getCommandedTorque
 _102:
 _DI_getCommandedTorque	.proc	far
 
-; AMKDrive.c	   284       return me->AMK_TorqueSetpoint;
+; AMKDrive.c	   285       return me->AMK_TorqueSetpoint;
 	addw	r2,#0xc
 _1044:
 	addcw	r3,#0x0
@@ -1810,7 +1811,7 @@ _1044:
 	movw	r2,[r2]
 _1387:
 
-; AMKDrive.c	   285  }
+; AMKDrive.c	   286  }
 	ret
 _146:
 	; End of function
@@ -1866,7 +1867,7 @@ _prevHVILState	.label	byte
 	.extern	__spf2s : far
 	.debug		.debug_info
 _114:
-	.dl	3383
+	.dl	3363
 	.dw	3
 	.dl	_115
 	.db	4
@@ -1879,7 +1880,7 @@ _113:
 	.dl	_116
 _152:
 	.db	2
-	.db	'_DI_Location_Address',0,2,39,14,1,3
+	.db	'_DI_Location_Address',0,2,46,14,1,3
 	.db	'FRONT_LEFT',0,1,3
 	.db	'FRONT_RIGHT',0,2,3
 	.db	'REAR_LEFT',0,5,3
@@ -1894,7 +1895,7 @@ _188:
 _168:
 	.db	4
 	.db	'float',0,4,4,5
-	.db	'_DriveInverter',0,2,46,16,52,6
+	.db	'_DriveInverter',0,2,53,16,52,6
 	.db	'location_address',0
 	.dl	179
 	.db	1,2,35,0,6
@@ -1978,14 +1979,14 @@ _151:
 	.dl	307
 _171:
 	.db	8
-	.db	'DI_commandTorque',0,1,1,151,2,6,6,1,1
+	.db	'DI_commandTorque',0,1,1,152,2,6,6,1,1
 _173:
 	.db	9
-	.db	'me',0,1,151,2,39,2
+	.db	'me',0,1,152,2,39,2
 	.dl	984
 _175:
 	.db	9
-	.db	'newTorque',0,1,151,2,50,2
+	.db	'newTorque',0,1,152,2,50,2
 	.dl	274
 _177:
 	.db	10,0,11
@@ -2137,22 +2138,22 @@ _159:
 	.db	'percent',0,6,42,95,2
 	.dl	2000
 	.db	0,16
-	.db	'_ReadyToDriveSound',0,8,7,16,1
+	.db	'_ReadyToDriveSound',0,8,12,16,1
 _163:
 	.db	7,5
 	.dl	2108
 	.db	15
-	.db	'RTDS_setVolume',0,8,13,6,6,1,1,1,1,9
-	.db	'rtds',0,8,13,40,2
+	.db	'RTDS_setVolume',0,8,18,6,6,1,1,1,1,9
+	.db	'rtds',0,8,18,40,2
 	.dl	2132
 	.db	9
-	.db	'volumePercent',0,8,13,53,2
+	.db	'volumePercent',0,8,18,53,2
 	.dl	298
 	.db	9
-	.db	'timeToPlay',0,8,13,75,2
+	.db	'timeToPlay',0,8,18,75,2
 	.dl	1093
 	.db	0,5
-	.db	'_BrakePressureSensor',0,9,10,16,48,6
+	.db	'_BrakePressureSensor',0,9,17,16,48,6
 	.db	'bench',0
 	.dl	281
 	.db	1,2,35,0,6
@@ -2283,46 +2284,43 @@ _179:
 	.db	20
 	.db	'Sensor_RTDButton',0,7,178,1,15,5
 	.dl	1292
-	.db	1,1,19
-	.db	'_iob_flag_t',0,13,82,25
-	.dl	2788
-	.db	5
-	.db	'_bl_t_date',0,14,90,16,4,6
+	.db	1,1,5
+	.db	'_bl_t_date',0,13,90,16,4,6
 	.db	'date',0
 	.dl	1093
 	.db	4,2,35,0,0,19
-	.db	'BL_T_DATE',0,14,93,2
-	.dl	3105
+	.db	'BL_T_DATE',0,13,93,2
+	.dl	3085
 	.db	5
-	.db	'_bl_t_can_id',0,14,102,16,8,6
+	.db	'_bl_t_can_id',0,13,102,16,8,6
 	.db	'extended',0
 	.dl	1093
 	.db	4,2,35,0,6
 	.db	'ID',0
 	.dl	1093
 	.db	4,2,35,4,0,19
-	.db	'BL_T_CAN_ID',0,14,106,2
-	.dl	3154
+	.db	'BL_T_CAN_ID',0,13,106,2
+	.dl	3134
 	.db	19
 	.db	'TorqueEncoder',0,6,38,3
 	.dl	1526
 	.db	19
-	.db	'BrakePressureSensor',0,9,38,3
+	.db	'BrakePressureSensor',0,9,45,3
 	.dl	2220
 	.db	19
-	.db	'ReadyToDriveSound',0,8,7,35
+	.db	'ReadyToDriveSound',0,8,12,35
 	.dl	2108
 	.db	19
-	.db	'DI_Location_Address',0,2,44,3
+	.db	'DI_Location_Address',0,2,51,3
 	.dl	179
 	.db	19
-	.db	'_DriveInverter',0,2,81,3
+	.db	'_DriveInverter',0,2,88,3
 	.dl	307
 	.db	21
 	.dl	281
 	.db	22,0,20
 	.db	'_lc_ub_user_stack',0,1,1,1,2
-	.dl	3350
+	.dl	3330
 	.db	1,1,0
 	; End of section
 
@@ -2360,7 +2358,6 @@ _1047:
 	.db	'IO_CAN.h',0,2,0,0
 	.db	'ptypes_xe167.h',0,2,0,0
 	.db	'IO_Constants.h',0,2,0,0
-	.db	'stdio.h',0,1,0,0
 	.db	'APDB.h',0,2,0,0,0
 _1048:
 _1046:
@@ -2369,7 +2366,7 @@ _1046:
 	.debug		.debug_pubnames
 	.dl	145
 	.dw	2
-	.dl	_114,3387,1063
+	.dl	_114,3367,1063
 	.db	'malloc',0
 	.dl	1125
 	.db	'IO_RTC_StartTime',0
@@ -2398,17 +2395,17 @@ _117:
 	.db	2
 	.dl	_113
 	.db	3
-	.db	'AmkDriver_new',0,1,30,17,6
+	.db	'AmkDriver_new',0,1,31,17,6
 	.dl	_151
 	.db	1,1,1
 	.dl	_42,_121,_41
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'location_address',0,1,30,51,2
+	.db	'location_address',0,1,31,51,2
 	.dl	_152,_153
 	.db	5
 	.dl	_42,_121
 	.db	6
-	.db	'me',0,1,32,21,2
+	.db	'me',0,1,33,21,2
 	.dl	_151,_154
 	.db	7
 	.dl	_155,_121
@@ -2434,7 +2431,7 @@ _1051:
 _1052:
 	.db	5,17,7,0,5,2
 	.dl	_42
-	.db	3,29,1,5,50,9
+	.db	3,30,1,5,50,9
 	.dw	_232-_42
 	.db	3,2,1,5,30,9
 	.dw	_1053-_232
@@ -2581,22 +2578,22 @@ _122:
 	.db	2
 	.dl	_113
 	.db	3
-	.db	'DI_calculateInverterControl',0,1,115,6,6,1,1,1
+	.db	'DI_calculateInverterControl',0,1,116,6,6,1,1,1
 	.dl	_66,_126,_65
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,115,50,2
+	.db	'me',0,1,116,50,2
 	.dl	_151,_156
 	.db	4
-	.db	'HVILTermSense',0,1,115,62,2
+	.db	'HVILTermSense',0,1,116,62,2
 	.dl	_157,_158
 	.db	4
-	.db	'tps',0,1,115,92,2
+	.db	'tps',0,1,116,92,2
 	.dl	_159,_160
 	.db	4
-	.db	'bps',0,1,115,118,2
+	.db	'bps',0,1,116,118,2
 	.dl	_161,_162
 	.db	4
-	.db	'rtds',0,1,115,142,1,2
+	.db	'rtds',0,1,116,142,1,2
 	.dl	_163,_164
 	.db	5
 	.dl	_66,_126
@@ -2622,7 +2619,7 @@ _1107:
 _1108:
 	.db	5,6,7,0,5,2
 	.dl	_66
-	.db	3,242,0,1,5,16,9
+	.db	3,243,0,1,5,16,9
 	.dw	_608-_66
 	.db	3,1,1,5,6,9
 	.dw	_1109-_608
@@ -2975,21 +2972,21 @@ _127:
 	.db	2
 	.dl	_113
 	.db	3
-	.db	'DI_calculateCommands',0,1,82,6,6,1,1,1
+	.db	'DI_calculateCommands',0,1,83,6,6,1,1,1
 	.dl	_54,_131,_53
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,82,43,2
+	.db	'me',0,1,83,43,2
 	.dl	_151,_165
 	.db	4
-	.db	'tps',0,1,82,62,2
+	.db	'tps',0,1,83,62,2
 	.dl	_159,_166
 	.db	4
-	.db	'bps',0,1,82,88,2
+	.db	'bps',0,1,83,88,2
 	.dl	_161,_167
 	.db	5
 	.dl	_54,_131
 	.db	6
-	.db	'appsOutputPercent',0,1,89,12,2
+	.db	'appsOutputPercent',0,1,90,12,2
 	.dl	_168,_169
 	.db	5
 	.dl	_170,_131
@@ -3024,7 +3021,7 @@ _1238:
 _1239:
 	.db	5,6,7,0,5,2
 	.dl	_54
-	.db	3,209,0,1,5,55,9
+	.db	3,210,0,1,5,55,9
 	.dw	_1240-_54
 	.db	3,20,1,5,25,9
 	.dw	_1241-_1240
@@ -3093,21 +3090,21 @@ _132:
 	.db	2
 	.dl	_113
 	.db	3
-	.db	'DI_parseCanMessage',0,1,227,1,6,6,1,1,1
+	.db	'DI_parseCanMessage',0,1,228,1,6,6,1,1,1
 	.dl	_78,_136,_77
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,227,1,41,2
+	.db	'me',0,1,228,1,41,2
 	.dl	_151,_178
 	.db	4
-	.db	'diCanMessage',0,1,227,1,64,2
+	.db	'diCanMessage',0,1,228,1,64,2
 	.dl	_179,_180
 	.db	5
 	.dl	_78,_136
 	.db	6
-	.db	'address1',0,1,231,1,9,2
+	.db	'address1',0,1,232,1,9,2
 	.dl	_181,_182
 	.db	6
-	.db	'address2',0,1,232,1,9,2
+	.db	'address2',0,1,233,1,9,2
 	.dl	_181,_183
 	.db	0,0,0
 	; End of section
@@ -3131,7 +3128,7 @@ _1258:
 _1259:
 	.db	5,6,7,0,5,2
 	.dl	_78
-	.db	3,226,1,1,5,22,9
+	.db	3,227,1,1,5,22,9
 	.dw	_1036-_78
 	.db	3,4,1,5,20,9
 	.dw	_1260-_1036
@@ -3438,7 +3435,7 @@ _1379:
 _1380:
 	.db	5,8,7,0,5,2
 	.dl	_90
-	.db	3,151,2,1,5,29,9
+	.db	3,152,2,1,5,29,9
 	.dw	_1381-_90
 	.db	1,5,1,9
 	.dw	_1382-_1381
@@ -3467,12 +3464,12 @@ _142:
 	.db	2
 	.dl	_113
 	.db	3
-	.db	'DI_getCommandedTorque',0,1,155,2,8,6
+	.db	'DI_getCommandedTorque',0,1,156,2,8,6
 	.dl	_181
 	.db	1,1,1
 	.dl	_102,_146,_101
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,155,2,46,2
+	.db	'me',0,1,156,2,46,2
 	.dl	_151,_186
 	.db	5
 	.dl	_102,_146
@@ -3498,7 +3495,7 @@ _1385:
 _1386:
 	.db	5,15,7,0,5,2
 	.dl	_102
-	.db	3,155,2,1,5,1,9
+	.db	3,156,2,1,5,1,9
 	.dw	_1387-_102
 	.db	3,1,1,7,9
 	.dw	_146-_1387
@@ -3531,7 +3528,7 @@ _147:
 	.db	12,1,2
 	.dl	_113
 	.db	3
-	.db	'timestamp_Precharge',0,1,27,8,5
+	.db	'timestamp_Precharge',0,1,28,8,5
 	.dl	_187
 	.db	1,5,3
 	.dl	_timestamp_Precharge
@@ -3556,7 +3553,7 @@ _149:
 	.db	12,1,2
 	.dl	_113
 	.db	3
-	.db	'prevHVILState',0,1,28,6,5
+	.db	'prevHVILState',0,1,29,6,5
 	.dl	_188
 	.db	1,5,3
 	.dl	_prevHVILState

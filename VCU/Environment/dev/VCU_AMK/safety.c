@@ -1,5 +1,11 @@
+/*****************************************************************************
+ * safety.c - All Vehicle Safety 
+ * Initial Author: Rusty P / Vincent Saw
+ ******************************************************************************
+ * For all torque reductions or safety state changes from external influence
+ ****************************************************************************/
+
 #include <stdlib.h> //malloc
-//#include <math.h>
 #include "IO_Driver.h"
 #include "IO_RTC.h"
 #include "IO_DIO.h"

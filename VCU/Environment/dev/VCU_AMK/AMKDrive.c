@@ -1,7 +1,8 @@
 /*****************************************************************************
  * AMKDrive.c - Drive Inverter (DI)
+ * Initial Author: Shinika Balasundar
  ******************************************************************************
- * Stores data from / commands going to AMK drive inverters.
+ * Calculated initial Torque to AMKs, Sends values to AMKs, and parses messages from AMKs
  ****************************************************************************/
 
 #include <stdlib.h>
@@ -182,7 +183,7 @@ void DI_calculateInverterControl(_DriveInverter* me, Sensor *HVILTermSense, Torq
             }
         break;
         case READY_TO_DRIVE_INVERTER_ON:
-            if(Sensor_RTDButton.sensorValue == FALSE && me->AMK_bEnable == TRUE){
+            if(Sensor_RTDButton.sensorValue == FALSE && me->AMK_bEnable == TRUE /*Add in brakes being pressed*/){
                 me->AMK_bInverterOn = TRUE;
                 me->AMK_bDcOn = TRUE;
                 me->AMK_bEnable = TRUE;

@@ -1,3 +1,10 @@
+/*****************************************************************************
+ * mathFunctions.h - Math functionality
+ * Initial Author: Rusty P
+ ******************************************************************************
+ * Specialized math control functions
+ ****************************************************************************/
+
 #ifndef _MATHFUNCTIONS_H
 #define _MATHFUNCTIONS_H
 
