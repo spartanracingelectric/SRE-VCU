@@ -103,8 +103,8 @@ void DI_calculateCommands(_DriveInverter* me, TorqueEncoder *tps, BrakePressureS
     TorqueEncoder_getIndividualSensorPercent(tps, 0, &appsOutputPercent);
     appsOutputPercent = appsOutputPercent * 10000;
 
-    //float4 torqueMax = ((21 / 9.8) / 100.0);
-    float4 torqueMax = (((float4)me->AMK_TorqueSetpoint / 10.0 / 9.8) / 100.0);
+    float4 torqueMax = ((21 / 9.8) / 100.0);
+    //float4 torqueMax = (((float4)me->AMK_TorqueSetpoint / 10.0 / 9.8) / 100.0);
 
     torqueOutput = appsOutputPercent * torqueMax; 
 

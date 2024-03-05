@@ -21,6 +21,8 @@ _DAQSensors* DAQ_Sensor_new(){
     me->AccelY = 0;
     me->GyroZ = 0;
 
+    //Update for GPS SPEED on IMU TEST CONFIG
+
     return me;
 
 }
