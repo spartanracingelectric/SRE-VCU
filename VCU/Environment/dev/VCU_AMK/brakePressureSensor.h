@@ -1,3 +1,10 @@
+/*****************************************************************************
+ * brakePressureSensor.h - Brake Sensor
+ * Initial Author: Rusty P 
+ ******************************************************************************
+ * Works with calculation of the brake sensors and getting appropriate values
+ ****************************************************************************/
+
 #ifndef _BRAKEPRESSURESENSOR_H
 #define _BRAKEPRESSURESENSOR_H
 

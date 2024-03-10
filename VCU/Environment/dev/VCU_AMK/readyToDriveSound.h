@@ -1,9 +1,14 @@
+/*****************************************************************************
+ * readyToDriveSound.h - Buzzer 
+ * Initial Author: Rusty P
+ ******************************************************************************
+ * Control of the rules compliance buzzer
+ ****************************************************************************/
+
 //"Include guard" - prevents this file from being #included more than once
 #ifndef _READYTODRIVESOUND_H
 #define _READYTODRIVESOUND_H
 
-//struct _ReadyToDriveSound;
-//typedef ReadyToDriveSound struct _ReadyToDriveSound;
 typedef struct _ReadyToDriveSound ReadyToDriveSound;
 
 ReadyToDriveSound* RTDS_new(void);

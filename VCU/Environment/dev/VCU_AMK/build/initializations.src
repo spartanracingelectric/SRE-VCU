@@ -1,30 +1,38 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc10888a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=1 -DRTS_TTC_FLASH_DATE_DAY=18 -DRTS_TTC_FLASH_DATE_HOUR=0 -DRTS_TTC_FLASH_DATE_MINUTE=28 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\initializations.src
+	; Options: -f cc21024a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=3 -DRTS_TTC_FLASH_DATE_DAY=4 -DRTS_TTC_FLASH_DATE_HOUR=18 -DRTS_TTC_FLASH_DATE_MINUTE=51 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\initializations.src
 	; Module start
 	.source	'initializations.c'
 code_vcu_initializeADC	.section	code, cluster 'vcu_initializeADC', new
 	.global	_vcu_initializeADC
 
-; initializations.c	     1  //VCU initializations
-; initializations.c	     2  //Object (sensors, controllers, etc) instantiations
-; initializations.c	     3  //ONLY THIS FILE should have "true" version of object variables
-; initializations.c	     4  //Everything else should have "extern" declarations of variables
-; initializations.c	     5  
-; initializations.c	     6  #include "IO_Driver.h" //Includes datatypes, constants, etc - probably should be included in every c file
-; initializations.c	     7  #include "IO_ADC.h"
-; initializations.c	     8  #include "IO_PWM.h"
-; initializations.c	     9  #include "IO_CAN.h"
-; initializations.c	    10  #include "IO_DIO.h"
-; initializations.c	    11  
-; initializations.c	    12  #include "sensors.h"
-; initializations.c	    13  #include "initializations.h"
-; initializations.c	    14  //#include "can.h"
-; initializations.c	    15  
-; initializations.c	    16  /*****************************************************************************
-; initializations.c	    17  * ADC
-; initializations.c	    18  ****************************************************************************/
-; initializations.c	    19  //Turns on the VCU's ADC channels and power supplies.
-; initializations.c	    20  void vcu_initializeADC(bool benchMode)
+; initializations.c	     1  //----------------------------------------------------------------------------
+; initializations.c	     2  // VCU Subsystem Initializations
+; initializations.c	     3  //----------------------------------------------------------------------------
+; initializations.c	     4  // This is where we turn on the VCU's internal power supplies and sensors.
+; initializations.c	     5  //
+; initializations.c	     6  // The supplies/sensors and their parameters are defined in IO_ADC.h.
+; initializations.c	     7  // Each sensor/ADC channel/etc has different parameters, so make sure to
+; initializations.c	     8  // check the .h files, the examples, and the documentation!
+; initializations.c	     9  //----------------------------------------------------------------------------
+; initializations.c	    10  
+; initializations.c	    11  //Object (sensors, controllers, etc) instantiations
+; initializations.c	    12  //ONLY THIS FILE should have "true" version of object variables
+; initializations.c	    13  //Everything else should have "extern" declarations of variables
+; initializations.c	    14  
+; initializations.c	    15  #include "IO_Driver.h" //Includes datatypes, constants, etc - probably should be included in every c file
+; initializations.c	    16  #include "IO_ADC.h"
+; initializations.c	    17  #include "IO_PWM.h"
+; initializations.c	    18  #include "IO_CAN.h"
+; initializations.c	    19  #include "IO_DIO.h"
+; initializations.c	    20  
+; initializations.c	    21  #include "sensors.h"
+; initializations.c	    22  #include "initializations.h"
+; initializations.c	    23  
+; initializations.c	    24  /*****************************************************************************
+; initializations.c	    25  * ADC
+; initializations.c	    26  ****************************************************************************/
+; initializations.c	    27  //Turns on the VCU's ADC channels and power supplies.
+; initializations.c	    28  void vcu_initializeADC(bool benchMode)
 ; Function _vcu_initializeADC
 _9:
 _vcu_initializeADC	.proc	far
@@ -45,12 +53,12 @@ _147:
 	movb	rh1,rl2
 _376:
 
-; initializations.c	    21  {
-; initializations.c	    22      //----------------------------------------------------------------------------
-; initializations.c	    23      //Power supplies/outputs
-; initializations.c	    24      //----------------------------------------------------------------------------
-; initializations.c	    25      //Analog sensor supplies
-; initializations.c	    26      Sensor_TPS0.ioErr_powerSet = Sensor_BPS0.ioErr_powerSet = IO_POWER_Set(IO_ADC_SENSOR_SUPPLY_0, IO_POWER_ON);  // Pin 148 and 136
+; initializations.c	    29  {
+; initializations.c	    30      //----------------------------------------------------------------------------
+; initializations.c	    31      //Power supplies/outputs
+; initializations.c	    32      //----------------------------------------------------------------------------
+; initializations.c	    33      //Analog sensor supplies
+; initializations.c	    34      Sensor_TPS0.ioErr_powerSet = Sensor_BPS0.ioErr_powerSet = IO_POWER_Set(IO_ADC_SENSOR_SUPPLY_0, IO_POWER_ON);  // Pin 148 and 136
 	movb	rl2,#0x24
 _375:
 	movb	rh2,#0x1
@@ -63,7 +71,7 @@ _598:
 	movw	@pof(_Sensor_TPS0+0x18),r2
 _599:
 
-; initializations.c	    27      Sensor_TPS1.ioErr_powerSet = Sensor_BPS1.ioErr_powerSet = IO_POWER_Set(IO_ADC_SENSOR_SUPPLY_1, IO_POWER_ON);  // Pin 147
+; initializations.c	    35      Sensor_TPS1.ioErr_powerSet = Sensor_BPS1.ioErr_powerSet = IO_POWER_Set(IO_ADC_SENSOR_SUPPLY_1, IO_POWER_ON);  // Pin 147
 	movb	rl2,#0x25
 _600:
 	movb	rh2,#0x1
@@ -76,19 +84,19 @@ _602:
 	movw	@pof(_Sensor_TPS1+0x18),r2
 _603:
 
-; initializations.c	    28  
-; initializations.c	    29      //Variable power supply
-; initializations.c	    30      IO_POWER_Set(IO_SENSOR_SUPPLY_VAR, IO_POWER_14_5_V);    //IO_POWER_Set(IO_PIN_269, IO_POWER_8_5_V);
+; initializations.c	    36  
+; initializations.c	    37      //Variable power supply
+; initializations.c	    38      IO_POWER_Set(IO_SENSOR_SUPPLY_VAR, IO_POWER_14_5_V);    //IO_POWER_Set(IO_PIN_269, IO_POWER_8_5_V);
 	movb	rl2,#0x33
 _604:
 	movb	rh2,#0x4
 	call	_IO_POWER_Set
 _605:
 
-; initializations.c	    31  
-; initializations.c	    32      //Digital/power outputs ---------------------------------------------------
-; initializations.c	    33      //Relay power outputs
-; initializations.c	    34      IO_DO_Init(IO_DO_00);    IO_DO_Set(IO_DO_00, FALSE); //mcm0 Relay
+; initializations.c	    39  
+; initializations.c	    40      //Digital/power outputs ---------------------------------------------------
+; initializations.c	    41      //Relay power outputs
+; initializations.c	    42      IO_DO_Init(IO_DO_00);    IO_DO_Set(IO_DO_00, FALSE); //mcm0 Relay
 	movb	rl2,#0x18
 	call	_IO_DO_Init
 _606:
@@ -98,7 +106,7 @@ _607:
 	call	_IO_DO_Set
 _608:
 
-; initializations.c	    35      IO_DO_Init(IO_DO_01);    IO_DO_Set(IO_DO_01, FALSE); //VCU-BMS Shutdown Relay
+; initializations.c	    43      IO_DO_Init(IO_DO_01);    IO_DO_Set(IO_DO_01, FALSE); //VCU-BMS Shutdown Relay
 	movb	rl2,#0x19
 	call	_IO_DO_Init
 _609:
@@ -108,7 +116,7 @@ _610:
 	call	_IO_DO_Set
 _611:
 
-; initializations.c	    36      IO_DO_Init(IO_DO_02);    IO_DO_Set(IO_DO_02, FALSE); //Water pump signal (no longer using PWM signal for the water pump)
+; initializations.c	    44      IO_DO_Init(IO_DO_02);    IO_DO_Set(IO_DO_02, FALSE); //Water pump signal (no longer using PWM signal for the water pump)
 	movb	rl2,#0x1a
 	call	_IO_DO_Init
 _612:
@@ -118,7 +126,7 @@ _613:
 	call	_IO_DO_Set
 _614:
 
-; initializations.c	    37      IO_DO_Init(IO_DO_03);    IO_DO_Set(IO_DO_03, FALSE); //Fan relay - motor fan and radiator fan are on same circuit
+; initializations.c	    45      IO_DO_Init(IO_DO_03);    IO_DO_Set(IO_DO_03, FALSE); //Fan relay - motor fan and radiator fan are on same circuit
 	movb	rl2,#0x1b
 	call	_IO_DO_Init
 _615:
@@ -128,7 +136,7 @@ _616:
 	call	_IO_DO_Set
 _617:
 
-; initializations.c	    38      IO_DO_Init(IO_DO_04);    IO_DO_Set(IO_DO_04, FALSE); //Battery fan relay - not used on SRE-4
+; initializations.c	    46      IO_DO_Init(IO_DO_04);    IO_DO_Set(IO_DO_04, FALSE); //Battery fan relay - not used on SRE-4
 	movb	rl2,#0x1c
 	call	_IO_DO_Init
 _618:
@@ -138,7 +146,7 @@ _619:
 	call	_IO_DO_Set
 _620:
 
-; initializations.c	    39      IO_DO_Init(IO_DO_05);    IO_DO_Set(IO_DO_05, benchMode); //power output for switches - only used on bench
+; initializations.c	    47      IO_DO_Init(IO_DO_05);    IO_DO_Set(IO_DO_05, benchMode); //power output for switches - only used on bench
 	movb	rl2,#0x1d
 	call	_IO_DO_Init
 _621:
@@ -149,7 +157,7 @@ _377:
 	call	_IO_DO_Set
 _378:
 
-; initializations.c	    40      IO_DO_Init(IO_DO_06);    IO_DO_Set(IO_DO_06, FALSE); //DRS Open
+; initializations.c	    48      IO_DO_Init(IO_DO_06);    IO_DO_Set(IO_DO_06, FALSE); //DRS Open
 	movb	rl2,#0x1e
 	call	_IO_DO_Init
 _623:
@@ -159,7 +167,7 @@ _624:
 	call	_IO_DO_Set
 _625:
 
-; initializations.c	    41      IO_DO_Init(IO_DO_07);    IO_DO_Set(IO_DO_07, FALSE); //DRS Close
+; initializations.c	    49      IO_DO_Init(IO_DO_07);    IO_DO_Set(IO_DO_07, FALSE); //DRS Close
 	movb	rl2,#0x1f
 	call	_IO_DO_Init
 _626:
@@ -169,9 +177,9 @@ _627:
 	call	_IO_DO_Set
 _628:
 
-; initializations.c	    42  
-; initializations.c	    43      //Lowside outputs (connects to ground when on)
-; initializations.c	    44      IO_DO_Init(IO_ADC_CUR_00);    IO_DO_Set(IO_ADC_CUR_00, FALSE); //Brake light
+; initializations.c	    50  
+; initializations.c	    51      //Lowside outputs (connects to ground when on)
+; initializations.c	    52      IO_DO_Init(IO_ADC_CUR_00);    IO_DO_Set(IO_ADC_CUR_00, FALSE); //Brake light
 	movb	rl2,#0x2e
 	call	_IO_DO_Init
 _629:
@@ -181,7 +189,7 @@ _630:
 	call	_IO_DO_Set
 _631:
 
-; initializations.c	    45      IO_DO_Init(IO_ADC_CUR_01);    IO_DO_Set(IO_ADC_CUR_01, FALSE); //Eco
+; initializations.c	    53      IO_DO_Init(IO_ADC_CUR_01);    IO_DO_Set(IO_ADC_CUR_01, FALSE); //Eco
 	movb	rl2,#0x2f
 	call	_IO_DO_Init
 _632:
@@ -191,7 +199,7 @@ _633:
 	call	_IO_DO_Set
 _634:
 
-; initializations.c	    46      IO_DO_Init(IO_ADC_CUR_02);    IO_DO_Set(IO_ADC_CUR_02, FALSE); //Err
+; initializations.c	    54      IO_DO_Init(IO_ADC_CUR_02);    IO_DO_Set(IO_ADC_CUR_02, FALSE); //Err
 	movb	rl2,#0x30
 	call	_IO_DO_Init
 _635:
@@ -201,7 +209,7 @@ _636:
 	call	_IO_DO_Set
 _637:
 
-; initializations.c	    47      IO_DO_Init(IO_ADC_CUR_03);    IO_DO_Set(IO_ADC_CUR_03, FALSE); //RTD
+; initializations.c	    55      IO_DO_Init(IO_ADC_CUR_03);    IO_DO_Set(IO_ADC_CUR_03, FALSE); //RTD
 	movb	rl2,#0x31
 	call	_IO_DO_Init
 _638:
@@ -211,14 +219,14 @@ _639:
 	call	_IO_DO_Set
 _640:
 
-; initializations.c	    48  
-; initializations.c	    49      //Wheel Speed Sensor supplies
-; initializations.c	    50      //Sensor_WSS_FL.ioErr_powerInit = Sensor_WSS_FR.ioErr_powerInit = Sensor_WSS_RL.ioErr_powerInit = Sensor_WSS_RR.ioErr_powerInit = IO_DO_Init(IO_DO_07); // WSS power
-; initializations.c	    51      // IO_POWER_Set (IO_SENSOR_SUPPLY_VAR, IO_POWER_14_5_V);
-; initializations.c	    52  
-; initializations.c	    53      //Digital PWM outputs ---------------------------------------------------
-; initializations.c	    54      // RTD Sound
-; initializations.c	    55      IO_PWM_Init(IO_PWM_01, 750, TRUE, FALSE, 0, FALSE, NULL);
+; initializations.c	    56  
+; initializations.c	    57      //Wheel Speed Sensor supplies
+; initializations.c	    58      //Sensor_WSS_FL.ioErr_powerInit = Sensor_WSS_FR.ioErr_powerInit = Sensor_WSS_RL.ioErr_powerInit = Sensor_WSS_RR.ioErr_powerInit = IO_DO_Init(IO_DO_07); // WSS power
+; initializations.c	    59      // IO_POWER_Set (IO_SENSOR_SUPPLY_VAR, IO_POWER_14_5_V);
+; initializations.c	    60  
+; initializations.c	    61      //Digital PWM outputs ---------------------------------------------------
+; initializations.c	    62      // RTD Sound
+; initializations.c	    63      IO_PWM_Init(IO_PWM_01, 750, TRUE, FALSE, 0, FALSE, NULL);
 	movw	r3,#0x2ee
 _641:
 	movb	rl2,#0x1
@@ -231,7 +239,7 @@ _641:
 	call	_IO_PWM_Init
 _642:
 
-; initializations.c	    56      IO_PWM_SetDuty(IO_PWM_01, 0, NULL);
+; initializations.c	    64      IO_PWM_SetDuty(IO_PWM_01, 0, NULL);
 	movb	rl2,#0x1
 	movw	r3,#0x0
 	movw	r4,#0x0
@@ -239,9 +247,9 @@ _642:
 	call	_IO_PWM_SetDuty
 _643:
 
-; initializations.c	    57  
-; initializations.c	    58      //Bench LED 12V source
-; initializations.c	    59      IO_PWM_Init(IO_PWM_03, 500, TRUE, FALSE, 0, FALSE, NULL);
+; initializations.c	    65  
+; initializations.c	    66      //Bench LED 12V source
+; initializations.c	    67      IO_PWM_Init(IO_PWM_03, 500, TRUE, FALSE, 0, FALSE, NULL);
 	movw	r3,#0x1f4
 _644:
 	movb	rl2,#0x3
@@ -254,7 +262,7 @@ _644:
 	call	_IO_PWM_Init
 _645:
 
-; initializations.c	    60      IO_PWM_SetDuty(IO_PWM_03, benchMode == TRUE ? 0xFFFF : 0, NULL);
+; initializations.c	    68      IO_PWM_SetDuty(IO_PWM_03, benchMode == TRUE ? 0xFFFF : 0, NULL);
 	movb	rl2,#0x3
 _646:
 	movw	r3,#0x0
@@ -269,9 +277,9 @@ _647:
 	call	_IO_PWM_SetDuty
 _648:
 
-; initializations.c	    61      
-; initializations.c	    62      // Rad Fans (SR-14 and above)
-; initializations.c	    63      IO_PWM_Init(IO_PWM_02, 100, TRUE, FALSE, 0, FALSE, NULL); //Pin, Frequency Hz, Boolean for pos polarity, current measurement enabled bool, weird other pin (current), no diagram margin, not safety critical
+; initializations.c	    69      
+; initializations.c	    70      // Rad Fans (SR-14 and above)
+; initializations.c	    71      IO_PWM_Init(IO_PWM_02, 100, TRUE, FALSE, 0, FALSE, NULL); //Pin, Frequency Hz, Boolean for pos polarity, current measurement enabled bool, weird other pin (current), no diagram margin, not safety critical
 	movw	r3,#0x64
 _649:
 	movb	rl2,#0x2
@@ -284,7 +292,7 @@ _649:
 	call	_IO_PWM_Init
 _650:
 
-; initializations.c	    64      IO_PWM_SetDuty(IO_PWM_02, .90 * 0xFFFF, NULL); //Pin, 0 - 65535, Feedback Measurement
+; initializations.c	    72      IO_PWM_SetDuty(IO_PWM_02, .90 * 0xFFFF, NULL); //Pin, 0 - 65535, Feedback Measurement
 	movw	r3,#0xe665
 _651:
 	movb	rl2,#0x2
@@ -293,9 +301,9 @@ _651:
 	call	_IO_PWM_SetDuty
 _652:
 
-; initializations.c	    65  
-; initializations.c	    66      //Accum fan signal
-; initializations.c	    67      IO_PWM_Init(IO_PWM_04, 100, TRUE, FALSE, 0, FALSE, NULL);
+; initializations.c	    73  
+; initializations.c	    74      //Accum fan signal
+; initializations.c	    75      IO_PWM_Init(IO_PWM_04, 100, TRUE, FALSE, 0, FALSE, NULL);
 	movw	r3,#0x64
 _653:
 	movb	rl2,#0x4
@@ -308,7 +316,7 @@ _653:
 	call	_IO_PWM_Init
 _654:
 
-; initializations.c	    68      IO_PWM_SetDuty(IO_PWM_04, 1.00 * 0xFFFF, NULL);    //Default 100%, build up momentum in fans or whatever? Lol
+; initializations.c	    76      IO_PWM_SetDuty(IO_PWM_04, 1.00 * 0xFFFF, NULL);    //Default 100%, build up momentum in fans or whatever? Lol
 	movw	r3,#0xffff
 _655:
 	movb	rl2,#0x4
@@ -324,27 +332,27 @@ _74:
 	movw	r8,#@seg(_Sensor_BPS0+0x1a)
 _656:
 
-; initializations.c	    69  
-; initializations.c	    70      //----------------------------------------------------------------------------
-; initializations.c	    71      //ADC channels
-; initializations.c	    72      //----------------------------------------------------------------------------
-; initializations.c	    73      //TPS+BPS
-; initializations.c	    74      extern Sensor Sensor_BenchTPS0; //wtf where are these even defined?
-; initializations.c	    75      extern Sensor Sensor_BenchTPS1;
-; initializations.c	    76  
-; initializations.c	    77      //IO_ADC_ChannelInit(IO_ADC_5V_00, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_0, NULL);
-; initializations.c	    78      //IO_ADC_ChannelInit(IO_ADC_5V_01, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_1, NULL);
-; initializations.c	    79  
-; initializations.c	    80      //TPS/BPS
-; initializations.c	    81      //Sensor_BPS0.ioErr_init = IO_ADC_ChannelInit(IO_ADC_5V_02, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_0, NULL);
-; initializations.c	    82      if (benchMode == TRUE)
+; initializations.c	    77  
+; initializations.c	    78      //----------------------------------------------------------------------------
+; initializations.c	    79      //ADC channels
+; initializations.c	    80      //----------------------------------------------------------------------------
+; initializations.c	    81      //TPS+BPS
+; initializations.c	    82      extern Sensor Sensor_BenchTPS0; //wtf where are these even defined?
+; initializations.c	    83      extern Sensor Sensor_BenchTPS1;
+; initializations.c	    84  
+; initializations.c	    85      //IO_ADC_ChannelInit(IO_ADC_5V_00, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_0, NULL);
+; initializations.c	    86      //IO_ADC_ChannelInit(IO_ADC_5V_01, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_1, NULL);
+; initializations.c	    87  
+; initializations.c	    88      //TPS/BPS
+; initializations.c	    89      //Sensor_BPS0.ioErr_init = IO_ADC_ChannelInit(IO_ADC_5V_02, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_0, NULL);
+; initializations.c	    90      if (benchMode == TRUE)
 	cmpb	rh1,#0x1
 	jmp	cc_ne,_3
 _657:
 
-; initializations.c	    83      {
-; initializations.c	    84          //Redo BPS ratiometric
-; initializations.c	    85          Sensor_TPS0.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_00, IO_ADC_RESISTIVE, 0, 0, 0, NULL);
+; initializations.c	    91      {
+; initializations.c	    92          //Redo BPS ratiometric
+; initializations.c	    93          Sensor_TPS0.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_00, IO_ADC_RESISTIVE, 0, 0, 0, NULL);
 	movb	rl2,#0x8
 	movb	rh2,#0x0
 	movb	rl3,#0x0
@@ -358,7 +366,7 @@ _658:
 	movw	[r0],r2
 _659:
 
-; initializations.c	    86          Sensor_TPS1.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_01, IO_ADC_RESISTIVE, 0, 0, 0, NULL);
+; initializations.c	    94          Sensor_TPS1.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_01, IO_ADC_RESISTIVE, 0, 0, 0, NULL);
 	movb	rl2,#0x9
 	movb	rh2,#0x0
 	movb	rl3,#0x0
@@ -372,7 +380,7 @@ _660:
 	movw	[r6],r2
 _661:
 
-; initializations.c	    87          Sensor_BPS0.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_02, IO_ADC_RESISTIVE, 0, 0, 0, NULL);
+; initializations.c	    95          Sensor_BPS0.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_02, IO_ADC_RESISTIVE, 0, 0, 0, NULL);
 	movb	rl2,#0xa
 	movb	rh2,#0x0
 	movb	rl3,#0x0
@@ -386,7 +394,7 @@ _662:
 	movw	[r9],r2
 _663:
 
-; initializations.c	    88          Sensor_BPS1.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_03, IO_ADC_RESISTIVE, 0, 0, 0, NULL);
+; initializations.c	    96          Sensor_BPS1.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_03, IO_ADC_RESISTIVE, 0, 0, 0, NULL);
 	movb	rl2,#0xb
 	movb	rh2,#0x0
 	movb	rl3,#0x0
@@ -396,14 +404,14 @@ _664:
 	jmp	_4
 _3:
 
-; initializations.c	    89      }
-; initializations.c	    90      else //Not bench mode
-; initializations.c	    91      {
-; initializations.c	    92          //In the future, production TPS will be digital instead of analog (see PWD section, below)
-; initializations.c	    93          //Sensor_TPS0.ioErr_signalInit = IO_PWD_PulseInit(IO_PWM_00, IO_PWD_HIGH_TIME);
-; initializations.c	    94          //Sensor_TPS1.ioErr_signalInit = IO_PWD_PulseInit(IO_PWM_01, IO_PWD_HIGH_TIME);
-; initializations.c	    95          //Redo BPS ratiometric
-; initializations.c	    96          Sensor_TPS0.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_00, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_0, NULL);
+; initializations.c	    97      }
+; initializations.c	    98      else //Not bench mode
+; initializations.c	    99      {
+; initializations.c	   100          //In the future, production TPS will be digital instead of analog (see PWD section, below)
+; initializations.c	   101          //Sensor_TPS0.ioErr_signalInit = IO_PWD_PulseInit(IO_PWM_00, IO_PWD_HIGH_TIME);
+; initializations.c	   102          //Sensor_TPS1.ioErr_signalInit = IO_PWD_PulseInit(IO_PWM_01, IO_PWD_HIGH_TIME);
+; initializations.c	   103          //Redo BPS ratiometric
+; initializations.c	   104          Sensor_TPS0.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_00, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_0, NULL);
 	movb	rl4,#0x24
 _665:
 	movb	rl2,#0x8
@@ -418,7 +426,7 @@ _666:
 	movw	[r0],r2
 _667:
 
-; initializations.c	    97          Sensor_TPS1.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_01, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_1, NULL);
+; initializations.c	   105          Sensor_TPS1.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_01, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_1, NULL);
 	movb	rl4,#0x25
 _668:
 	movb	rl2,#0x9
@@ -433,7 +441,7 @@ _669:
 	movw	[r6],r2
 _670:
 
-; initializations.c	    98          Sensor_BPS0.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_02, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_0, NULL);
+; initializations.c	   106          Sensor_BPS0.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_02, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_0, NULL);
 	movb	rl4,#0x24
 _671:
 	movb	rl2,#0xa
@@ -448,7 +456,7 @@ _672:
 	movw	[r9],r2
 _673:
 
-; initializations.c	    99          Sensor_BPS1.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_03, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_1, NULL);
+; initializations.c	   107          Sensor_BPS1.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_03, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_1, NULL);
 	movb	rl4,#0x25
 _674:
 	movb	rl2,#0xb
@@ -467,13 +475,13 @@ _676:
 	movw	[r11],r2
 _677:
 
-; initializations.c	   100      }
-; initializations.c	   101  
-; initializations.c	   102      //Unused
-; initializations.c	   103      //IO_ADC_ChannelInit(IO_ADC_5V_03, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_0, NULL);
-; initializations.c	   104  
-; initializations.c	   105      //SAS (Steering Angle Sensor)
-; initializations.c	   106      Sensor_SAS.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_04, IO_ADC_ABSOLUTE, 0, 0, IO_ADC_SENSOR_SUPPLY_1, NULL);
+; initializations.c	   108      }
+; initializations.c	   109  
+; initializations.c	   110      //Unused
+; initializations.c	   111      //IO_ADC_ChannelInit(IO_ADC_5V_03, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_0, NULL);
+; initializations.c	   112  
+; initializations.c	   113      //SAS (Steering Angle Sensor)
+; initializations.c	   114      Sensor_SAS.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_04, IO_ADC_ABSOLUTE, 0, 0, IO_ADC_SENSOR_SUPPLY_1, NULL);
 	movb	rl4,#0x25
 _678:
 	movb	rl2,#0xc
@@ -488,9 +496,9 @@ _679:
 	movw	@pof(_Sensor_SAS+0x1a),r2
 _680:
 
-; initializations.c	   107  
-; initializations.c	   108      //DRS
-; initializations.c	   109      Sensor_DRSKnob.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_VAR_00, IO_ADC_ABSOLUTE, IO_ADC_RANGE_25V, 0, 0, NULL);
+; initializations.c	   115  
+; initializations.c	   116      //DRS
+; initializations.c	   117      Sensor_DRSKnob.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_VAR_00, IO_ADC_ABSOLUTE, IO_ADC_RANGE_25V, 0, 0, NULL);
 	movb	rl2,#0x10
 _681:
 	movb	rh2,#0x2
@@ -505,40 +513,40 @@ _682:
 	movw	@pof(_Sensor_DRSKnob+0x1a),r2
 _683:
 
-; initializations.c	   110  
-; initializations.c	   111      //TCS Pot
-; initializations.c	   112      //IO_ADC_ChannelInit(IO_ADC_5V_04, IO_ADC_RESISTIVE, 0, 0, 0, NULL);
-; initializations.c	   113  
-; initializations.c	   114      //Unused
-; initializations.c	   115      //IO_ADC_ChannelInit(IO_ADC_5V_05, IO_ADC_RESISTIVE, 0, 0, 0, NULL);
-; initializations.c	   116      //IO_ADC_ChannelInit(IO_ADC_5V_06, IO_ADC_RESISTIVE, 0, 0, 0, NULL);
-; initializations.c	   117      //IO_ADC_ChannelInit(IO_ADC_5V_07, IO_ADC_RESISTIVE, 0, 0, 0, NULL);
 ; initializations.c	   118  
-; initializations.c	   119      //----------------------------------------------------------------------------
-; initializations.c	   120      //PWD channels
-; initializations.c	   121      //----------------------------------------------------------------------------
-; initializations.c	   122      //TPS
-; initializations.c	   123      //MOVED TO TPS/BPS BLOCK ABOVE
-; initializations.c	   124  
-; initializations.c	   125      //Wheel Speed Sensors (Pulse Width Detection)
+; initializations.c	   119      //TCS Pot
+; initializations.c	   120      //IO_ADC_ChannelInit(IO_ADC_5V_04, IO_ADC_RESISTIVE, 0, 0, 0, NULL);
+; initializations.c	   121  
+; initializations.c	   122      //Unused
+; initializations.c	   123      //IO_ADC_ChannelInit(IO_ADC_5V_05, IO_ADC_RESISTIVE, 0, 0, 0, NULL);
+; initializations.c	   124      //IO_ADC_ChannelInit(IO_ADC_5V_06, IO_ADC_RESISTIVE, 0, 0, 0, NULL);
+; initializations.c	   125      //IO_ADC_ChannelInit(IO_ADC_5V_07, IO_ADC_RESISTIVE, 0, 0, 0, NULL);
 ; initializations.c	   126  
-; initializations.c	   127      //IO_RTC_StartTime(&Sensor_WSS_FL.timestamp);
-; initializations.c	   128      //IO_RTC_StartTime(&Sensor_WSS_FR.timestamp);
-; initializations.c	   129      //IO_RTC_StartTime(&Sensor_WSS_RL.timestamp);
-; initializations.c	   130      //IO_RTC_StartTime(&Sensor_WSS_RR.timestamp);
-; initializations.c	   131  
-; initializations.c	   132      //Sensor_WSS_FL.heldSensorValue = Sensor_WSS_FR.heldSensorValue = Sensor_WSS_RL.heldSensorValue = Sensor_WSS_RR.heldSensorValue = 0;
-; initializations.c	   133  
-; initializations.c	   134      //Sensor_WSS_FL.ioErr_signalInit = IO_PWD_ComplexInit(IO_PWD_10, IO_PWD_LOW_TIME, IO_PWD_FALLING_VAR, IO_PWD_RESOLUTION_0_8, 4, IO_PWD_THRESH_1_25V, NULL, NULL); //P274
-; initializations.c	   135      //Sensor_WSS_FR.ioErr_signalInit = IO_PWD_ComplexInit(IO_PWD_08, IO_PWD_LOW_TIME, IO_PWD_FALLING_VAR, IO_PWD_RESOLUTION_0_8, 4, IO_PWD_THRESH_1_25V, NULL, NULL); //P275
-; initializations.c	   136      //Sensor_WSS_RL.ioErr_signalInit = IO_PWD_ComplexInit(IO_PWD_09, IO_PWD_LOW_TIME, IO_PWD_FALLING_VAR, IO_PWD_RESOLUTION_0_8, 4, IO_PWD_THRESH_1_25V, NULL, NULL); //P268
-; initializations.c	   137      //Sensor_WSS_RR.ioErr_signalInit = IO_PWD_ComplexInit(IO_PWD_11, IO_PWD_LOW_TIME, IO_PWD_FALLING_VAR, IO_PWD_RESOLUTION_0_8, 4, IO_PWD_THRESH_1_25V, NULL, NULL); //P267
-; initializations.c	   138      //Maybe look for falling edge because we're using NPN/sinking WSS? 
+; initializations.c	   127      //----------------------------------------------------------------------------
+; initializations.c	   128      //PWD channels
+; initializations.c	   129      //----------------------------------------------------------------------------
+; initializations.c	   130      //TPS
+; initializations.c	   131      //MOVED TO TPS/BPS BLOCK ABOVE
+; initializations.c	   132  
+; initializations.c	   133      //Wheel Speed Sensors (Pulse Width Detection)
+; initializations.c	   134  
+; initializations.c	   135      //IO_RTC_StartTime(&Sensor_WSS_FL.timestamp);
+; initializations.c	   136      //IO_RTC_StartTime(&Sensor_WSS_FR.timestamp);
+; initializations.c	   137      //IO_RTC_StartTime(&Sensor_WSS_RL.timestamp);
+; initializations.c	   138      //IO_RTC_StartTime(&Sensor_WSS_RR.timestamp);
 ; initializations.c	   139  
-; initializations.c	   140      //----------------------------------------------------------------------------
-; initializations.c	   141      //Switches
-; initializations.c	   142      //----------------------------------------------------------------------------
-; initializations.c	   143      Sensor_RTDButton.ioErr_signalInit = IO_DI_Init(IO_DI_00, IO_DI_PU_10K);     //RTD Button
+; initializations.c	   140      //Sensor_WSS_FL.heldSensorValue = Sensor_WSS_FR.heldSensorValue = Sensor_WSS_RL.heldSensorValue = Sensor_WSS_RR.heldSensorValue = 0;
+; initializations.c	   141  
+; initializations.c	   142      //Sensor_WSS_FL.ioErr_signalInit = IO_PWD_ComplexInit(IO_PWD_10, IO_PWD_LOW_TIME, IO_PWD_FALLING_VAR, IO_PWD_RESOLUTION_0_8, 4, IO_PWD_THRESH_1_25V, NULL, NULL); //P274
+; initializations.c	   143      //Sensor_WSS_FR.ioErr_signalInit = IO_PWD_ComplexInit(IO_PWD_08, IO_PWD_LOW_TIME, IO_PWD_FALLING_VAR, IO_PWD_RESOLUTION_0_8, 4, IO_PWD_THRESH_1_25V, NULL, NULL); //P275
+; initializations.c	   144      //Sensor_WSS_RL.ioErr_signalInit = IO_PWD_ComplexInit(IO_PWD_09, IO_PWD_LOW_TIME, IO_PWD_FALLING_VAR, IO_PWD_RESOLUTION_0_8, 4, IO_PWD_THRESH_1_25V, NULL, NULL); //P268
+; initializations.c	   145      //Sensor_WSS_RR.ioErr_signalInit = IO_PWD_ComplexInit(IO_PWD_11, IO_PWD_LOW_TIME, IO_PWD_FALLING_VAR, IO_PWD_RESOLUTION_0_8, 4, IO_PWD_THRESH_1_25V, NULL, NULL); //P267
+; initializations.c	   146      //Maybe look for falling edge because we're using NPN/sinking WSS? 
+; initializations.c	   147  
+; initializations.c	   148      //----------------------------------------------------------------------------
+; initializations.c	   149      //Switches
+; initializations.c	   150      //----------------------------------------------------------------------------
+; initializations.c	   151      Sensor_RTDButton.ioErr_signalInit = IO_DI_Init(IO_DI_00, IO_DI_PU_10K);     //RTD Button
 	movb	rl2,#0x26
 _684:
 	movb	rh2,#0x1
@@ -548,7 +556,7 @@ _685:
 	movw	@pof(_Sensor_RTDButton+0x1a),r2
 _686:
 
-; initializations.c	   144      Sensor_EcoButton.ioErr_signalInit = IO_DI_Init(IO_DI_01, IO_DI_PU_10K);     //Eco Button
+; initializations.c	   152      Sensor_EcoButton.ioErr_signalInit = IO_DI_Init(IO_DI_01, IO_DI_PU_10K);     //Eco Button
 	movb	rl2,#0x27
 _687:
 	movb	rh2,#0x1
@@ -558,8 +566,8 @@ _688:
 	movw	@pof(_Sensor_EcoButton+0x1a),r2
 _689:
 
-; initializations.c	   145      //Sensor_TCSSwitchUp.ioErr_signalInit = IO_DI_Init(IO_DI_02, IO_DI_PU_10K);   //TCS Switch A
-; initializations.c	   146      Sensor_TVButton.ioErr_signalInit = IO_DI_Init(IO_DI_03, IO_DI_PU_10K); // Torque Control Enable Button
+; initializations.c	   153      //Sensor_TCSSwitchUp.ioErr_signalInit = IO_DI_Init(IO_DI_02, IO_DI_PU_10K);   //TCS Switch A
+; initializations.c	   154      Sensor_TVButton.ioErr_signalInit = IO_DI_Init(IO_DI_03, IO_DI_PU_10K); // Torque Control Enable Button
 	movb	rl2,#0x29
 _690:
 	movb	rh2,#0x1
@@ -569,7 +577,7 @@ _691:
 	movw	@pof(_Sensor_TVButton+0x1a),r2
 _692:
 
-; initializations.c	   147      Sensor_DRSButton.ioErr_signalInit = IO_DI_Init(IO_DI_04, IO_DI_PU_10K);
+; initializations.c	   155      Sensor_DRSButton.ioErr_signalInit = IO_DI_Init(IO_DI_04, IO_DI_PU_10K);
 	movb	rl2,#0x2a
 _693:
 	movb	rh2,#0x1
@@ -579,21 +587,21 @@ _694:
 	movw	@pof(_Sensor_DRSButton+0x1a),r2
 _695:
 
-; initializations.c	   148  
-; initializations.c	   149      //TV and DRS Button may be switched on SRE-7
-; initializations.c	   150  
-; initializations.c	   151      // Sensor_IO_DI_06.ioErr_signalInit = IO_DI_Init(IO_DI_06, IO_DI_PD_10K); //Unused
-; initializations.c	   152      Sensor_HVILTerminationSense.ioErr_signalInit = IO_DI_Init(IO_DI_07, IO_DI_PD_10K); //HVIL Term sense, high = HV present
+; initializations.c	   156  
+; initializations.c	   157      //TV and DRS Button may be switched on SRE-7
+; initializations.c	   158  
+; initializations.c	   159      // Sensor_IO_DI_06.ioErr_signalInit = IO_DI_Init(IO_DI_06, IO_DI_PD_10K); //Unused
+; initializations.c	   160      Sensor_HVILTerminationSense.ioErr_signalInit = IO_DI_Init(IO_DI_07, IO_DI_PU_10K); //HVIL Term sense, high = HV present
 	movb	rl2,#0x2d
 _696:
-	movb	rh2,#0x0
+	movb	rh2,#0x1
 	call	_IO_DI_Init
 _697:
 	extp	#@pag(_Sensor_HVILTerminationSense+0x1a),#0x1
 	movw	@pof(_Sensor_HVILTerminationSense+0x1a),r2
 _698:
 
-; initializations.c	   153  }
+; initializations.c	   161  }
 	movw	r10,[r15+]
 _158:
 	movw	r9,[r15+]
@@ -616,11 +624,11 @@ _40:
 code_vcu_ADCWasteLoop	.section	code, cluster 'vcu_ADCWasteLoop', new
 	.global	_vcu_ADCWasteLoop
 
-; initializations.c	   154  
-; initializations.c	   155  //----------------------------------------------------------------------------
-; initializations.c	   156  // Waste CPU cycles until we have valid data
-; initializations.c	   157  //----------------------------------------------------------------------------
-; initializations.c	   158  void vcu_ADCWasteLoop(void)
+; initializations.c	   162  
+; initializations.c	   163  //----------------------------------------------------------------------------
+; initializations.c	   164  // Waste CPU cycles until we have valid data
+; initializations.c	   165  //----------------------------------------------------------------------------
+; initializations.c	   166  void vcu_ADCWasteLoop(void)
 ; Function _vcu_ADCWasteLoop
 _21:
 _vcu_ADCWasteLoop	.proc	far
@@ -635,13 +643,13 @@ _412:
 	subw	r15,#0x8
 _423:
 
-; initializations.c	   159  {
-; initializations.c	   160      bool tempFresh = FALSE;
+; initializations.c	   167  {
+; initializations.c	   168      bool tempFresh = FALSE;
 	movb	rh4,#0x0
 _703:
 
-; initializations.c	   161      ubyte2 tempData;
-; initializations.c	   162      ubyte4 timestamp_sensorpoll = 0;
+; initializations.c	   169      ubyte2 tempData;
+; initializations.c	   170      ubyte4 timestamp_sensorpoll = 0;
 	movw	r11,#0x0
 _704:
 	movb	[r15+#0x6],rh4
@@ -650,7 +658,7 @@ _705:
 	movw	[r15+#0x2],r11
 _706:
 
-; initializations.c	   163      IO_RTC_StartTime(&timestamp_sensorpoll);
+; initializations.c	   171      IO_RTC_StartTime(&timestamp_sensorpoll);
 	movw	r2,r15
 	andw	r2,#0x3fff
 	orw	r2,#@sof(__lc_ub_user_stack+0xffff) & 0xc000
@@ -658,7 +666,7 @@ _706:
 	call	_IO_RTC_StartTime
 _707:
 
-; initializations.c	   164      while (IO_RTC_GetTimeUS(timestamp_sensorpoll) < 1000000)
+; initializations.c	   172      while (IO_RTC_GetTimeUS(timestamp_sensorpoll) < 1000000)
 	movw	r3,[r15+#0x2]
 	movw	r2,[r15]
 	call	_IO_RTC_GetTimeUS
@@ -668,16 +676,16 @@ _708:
 	jmp+	cc_uge,_5
 _709:
 
-; initializations.c	   165      {
-; initializations.c	   166          IO_Driver_TaskBegin();
-; initializations.c	   167  
-; initializations.c	   168          IO_PWM_SetDuty(IO_PWM_01, 0, NULL);
-; initializations.c	   169  
-; initializations.c	   170          IO_DO_Set(IO_DO_00, FALSE); //False = low
-; initializations.c	   171          IO_DO_Set(IO_DO_01, FALSE); //HVIL shutdown relay
-; initializations.c	   172  
-; initializations.c	   173          //IO_DI (digital inputs) supposed to take 2 cycles before they return valid data
-; initializations.c	   174          IO_DI_Get(IO_DI_04, &tempData);
+; initializations.c	   173      {
+; initializations.c	   174          IO_Driver_TaskBegin();
+; initializations.c	   175  
+; initializations.c	   176          IO_PWM_SetDuty(IO_PWM_01, 0, NULL);
+; initializations.c	   177  
+; initializations.c	   178          IO_DO_Set(IO_DO_00, FALSE); //False = low
+; initializations.c	   179          IO_DO_Set(IO_DO_01, FALSE); //HVIL shutdown relay
+; initializations.c	   180  
+; initializations.c	   181          //IO_DI (digital inputs) supposed to take 2 cycles before they return valid data
+; initializations.c	   182          IO_DI_Get(IO_DI_04, &tempData);
 	movw	r8,#0x4
 	addw	r8,r15
 	andw	r8,#0x3fff
@@ -685,8 +693,8 @@ _709:
 	movw	r9,#@seg(__lc_ub_user_stack+0xffff)
 _710:
 
-; initializations.c	   175          IO_DI_Get(IO_DI_05, &tempData);
-; initializations.c	   176          IO_ADC_Get(IO_ADC_5V_00, &tempData, &tempFresh);
+; initializations.c	   183          IO_DI_Get(IO_DI_05, &tempData);
+; initializations.c	   184          IO_ADC_Get(IO_ADC_5V_00, &tempData, &tempFresh);
 	movw	r10,#0x6
 	addw	r10,r15
 	andw	r10,#0x3fff
@@ -735,7 +743,7 @@ _721:
 	call	_IO_ADC_Get
 _722:
 
-; initializations.c	   177          IO_ADC_Get(IO_ADC_5V_01, &tempData, &tempFresh);
+; initializations.c	   185          IO_ADC_Get(IO_ADC_5V_01, &tempData, &tempFresh);
 	movb	rl2,#0x9
 	movw	r4,r6
 	movw	r5,r9
@@ -744,12 +752,12 @@ _722:
 	call	_IO_ADC_Get
 _723:
 
-; initializations.c	   178  
-; initializations.c	   179          IO_Driver_TaskEnd();
+; initializations.c	   186  
+; initializations.c	   187          IO_Driver_TaskEnd();
 	call	_IO_Driver_TaskEnd
 
-; initializations.c	   180          //TODO: Find out if EACH pin needs 2 cycles or just the entire DIO unit
-; initializations.c	   181          while (IO_RTC_GetTimeUS(timestamp_sensorpoll) < 12500)
+; initializations.c	   188          //TODO: Find out if EACH pin needs 2 cycles or just the entire DIO unit
+; initializations.c	   189          while (IO_RTC_GetTimeUS(timestamp_sensorpoll) < 12500)
 _7:
 	movw	r3,[r15+#0x2]
 	movw	r2,[r15]
@@ -768,9 +776,9 @@ _726:
 	jmp+	cc_ult,_6
 _5:
 
-; initializations.c	   182              ; // wait until 1/8/10s (125ms) have passed
-; initializations.c	   183      }
-; initializations.c	   184  }
+; initializations.c	   190              ; // wait until 1/8/10s (125ms) have passed
+; initializations.c	   191      }
+; initializations.c	   192  }
 	addw	r15,#0x8
 _434:
 	movw	r10,[r15+]
@@ -789,11 +797,11 @@ _45:
 huge_Sensor_TPS0	.section	huge, clear, cluster 'Sensor_TPS0', new
 	.global	_Sensor_TPS0
 
-; initializations.c	   185  
-; initializations.c	   186  /*****************************************************************************
-; initializations.c	   187  * Sensors
-; initializations.c	   188  ****************************************************************************/
-; initializations.c	   189  Sensor Sensor_TPS0; // = { 0, 0.5, 4.5 };
+; initializations.c	   193  
+; initializations.c	   194  /*****************************************************************************
+; initializations.c	   195  * Sensors
+; initializations.c	   196  ****************************************************************************/
+; initializations.c	   197  Sensor Sensor_TPS0; // = { 0, 0.5, 4.5 };
 _Sensor_TPS0	.label	word
 	.ds	30
 	; End of section
@@ -801,7 +809,7 @@ _Sensor_TPS0	.label	word
 huge_Sensor_TPS1	.section	huge, clear, cluster 'Sensor_TPS1', new
 	.global	_Sensor_TPS1
 
-; initializations.c	   190  Sensor Sensor_TPS1; // = { 0, 4.5, 0.5 };
+; initializations.c	   198  Sensor Sensor_TPS1; // = { 0, 4.5, 0.5 };
 _Sensor_TPS1	.label	word
 	.ds	30
 	; End of section
@@ -809,7 +817,7 @@ _Sensor_TPS1	.label	word
 huge_Sensor_BPS0	.section	huge, clear, cluster 'Sensor_BPS0', new
 	.global	_Sensor_BPS0
 
-; initializations.c	   191  Sensor Sensor_BPS0; // = { 1, 0.5, 4.5 };  //Brake system pressure (or front only in the future)
+; initializations.c	   199  Sensor Sensor_BPS0; // = { 1, 0.5, 4.5 };  //Brake system pressure (or front only in the future)
 _Sensor_BPS0	.label	word
 	.ds	30
 	; End of section
@@ -817,7 +825,7 @@ _Sensor_BPS0	.label	word
 huge_Sensor_BPS1	.section	huge, clear, cluster 'Sensor_BPS1', new
 	.global	_Sensor_BPS1
 
-; initializations.c	   192  Sensor Sensor_BPS1;  // = { 2, 0.5, 4.5 }; //Rear brake system pressure (separate address in case used for something else)
+; initializations.c	   200  Sensor Sensor_BPS1;  // = { 2, 0.5, 4.5 }; //Rear brake system pressure (separate address in case used for something else)
 _Sensor_BPS1	.label	word
 	.ds	30
 	; End of section
@@ -825,7 +833,7 @@ _Sensor_BPS1	.label	word
 huge_Sensor_SAS	.section	huge, clear, cluster 'Sensor_SAS', new
 	.global	_Sensor_SAS
 
-; initializations.c	   193  Sensor Sensor_SAS;    // = { 4 };
+; initializations.c	   201  Sensor Sensor_SAS;    // = { 4 };
 _Sensor_SAS	.label	word
 	.ds	30
 	; End of section
@@ -833,7 +841,7 @@ _Sensor_SAS	.label	word
 huge_Sensor_LVBattery	.section	huge, clear, cluster 'Sensor_LVBattery', new
 	.global	_Sensor_LVBattery
 
-; initializations.c	   194  Sensor Sensor_LVBattery;
+; initializations.c	   202  Sensor Sensor_LVBattery;
 _Sensor_LVBattery	.label	word
 	.ds	30
 	; End of section
@@ -841,8 +849,8 @@ _Sensor_LVBattery	.label	word
 huge_Sensor_TCSKnob	.section	huge, clear, cluster 'Sensor_TCSKnob', new
 	.global	_Sensor_TCSKnob
 
-; initializations.c	   195  
-; initializations.c	   196  Sensor Sensor_TCSKnob;
+; initializations.c	   203  
+; initializations.c	   204  Sensor Sensor_TCSKnob;
 _Sensor_TCSKnob	.label	word
 	.ds	30
 	; End of section
@@ -850,8 +858,8 @@ _Sensor_TCSKnob	.label	word
 huge_Sensor_RTDButton	.section	huge, clear, cluster 'Sensor_RTDButton', new
 	.global	_Sensor_RTDButton
 
-; initializations.c	   197  
-; initializations.c	   198  Sensor Sensor_RTDButton;
+; initializations.c	   205  
+; initializations.c	   206  Sensor Sensor_RTDButton;
 _Sensor_RTDButton	.label	word
 	.ds	30
 	; End of section
@@ -859,7 +867,7 @@ _Sensor_RTDButton	.label	word
 huge_Sensor_EcoButton	.section	huge, clear, cluster 'Sensor_EcoButton', new
 	.global	_Sensor_EcoButton
 
-; initializations.c	   199  Sensor Sensor_EcoButton;
+; initializations.c	   207  Sensor Sensor_EcoButton;
 _Sensor_EcoButton	.label	word
 	.ds	30
 	; End of section
@@ -867,7 +875,7 @@ _Sensor_EcoButton	.label	word
 huge_Sensor_HVILTerminationSense	.section	huge, clear, cluster 'Sensor_HVILTerminationSense', new
 	.global	_Sensor_HVILTerminationSense
 
-; initializations.c	   200  Sensor Sensor_HVILTerminationSense;
+; initializations.c	   208  Sensor Sensor_HVILTerminationSense;
 _Sensor_HVILTerminationSense	.label	word
 	.ds	30
 	; End of section
@@ -875,7 +883,7 @@ _Sensor_HVILTerminationSense	.label	word
 huge_Sensor_TVButton	.section	huge, clear, cluster 'Sensor_TVButton', new
 	.global	_Sensor_TVButton
 
-; initializations.c	   201  Sensor Sensor_TVButton;
+; initializations.c	   209  Sensor Sensor_TVButton;
 _Sensor_TVButton	.label	word
 	.ds	30
 	; End of section
@@ -883,8 +891,8 @@ _Sensor_TVButton	.label	word
 huge_Sensor_DRSButton	.section	huge, clear, cluster 'Sensor_DRSButton', new
 	.global	_Sensor_DRSButton
 
-; initializations.c	   202  
-; initializations.c	   203  Sensor Sensor_DRSButton;
+; initializations.c	   210  
+; initializations.c	   211  Sensor Sensor_DRSButton;
 _Sensor_DRSButton	.label	word
 	.ds	30
 	; End of section
@@ -892,7 +900,7 @@ _Sensor_DRSButton	.label	word
 huge_Sensor_DRSKnob	.section	huge, clear, cluster 'Sensor_DRSKnob', new
 	.global	_Sensor_DRSKnob
 
-; initializations.c	   204  Sensor Sensor_DRSKnob;
+; initializations.c	   212  Sensor Sensor_DRSKnob;
 _Sensor_DRSKnob	.label	word
 	.ds	30
 	; End of section
@@ -1289,10 +1297,10 @@ _36:
 	.db	2
 	.dl	_32
 	.db	3
-	.db	'vcu_initializeADC',0,1,20,6,6,1,1,1
+	.db	'vcu_initializeADC',0,1,28,6,6,1,1,1
 	.dl	_9,_40,_8
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'benchMode',0,1,20,29,2
+	.db	'benchMode',0,1,28,29,2
 	.dl	_72,_73
 	.db	5
 	.dl	_9,_40
@@ -1320,7 +1328,7 @@ _595:
 _596:
 	.db	5,6,7,0,5,2
 	.dl	_9
-	.db	3,19,1,5,76,9
+	.db	3,27,1,5,76,9
 	.dw	_376-_9
 	.db	3,6,1,5,100,9
 	.dw	_375-_376
@@ -1567,18 +1575,18 @@ _41:
 	.db	2
 	.dl	_32
 	.db	3
-	.db	'vcu_ADCWasteLoop',0,1,158,1,6,6,1,1,1
+	.db	'vcu_ADCWasteLoop',0,1,166,1,6,6,1,1,1
 	.dl	_21,_45,_20
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
 	.dl	_21,_45
 	.db	5
-	.db	'tempFresh',0,1,160,1,10,2
+	.db	'tempFresh',0,1,168,1,10,2
 	.dl	_72,_75
 	.db	5
-	.db	'tempData',0,1,161,1,12,2
+	.db	'tempData',0,1,169,1,12,2
 	.dl	_76,_77
 	.db	5
-	.db	'timestamp_sensorpoll',0,1,162,1,12,2
+	.db	'timestamp_sensorpoll',0,1,170,1,12,2
 	.dl	_78,_79
 	.db	0,0,0
 	; End of section
@@ -1602,7 +1610,7 @@ _701:
 _702:
 	.db	5,6,7,0,5,2
 	.dl	_21
-	.db	3,157,1,1,5,22,9
+	.db	3,165,1,1,5,22,9
 	.dw	_423-_21
 	.db	3,2,1,5,35,9
 	.dw	_703-_423
@@ -1689,7 +1697,7 @@ _46:
 	.db	12,1,2
 	.dl	_32
 	.db	3
-	.db	'Sensor_TPS0',0,7,189,1,8,5
+	.db	'Sensor_TPS0',0,7,197,1,8,5
 	.dl	_80
 	.db	1,5,3
 	.dl	_Sensor_TPS0
@@ -1714,7 +1722,7 @@ _48:
 	.db	12,1,2
 	.dl	_32
 	.db	3
-	.db	'Sensor_TPS1',0,7,190,1,8,5
+	.db	'Sensor_TPS1',0,7,198,1,8,5
 	.dl	_80
 	.db	1,5,3
 	.dl	_Sensor_TPS1
@@ -1739,7 +1747,7 @@ _50:
 	.db	12,1,2
 	.dl	_32
 	.db	3
-	.db	'Sensor_BPS0',0,7,191,1,8,5
+	.db	'Sensor_BPS0',0,7,199,1,8,5
 	.dl	_80
 	.db	1,5,3
 	.dl	_Sensor_BPS0
@@ -1764,7 +1772,7 @@ _52:
 	.db	12,1,2
 	.dl	_32
 	.db	3
-	.db	'Sensor_BPS1',0,7,192,1,8,5
+	.db	'Sensor_BPS1',0,7,200,1,8,5
 	.dl	_80
 	.db	1,5,3
 	.dl	_Sensor_BPS1
@@ -1789,7 +1797,7 @@ _54:
 	.db	12,1,2
 	.dl	_32
 	.db	3
-	.db	'Sensor_SAS',0,7,193,1,8,5
+	.db	'Sensor_SAS',0,7,201,1,8,5
 	.dl	_80
 	.db	1,5,3
 	.dl	_Sensor_SAS
@@ -1814,7 +1822,7 @@ _56:
 	.db	12,1,2
 	.dl	_32
 	.db	3
-	.db	'Sensor_RTDButton',0,7,198,1,8,5
+	.db	'Sensor_RTDButton',0,7,206,1,8,5
 	.dl	_80
 	.db	1,5,3
 	.dl	_Sensor_RTDButton
@@ -1839,7 +1847,7 @@ _58:
 	.db	12,1,2
 	.dl	_32
 	.db	3
-	.db	'Sensor_EcoButton',0,7,199,1,8,5
+	.db	'Sensor_EcoButton',0,7,207,1,8,5
 	.dl	_80
 	.db	1,5,3
 	.dl	_Sensor_EcoButton
@@ -1864,7 +1872,7 @@ _60:
 	.db	12,1,2
 	.dl	_32
 	.db	3
-	.db	'Sensor_TVButton',0,7,201,1,8,5
+	.db	'Sensor_TVButton',0,7,209,1,8,5
 	.dl	_80
 	.db	1,5,3
 	.dl	_Sensor_TVButton
@@ -1889,7 +1897,7 @@ _62:
 	.db	12,1,2
 	.dl	_32
 	.db	3
-	.db	'Sensor_TCSKnob',0,7,196,1,8,5
+	.db	'Sensor_TCSKnob',0,7,204,1,8,5
 	.dl	_80
 	.db	1,5,3
 	.dl	_Sensor_TCSKnob
@@ -1914,7 +1922,7 @@ _64:
 	.db	12,1,2
 	.dl	_32
 	.db	3
-	.db	'Sensor_DRSButton',0,7,203,1,8,5
+	.db	'Sensor_DRSButton',0,7,211,1,8,5
 	.dl	_80
 	.db	1,5,3
 	.dl	_Sensor_DRSButton
@@ -1939,7 +1947,7 @@ _66:
 	.db	12,1,2
 	.dl	_32
 	.db	3
-	.db	'Sensor_DRSKnob',0,7,204,1,8,5
+	.db	'Sensor_DRSKnob',0,7,212,1,8,5
 	.dl	_80
 	.db	1,5,3
 	.dl	_Sensor_DRSKnob
@@ -1964,7 +1972,7 @@ _68:
 	.db	12,1,2
 	.dl	_32
 	.db	3
-	.db	'Sensor_HVILTerminationSense',0,7,200,1,8,5
+	.db	'Sensor_HVILTerminationSense',0,7,208,1,8,5
 	.dl	_80
 	.db	1,5,3
 	.dl	_Sensor_HVILTerminationSense
@@ -1989,7 +1997,7 @@ _70:
 	.db	12,1,2
 	.dl	_32
 	.db	3
-	.db	'Sensor_LVBattery',0,7,194,1,8,5
+	.db	'Sensor_LVBattery',0,7,202,1,8,5
 	.dl	_80
 	.db	1,5,3
 	.dl	_Sensor_LVBattery
@@ -3462,12 +3470,12 @@ _582:
 	; End of section
 
 
-; initializations.c	   205  
-; initializations.c	   206  //Switches
-; initializations.c	   207  //precharge failure
-; initializations.c	   208  
-; initializations.c	   209  //Other
-; initializations.c	   210  extern Sensor Sensor_LVBattery; // = { 0xA };  //Note: There will be no init for this "sensor"
+; initializations.c	   213  
+; initializations.c	   214  //Switches
+; initializations.c	   215  //precharge failure
+; initializations.c	   216  
+; initializations.c	   217  //Other
+; initializations.c	   218  extern Sensor Sensor_LVBattery; // = { 0xA };  //Note: There will be no init for this "sensor"
 
 	; Module end
 	.end

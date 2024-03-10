@@ -1,5 +1,5 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc24128a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=1 -DRTS_TTC_FLASH_DATE_DAY=17 -DRTS_TTC_FLASH_DATE_HOUR=13 -DRTS_TTC_FLASH_DATE_MINUTE=38 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\torqueEncoder.src
+	; Options: -f cc20744a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=3 -DRTS_TTC_FLASH_DATE_DAY=3 -DRTS_TTC_FLASH_DATE_HOUR=12 -DRTS_TTC_FLASH_DATE_MINUTE=6 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\torqueEncoder.src
 	; Module start
 	.source	'torqueEncoder.c'
 code_TorqueEncoder_new	.section	code, cluster 'TorqueEncoder_new', new
@@ -2146,19 +2146,19 @@ _225:
 	.db	5,5
 	.dl	184
 	.db	10
-	.db	'getPercent',0,7,15,8,6
+	.db	'getPercent',0,7,22,8,6
 	.dl	472
 	.db	1,1,1,1,7
-	.db	'value',0,7,15,26,2
+	.db	'value',0,7,22,26,2
 	.dl	472
 	.db	7
-	.db	'start',0,7,15,40,2
+	.db	'start',0,7,22,40,2
 	.dl	472
 	.db	7
-	.db	'end',0,7,15,54,2
+	.db	'end',0,7,22,54,2
 	.dl	472
 	.db	7
-	.db	'zeroToOneOnly',0,7,15,64,2
+	.db	'zeroToOneOnly',0,7,22,64,2
 	.dl	184
 	.db	0,2
 	.db	'unsigned short int',0,2,7,16

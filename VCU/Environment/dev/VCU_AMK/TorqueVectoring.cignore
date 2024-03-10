@@ -19,6 +19,7 @@
  * Torque Vectoring
  * Torque Vectoring reads available sensors on the vehicle, uses a look up table to choose torque setpoint
  * based on available friction & driver torque command and yaw rate based on driver steering and velocity
+ * Intial Author: James W
 *****************************/
 
 float Mz; //Yaw Moment Target

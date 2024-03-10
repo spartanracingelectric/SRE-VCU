@@ -1,5 +1,11 @@
+/*****************************************************************************
+ * safety.c - All Vehicle Safety 
+ * Initial Author: Rusty P / Vincent Saw
+ ******************************************************************************
+ * For all torque reductions or safety state changes from external influence
+ ****************************************************************************/
+
 #include <stdlib.h> //malloc
-//#include <math.h>
 #include "IO_Driver.h"
 #include "IO_RTC.h"
 #include "IO_DIO.h"
@@ -172,7 +178,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     bps->calibrated == TRUE; // Remove later with BPS. Dont keep
     if (bps->calibrated == FALSE)
     {
-        me->faults |= F_bpsNotCalibrated;
+        //me->faults |= F_bpsNotCalibrated;
     }
     else
     {
@@ -232,7 +238,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     //-------------------------------------------------------------------
     if (tps->tps0->sensorValue < tps->tps0->specMin || tps->tps0->sensorValue > tps->tps0->specMax || tps->tps1->sensorValue < tps->tps1->specMin || tps->tps1->sensorValue > tps->tps1->specMax)
     {
-        me->faults |= F_tpsOutOfRange;
+        //me->faults |= F_tpsOutOfRange;
     }
     else
     {
@@ -244,7 +250,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     //-------------------------------------------------------------------
     if (bps->bps0->sensorValue < bps->bps0->specMin || bps->bps0->sensorValue > bps->bps0->specMax)
     {
-        me->faults |= F_bpsOutOfRange;
+        //me->faults |= F_bpsOutOfRange;
     }
     else
     {
@@ -524,7 +530,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
 
     if (BMS_getPower_W(bms) > 75000)
     {
-        me->notices |= N_Over75kW_BMS;
+        //me->notices |= N_Over75kW_BMS;
     }
     else
     {
@@ -599,6 +605,13 @@ void SafetyChecker_reduceTorque(SafetyChecker *me, BatteryManagementSystem *bms,
     {
        multiplier = 0;
        //SerialManager_send(me->serialMan, "HVIL term sense low\n");
+    }
+
+    //If any AMK motor runs into issues we want to set them all to 0 to prevent driver spin
+
+    if(in1->AMK_bError == TRUE || in2->AMK_bError == TRUE || in3->AMK_bError == TRUE || in4->AMK_bError == TRUE)
+    {
+        multiplier = 0;
     }
     
 

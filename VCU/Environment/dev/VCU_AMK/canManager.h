@@ -1,3 +1,10 @@
+/*****************************************************************************
+ * canManager.h - CAN Message Sending and Recieve
+ * Initial Author: Rusty P 
+ ******************************************************************************
+ * Works with sending the CAN messages and recieving with the specific values
+ ****************************************************************************/
+
 #ifndef _CANMANAGER_H
 #define _CANMANAGER_H
 

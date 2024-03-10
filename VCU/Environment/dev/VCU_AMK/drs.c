@@ -1,3 +1,10 @@
+/*****************************************************************************
+ * drs.c - Drag Reduction System 
+ * Initial Author: Mehul W
+ ******************************************************************************
+ * Control of the DRS actuation through manual and automatic
+ ****************************************************************************/
+
 #include <stdlib.h>
 #include "IO_Driver.h"
 #include "IO_DIO.h"

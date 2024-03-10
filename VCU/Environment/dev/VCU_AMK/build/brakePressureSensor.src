@@ -1,38 +1,42 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc9604a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=1 -DRTS_TTC_FLASH_DATE_DAY=17 -DRTS_TTC_FLASH_DATE_HOUR=13 -DRTS_TTC_FLASH_DATE_MINUTE=38 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\brakePressureSensor.src
+	; Options: -f cc3844a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=3 -DRTS_TTC_FLASH_DATE_DAY=3 -DRTS_TTC_FLASH_DATE_HOUR=12 -DRTS_TTC_FLASH_DATE_MINUTE=6 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\brakePressureSensor.src
 	; Module start
 	.source	'brakePressureSensor.c'
 code_BrakePressureSensor_new	.section	code, cluster 'BrakePressureSensor_new', new
 	.global	_BrakePressureSensor_new
 
-; brakePressureSensor.c	     1  #include <stdlib.h> //Needed for malloc
-; brakePressureSensor.c	     2  #include <math.h>
-; brakePressureSensor.c	     3  #include "IO_RTC.h"
-; brakePressureSensor.c	     4  
-; brakePressureSensor.c	     5  #include "brakePressureSensor.h"
-; brakePressureSensor.c	     6  #include "mathFunctions.h"
+; brakePressureSensor.c	     1  /*****************************************************************************
+; brakePressureSensor.c	     2   * brakePressureSensor.c - Brake Sensor
+; brakePressureSensor.c	     3   * Initial Author: Rusty P 
+; brakePressureSensor.c	     4   ******************************************************************************
+; brakePressureSensor.c	     5   * Works with calculation of the brake sensors and getting appropriate values
+; brakePressureSensor.c	     6   ****************************************************************************/
 ; brakePressureSensor.c	     7  
-; brakePressureSensor.c	     8  #include "sensors.h"
-; brakePressureSensor.c	     9  //extern Sensor Sensor_BPS0;
-; brakePressureSensor.c	    10  //extern Sensor Sensor_BenchTPS1;
+; brakePressureSensor.c	     8  #include <stdlib.h> //Needed for malloc
+; brakePressureSensor.c	     9  #include <math.h>
+; brakePressureSensor.c	    10  #include "IO_RTC.h"
 ; brakePressureSensor.c	    11  
-; brakePressureSensor.c	    12  /*****************************************************************************
-; brakePressureSensor.c	    13  * Brake Pressure Sensor (BPS) functions
-; brakePressureSensor.c	    14  ****************************************************************************/
-; brakePressureSensor.c	    15  
-; brakePressureSensor.c	    16  // TODO: #94 Make this CAN configurable and store in EEPROM
-; brakePressureSensor.c	    17  // This value is used for controlling the brake light and triggering the TPS-BPS implausibility fault
-; brakePressureSensor.c	    18  #define BRAKES_ON_PERCENT .08
-; brakePressureSensor.c	    19  
-; brakePressureSensor.c	    20  BrakePressureSensor *BrakePressureSensor_new(void)
+; brakePressureSensor.c	    12  #include "brakePressureSensor.h"
+; brakePressureSensor.c	    13  #include "mathFunctions.h"
+; brakePressureSensor.c	    14  
+; brakePressureSensor.c	    15  #include "sensors.h"
+; brakePressureSensor.c	    16  
+; brakePressureSensor.c	    17  /*****************************************************************************
+; brakePressureSensor.c	    18  * Brake Pressure Sensor (BPS) functions
+; brakePressureSensor.c	    19  ****************************************************************************/
+; brakePressureSensor.c	    20  
+; brakePressureSensor.c	    21  // This value is used for controlling the brake light and triggering the TPS-BPS implausibility fault
+; brakePressureSensor.c	    22  #define BRAKES_ON_PERCENT .08
+; brakePressureSensor.c	    23  
+; brakePressureSensor.c	    24  BrakePressureSensor *BrakePressureSensor_new(void)
 ; Function _BrakePressureSensor_new
 _33:
 _BrakePressureSensor_new	.proc	far
 	subw	r15,#0x2
 _226:
 
-; brakePressureSensor.c	    21  {
-; brakePressureSensor.c	    22      BrakePressureSensor *me = (BrakePressureSensor *)malloc(sizeof(struct _BrakePressureSensor));
+; brakePressureSensor.c	    25  {
+; brakePressureSensor.c	    26      BrakePressureSensor *me = (BrakePressureSensor *)malloc(sizeof(struct _BrakePressureSensor));
 	movw	r2,#0x30
 _1995:
 	CoSTORE	[r15-],MSW
@@ -45,10 +49,8 @@ _259:
 	call	_malloc
 _1996:
 
-; brakePressureSensor.c	    23      //me->bench = benchMode;
-; brakePressureSensor.c	    24  
-; brakePressureSensor.c	    25      //TODO: Make sure the main loop is running before doing this
-; brakePressureSensor.c	    26      me->bps0 = &Sensor_BPS0;
+; brakePressureSensor.c	    27  
+; brakePressureSensor.c	    28      me->bps0 = &Sensor_BPS0;
 	movw	r8,r2
 	movw	r4,r3
 	addw	r8,#0x2
@@ -70,8 +72,6 @@ _2001:
 	movw	[r13],r12
 _2002:
 
-; brakePressureSensor.c	    27      //me->bps1 = &Sensor_BPS1;
-; brakePressureSensor.c	    28      //me->tps1 = (benchMode == TRUE) ? &Sensor_BenchTPS1 : &Sensor_TPS1;
 ; brakePressureSensor.c	    29  
 ; brakePressureSensor.c	    30      // Max/min values from the datasheet, including inaccuracy (important since our BPS sits slightly below 0.5V but still within range)
 ; brakePressureSensor.c	    31      // If voltage exceeds these values, a fault is thrown in safety.c.
@@ -1020,18 +1020,9 @@ code_BrakePressureSensor_calibrationCycle	.section	code, cluster 'BrakePressureS
 	.global	_BrakePressureSensor_calibrationCycle
 
 ; brakePressureSensor.c	   137  
-; brakePressureSensor.c	   138  /*-------------------------------------------------------------------
-; brakePressureSensor.c	   139  * CalibrateTPS
-; brakePressureSensor.c	   140  * Description: Records TPS minimum/maximum voltages (when?) and stores them (where?), or flags that calibration is complete
-; brakePressureSensor.c	   141  * Parameters:
-; brakePressureSensor.c	   142  * Inputs:
-; brakePressureSensor.c	   143  * Returns:
-; brakePressureSensor.c	   144  * Notes:
-; brakePressureSensor.c	   145  * Throws:
-; brakePressureSensor.c	   146  -------------------------------------------------------------------*/
-; brakePressureSensor.c	   147  // Physical pedal travel will only occur across the center (about 1/2) of the actual sensor's range of travel
-; brakePressureSensor.c	   148  // The rules (especially EV2.3.6) are written about % of PEDAL travel, not percent of sensor range, so we must calculate pedal travel by recording the min/max voltages at min/max throttle positions
-; brakePressureSensor.c	   149  void BrakePressureSensor_calibrationCycle(BrakePressureSensor *me, ubyte1 *errorCount)
+; brakePressureSensor.c	   138  // Physical pedal travel will only occur across the center (about 1/2) of the actual sensor's range of travel
+; brakePressureSensor.c	   139  // The rules (especially EV2.3.6) are written about % of PEDAL travel, not percent of sensor range, so we must calculate pedal travel by recording the min/max voltages at min/max throttle positions
+; brakePressureSensor.c	   140  void BrakePressureSensor_calibrationCycle(BrakePressureSensor *me, ubyte1 *errorCount)
 ; Function _BrakePressureSensor_calibrationCycle
 _105:
 _BrakePressureSensor_calibrationCycle	.proc	far
@@ -1062,8 +1053,8 @@ _1623:
 	movw	r0,r3
 _1980:
 
-; brakePressureSensor.c	   150  {
-; brakePressureSensor.c	   151      if (me->runCalibration == TRUE)
+; brakePressureSensor.c	   141  {
+; brakePressureSensor.c	   142      if (me->runCalibration == TRUE)
 	addw	r2,#0x22
 _1981:
 	addcw	r3,#0x0
@@ -1076,17 +1067,17 @@ _1978:
 	jmp+	cc_ne,_19
 _2190:
 
-; brakePressureSensor.c	   152      {
-; brakePressureSensor.c	   153          if (IO_RTC_GetTimeUS(me->timestamp_calibrationStart) < (ubyte4)(me->calibrationRunTime) * 1000 * 1000)
+; brakePressureSensor.c	   143      {
+; brakePressureSensor.c	   144          if (IO_RTC_GetTimeUS(me->timestamp_calibrationStart) < (ubyte4)(me->calibrationRunTime) * 1000 * 1000)
 	movw	r11,r8
 	movw	r12,r0
 	addw	r11,#0x24
 	addcw	r12,#0x0
 _2191:
 
-; brakePressureSensor.c	   154          {
-; brakePressureSensor.c	   155              //The calibration itself
-; brakePressureSensor.c	   156              if (me->bps0->sensorValue < me->bps0_calibMin)
+; brakePressureSensor.c	   145          {
+; brakePressureSensor.c	   146              //The calibration itself
+; brakePressureSensor.c	   147              if (me->bps0->sensorValue < me->bps0_calibMin)
 	movw	r10,r8
 _2192:
 	exts	r12,#0x1
@@ -1155,14 +1146,14 @@ _2205:
 	jmp-	cc_uge,_21
 _2206:
 
-; brakePressureSensor.c	   157              {
-; brakePressureSensor.c	   158                  me->bps0_calibMin = me->bps0->sensorValue;
+; brakePressureSensor.c	   148              {
+; brakePressureSensor.c	   149                  me->bps0_calibMin = me->bps0->sensorValue;
 	exts	r9,#0x1
 	movw	[r10],r12
 _21:
 
-; brakePressureSensor.c	   159              }
-; brakePressureSensor.c	   160              if (me->bps0->sensorValue > me->bps0_calibMax)
+; brakePressureSensor.c	   150              }
+; brakePressureSensor.c	   151              if (me->bps0->sensorValue > me->bps0_calibMax)
 	exts	r4,#0x1
 	movw	r11,[r14]
 	addw	r14,#0x2
@@ -1191,32 +1182,32 @@ _2211:
 	jmp-	cc_ule,_22
 _2212:
 
-; brakePressureSensor.c	   161              {
-; brakePressureSensor.c	   162                  me->bps0_calibMax = me->bps0->sensorValue;
+; brakePressureSensor.c	   152              {
+; brakePressureSensor.c	   153                  me->bps0_calibMax = me->bps0->sensorValue;
 	exts	r0,#0x1
 	movw	[r8],r13
 _2213:
 	jmp	_23
 _20:
 
+; brakePressureSensor.c	   154              }
+; brakePressureSensor.c	   155              /*
+; brakePressureSensor.c	   156              if (me->bps1->sensorValue < me->bps1_calibMin)
+; brakePressureSensor.c	   157              {
+; brakePressureSensor.c	   158                  me->bps1_calibMin = me->bps1->sensorValue;
+; brakePressureSensor.c	   159              }
+; brakePressureSensor.c	   160              if (me->bps1->sensorValue > me->bps1_calibMax)
+; brakePressureSensor.c	   161              {
+; brakePressureSensor.c	   162                  me->bps1_calibMax = me->bps1->sensorValue;
 ; brakePressureSensor.c	   163              }
-; brakePressureSensor.c	   164              /*
-; brakePressureSensor.c	   165              if (me->bps1->sensorValue < me->bps1_calibMin)
-; brakePressureSensor.c	   166              {
-; brakePressureSensor.c	   167                  me->bps1_calibMin = me->bps1->sensorValue;
-; brakePressureSensor.c	   168              }
-; brakePressureSensor.c	   169              if (me->bps1->sensorValue > me->bps1_calibMax)
-; brakePressureSensor.c	   170              {
-; brakePressureSensor.c	   171                  me->bps1_calibMax = me->bps1->sensorValue;
-; brakePressureSensor.c	   172              }
-; brakePressureSensor.c	   173              */
-; brakePressureSensor.c	   174          }
-; brakePressureSensor.c	   175          else //Calibration shutdown
-; brakePressureSensor.c	   176          {
-; brakePressureSensor.c	   177              float4 pedalTopPlay = 1.05;
-; brakePressureSensor.c	   178              float4 pedalBottomPlay = .95;
-; brakePressureSensor.c	   179  
-; brakePressureSensor.c	   180              me->bps0_calibMin *= me->bps0_reverse ? pedalBottomPlay : pedalTopPlay;
+; brakePressureSensor.c	   164              */
+; brakePressureSensor.c	   165          }
+; brakePressureSensor.c	   166          else //Calibration shutdown
+; brakePressureSensor.c	   167          {
+; brakePressureSensor.c	   168              float4 pedalTopPlay = 1.05;
+; brakePressureSensor.c	   169              float4 pedalBottomPlay = .95;
+; brakePressureSensor.c	   170  
+; brakePressureSensor.c	   171              me->bps0_calibMin *= me->bps0_reverse ? pedalBottomPlay : pedalTopPlay;
 	movw	r11,r8
 	movw	r12,r0
 	addw	r11,#0xe
@@ -1244,7 +1235,7 @@ _2217:
 	movw	[r10],r2
 _2218:
 
-; brakePressureSensor.c	   181              me->bps0_calibMax *= me->bps0_reverse ? pedalTopPlay : pedalBottomPlay;
+; brakePressureSensor.c	   172              me->bps0_calibMax *= me->bps0_reverse ? pedalTopPlay : pedalBottomPlay;
 	cmpb	rh7,#0x0
 	jmp	cc_eq,_26
 _2219:
@@ -1262,11 +1253,11 @@ _27:
 	addcw	r12,#0x0
 _2221:
 
-; brakePressureSensor.c	   182              //me->bps1_calibMin *= me->bps1_reverse ? pedalBottomPlay : pedalTopPlay;
-; brakePressureSensor.c	   183              //me->bps1_calibMax *= me->bps1_reverse ? pedalTopPlay : pedalBottomPlay;
-; brakePressureSensor.c	   184  
-; brakePressureSensor.c	   185              me->runCalibration = FALSE;
-; brakePressureSensor.c	   186              me->calibrated = TRUE;
+; brakePressureSensor.c	   173              //me->bps1_calibMin *= me->bps1_reverse ? pedalBottomPlay : pedalTopPlay;
+; brakePressureSensor.c	   174              //me->bps1_calibMax *= me->bps1_reverse ? pedalTopPlay : pedalBottomPlay;
+; brakePressureSensor.c	   175  
+; brakePressureSensor.c	   176              me->runCalibration = FALSE;
+; brakePressureSensor.c	   177              me->calibrated = TRUE;
 	addw	r8,#0x29
 	addcw	r0,#0x0
 _2222:
@@ -1293,7 +1284,7 @@ _2228:
 	movb	[r8],rh4
 _2229:
 
-; brakePressureSensor.c	   187              Light_set(Light_dashEco, 0);
+; brakePressureSensor.c	   178              Light_set(Light_dashEco, 0);
 	movw	r4,#0x0
 	movw	r5,#0x0
 	call	_Light_set
@@ -1301,22 +1292,11 @@ _23:
 _22:
 _19:
 
-; brakePressureSensor.c	   188          }
-; brakePressureSensor.c	   189      }
-; brakePressureSensor.c	   190      else
-; brakePressureSensor.c	   191      {
-; brakePressureSensor.c	   192          //TODO: Throw warning: calibrationCycle helper function was called but calibration should not be running
-; brakePressureSensor.c	   193      }
-; brakePressureSensor.c	   194  
-; brakePressureSensor.c	   195      //TODO: Write calibration data to EEPROM
-; brakePressureSensor.c	   196  
-; brakePressureSensor.c	   197      //TODO: Check for valid/reasonable calibration data
-; brakePressureSensor.c	   198  
-; brakePressureSensor.c	   199      //TODO: Do something on the display to show that voltages are being recorded
-; brakePressureSensor.c	   200  
-; brakePressureSensor.c	   201      //Idea: Display "bars" filling up on right segment (for gas pedal) _=E=_=E...
-; brakePressureSensor.c	   202      //      Once calibration data makes sense, show pedal location (0-10%, 10-90%, 90-100%) with bars
-; brakePressureSensor.c	   203  }
+; brakePressureSensor.c	   179          }
+; brakePressureSensor.c	   180      }
+; brakePressureSensor.c	   181      else
+; brakePressureSensor.c	   182      {}
+; brakePressureSensor.c	   183  }
 	addw	r15,#0x4
 _1634:
 	movw	r10,[r15+]
@@ -1353,18 +1333,15 @@ _183:
 code_BrakePressureSensor_getIndividualSensorPercent	.section	code, cluster 'BrakePressureSensor_getIndividualSensorPercent', new
 	.global	_BrakePressureSensor_getIndividualSensorPercent
 
-; brakePressureSensor.c	   204  
-; brakePressureSensor.c	   205  void BrakePressureSensor_getIndividualSensorPercent(BrakePressureSensor *me, ubyte1 sensorNumber, float4 *percent)
+; brakePressureSensor.c	   184  
+; brakePressureSensor.c	   185  void BrakePressureSensor_getIndividualSensorPercent(BrakePressureSensor *me, ubyte1 sensorNumber, float4 *percent)
 ; Function _BrakePressureSensor_getIndividualSensorPercent
 _117:
 _BrakePressureSensor_getIndividualSensorPercent	.proc	far
 
-; brakePressureSensor.c	   206  {
-; brakePressureSensor.c	   207      //Sensor* bps;
-; brakePressureSensor.c	   208      //ubyte2 calMin;
-; brakePressureSensor.c	   209      //ubyte2 calMax;
-; brakePressureSensor.c	   210  
-; brakePressureSensor.c	   211      switch (sensorNumber)
+; brakePressureSensor.c	   186  {
+; brakePressureSensor.c	   187  
+; brakePressureSensor.c	   188      switch (sensorNumber)
 	movbz	r13,rl4
 _1984:
 	cmpw	r13,#0x1
@@ -1385,33 +1362,33 @@ _$1$swt	.label	word
 
 code_BrakePressureSensor_getIndividualSensorPercent	.section	code, cluster 'BrakePressureSensor_getIndividualSensorPercent'
 
-; brakePressureSensor.c	   212      {
-; brakePressureSensor.c	   213      case 0:
+; brakePressureSensor.c	   189      {
+; brakePressureSensor.c	   190      case 0:
 _29:
 
-; brakePressureSensor.c	   214          *percent = me->bps0_percent;
+; brakePressureSensor.c	   191          *percent = me->bps0_percent;
 	addw	r2,#0x12
 _2121:
 
-; brakePressureSensor.c	   215          //bps = me->bps0;
-; brakePressureSensor.c	   216          //calMin = me->bps0_calibMin;
-; brakePressureSensor.c	   217          //calMax = me->bps0_calibMax;
-; brakePressureSensor.c	   218          break;
+; brakePressureSensor.c	   192          //bps = me->bps0;
+; brakePressureSensor.c	   193          //calMin = me->bps0_calibMin;
+; brakePressureSensor.c	   194          //calMax = me->bps0_calibMax;
+; brakePressureSensor.c	   195          break;
 	jmp	_31
 
-; brakePressureSensor.c	   219      case 1:
+; brakePressureSensor.c	   196      case 1:
 _30:
 
-; brakePressureSensor.c	   220          *percent = me->bps1_percent;
+; brakePressureSensor.c	   197          *percent = me->bps1_percent;
 	addw	r2,#0x1e
 
-; brakePressureSensor.c	   221          //bps = me->bps1;
-; brakePressureSensor.c	   222          //calMin = me->bps1_calibMin;
-; brakePressureSensor.c	   223          //calMax = me->bps1_calibMax;
-; brakePressureSensor.c	   224          break;
-; brakePressureSensor.c	   225      }
-; brakePressureSensor.c	   226      //float4 TPS0PedalPercent = getPercent(me->tps0->sensorValue, calMin, calMax, TRUE); //Analog Input 0
-; brakePressureSensor.c	   227  }
+; brakePressureSensor.c	   198          //bps = me->bps1;
+; brakePressureSensor.c	   199          //calMin = me->bps1_calibMin;
+; brakePressureSensor.c	   200          //calMax = me->bps1_calibMax;
+; brakePressureSensor.c	   201          break;
+; brakePressureSensor.c	   202      }
+; brakePressureSensor.c	   203      //float4 TPS0PedalPercent = getPercent(me->tps0->sensorValue, calMin, calMax, TRUE); //Analog Input 0
+; brakePressureSensor.c	   204  }
 _31:
 	addcw	r3,#0x0
 	exts	r3,#0x1
@@ -1437,24 +1414,24 @@ _158:
 code_BrakePressureSensor_getPedalTravel	.section	code, cluster 'BrakePressureSensor_getPedalTravel', new
 	.global	_BrakePressureSensor_getPedalTravel
 
-; brakePressureSensor.c	   228  
-; brakePressureSensor.c	   229  /*-------------------------------------------------------------------
-; brakePressureSensor.c	   230  * GetThrottlePosition
-; brakePressureSensor.c	   231  * Description: Reads TPS Pin voltages and returns % of throttle pedal travel.
-; brakePressureSensor.c	   232  * Parameters:  None
-; brakePressureSensor.c	   233  * Inputs:      Assumes TPS#.sensorValue has been set by main loop
-; brakePressureSensor.c	   234  * Returns:     Throttle value in percent (from 0 to 1)
-; brakePressureSensor.c	   235  * Notes:       Valid pedal travel is from 10% (0.10) to 90% (0.90), not including mechanical limits.
-; brakePressureSensor.c	   236  * Throws:      000 - TPS0 voltage out of range
-; brakePressureSensor.c	   237  *              001 - TPS1 voltage out of range, 002
-; brakePressureSensor.c	   238  -------------------------------------------------------------------*/
-; brakePressureSensor.c	   239  void BrakePressureSensor_getPedalTravel(BrakePressureSensor *me, ubyte1 *errorCount, float4 *pedalPercent)
+; brakePressureSensor.c	   205  
+; brakePressureSensor.c	   206  /*-------------------------------------------------------------------
+; brakePressureSensor.c	   207  * GetThrottlePosition
+; brakePressureSensor.c	   208  * Description: Reads TPS Pin voltages and returns % of throttle pedal travel.
+; brakePressureSensor.c	   209  * Parameters:  None
+; brakePressureSensor.c	   210  * Inputs:      Assumes TPS#.sensorValue has been set by main loop
+; brakePressureSensor.c	   211  * Returns:     Throttle value in percent (from 0 to 1)
+; brakePressureSensor.c	   212  * Notes:       Valid pedal travel is from 10% (0.10) to 90% (0.90), not including mechanical limits.
+; brakePressureSensor.c	   213  * Throws:      000 - TPS0 voltage out of range
+; brakePressureSensor.c	   214  *              001 - TPS1 voltage out of range, 002
+; brakePressureSensor.c	   215  -------------------------------------------------------------------*/
+; brakePressureSensor.c	   216  void BrakePressureSensor_getPedalTravel(BrakePressureSensor *me, ubyte1 *errorCount, float4 *pedalPercent)
 ; Function _BrakePressureSensor_getPedalTravel
 _129:
 _BrakePressureSensor_getPedalTravel	.proc	far
 
-; brakePressureSensor.c	   240  {
-; brakePressureSensor.c	   241      *pedalPercent = me->percent;
+; brakePressureSensor.c	   217  {
+; brakePressureSensor.c	   218      *pedalPercent = me->percent;
 	addw	r2,#0x2a
 _1986:
 	addcw	r3,#0x0
@@ -1473,20 +1450,8 @@ _2234:
 	movw	[r11],r14
 _2235:
 
-; brakePressureSensor.c	   242  
-; brakePressureSensor.c	   243      //What about other error states?
-; brakePressureSensor.c	   244      //Voltage outside of calibration range
-; brakePressureSensor.c	   245      //Voltages off center
-; brakePressureSensor.c	   246  
-; brakePressureSensor.c	   247      //    if (errorCount > 0)
-; brakePressureSensor.c	   248      //    {
-; brakePressureSensor.c	   249      //        return 0;
-; brakePressureSensor.c	   250      //    }
-; brakePressureSensor.c	   251      //    else
-; brakePressureSensor.c	   252      //    {
-; brakePressureSensor.c	   253      //return (TPS0PedalPercent + TPS1PedalPercent) / 2;
-; brakePressureSensor.c	   254      //    }
-; brakePressureSensor.c	   255  }
+; brakePressureSensor.c	   219  
+; brakePressureSensor.c	   220  }
 	ret
 _188:
 	; End of function
@@ -1582,7 +1547,7 @@ _203:
 	.dl	244
 	.db	2
 	.db	'float',0,4,4,3
-	.db	'_BrakePressureSensor',0,2,10,16,48,4
+	.db	'_BrakePressureSensor',0,2,17,16,48,4
 	.db	'bench',0
 	.dl	190
 	.db	1,2,35,0,4
@@ -1701,19 +1666,19 @@ _221:
 	.db	5,5
 	.dl	190
 	.db	10
-	.db	'getPercent',0,6,15,8,6
+	.db	'getPercent',0,6,22,8,6
 	.dl	478
 	.db	1,1,1,1,7
-	.db	'value',0,6,15,26,2
+	.db	'value',0,6,22,26,2
 	.dl	478
 	.db	7
-	.db	'start',0,6,15,40,2
+	.db	'start',0,6,22,40,2
 	.dl	478
 	.db	7
-	.db	'end',0,6,15,54,2
+	.db	'end',0,6,22,54,2
 	.dl	478
 	.db	7
-	.db	'zeroToOneOnly',0,6,15,64,2
+	.db	'zeroToOneOnly',0,6,22,64,2
 	.dl	190
 	.db	0,2
 	.db	'unsigned short int',0,2,7,16
@@ -1761,7 +1726,7 @@ _221:
 	.db	'Sensor_BPS0',0,3,158,1,15,5
 	.dl	244
 	.db	1,1,16
-	.db	'BrakePressureSensor',0,2,38,3
+	.db	'BrakePressureSensor',0,2,45,3
 	.dl	487
 	.db	0
 	; End of section
@@ -1829,14 +1794,14 @@ _144:
 	.db	2
 	.dl	_140
 	.db	3
-	.db	'BrakePressureSensor_new',0,1,20,22,6
+	.db	'BrakePressureSensor_new',0,1,24,22,6
 	.dl	_189
 	.db	1,1,1
 	.dl	_33,_148,_32
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
 	.dl	_33,_148
 	.db	5
-	.db	'me',0,1,22,26,2
+	.db	'me',0,1,26,26,2
 	.dl	_189,_190
 	.db	6
 	.dl	_191,_192,_193
@@ -1874,7 +1839,7 @@ _1993:
 _1994:
 	.db	5,22,7,0,5,2
 	.dl	_33
-	.db	3,19,1,5,61,9
+	.db	3,23,1,5,61,9
 	.dw	_226-_33
 	.db	3,2,1,5,22,9
 	.dw	_1995-_226
@@ -1882,7 +1847,7 @@ _1994:
 	.dw	_259-_1995
 	.db	3,2,1,5,7,9
 	.dw	_1996-_259
-	.db	3,4,1,5,14,9
+	.db	3,2,1,5,14,9
 	.dw	_1997-_1996
 	.db	1,5,17,9
 	.dw	_1998-_1997
@@ -1894,7 +1859,7 @@ _1994:
 	.dw	_2001-_2000
 	.db	1,5,25,9
 	.dw	_2002-_2001
-	.db	3,7,1,9
+	.db	3,5,1,9
 	.dw	_2003-_2002
 	.db	3,4,1,5,7,9
 	.dw	_2004-_2003
@@ -2254,16 +2219,16 @@ _154:
 	.db	2
 	.dl	_140
 	.db	3
-	.db	'BrakePressureSensor_getIndividualSensorPercent',0,1,205,1,6,6,1,1,1
+	.db	'BrakePressureSensor_getIndividualSensorPercent',0,1,185,1,6,6,1,1,1
 	.dl	_117,_158,_116
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,205,1,74,2
+	.db	'me',0,1,185,1,74,2
 	.dl	_189,_205
 	.db	4
-	.db	'sensorNumber',0,1,205,1,85,2
+	.db	'sensorNumber',0,1,185,1,85,2
 	.dl	_203,_206
 	.db	4
-	.db	'percent',0,1,205,1,107,2
+	.db	'percent',0,1,185,1,107,2
 	.dl	_207,_208
 	.db	5
 	.dl	_117,_158
@@ -2289,7 +2254,7 @@ _2119:
 _2120:
 	.db	5,5,7,0,5,2
 	.dl	_117
-	.db	3,210,1,1,5,22,9
+	.db	3,187,1,1,5,22,9
 	.dw	_29-_117
 	.db	3,3,1,5,9,9
 	.dw	_2121-_29
@@ -2702,13 +2667,13 @@ _179:
 	.db	2
 	.dl	_140
 	.db	3
-	.db	'BrakePressureSensor_calibrationCycle',0,1,149,1,6,6,1,1,1
+	.db	'BrakePressureSensor_calibrationCycle',0,1,140,1,6,6,1,1,1
 	.dl	_105,_183,_104
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,149,1,64,2
+	.db	'me',0,1,140,1,64,2
 	.dl	_189,_220
 	.db	4
-	.db	'errorCount',0,1,149,1,76,2
+	.db	'errorCount',0,1,140,1,76,2
 	.dl	_221,_222
 	.db	5
 	.dl	_105,_183
@@ -2736,7 +2701,7 @@ _2188:
 _2189:
 	.db	5,6,7,0,5,2
 	.dl	_105
-	.db	3,148,1,1,5,11,9
+	.db	3,139,1,1,5,11,9
 	.dw	_1980-_105
 	.db	3,2,1,5,5,9
 	.dw	_1978-_1980
@@ -2834,7 +2799,7 @@ _2189:
 	.dw	_2229-_2228
 	.db	3,1,1,5,1,9
 	.dw	_19-_2229
-	.db	3,16,1,9
+	.db	3,5,1,9
 	.dw	_183-_19
 	.db	0,1,1
 _2187:
@@ -2867,16 +2832,16 @@ _184:
 	.db	2
 	.dl	_140
 	.db	3
-	.db	'BrakePressureSensor_getPedalTravel',0,1,239,1,6,6,1,1,1
+	.db	'BrakePressureSensor_getPedalTravel',0,1,216,1,6,6,1,1,1
 	.dl	_129,_188,_128
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,239,1,62,2
+	.db	'me',0,1,216,1,62,2
 	.dl	_189,_223
 	.db	4
-	.db	'errorCount',0,1,239,1,74,2
+	.db	'errorCount',0,1,216,1,74,2
 	.dl	_221,_224
 	.db	4
-	.db	'pedalPercent',0,1,239,1,94,2
+	.db	'pedalPercent',0,1,216,1,94,2
 	.dl	_207,_225
 	.db	5
 	.dl	_129,_188
@@ -2902,11 +2867,11 @@ _2232:
 _2233:
 	.db	5,23,7,0,5,2
 	.dl	_129
-	.db	3,240,1,1,5,19,9
+	.db	3,217,1,1,5,19,9
 	.dw	_2234-_129
 	.db	1,5,1,9
 	.dw	_2235-_2234
-	.db	3,14,1,7,9
+	.db	3,2,1,7,9
 	.dw	_188-_2235
 	.db	0,1,1
 _2231:

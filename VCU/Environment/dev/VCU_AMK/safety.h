@@ -1,3 +1,10 @@
+/*****************************************************************************
+ * safety.h - All Vehicle Safety 
+ * Initial Author: Rusty P / Vincent Saw
+ ******************************************************************************
+ * For all torque reductions or safety state changes from external influence
+ ****************************************************************************/
+
 #ifndef _SAFETY_H
 #define _SAFETY_H
 
@@ -9,14 +16,6 @@
 #include "bms.h"
 #include "wheelSpeeds.h"
 #include "AMKdrive.h"
-
-/*
-typedef enum { CHECK_tpsOutOfRange    , CHECK_bpsOutOfRange
-             , CHECK_tpsOpenOrShort   , CHECK_bpsOpenOrShort
-             , CHECK_tpsNotCalibrated , CHECK_bpsNotCalibrated 
-             , CHECK_tpsOutOfSync     , CHECK_tpsbpsImplausible
-             } SafetyCheck;
-*/
 
 typedef struct _SafetyChecker SafetyChecker;
 

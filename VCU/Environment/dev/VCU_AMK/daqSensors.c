@@ -1,3 +1,10 @@
+/*****************************************************************************
+ * daqSensors.h - DAQ object and parsing
+ * Initial Author: Shinika B
+ ******************************************************************************
+ * Items taken coming from the DAQs CAN messages
+ ****************************************************************************/
+
 #include <stdlib.h> 
 #include "IO_CAN.h"
 #include "IO_Driver.h"
@@ -13,6 +20,8 @@ _DAQSensors* DAQ_Sensor_new(){
     me->AccelX = 0;
     me->AccelY = 0;
     me->GyroZ = 0;
+
+    //Update for GPS SPEED on IMU TEST CONFIG
 
     return me;
 

@@ -195,7 +195,11 @@ void main(void)
     // Most default values for things should be specified here
     //----------------------------------------------------------------------------
 
-    ubyte1 pot_DRS_LC = 0; //0 is for DRS and 1 is for Torque Vectoring
+    //0 is for MANUAL DRS and 1 is for AUTO DRS
+    ubyte1 pot_DRS_LC = 0; 
+
+    //0 is for AWD, 1 is for RWD
+    ubyte1 AMK_Mode = 0;
 
     ReadyToDriveSound *rtds = RTDS_new();
     //BatteryManagementSystem* bms = BMS_new();
@@ -218,8 +222,6 @@ void main(void)
     DRS *drs = DRS_new();
     _DAQSensors *d1 = DAQ_Sensor_new();
 
-    //----------------------------------------------------------------------------
-    // TODO: Additional Initial Power-up functions
     // //----------------------------------------------------------------------------
     // ubyte2 tps0_calibMin = 0xABCD;  //me->tps0->sensorValue;
     // ubyte2 tps0_calibMax = 0x9876;  //me->tps0->sensorValue;
@@ -229,9 +231,6 @@ void main(void)
     ubyte2 tps0_calibMax = 1900; //me->tps0->sensorValue;
     ubyte2 tps1_calibMin = 3000; //me->tps1->sensorValue;
     ubyte2 tps1_calibMax = 4800; //me->tps1->sensorValue;
-    //TODO: Read calibration data from EEPROM?
-    //TODO: Run calibration functions?
-    //TODO: Power-on error checking?
 
     /*******************************************/
     /*       PERIODIC APPLICATION CODE         */
@@ -361,10 +360,15 @@ void main(void)
         // MCM_readTCSSettings(mcm0, &Sensor_TCSSwitchUp, &Sensor_TCSSwitchDown, &Sensor_TCSKnob);
         //MCM_calculateCommands(mcm0, tps, bps);
 
-        DI_calculateCommands(invFL, tps, bps);
-        DI_calculateCommands(invFR, tps, bps);
-        DI_calculateCommands(invRL, tps, bps);
-        DI_calculateCommands(invRR, tps, bps);
+        if(AMK_Mode == 0){
+            DI_calculateCommands(invFL, tps, bps);
+            DI_calculateCommands(invFR, tps, bps);
+            DI_calculateCommands(invRL, tps, bps);
+            DI_calculateCommands(invRR, tps, bps);
+        } else {
+            DI_calculateCommands(invRL, tps, bps);
+            DI_calculateCommands(invRR, tps, bps);
+        }
 
         //SRE-7 Update: Torque Vectoring Calculation can go here
 

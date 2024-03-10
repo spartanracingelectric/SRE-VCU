@@ -1,44 +1,49 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc2668a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=1 -DRTS_TTC_FLASH_DATE_DAY=17 -DRTS_TTC_FLASH_DATE_HOUR=13 -DRTS_TTC_FLASH_DATE_MINUTE=38 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\cooling.src
+	; Options: -f cc8972a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=3 -DRTS_TTC_FLASH_DATE_DAY=3 -DRTS_TTC_FLASH_DATE_HOUR=12 -DRTS_TTC_FLASH_DATE_MINUTE=6 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\cooling.src
 	; Module start
 	.source	'cooling.c'
 code_CoolingSystem_new	.section	code, cluster 'CoolingSystem_new', new
 	.global	_CoolingSystem_new
 
-; cooling.c	     1  #include <stdlib.h>
-; cooling.c	     2  #include "IO_Driver.h"
-; cooling.c	     3  //#include "IO_DIO.h"
-; cooling.c	     4  //#include "IO_PWM.h"
-; cooling.c	     5  
-; cooling.c	     6  #include "sensors.h"
-; cooling.c	     7  #include "cooling.h"
-; cooling.c	     8  #include "mathFunctions.h"
-; cooling.c	     9  #include "bms.h"
+; cooling.c	     1  /*****************************************************************************
+; cooling.c	     2   * cooling.c - Cooling infrastructure
+; cooling.c	     3   * Initial Author: Vincent S
+; cooling.c	     4   ******************************************************************************
+; cooling.c	     5   * Integrates cooling control and driving pins
+; cooling.c	     6   ****************************************************************************/
+; cooling.c	     7  
+; cooling.c	     8  #include <stdlib.h>
+; cooling.c	     9  #include "IO_Driver.h"
 ; cooling.c	    10  
-; cooling.c	    11  extern Sensor Sensor_HVILTerminationSense;
-; cooling.c	    12  
-; cooling.c	    13  //All temperatures in C
-; cooling.c	    14  CoolingSystem *CoolingSystem_new()
+; cooling.c	    11  #include "sensors.h"
+; cooling.c	    12  #include "cooling.h"
+; cooling.c	    13  #include "mathFunctions.h"
+; cooling.c	    14  #include "bms.h"
+; cooling.c	    15  
+; cooling.c	    16  extern Sensor Sensor_HVILTerminationSense;
+; cooling.c	    17  
+; cooling.c	    18  //All temperatures in C
+; cooling.c	    19  CoolingSystem *CoolingSystem_new()
 ; Function _CoolingSystem_new
 _7:
 _CoolingSystem_new	.proc	far
 	movw	[-r15],r6
 _72:
 
-; cooling.c	    15  {
-; cooling.c	    16      CoolingSystem *me = (CoolingSystem *)malloc(sizeof(struct _CoolingSystem));
+; cooling.c	    20  {
+; cooling.c	    21      CoolingSystem *me = (CoolingSystem *)malloc(sizeof(struct _CoolingSystem));
 	movw	r2,#0x1c
 	call	_malloc
 _254:
 
-; cooling.c	    17  
-; cooling.c	    18      //-------------------------------------------------------------------
-; cooling.c	    19      // Cooling System Configuration
-; cooling.c	    20      //-------------------------------------------------------------------
-; cooling.c	    21  
-; cooling.c	    22      // Water pump PWM control (for motor and controller)
-; cooling.c	    23      // Note: the water pump needs to receive a PWM singal within n seconds of being turned on
-; cooling.c	    24      me->waterPumpMinPercent = 0.2;
+; cooling.c	    22  
+; cooling.c	    23      //-------------------------------------------------------------------
+; cooling.c	    24      // Cooling System Configuration
+; cooling.c	    25      //-------------------------------------------------------------------
+; cooling.c	    26  
+; cooling.c	    27      // Water pump PWM control (for motor and controller)
+; cooling.c	    28      // Note: the water pump needs to receive a PWM singal within n seconds of being turned on
+; cooling.c	    29      me->waterPumpMinPercent = 0.2;
 	movw	r11,r2
 _255:
 	movw	r14,#0xcccd
@@ -55,7 +60,7 @@ _258:
 	movw	[r11],r13
 _259:
 
-; cooling.c	    25      me->waterPumpLow = 25; //Start ramping beyond min at this temp
+; cooling.c	    30      me->waterPumpLow = 25; //Start ramping beyond min at this temp
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x4
@@ -67,7 +72,7 @@ _261:
 	movb	[r11],rh4
 _262:
 
-; cooling.c	    26      me->waterPumpHigh = 40;
+; cooling.c	    31      me->waterPumpHigh = 40;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x5
@@ -79,16 +84,16 @@ _264:
 	movb	[r11],rl4
 _265:
 
-; cooling.c	    27      me->waterPumpPercent = 0.2;
+; cooling.c	    32      me->waterPumpPercent = 0.2;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x6
 	addcw	r12,#0x0
 _266:
 
-; cooling.c	    28  
-; cooling.c	    29      // Power pack fan relay  (for 2021 3ator)
-; cooling.c	    30      me->motorFanLow = 38;     //Turn off BELOW this point
+; cooling.c	    33  
+; cooling.c	    34      // Power pack fan relay  (for 2021 3ator)
+; cooling.c	    35      me->motorFanLow = 38;     //Turn off BELOW this point
 	movb	rh5,#0x26
 _267:
 	exts	r12,#0x1
@@ -97,7 +102,7 @@ _267:
 	addcw	r12,#0x0
 _268:
 
-; cooling.c	    31      me->motorFanHigh = 43;    //Turn on at this temperature
+; cooling.c	    36      me->motorFanHigh = 43;    //Turn on at this temperature
 	movb	rl5,#0x2b
 _269:
 	exts	r12,#0x1
@@ -109,7 +114,7 @@ _270:
 	addcw	r12,#0x0
 _271:
 
-; cooling.c	    32      me->motorFanState = TRUE; //float4 motorFanPercent;
+; cooling.c	    37      me->motorFanState = TRUE; //float4 motorFanPercent;
 	movb	rh6,#0x1
 _272:
 	exts	r12,#0x1
@@ -121,8 +126,8 @@ _273:
 	addcw	r12,#0x0
 _274:
 
-; cooling.c	    33  
-; cooling.c	    34      me->radFanMinPercent = 0;
+; cooling.c	    38  
+; cooling.c	    39      me->radFanMinPercent = 0;
 	movw	r13,#0x0
 _275:
 	exts	r12,#0x1
@@ -149,7 +154,7 @@ _279:
 	movw	[r11],r13
 _280:
 
-; cooling.c	    35      me->radFanLow = 25;
+; cooling.c	    40      me->radFanLow = 25;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x12
@@ -159,7 +164,7 @@ _281:
 	movb	[r11],rh4
 _282:
 
-; cooling.c	    36      me->radFanHigh = 40;
+; cooling.c	    41      me->radFanHigh = 40;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x13
@@ -169,7 +174,7 @@ _283:
 	movb	[r11],rl4
 _284:
 
-; cooling.c	    37      me->radFanPercent = 0;
+; cooling.c	    42      me->radFanPercent = 0;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x14
@@ -183,9 +188,9 @@ _285:
 	movw	[r11],r13
 _286:
 
-; cooling.c	    38  
-; cooling.c	    39      // Battery fans (Unused in 2021)
-; cooling.c	    40      me->batteryFanLow = 38;     //Turn off BELOW this point
+; cooling.c	    43  
+; cooling.c	    44      // Battery fans (Unused in 2021)
+; cooling.c	    45      me->batteryFanLow = 38;     //Turn off BELOW this point
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x18
@@ -195,7 +200,7 @@ _287:
 	movb	[r11],rh5
 _288:
 
-; cooling.c	    41      me->batteryFanHigh = 43;    //Turn on at this temperature
+; cooling.c	    46      me->batteryFanHigh = 43;    //Turn on at this temperature
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x19
@@ -205,7 +210,7 @@ _289:
 	movb	[r11],rl5
 _290:
 
-; cooling.c	    42      me->batteryFanState = TRUE; //float4 batteryFanPercent;
+; cooling.c	    47      me->batteryFanState = TRUE; //float4 batteryFanPercent;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x1a
@@ -215,9 +220,9 @@ _291:
 	movb	[r11],rh6
 _292:
 
-; cooling.c	    43  
-; cooling.c	    44      return me;
-; cooling.c	    45  }
+; cooling.c	    48  
+; cooling.c	    49      return me;
+; cooling.c	    50  }
 	movw	r6,[r15+]
 _83:
 	ret
@@ -228,24 +233,24 @@ _50:
 code_CoolingSystem_calculations	.section	code, cluster 'CoolingSystem_calculations', new
 	.global	_CoolingSystem_calculations
 
-; cooling.c	    46  
-; cooling.c	    47  //-------------------------------------------------------------------
-; cooling.c	    48  // Cooling system calculations - turns fans PWM, sends water pump DO control signal
-; cooling.c	    49  //Rinehart water temperature operating range: -30C to +80C before derating
-; cooling.c	    50  //-------------------------------------------------------------------
-; cooling.c	    51  void CoolingSystem_calculations(CoolingSystem *me, sbyte2 motorControllerTemp, sbyte2 motorTemp, sbyte1 batteryTemp, Sensor *HVILTermSense)
+; cooling.c	    51  
+; cooling.c	    52  //-------------------------------------------------------------------
+; cooling.c	    53  // Cooling system calculations - turns fans PWM, sends water pump DO control signal
+; cooling.c	    54  //Rinehart water temperature operating range: -30C to +80C before derating
+; cooling.c	    55  //-------------------------------------------------------------------
+; cooling.c	    56  void CoolingSystem_calculations(CoolingSystem *me, sbyte2 motorControllerTemp, sbyte2 motorTemp, sbyte1 batteryTemp, Sensor *HVILTermSense)
 ; Function _CoolingSystem_calculations
 _19:
 _CoolingSystem_calculations	.proc	far
 
-; cooling.c	    52  {
-; cooling.c	    53      //Water pump ------------------ ALWAYS ON
-; cooling.c	    54      if(HVILTermSense->sensorValue == TRUE){
-; cooling.c	    55          me->waterPumpPercent = 1;
-; cooling.c	    56      } else if (HVILTermSense->sensorValue == FALSE && (motorControllerTemp >= 50.0 || motorTemp >= 50.0)){
-; cooling.c	    57          me->waterPumpPercent = 1;
-; cooling.c	    58      } else {
-; cooling.c	    59          me->waterPumpPercent = 1;
+; cooling.c	    57  {
+; cooling.c	    58      //Water pump ------------------ ALWAYS ON
+; cooling.c	    59      if(HVILTermSense->sensorValue == TRUE){
+; cooling.c	    60          me->waterPumpPercent = 1;
+; cooling.c	    61      } else if (HVILTermSense->sensorValue == FALSE && (motorControllerTemp >= 50.0 || motorTemp >= 50.0)){
+; cooling.c	    62          me->waterPumpPercent = 1;
+; cooling.c	    63      } else {
+; cooling.c	    64          me->waterPumpPercent = 1;
 	movw	r11,r2
 _156:
 	movw	r12,r3
@@ -267,12 +272,12 @@ _300:
 	movw	[r11],r14
 _301:
 
-; cooling.c	    60      }
-; cooling.c	    61      //On the car- if pumps dont turn on with HV reverse TRUE/FALSE, if pumps dont turn on correctly with HV low then change waterPumpPercent 0/1
-; cooling.c	    62  
-; cooling.c	    63      if (motorControllerTemp >= me->radFanHigh || motorTemp >= me->radFanHigh)
-; cooling.c	    64      {
-; cooling.c	    65          me->radFanPercent = 1.0;  //0.9
+; cooling.c	    65      }
+; cooling.c	    66      //On the car- if pumps dont turn on with HV reverse TRUE/FALSE, if pumps dont turn on correctly with HV low then change waterPumpPercent 0/1
+; cooling.c	    67  
+; cooling.c	    68      if (motorControllerTemp >= me->radFanHigh || motorTemp >= me->radFanHigh)
+; cooling.c	    69      {
+; cooling.c	    70          me->radFanPercent = 1.0;  //0.9
 	movw	r11,r2
 	movw	r14,r3
 _302:
@@ -302,15 +307,15 @@ _307:
 	jmp	_5
 _4:
 
-; cooling.c	    66      }
-; cooling.c	    67      else if (motorControllerTemp < me->radFanLow && motorTemp < me->radFanLow)
-; cooling.c	    68      {
-; cooling.c	    69          me->radFanPercent = 0.3; //0.2
-; cooling.c	    70      }
-; cooling.c	    71      else
-; cooling.c	    72      {
-; cooling.c	    73          //me->radFanPercent = .2 + .7 * getPercent(max(motorControllerTemp, motorTemp), me->radFanLow, me->radFanHigh, TRUE);
-; cooling.c	    74          me->radFanPercent = 0.3;
+; cooling.c	    71      }
+; cooling.c	    72      else if (motorControllerTemp < me->radFanLow && motorTemp < me->radFanLow)
+; cooling.c	    73      {
+; cooling.c	    74          me->radFanPercent = 0.3; //0.2
+; cooling.c	    75      }
+; cooling.c	    76      else
+; cooling.c	    77      {
+; cooling.c	    78          //me->radFanPercent = .2 + .7 * getPercent(max(motorControllerTemp, motorTemp), me->radFanLow, me->radFanHigh, TRUE);
+; cooling.c	    79          me->radFanPercent = 0.3;
 	movw	r12,#0x999a
 	movw	r13,#0x3e99
 _5:
@@ -322,47 +327,8 @@ _5:
 	movw	[r11],r13
 _308:
 
-; cooling.c	    75      }
-; cooling.c	    76  
-; cooling.c	    77      /*
-; cooling.c	    78      //Motor fan / rad fan
-; cooling.c	    79      if (me->motorFanState == FALSE)
-; cooling.c	    80      {
-; cooling.c	    81          if ((motorControllerTemp >= me->motorFanHigh) || (motorTemp >= me->motorFanHigh))
-; cooling.c	    82          {
-; cooling.c	    83              me->motorFanState = TRUE;
-; cooling.c	    84              SerialManager_send(me->sm, "Turning motor fans on.\n");
-; cooling.c	    85          }
-; cooling.c	    86      }
-; cooling.c	    87      else //motor fan is on
-; cooling.c	    88      {
-; cooling.c	    89          if ((motorControllerTemp < me->motorFanLow) && (motorTemp < me->motorFanLow))
-; cooling.c	    90          // Shouldn't this be an || instead of an &&
-; cooling.c	    91          {
-; cooling.c	    92              me->motorFanState = FALSE;
-; cooling.c	    93              SerialManager_send(me->sm, "Turning motor fans off.\n");
-; cooling.c	    94          }
-; cooling.c	    95      }
-; cooling.c	    96  
-; cooling.c	    97      //Battery fans
-; cooling.c	    98      if (me->batteryFanState == TRUE)
-; cooling.c	    99      {
-; cooling.c	   100          if (batteryTemp < me->batteryFanLow)
-; cooling.c	   101          {
-; cooling.c	   102              me->batteryFanState = FALSE;
-; cooling.c	   103              SerialManager_send(me->sm, "Turning battery fans off.\n");
-; cooling.c	   104          }
-; cooling.c	   105      }
-; cooling.c	   106      else //fans are off
-; cooling.c	   107      {
-; cooling.c	   108          if (batteryTemp >= me->batteryFanHigh)
-; cooling.c	   109          {
-; cooling.c	   110              me->batteryFanState = TRUE;
-; cooling.c	   111              SerialManager_send(me->sm, "Turning battery fans on.\n");
-; cooling.c	   112          }
-; cooling.c	   113      }
-; cooling.c	   114      */
-; cooling.c	   115  }
+; cooling.c	    80      }
+; cooling.c	    81  }
 	movw	r8,[r15+]
 _125:
 	ret
@@ -373,21 +339,21 @@ _55:
 code_CoolingSystem_enactCooling	.section	code, cluster 'CoolingSystem_enactCooling', new
 	.global	_CoolingSystem_enactCooling
 
-; cooling.c	   116  
-; cooling.c	   117  //-------------------------------------------------------------------
-; cooling.c	   118  // Cooling system control - turns fans on/off, sends water pump PWM control signal
-; cooling.c	   119  //Rinehart water temperature operating range: -30C to +80C before derating
-; cooling.c	   120  //-------------------------------------------------------------------
-; cooling.c	   121  void CoolingSystem_enactCooling(CoolingSystem *me)
+; cooling.c	    82  
+; cooling.c	    83  //-------------------------------------------------------------------
+; cooling.c	    84  // Cooling system control - turns fans on/off, sends water pump PWM control signal
+; cooling.c	    85  //Rinehart water temperature operating range: -30C to +80C before derating
+; cooling.c	    86  //-------------------------------------------------------------------
+; cooling.c	    87  void CoolingSystem_enactCooling(CoolingSystem *me)
 ; Function _CoolingSystem_enactCooling
 _31:
 _CoolingSystem_enactCooling	.proc	far
 	movw	[-r15],r8
 _160:
 
-; cooling.c	   122  {
-; cooling.c	   123      //Send PWM control signal to water pump
-; cooling.c	   124      Light_set(Cooling_waterPump, me->waterPumpPercent);
+; cooling.c	    88  {
+; cooling.c	    89      //Send PWM control signal to water pump
+; cooling.c	    90      Light_set(Cooling_waterPump, me->waterPumpPercent);
 	movw	r11,r2
 _313:
 	movw	[-r15],r9
@@ -405,7 +371,7 @@ _245:
 	addcw	r3,#0x0
 _315:
 
-; cooling.c	   125      Light_set(Cooling_RadFans, me->radFanPercent);
+; cooling.c	    91      Light_set(Cooling_RadFans, me->radFanPercent);
 	addw	r8,#0x14
 	addcw	r9,#0x0
 _316:
@@ -424,26 +390,8 @@ _317:
 	call	_Light_set
 _318:
 
-; cooling.c	   126  
-; cooling.c	   127      // Issue #110 https://github.com/spartanracingelectric/VCU/issues/110
-; cooling.c	   128      // Relay wiring seems to be backwards for 2021 car: Fans are on while everything is cool,
-; cooling.c	   129      // and they turn OFF when systems get hot.  This boolean flips the software logic, but the
-; cooling.c	   130      // wiring needs to be fixed and this software hack needs to be removed in the future.
-; cooling.c	   131      /*
-; cooling.c	   132      bool wiringIsWrong = TRUE;
-; cooling.c	   133      
-; cooling.c	   134      if (wiringIsWrong)
-; cooling.c	   135      {
-; cooling.c	   136          Light_set(Cooling_Fans, me->motorFanState == TRUE ? 0 : 1);
-; cooling.c	   137          Light_set(Cooling_batteryFans, me->batteryFanState == TRUE ? 0 : 1);
-; cooling.c	   138      }
-; cooling.c	   139      else
-; cooling.c	   140      {
-; cooling.c	   141          Light_set(Cooling_motorFans, me->motorFanState == TRUE ? 1 : 0);
-; cooling.c	   142          Light_set(Cooling_batteryFans, me->batteryFanState == TRUE ? 1 : 0);
-; cooling.c	   143      }
-; cooling.c	   144      */
-; cooling.c	   145  }
+; cooling.c	    92  
+; cooling.c	    93  }
 	movw	r9,[r15+]
 _182:
 	movw	r8,[r15+]
@@ -503,7 +451,7 @@ _67:
 	.db	4
 	.db	'char',0,1,6,4
 	.db	'unsigned char',0,1,8,11
-	.db	'_CoolingSystem',0,3,6,16,28,12
+	.db	'_CoolingSystem',0,3,13,16,28,12
 	.db	'waterPumpMinPercent',0
 	.dl	382
 	.db	4,2,35,0,12
@@ -636,7 +584,7 @@ _69:
 	.db	'Sensor',0,2,145,1,3
 	.dl	852
 	.db	13
-	.db	'CoolingSystem',0,3,33,3
+	.db	'CoolingSystem',0,3,40,3
 	.dl	471
 	.db	13
 	.db	'_iob_flag_t',0,7,82,25
@@ -698,14 +646,14 @@ _46:
 	.db	2
 	.dl	_42
 	.db	3
-	.db	'CoolingSystem_new',0,1,14,16,6
+	.db	'CoolingSystem_new',0,1,19,16,6
 	.dl	_61
 	.db	1,1
 	.dl	_7,_50,_6
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
 	.dl	_7,_50
 	.db	5
-	.db	'me',0,1,16,20,2
+	.db	'me',0,1,21,20,2
 	.dl	_61,_62
 	.db	0,0,0
 	; End of section
@@ -729,7 +677,7 @@ _252:
 _253:
 	.db	5,16,7,0,5,2
 	.dl	_7
-	.db	3,13,1,5,49,9
+	.db	3,18,1,5,49,9
 	.dw	_72-_7
 	.db	3,2,1,5,29,9
 	.dw	_254-_72
@@ -842,22 +790,22 @@ _51:
 	.db	2
 	.dl	_42
 	.db	3
-	.db	'CoolingSystem_calculations',0,1,51,6,6,1,1,1
+	.db	'CoolingSystem_calculations',0,1,56,6,6,1,1,1
 	.dl	_19,_55,_18
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,51,48,2
+	.db	'me',0,1,56,48,2
 	.dl	_61,_63
 	.db	4
-	.db	'motorControllerTemp',0,1,51,59,2
+	.db	'motorControllerTemp',0,1,56,59,2
 	.dl	_64,_65
 	.db	4
-	.db	'motorTemp',0,1,51,87,2
+	.db	'motorTemp',0,1,56,87,2
 	.dl	_64,_66
 	.db	4
-	.db	'batteryTemp',0,1,51,105,2
+	.db	'batteryTemp',0,1,56,105,2
 	.dl	_67,_68
 	.db	4
-	.db	'HVILTermSense',0,1,51,126,2
+	.db	'HVILTermSense',0,1,56,126,2
 	.dl	_69,_70
 	.db	5
 	.dl	_19,_55
@@ -883,7 +831,7 @@ _295:
 _296:
 	.db	5,11,7,0,5,2
 	.dl	_19
-	.db	3,58,1,5,6,9
+	.db	3,63,1,5,6,9
 	.dw	_297-_19
 	.db	3,120,1,5,32,9
 	.dw	_114-_297
@@ -917,7 +865,7 @@ _296:
 	.dw	_5-_4
 	.db	1,5,1,9
 	.dw	_308-_5
-	.db	3,41,1,9
+	.db	3,2,1,9
 	.dw	_55-_308
 	.db	0,1,1
 _294:
@@ -950,10 +898,10 @@ _56:
 	.db	2
 	.dl	_42
 	.db	3
-	.db	'CoolingSystem_enactCooling',0,1,121,6,6,1,1,1
+	.db	'CoolingSystem_enactCooling',0,1,87,6,6,1,1,1
 	.dl	_31,_60,_30
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,121,48,2
+	.db	'me',0,1,87,48,2
 	.dl	_61,_71
 	.db	5
 	.dl	_31,_60
@@ -979,7 +927,7 @@ _311:
 _312:
 	.db	5,6,7,0,5,2
 	.dl	_31
-	.db	3,248,0,1,5,36,9
+	.db	3,214,0,1,5,36,9
 	.dw	_160-_31
 	.db	3,3,1,5,6,9
 	.dw	_313-_160
@@ -997,7 +945,7 @@ _312:
 	.dw	_317-_316
 	.db	3,1,1,5,1,9
 	.dw	_318-_317
-	.db	3,20,1,9
+	.db	3,2,1,9
 	.dw	_60-_318
 	.db	0,1,1
 _310:

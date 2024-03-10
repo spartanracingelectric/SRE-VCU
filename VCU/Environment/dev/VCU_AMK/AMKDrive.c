@@ -1,7 +1,8 @@
 /*****************************************************************************
  * AMKDrive.c - Drive Inverter (DI)
+ * Initial Author: Shinika Balasundar
  ******************************************************************************
- * Stores data from / commands going to AMK drive inverters.
+ * Calculated initial Torque to AMKs, Sends values to AMKs, and parses messages from AMKs
  ****************************************************************************/
 
 #include <stdlib.h>
@@ -88,6 +89,7 @@ void DI_calculateCommands(_DriveInverter* me, TorqueEncoder *tps, BrakePressureS
 
     float4 appsOutputPercent;
 
+    /*
     TorqueEncoder_getOutputPercent(tps, &appsOutputPercent);
 
     sbyte2 torqueMax = (me->AMK_TorqueLimitPositiv / 100); // this should give 21 or the max value 
@@ -95,8 +97,16 @@ void DI_calculateCommands(_DriveInverter* me, TorqueEncoder *tps, BrakePressureS
 
     appsTorque = torqueMax * getPercent(appsOutputPercent, 0, 1, TRUE) - 0 * getPercent(appsOutputPercent, 0, 0, TRUE);
     bpsTorque = 0 - (0 - 0) * getPercent(bps->percent, 0, 0, TRUE);
+    */ 
 
-    torqueOutput = appsTorque + bpsTorque; //This should be giving a value on CAN from 0 - 2.14. 
+    //Vehicle Testing works on Test-Bench
+    TorqueEncoder_getIndividualSensorPercent(tps, 0, &appsOutputPercent);
+    appsOutputPercent = appsOutputPercent * 10000;
+
+    float4 torqueMax = ((21 / 9.8) / 100.0);
+    //float4 torqueMax = (((float4)me->AMK_TorqueSetpoint / 10.0 / 9.8) / 100.0);
+
+    torqueOutput = appsOutputPercent * torqueMax; 
 
     DI_commandTorque(me, torqueOutput);
     DI_getCommandedTorque(me);
@@ -122,7 +132,7 @@ void DI_calculateInverterControl(_DriveInverter* me, Sensor *HVILTermSense, Torq
             me->AMK_bErrorReset = FALSE;
             me->AMK_TorqueSetpoint = 0;
             me->AMK_TorqueLimitPositiv = 0;
-            me->AMK_TorqueLimitNegativ = 0; //No changes until regen is present
+            me->AMK_TorqueLimitNegativ = 0; 
             if(me->AMK_bSystemReady == TRUE && me->AMK_bError == FALSE){ 
                 timestamp_Precharge = 0;
                 me->startUpStage = 2;
@@ -173,7 +183,7 @@ void DI_calculateInverterControl(_DriveInverter* me, Sensor *HVILTermSense, Torq
             }
         break;
         case READY_TO_DRIVE_INVERTER_ON:
-            if(Sensor_RTDButton.sensorValue == FALSE && me->AMK_bEnable == TRUE){
+            if(Sensor_RTDButton.sensorValue == FALSE && me->AMK_bEnable == TRUE /*Add in brakes being pressed*/){
                 me->AMK_bInverterOn = TRUE;
                 me->AMK_bDcOn = TRUE;
                 me->AMK_bEnable = TRUE;
@@ -191,7 +201,7 @@ void DI_calculateInverterControl(_DriveInverter* me, Sensor *HVILTermSense, Torq
             me->AMK_bDcOn = TRUE;
             me->AMK_bEnable = TRUE;
             me->AMK_TorqueSetpoint = 0;
-            me->AMK_TorqueLimitPositiv = 21 * 100; // 25Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
+            me->AMK_TorqueLimitPositiv = 21 * 10; // 25Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
             me->AMK_TorqueLimitNegativ = 0;
             if(me->AMK_bError == FALSE){
                 me->startUpStage = 6;
@@ -201,9 +211,9 @@ void DI_calculateInverterControl(_DriveInverter* me, Sensor *HVILTermSense, Torq
             me->AMK_bInverterOn = TRUE;
             me->AMK_bDcOn = TRUE;
             me->AMK_bEnable = TRUE;
-            me->AMK_TorqueLimitPositiv = 21 * 100; // SRE-7 Update: 21Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
+            me->AMK_TorqueLimitPositiv = 21 * 10; // SRE-7 Update: 21Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
             me->AMK_TorqueLimitNegativ = 0; //SRE-7 Update: Make -21 for Regen
-            if(me->AMK_bError == TRUE /*|| Verify Voltage Range Here w/ PCB*/){
+            if(me->AMK_bError == TRUE || HVILTermSense->sensorValue == FALSE){
                 me->startUpStage = 1; 
             }
         break;

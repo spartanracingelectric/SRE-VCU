@@ -1,31 +1,38 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc17524a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=1 -DRTS_TTC_FLASH_DATE_DAY=17 -DRTS_TTC_FLASH_DATE_HOUR=13 -DRTS_TTC_FLASH_DATE_MINUTE=38 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\daqSensors.src
+	; Options: -f cc15172a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=3 -DRTS_TTC_FLASH_DATE_DAY=4 -DRTS_TTC_FLASH_DATE_HOUR=18 -DRTS_TTC_FLASH_DATE_MINUTE=20 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\daqSensors.src
 	; Module start
 	.source	'daqSensors.c'
 code_DAQ_Sensor_new	.section	code, cluster 'DAQ_Sensor_new', new
 	.global	_DAQ_Sensor_new
 
-; daqSensors.c	     1  #include <stdlib.h> 
-; daqSensors.c	     2  #include "IO_CAN.h"
-; daqSensors.c	     3  #include "IO_Driver.h"
-; daqSensors.c	     4  #include "mathFunctions.h"
-; daqSensors.c	     5  #include "initializations.h"
-; daqSensors.c	     6  #include "sensors.h"
-; daqSensors.c	     7  #include "daqSensors.h"
-; daqSensors.c	     8  
-; daqSensors.c	     9  _DAQSensors* DAQ_Sensor_new(){
+; daqSensors.c	     1  /*****************************************************************************
+; daqSensors.c	     2   * daqSensors.h - DAQ object and parsing
+; daqSensors.c	     3   * Initial Author: Shinika B
+; daqSensors.c	     4   ******************************************************************************
+; daqSensors.c	     5   * Items taken coming from the DAQs CAN messages
+; daqSensors.c	     6   ****************************************************************************/
+; daqSensors.c	     7  
+; daqSensors.c	     8  #include <stdlib.h> 
+; daqSensors.c	     9  #include "IO_CAN.h"
+; daqSensors.c	    10  #include "IO_Driver.h"
+; daqSensors.c	    11  #include "mathFunctions.h"
+; daqSensors.c	    12  #include "initializations.h"
+; daqSensors.c	    13  #include "sensors.h"
+; daqSensors.c	    14  #include "daqSensors.h"
+; daqSensors.c	    15  
+; daqSensors.c	    16  _DAQSensors* DAQ_Sensor_new(){
 ; Function _DAQ_Sensor_new
 _7:
 _DAQ_Sensor_new	.proc	far
 
-; daqSensors.c	    10  
-; daqSensors.c	    11      _DAQSensors* me = (_DAQSensors*)malloc(sizeof(_DAQSensors));
+; daqSensors.c	    17  
+; daqSensors.c	    18      _DAQSensors* me = (_DAQSensors*)malloc(sizeof(_DAQSensors));
 	movw	r2,#0xc
 	call	_malloc
 _528:
 
-; daqSensors.c	    12  
-; daqSensors.c	    13      me->AccelX = 0;
+; daqSensors.c	    19  
+; daqSensors.c	    20      me->AccelX = 0;
 	movw	r11,#0x0
 _529:
 	movw	r12,r2
@@ -38,7 +45,7 @@ _529:
 	movw	[r12],r11
 _530:
 
-; daqSensors.c	    14      me->AccelY = 0;
+; daqSensors.c	    21      me->AccelY = 0;
 	movw	r12,r2
 	movw	r13,r3
 	addw	r12,#0x4
@@ -52,7 +59,7 @@ _531:
 	movw	[r12],r11
 _532:
 
-; daqSensors.c	    15      me->GyroZ = 0;
+; daqSensors.c	    22      me->GyroZ = 0;
 	movw	r12,r2
 	movw	r13,r3
 	addw	r12,#0x8
@@ -66,10 +73,12 @@ _533:
 	movw	[r12],r11
 _534:
 
-; daqSensors.c	    16  
-; daqSensors.c	    17      return me;
-; daqSensors.c	    18  
-; daqSensors.c	    19  }
+; daqSensors.c	    23  
+; daqSensors.c	    24      //Update for GPS SPEED on IMU TEST CONFIG
+; daqSensors.c	    25  
+; daqSensors.c	    26      return me;
+; daqSensors.c	    27  
+; daqSensors.c	    28  }
 	ret
 _38:
 	; End of function
@@ -78,8 +87,8 @@ _38:
 code_DAQ_parseCanMessage	.section	code, cluster 'DAQ_parseCanMessage', new
 	.global	_DAQ_parseCanMessage
 
-; daqSensors.c	    20  
-; daqSensors.c	    21  void DAQ_parseCanMessage(_DAQSensors* me, IO_CAN_DATA_FRAME* daqCANMessage){
+; daqSensors.c	    29  
+; daqSensors.c	    30  void DAQ_parseCanMessage(_DAQSensors* me, IO_CAN_DATA_FRAME* daqCANMessage){
 ; Function _DAQ_parseCanMessage
 _19:
 _DAQ_parseCanMessage	.proc	far
@@ -102,11 +111,11 @@ _115:
 	movw	r7,r5
 _516:
 
-; daqSensors.c	    22  
-; daqSensors.c	    23      //Issue with it not subtracting the value correctly due to the DBC (offset required) -> -320 and -250 dont work
-; daqSensors.c	    24      //Compare it with 320 and 250
-; daqSensors.c	    25  
-; daqSensors.c	    26      if(daqCANMessage->id == 0x400) {
+; daqSensors.c	    31  
+; daqSensors.c	    32      //Issue with it not subtracting the value correctly due to the DBC (offset required) -> -320 and -250 dont work
+; daqSensors.c	    33      //Compare it with 320 and 250
+; daqSensors.c	    34  
+; daqSensors.c	    35      if(daqCANMessage->id == 0x400) {
 	addw	r4,#0xa
 _514:
 	addcw	r5,#0x0
@@ -135,8 +144,8 @@ _542:
 	jmp+	cc_ne,_3
 _543:
 
-; daqSensors.c	    27  
-; daqSensors.c	    28          me->AccelX = (((ubyte4)daqCANMessage->data[1] << 8 | daqCANMessage->data[0]) - 320.0); //m/s2
+; daqSensors.c	    36  
+; daqSensors.c	    37          me->AccelX = (((ubyte4)daqCANMessage->data[1] << 8 | daqCANMessage->data[0]) - 320.0); //m/s2
 	movw	r11,r6
 	movw	r12,r7
 _544:
@@ -181,7 +190,7 @@ _556:
 	addcw	r12,#0x0
 _557:
 
-; daqSensors.c	    29          me->AccelY = (((ubyte4)daqCANMessage->data[3] << 8 | daqCANMessage->data[2]) - 320.0); //m/s2
+; daqSensors.c	    38          me->AccelY = (((ubyte4)daqCANMessage->data[3] << 8 | daqCANMessage->data[2]) - 320.0); //m/s2
 	movw	r14,#0x4074
 _558:
 	exts	r12,#0x1
@@ -237,15 +246,15 @@ _573:
 	jmp	_4
 _3:
 
-; daqSensors.c	    30          
-; daqSensors.c	    31      } else if(daqCANMessage->id == 0x402) {
+; daqSensors.c	    39          
+; daqSensors.c	    40      } else if(daqCANMessage->id == 0x402) {
 	cmpw	r11,#0x402
 	subcw	r12,#0x0
 	jmp+	cc_ne,_5
 _574:
 
-; daqSensors.c	    32    
-; daqSensors.c	    33          me->GyroZ = (((ubyte4)daqCANMessage->data[5] << 8 | daqCANMessage->data[4]) - 250.0); //deg/s
+; daqSensors.c	    41    
+; daqSensors.c	    42          me->GyroZ = (((ubyte4)daqCANMessage->data[5] << 8 | daqCANMessage->data[4]) - 250.0); //deg/s
 	movw	r11,r6
 	movw	r12,r7
 _575:
@@ -299,9 +308,9 @@ _588:
 _5:
 _4:
 
-; daqSensors.c	    34  
-; daqSensors.c	    35      }
-; daqSensors.c	    35  }
+; daqSensors.c	    43  
+; daqSensors.c	    44      }
+; daqSensors.c	    44  }
 
 	addw	r15,#0x2
 _170:
@@ -398,7 +407,7 @@ _30:
 	.dl	193
 	.db	0,4
 	.db	'unsigned long int',0,4,7,7
-	.db	'DAQSensors',0,2,11,16,12,8
+	.db	'DAQSensors',0,2,18,16,12,8
 	.db	'AccelX',0
 	.dl	239
 	.db	4,2,35,0,8
@@ -485,7 +494,7 @@ _47:
 	.db	'BL_T_CAN_ID',0,7,106,2
 	.dl	720
 	.db	11
-	.db	'_DAQSensors',0,2,17,3
+	.db	'_DAQSensors',0,2,24,3
 	.dl	260
 	.db	0
 	; End of section
@@ -541,14 +550,14 @@ _34:
 	.db	2
 	.dl	_30
 	.db	3
-	.db	'DAQ_Sensor_new',0,1,9,14,6
+	.db	'DAQ_Sensor_new',0,1,16,14,6
 	.dl	_44
 	.db	1,1
 	.dl	_7,_38,_6
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
 	.dl	_7,_38
 	.db	5
-	.db	'me',0,1,11,18,2
+	.db	'me',0,1,18,18,2
 	.dl	_44,_45
 	.db	0,0,0
 	; End of section
@@ -572,7 +581,7 @@ _526:
 _527:
 	.db	5,44,7,0,5,2
 	.dl	_7
-	.db	3,10,1,5,18,9
+	.db	3,17,1,5,18,9
 	.dw	_528-_7
 	.db	3,2,1,5,16,9
 	.dw	_529-_528
@@ -586,7 +595,7 @@ _527:
 	.dw	_533-_532
 	.db	1,5,1,9
 	.dw	_534-_533
-	.db	3,4,1,7,9
+	.db	3,6,1,7,9
 	.dw	_38-_534
 	.db	0,1,1
 _525:
@@ -619,13 +628,13 @@ _39:
 	.db	2
 	.dl	_30
 	.db	3
-	.db	'DAQ_parseCanMessage',0,1,21,6,6,1,1,1
+	.db	'DAQ_parseCanMessage',0,1,30,6,6,1,1,1
 	.dl	_19,_43,_18
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,21,39,2
+	.db	'me',0,1,30,39,2
 	.dl	_44,_46
 	.db	4
-	.db	'daqCANMessage',0,1,21,62,2
+	.db	'daqCANMessage',0,1,30,62,2
 	.dl	_47,_48
 	.db	5
 	.dl	_19,_43
@@ -651,7 +660,7 @@ _537:
 _538:
 	.db	5,6,7,0,5,2
 	.dl	_19
-	.db	3,20,1,5,21,9
+	.db	3,29,1,5,21,9
 	.dw	_516-_19
 	.db	3,5,1,5,6,9
 	.dw	_539-_516

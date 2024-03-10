@@ -44,6 +44,9 @@ BO_ 1024 Aceinna_Accel: 8 Aceinna
  SG_ Aceinna_AccY : 16|16@1+ (0.01,-320) [-320|335.35] "m/s2" Vector__XXX
  SG_ Aceinna_AccX : 0|16@1+ (0.01,-320) [-320|335.35] "m/s2" Vector__XXX
 
+BO_ 1025 GPS_Speed: 8 Aceinna
+ SG_ Speed : 0|16@1- (0.001,0) [-1000|1000] "kph" Vector__XXX
+
 BO_ 1026 Aceinna_Rate: 8 Aceinna
  SG_ Aceinna_AngleRate_Latency : 56|8@1+ (0.5,0) [0|0] "ms" Vector__XXX
  SG_ Aceinna_YawRate_Figure_OfMerit : 52|2@1+ (1,0) [0|0] "" Vector__XXX

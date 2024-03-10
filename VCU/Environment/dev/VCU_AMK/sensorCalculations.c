@@ -370,4 +370,3 @@ sbyte4 steering_degrees(){
 //000 = TPS0 out of range
 //001 = TPS1 out of range
 //}
-

@@ -1,29 +1,36 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc14096a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=1 -DRTS_TTC_FLASH_DATE_DAY=17 -DRTS_TTC_FLASH_DATE_HOUR=13 -DRTS_TTC_FLASH_DATE_MINUTE=38 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\mathFunctions.src
+	; Options: -f cc23888a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=3 -DRTS_TTC_FLASH_DATE_DAY=3 -DRTS_TTC_FLASH_DATE_HOUR=12 -DRTS_TTC_FLASH_DATE_MINUTE=6 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\mathFunctions.src
 	; Module start
 	.source	'mathFunctions.c'
 code_getPercent	.section	code, cluster 'getPercent', new
 	.global	_getPercent
 
-; mathFunctions.c	     1  #include <stdarg.h>
-; mathFunctions.c	     2  #include <math.h>
-; mathFunctions.c	     3  #include "mathFunctions.h"
-; mathFunctions.c	     4  #include "IO_Driver.h"
-; mathFunctions.c	     5  #include "IO_RTC.h"
-; mathFunctions.c	     6  
-; mathFunctions.c	     7  /*****************************************************************************
-; mathFunctions.c	     8  * Helper functions
-; mathFunctions.c	     9  ****************************************************************************/
-; mathFunctions.c	    10  /*-------------------------------------------------------------------
-; mathFunctions.c	    11  * getPercent
-; mathFunctions.c	    12  * Returns the % (position) of value, between min and max
-; mathFunctions.c	    13  * Special features:
-; mathFunctions.c	    14  *   - Handles cases where "start" is less than "end" (value goes backwards)
-; mathFunctions.c	    15  * Automatically compensates for reverse-direction values: When min > max, value is assumed to travel in reverse direction.
-; mathFunctions.c	    16  * If zeroToOneOnly is true, then % will be capped at 0%-100% (no negative % or > 100%)
-; mathFunctions.c	    17  * If range == 0, then 0 will be returned.  (Safety: in case of problem during regen torque calculation)
-; mathFunctions.c	    18  -------------------------------------------------------------------*/
-; mathFunctions.c	    19  float4 getPercent(float4 value, float4 start, float4 end, bool zeroToOneOnly)
+; mathFunctions.c	     1  /*****************************************************************************
+; mathFunctions.c	     2   * mathFunctions.c - Math functionality
+; mathFunctions.c	     3   * Initial Author: Rusty P
+; mathFunctions.c	     4   ******************************************************************************
+; mathFunctions.c	     5   * Specialized math control functions
+; mathFunctions.c	     6   ****************************************************************************/
+; mathFunctions.c	     7  
+; mathFunctions.c	     8  #include <stdarg.h>
+; mathFunctions.c	     9  #include <math.h>
+; mathFunctions.c	    10  #include "mathFunctions.h"
+; mathFunctions.c	    11  #include "IO_Driver.h"
+; mathFunctions.c	    12  #include "IO_RTC.h"
+; mathFunctions.c	    13  
+; mathFunctions.c	    14  /*****************************************************************************
+; mathFunctions.c	    15  * Helper functions
+; mathFunctions.c	    16  ****************************************************************************/
+; mathFunctions.c	    17  /*-------------------------------------------------------------------
+; mathFunctions.c	    18  * getPercent
+; mathFunctions.c	    19  * Returns the % (position) of value, between min and max
+; mathFunctions.c	    20  * Special features:
+; mathFunctions.c	    21  *   - Handles cases where "start" is less than "end" (value goes backwards)
+; mathFunctions.c	    22  * Automatically compensates for reverse-direction values: When min > max, value is assumed to travel in reverse direction.
+; mathFunctions.c	    23  * If zeroToOneOnly is true, then % will be capped at 0%-100% (no negative % or > 100%)
+; mathFunctions.c	    24  * If range == 0, then 0 will be returned.  (Safety: in case of problem during regen torque calculation)
+; mathFunctions.c	    25  -------------------------------------------------------------------*/
+; mathFunctions.c	    26  float4 getPercent(float4 value, float4 start, float4 end, bool zeroToOneOnly)
 ; Function _getPercent
 _21:
 _getPercent	.proc	far
@@ -47,8 +54,8 @@ _516:
 	movb	rh7,[r15+#0xe]
 _517:
 
-; mathFunctions.c	    20  {
-; mathFunctions.c	    21      float4 retVal = (value - start) / (end - start);
+; mathFunctions.c	    27  {
+; mathFunctions.c	    28      float4 retVal = (value - start) / (end - start);
 	call	__sub_spf
 _515:
 	movw	r9,r2
@@ -69,14 +76,14 @@ _883:
 	movw	r11,r2
 _514:
 
-; mathFunctions.c	    22  
-; mathFunctions.c	    23      if (zeroToOneOnly == TRUE)
+; mathFunctions.c	    29  
+; mathFunctions.c	    30      if (zeroToOneOnly == TRUE)
 	cmpb	rh7,#0x1
 	jmp	cc_ne,_2
 _884:
 
-; mathFunctions.c	    24      {
-; mathFunctions.c	    25          if (retVal < 0)
+; mathFunctions.c	    31      {
+; mathFunctions.c	    32          if (retVal < 0)
 	movw	r2,r11
 	movw	r4,#0x0
 	movw	r5,#0x0
@@ -86,14 +93,14 @@ _885:
 	jmp+	cc_eq,_3
 _886:
 
-; mathFunctions.c	    26          {
-; mathFunctions.c	    27              retVal = 0;
+; mathFunctions.c	    33          {
+; mathFunctions.c	    34              retVal = 0;
 	movw	r11,#0x0
 	movw	r3,#0x0
 _3:
 
-; mathFunctions.c	    28          }
-; mathFunctions.c	    29          if (retVal > 1)
+; mathFunctions.c	    35          }
+; mathFunctions.c	    36          if (retVal > 1)
 	movw	r5,#0x3f80
 _887:
 	movw	r2,r11
@@ -104,21 +111,21 @@ _888:
 	jmp+	cc_eq,_4
 _889:
 
-; mathFunctions.c	    30          {
-; mathFunctions.c	    31              retVal = 1;
+; mathFunctions.c	    37          {
+; mathFunctions.c	    38              retVal = 1;
 	movw	r11,#0x0
 	movw	r3,#0x3f80
 _4:
 _2:
 
-; mathFunctions.c	    32          }
-; mathFunctions.c	    33      }
-; mathFunctions.c	    34  
-; mathFunctions.c	    35      return retVal;
+; mathFunctions.c	    39          }
+; mathFunctions.c	    40      }
+; mathFunctions.c	    41  
+; mathFunctions.c	    42      return retVal;
 	movw	r2,r11
 _890:
 
-; mathFunctions.c	    36  }
+; mathFunctions.c	    43  }
 	movw	r10,[r15+]
 _297:
 	movw	r9,[r15+]
@@ -141,22 +148,22 @@ _148:
 code_max	.section	code, cluster 'max', new
 	.global	_max
 
-; mathFunctions.c	    37  
-; mathFunctions.c	    38  // A utility function to get maximum of two integers
-; mathFunctions.c	    39  ubyte2 max(ubyte2 a, ubyte2 b)
+; mathFunctions.c	    44  
+; mathFunctions.c	    45  // A utility function to get maximum of two integers
+; mathFunctions.c	    46  ubyte2 max(ubyte2 a, ubyte2 b)
 ; Function _max
 _33:
 _max	.proc	far
 
-; mathFunctions.c	    40  {
-; mathFunctions.c	    41      return (a > b) ? a : b;
+; mathFunctions.c	    47  {
+; mathFunctions.c	    48      return (a > b) ? a : b;
 	cmpw	r2,r3
 	jmp	cc_ugt,_7
 _895:
 	movw	r2,r3
 _7:
 
-; mathFunctions.c	    42  }
+; mathFunctions.c	    49  }
 	ret
 _153:
 	; End of function
@@ -165,22 +172,22 @@ _153:
 code_min	.section	code, cluster 'min', new
 	.global	_min
 
-; mathFunctions.c	    43  
-; mathFunctions.c	    44  // A utility function to get maximum of two integers
-; mathFunctions.c	    45  ubyte2 min(ubyte2 a, ubyte2 b)
+; mathFunctions.c	    50  
+; mathFunctions.c	    51  // A utility function to get maximum of two integers
+; mathFunctions.c	    52  ubyte2 min(ubyte2 a, ubyte2 b)
 ; Function _min
 _45:
 _min	.proc	far
 
-; mathFunctions.c	    46  {
-; mathFunctions.c	    47      return (a < b) ? a : b;
+; mathFunctions.c	    53  {
+; mathFunctions.c	    54      return (a < b) ? a : b;
 	cmpw	r2,r3
 	jmp	cc_ult,_10
 _955:
 	movw	r2,r3
 _10:
 
-; mathFunctions.c	    48  }
+; mathFunctions.c	    55  }
 	ret
 _188:
 	; End of function
@@ -189,37 +196,37 @@ _188:
 code_blink	.section	code, cluster 'blink', new
 	.global	_blink
 
-; mathFunctions.c	    49  
-; mathFunctions.c	    50  /**********************************************************************/ /**
-; mathFunctions.c	    51   *
-; mathFunctions.c	    52   * \brief Decides whether a blinking light should be on or off based on
-; mathFunctions.c	    53   *        the system clock and period given
-; mathFunctions.c	    54   *
-; mathFunctions.c	    55   * \param timestamp     A timestamp from IO_RTC for when the blink was started
-; mathFunctions.c	    56   * \param highPeriod    How long the blink should stay high, in ms (NOT ns)
-; mathFunctions.c	    57   * \param lowPeriod     How long the blink should stay low -- NOT IMPLEMENTED;
-; mathFunctions.c	    58   *                      Always the same as highPeriod
-; mathFunctions.c	    59   *
-; mathFunctions.c	    60   * \return boolean:
-; mathFunctions.c	    61   * \retval TRUE      blink should be high
-; mathFunctions.c	    62   * \retval FALSE     blink should be low
-; mathFunctions.c	    63   *
-; mathFunctions.c	    64   ***************************************************************************
-; mathFunctions.c	    65   *
-; mathFunctions.c	    66   * \remarks
-; mathFunctions.c	    67   *   Blablabla
-; mathFunctions.c	    68   *
-; mathFunctions.c	    69   ***************************************************************************/
-; mathFunctions.c	    70  bool blink(ubyte4 *clock, ubyte2 highPeriod)
+; mathFunctions.c	    56  
+; mathFunctions.c	    57  /**********************************************************************/ /**
+; mathFunctions.c	    58   *
+; mathFunctions.c	    59   * \brief Decides whether a blinking light should be on or off based on
+; mathFunctions.c	    60   *        the system clock and period given
+; mathFunctions.c	    61   *
+; mathFunctions.c	    62   * \param timestamp     A timestamp from IO_RTC for when the blink was started
+; mathFunctions.c	    63   * \param highPeriod    How long the blink should stay high, in ms (NOT ns)
+; mathFunctions.c	    64   * \param lowPeriod     How long the blink should stay low -- NOT IMPLEMENTED;
+; mathFunctions.c	    65   *                      Always the same as highPeriod
+; mathFunctions.c	    66   *
+; mathFunctions.c	    67   * \return boolean:
+; mathFunctions.c	    68   * \retval TRUE      blink should be high
+; mathFunctions.c	    69   * \retval FALSE     blink should be low
+; mathFunctions.c	    70   *
+; mathFunctions.c	    71   ***************************************************************************
+; mathFunctions.c	    72   *
+; mathFunctions.c	    73   * \remarks
+; mathFunctions.c	    74   *   Blablabla
+; mathFunctions.c	    75   *
+; mathFunctions.c	    76   ***************************************************************************/
+; mathFunctions.c	    77  bool blink(ubyte4 *clock, ubyte2 highPeriod)
 ; Function _blink
 _57:
 _blink	.proc	far
 
-; mathFunctions.c	    71  {
-; mathFunctions.c	    72      //time passed since the start of the blinks divided by the period to get
-; mathFunctions.c	    73      //count.
-; mathFunctions.c	    74      //count % 2 gets the current state the blink should be in 0 or <0
-; mathFunctions.c	    75      ubyte4 count = IO_RTC_GetTimeUS(*clock) / highPeriod;
+; mathFunctions.c	    78  {
+; mathFunctions.c	    79      //time passed since the start of the blinks divided by the period to get
+; mathFunctions.c	    80      //count.
+; mathFunctions.c	    81      //count % 2 gets the current state the blink should be in 0 or <0
+; mathFunctions.c	    82      ubyte4 count = IO_RTC_GetTimeUS(*clock) / highPeriod;
 	movw	r11,r2
 _960:
 	movw	[-r15],r8
@@ -244,10 +251,10 @@ _605:
 	call	__udil
 _606:
 
-; mathFunctions.c	    76      //removes decimal places. there may be a better way to do this but I got lazy
-; mathFunctions.c	    77      count = count - count % 1;
-; mathFunctions.c	    78  
-; mathFunctions.c	    79      return !(count / highPeriod) % 2;
+; mathFunctions.c	    83      //removes decimal places. there may be a better way to do this but I got lazy
+; mathFunctions.c	    84      count = count - count % 1;
+; mathFunctions.c	    85  
+; mathFunctions.c	    86      return !(count / highPeriod) % 2;
 	movw	r4,r8
 _607:
 	movw	r5,#0x0
@@ -261,7 +268,7 @@ _12:
 	movb	rl2,rh4
 _962:
 
-; mathFunctions.c	    80  }
+; mathFunctions.c	    87  }
 	movw	r10,[r15+]
 _540:
 	movw	r8,[r15+]
@@ -274,16 +281,16 @@ _193:
 code_swap_uint8	.section	code, cluster 'swap_uint8', new
 	.global	_swap_uint8
 
-; mathFunctions.c	    81  
-; mathFunctions.c	    82  //byte swapping functions used by BMS
-; mathFunctions.c	    83  
-; mathFunctions.c	    84  ubyte1 swap_uint8(ubyte1 val)
+; mathFunctions.c	    88  
+; mathFunctions.c	    89  //byte swapping functions used by BMS
+; mathFunctions.c	    90  
+; mathFunctions.c	    91  ubyte1 swap_uint8(ubyte1 val)
 ; Function _swap_uint8
 _69:
 _swap_uint8	.proc	far
 
-; mathFunctions.c	    85  {
-; mathFunctions.c	    86      return (val << 4) | (val >> 4);
+; mathFunctions.c	    92  {
+; mathFunctions.c	    93      return (val << 4) | (val >> 4);
 	movb	rl4,rl2
 	shl	r4,#0x4
 _900:
@@ -296,7 +303,7 @@ _901:
 	movb	rl2,rl4
 _902:
 
-; mathFunctions.c	    87  }
+; mathFunctions.c	    94  }
 	ret
 _158:
 	; End of function
@@ -305,14 +312,14 @@ _158:
 code_swap_int8	.section	code, cluster 'swap_int8', new
 	.global	_swap_int8
 
-; mathFunctions.c	    88  
-; mathFunctions.c	    89  sbyte1 swap_int8(sbyte1 val)
+; mathFunctions.c	    95  
+; mathFunctions.c	    96  sbyte1 swap_int8(sbyte1 val)
 ; Function _swap_int8
 _81:
 _swap_int8	.proc	far
 
-; mathFunctions.c	    90  {
-; mathFunctions.c	    91      return (val << 4) | (val >> 4);
+; mathFunctions.c	    97  {
+; mathFunctions.c	    98      return (val << 4) | (val >> 4);
 	movb	rl4,rl2
 	shl	r4,#0x4
 _907:
@@ -325,7 +332,7 @@ _908:
 	movb	rl2,rl4
 _909:
 
-; mathFunctions.c	    92  }
+; mathFunctions.c	    99  }
 	ret
 _163:
 	; End of function
@@ -334,13 +341,13 @@ _163:
 code_swap_uint16	.section	code, cluster 'swap_uint16', new
 	.global	_swap_uint16
 
-; mathFunctions.c	    93  ubyte2 swap_uint16(ubyte2 val)
+; mathFunctions.c	   100  ubyte2 swap_uint16(ubyte2 val)
 ; Function _swap_uint16
 _93:
 _swap_uint16	.proc	far
 
-; mathFunctions.c	    94  {
-; mathFunctions.c	    95      return (val << 8) | (val >> 8);
+; mathFunctions.c	   101  {
+; mathFunctions.c	   102      return (val << 8) | (val >> 8);
 	movw	r11,r2
 _914:
 	shl	r11,#0x8
@@ -350,7 +357,7 @@ _916:
 	orw	r2,r11
 _917:
 
-; mathFunctions.c	    96  }
+; mathFunctions.c	   103  }
 	ret
 _168:
 	; End of function
@@ -359,15 +366,15 @@ _168:
 code_swap_int16	.section	code, cluster 'swap_int16', new
 	.global	_swap_int16
 
-; mathFunctions.c	    97  
-; mathFunctions.c	    98  //! Byte swap short
-; mathFunctions.c	    99  sbyte2 swap_int16(sbyte2 val)
+; mathFunctions.c	   104  
+; mathFunctions.c	   105  //! Byte swap short
+; mathFunctions.c	   106  sbyte2 swap_int16(sbyte2 val)
 ; Function _swap_int16
 _105:
 _swap_int16	.proc	far
 
-; mathFunctions.c	   100  {
-; mathFunctions.c	   101      return (val << 8) | ((val >> 8) & 0xFF);
+; mathFunctions.c	   107  {
+; mathFunctions.c	   108      return (val << 8) | ((val >> 8) & 0xFF);
 	movw	r11,r2
 _922:
 	shl	r11,#0x8
@@ -379,7 +386,7 @@ _925:
 	orw	r2,r11
 _926:
 
-; mathFunctions.c	   102  }
+; mathFunctions.c	   109  }
 	ret
 _173:
 	; End of function
@@ -388,9 +395,9 @@ _173:
 code_swap_uint32	.section	code, cluster 'swap_uint32', new
 	.global	_swap_uint32
 
-; mathFunctions.c	   103  
-; mathFunctions.c	   104  //! Byte swap unsigned int
-; mathFunctions.c	   105  ubyte4 swap_uint32(ubyte4 val)
+; mathFunctions.c	   110  
+; mathFunctions.c	   111  //! Byte swap unsigned int
+; mathFunctions.c	   112  ubyte4 swap_uint32(ubyte4 val)
 ; Function _swap_uint32
 _117:
 _swap_uint32	.proc	far
@@ -404,8 +411,8 @@ _635:
 	movw	r11,r2
 _931:
 
-; mathFunctions.c	   106  {
-; mathFunctions.c	   107      val = ((val << 8) & 0xFF00FF00) | ((val >> 8) & 0xFF00FF);
+; mathFunctions.c	   113  {
+; mathFunctions.c	   114      val = ((val << 8) & 0xFF00FF00) | ((val >> 8) & 0xFF00FF);
 	CoLOAD	r11,r3
 _932:
 	CoSHL	#0x8
@@ -428,11 +435,11 @@ _936:
 	orw	r2,r3
 _937:
 
-; mathFunctions.c	   108      return (val << 16) | (val >> 16);
+; mathFunctions.c	   115      return (val << 16) | (val >> 16);
 	movw	r3,r12
 _938:
 
-; mathFunctions.c	   109  }
+; mathFunctions.c	   116  }
 	movw	MAH,[r15]
 _709:
 	addw	r15,#0x2
@@ -453,9 +460,9 @@ _178:
 code_swap_int32	.section	code, cluster 'swap_int32', new
 	.global	_swap_int32
 
-; mathFunctions.c	   110  
-; mathFunctions.c	   111  //! Byte swap int
-; mathFunctions.c	   112  sbyte4 swap_int32(sbyte4 val)
+; mathFunctions.c	   117  
+; mathFunctions.c	   118  //! Byte swap int
+; mathFunctions.c	   119  sbyte4 swap_int32(sbyte4 val)
 ; Function _swap_int32
 _129:
 _swap_int32	.proc	far
@@ -469,8 +476,8 @@ _765:
 	movw	r11,r2
 _943:
 
-; mathFunctions.c	   113  {
-; mathFunctions.c	   114      val = ((val << 8) & 0xFF00FF00) | ((val >> 8) & 0xFF00FF);
+; mathFunctions.c	   120  {
+; mathFunctions.c	   121      val = ((val << 8) & 0xFF00FF00) | ((val >> 8) & 0xFF00FF);
 	CoLOAD	r11,r3
 _944:
 	CoSHL	#0x8
@@ -493,11 +500,11 @@ _948:
 	orw	r2,r3
 _949:
 
-; mathFunctions.c	   115      return (val << 16) | ((val >> 16) & 0xFFFF);
+; mathFunctions.c	   122      return (val << 16) | ((val >> 16) & 0xFFFF);
 	movw	r3,r12
 _950:
 
-; mathFunctions.c	   116  }
+; mathFunctions.c	   123  }
 	movw	MAH,[r15]
 _839:
 	addw	r15,#0x2
@@ -661,26 +668,26 @@ _144:
 	.db	2
 	.dl	_140
 	.db	3
-	.db	'getPercent',0,1,19,8,6
+	.db	'getPercent',0,1,26,8,6
 	.dl	_194
 	.db	1,1,1
 	.dl	_21,_148,_20
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'value',0,1,19,26,2
+	.db	'value',0,1,26,26,2
 	.dl	_194,_195
 	.db	4
-	.db	'start',0,1,19,40,2
+	.db	'start',0,1,26,40,2
 	.dl	_194,_196
 	.db	4
-	.db	'end',0,1,19,54,2
+	.db	'end',0,1,26,54,2
 	.dl	_194,_197
 	.db	4
-	.db	'zeroToOneOnly',0,1,19,64,2
+	.db	'zeroToOneOnly',0,1,26,64,2
 	.dl	_198,_199
 	.db	5
 	.dl	_21,_148
 	.db	6
-	.db	'retVal',0,1,21,12,2
+	.db	'retVal',0,1,28,12,2
 	.dl	_194,_200
 	.db	0,0,0
 	; End of section
@@ -704,7 +711,7 @@ _879:
 _880:
 	.db	5,8,7,0,5,2
 	.dl	_21
-	.db	3,18,1,5,28,9
+	.db	3,25,1,5,28,9
 	.dw	_517-_21
 	.db	3,2,1,5,44,9
 	.dw	_881-_517
@@ -765,15 +772,15 @@ _149:
 	.db	2
 	.dl	_140
 	.db	3
-	.db	'max',0,1,39,8,6
+	.db	'max',0,1,46,8,6
 	.dl	_201
 	.db	1,1,1
 	.dl	_33,_153,_32
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'a',0,1,39,19,2
+	.db	'a',0,1,46,19,2
 	.dl	_201,_202
 	.db	4
-	.db	'b',0,1,39,29,2
+	.db	'b',0,1,46,29,2
 	.dl	_201,_203
 	.db	5
 	.dl	_33,_153
@@ -799,7 +806,7 @@ _893:
 _894:
 	.db	5,12,7,0,5,2
 	.dl	_33
-	.db	3,40,1,5,20,9
+	.db	3,47,1,5,20,9
 	.dw	_895-_33
 	.db	1,5,1,9
 	.dw	_7-_895
@@ -836,12 +843,12 @@ _154:
 	.db	2
 	.dl	_140
 	.db	3
-	.db	'swap_uint8',0,1,84,8,6
+	.db	'swap_uint8',0,1,91,8,6
 	.dl	_198
 	.db	1,1,1
 	.dl	_69,_158,_68
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'val',0,1,84,26,2
+	.db	'val',0,1,91,26,2
 	.dl	_198,_204
 	.db	5
 	.dl	_69,_158
@@ -867,7 +874,7 @@ _898:
 _899:
 	.db	5,17,7,0,5,2
 	.dl	_69
-	.db	3,213,0,1,5,30,9
+	.db	3,220,0,1,5,30,9
 	.dw	_900-_69
 	.db	1,5,23,9
 	.dw	_609-_900
@@ -908,12 +915,12 @@ _159:
 	.db	2
 	.dl	_140
 	.db	3
-	.db	'swap_int8',0,1,89,8,6
+	.db	'swap_int8',0,1,96,8,6
 	.dl	_205
 	.db	1,1,1
 	.dl	_81,_163,_80
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'val',0,1,89,25,2
+	.db	'val',0,1,96,25,2
 	.dl	_205,_206
 	.db	5
 	.dl	_81,_163
@@ -939,7 +946,7 @@ _905:
 _906:
 	.db	5,17,7,0,5,2
 	.dl	_81
-	.db	3,218,0,1,5,30,9
+	.db	3,225,0,1,5,30,9
 	.dw	_907-_81
 	.db	1,5,23,9
 	.dw	_611-_907
@@ -980,12 +987,12 @@ _164:
 	.db	2
 	.dl	_140
 	.db	3
-	.db	'swap_uint16',0,1,93,8,6
+	.db	'swap_uint16',0,1,100,8,6
 	.dl	_201
 	.db	1,1,1
 	.dl	_93,_168,_92
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'val',0,1,93,27,2
+	.db	'val',0,1,100,27,2
 	.dl	_201,_207
 	.db	5
 	.dl	_93,_168
@@ -1011,7 +1018,7 @@ _912:
 _913:
 	.db	5,20,7,0,5,2
 	.dl	_93
-	.db	3,222,0,1,5,17,9
+	.db	3,229,0,1,5,17,9
 	.dw	_914-_93
 	.db	1,5,30,9
 	.dw	_915-_914
@@ -1052,12 +1059,12 @@ _169:
 	.db	2
 	.dl	_140
 	.db	3
-	.db	'swap_int16',0,1,99,8,6
+	.db	'swap_int16',0,1,106,8,6
 	.dl	_208
 	.db	1,1,1
 	.dl	_105,_173,_104
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'val',0,1,99,26,2
+	.db	'val',0,1,106,26,2
 	.dl	_208,_209
 	.db	5
 	.dl	_105,_173
@@ -1083,7 +1090,7 @@ _920:
 _921:
 	.db	5,20,7,0,5,2
 	.dl	_105
-	.db	3,228,0,1,5,17,9
+	.db	3,235,0,1,5,17,9
 	.dw	_922-_105
 	.db	1,5,31,9
 	.dw	_923-_922
@@ -1126,12 +1133,12 @@ _174:
 	.db	2
 	.dl	_140
 	.db	3
-	.db	'swap_uint32',0,1,105,8,6
+	.db	'swap_uint32',0,1,112,8,6
 	.dl	_210
 	.db	1,1,1
 	.dl	_117,_178,_116
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'val',0,1,105,27,2
+	.db	'val',0,1,112,27,2
 	.dl	_210,_211
 	.db	5
 	.dl	_117,_178
@@ -1157,7 +1164,7 @@ _929:
 _930:
 	.db	5,8,7,0,5,2
 	.dl	_117
-	.db	3,232,0,1,5,13,9
+	.db	3,239,0,1,5,13,9
 	.dw	_931-_117
 	.db	3,2,1,5,17,9
 	.dw	_932-_931
@@ -1208,12 +1215,12 @@ _179:
 	.db	2
 	.dl	_140
 	.db	3
-	.db	'swap_int32',0,1,112,8,6
+	.db	'swap_int32',0,1,119,8,6
 	.dl	_212
 	.db	1,1,1
 	.dl	_129,_183,_128
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'val',0,1,112,26,2
+	.db	'val',0,1,119,26,2
 	.dl	_212,_213
 	.db	5
 	.dl	_129,_183
@@ -1239,7 +1246,7 @@ _941:
 _942:
 	.db	5,8,7,0,5,2
 	.dl	_129
-	.db	3,239,0,1,5,13,9
+	.db	3,246,0,1,5,13,9
 	.dw	_943-_129
 	.db	3,2,1,5,17,9
 	.dw	_944-_943
@@ -1290,15 +1297,15 @@ _184:
 	.db	2
 	.dl	_140
 	.db	3
-	.db	'min',0,1,45,8,6
+	.db	'min',0,1,52,8,6
 	.dl	_201
 	.db	1,1,1
 	.dl	_45,_188,_44
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'a',0,1,45,19,2
+	.db	'a',0,1,52,19,2
 	.dl	_201,_214
 	.db	4
-	.db	'b',0,1,45,29,2
+	.db	'b',0,1,52,29,2
 	.dl	_201,_215
 	.db	5
 	.dl	_45,_188
@@ -1324,7 +1331,7 @@ _953:
 _954:
 	.db	5,12,7,0,5,2
 	.dl	_45
-	.db	3,46,1,5,20,9
+	.db	3,53,1,5,20,9
 	.dw	_955-_45
 	.db	1,5,1,9
 	.dw	_10-_955
@@ -1361,20 +1368,20 @@ _189:
 	.db	2
 	.dl	_140
 	.db	3
-	.db	'blink',0,1,70,6,6
+	.db	'blink',0,1,77,6,6
 	.dl	_198
 	.db	1,1,1
 	.dl	_57,_193,_56
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'clock',0,1,70,20,2
+	.db	'clock',0,1,77,20,2
 	.dl	_216,_217
 	.db	4
-	.db	'highPeriod',0,1,70,34,2
+	.db	'highPeriod',0,1,77,34,2
 	.dl	_201,_218
 	.db	5
 	.dl	_57,_193
 	.db	6
-	.db	'count',0,1,75,12,2
+	.db	'count',0,1,82,12,2
 	.dl	_210,_219
 	.db	0,0,0
 	; End of section
@@ -1398,7 +1405,7 @@ _958:
 _959:
 	.db	5,37,7,0,5,2
 	.dl	_57
-	.db	3,202,0,1,5,6,9
+	.db	3,209,0,1,5,6,9
 	.dw	_960-_57
 	.db	3,123,1,5,37,9
 	.dw	_529-_960

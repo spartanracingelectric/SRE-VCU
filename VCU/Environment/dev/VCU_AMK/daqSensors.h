@@ -1,3 +1,10 @@
+/*****************************************************************************
+ * daqSensors.h - DAQ object and parsing
+ * Initial Author: Shinika B
+ ******************************************************************************
+ * Items taken coming from the DAQs CAN messages
+ ****************************************************************************/
+
 #ifndef _DAQSENSORS_H
 #define _DAQSENSORS_H
 

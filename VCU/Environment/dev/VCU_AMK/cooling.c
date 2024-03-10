@@ -1,7 +1,12 @@
+/*****************************************************************************
+ * cooling.c - Cooling infrastructure
+ * Initial Author: Vincent S
+ ******************************************************************************
+ * Integrates cooling control and driving pins
+ ****************************************************************************/
+
 #include <stdlib.h>
 #include "IO_Driver.h"
-//#include "IO_DIO.h"
-//#include "IO_PWM.h"
 
 #include "sensors.h"
 #include "cooling.h"
@@ -73,45 +78,6 @@ void CoolingSystem_calculations(CoolingSystem *me, sbyte2 motorControllerTemp, s
         //me->radFanPercent = .2 + .7 * getPercent(max(motorControllerTemp, motorTemp), me->radFanLow, me->radFanHigh, TRUE);
         me->radFanPercent = 0.3;
     }
-
-    /*
-    //Motor fan / rad fan
-    if (me->motorFanState == FALSE)
-    {
-        if ((motorControllerTemp >= me->motorFanHigh) || (motorTemp >= me->motorFanHigh))
-        {
-            me->motorFanState = TRUE;
-            SerialManager_send(me->sm, "Turning motor fans on.\n");
-        }
-    }
-    else //motor fan is on
-    {
-        if ((motorControllerTemp < me->motorFanLow) && (motorTemp < me->motorFanLow))
-        // Shouldn't this be an || instead of an &&
-        {
-            me->motorFanState = FALSE;
-            SerialManager_send(me->sm, "Turning motor fans off.\n");
-        }
-    }
-
-    //Battery fans
-    if (me->batteryFanState == TRUE)
-    {
-        if (batteryTemp < me->batteryFanLow)
-        {
-            me->batteryFanState = FALSE;
-            SerialManager_send(me->sm, "Turning battery fans off.\n");
-        }
-    }
-    else //fans are off
-    {
-        if (batteryTemp >= me->batteryFanHigh)
-        {
-            me->batteryFanState = TRUE;
-            SerialManager_send(me->sm, "Turning battery fans on.\n");
-        }
-    }
-    */
 }
 
 //-------------------------------------------------------------------
@@ -124,22 +90,4 @@ void CoolingSystem_enactCooling(CoolingSystem *me)
     Light_set(Cooling_waterPump, me->waterPumpPercent);
     Light_set(Cooling_RadFans, me->radFanPercent);
 
-    // Issue #110 https://github.com/spartanracingelectric/VCU/issues/110
-    // Relay wiring seems to be backwards for 2021 car: Fans are on while everything is cool,
-    // and they turn OFF when systems get hot.  This boolean flips the software logic, but the
-    // wiring needs to be fixed and this software hack needs to be removed in the future.
-    /*
-    bool wiringIsWrong = TRUE;
-    
-    if (wiringIsWrong)
-    {
-        Light_set(Cooling_Fans, me->motorFanState == TRUE ? 0 : 1);
-        Light_set(Cooling_batteryFans, me->batteryFanState == TRUE ? 0 : 1);
-    }
-    else
-    {
-        Light_set(Cooling_motorFans, me->motorFanState == TRUE ? 1 : 0);
-        Light_set(Cooling_batteryFans, me->batteryFanState == TRUE ? 1 : 0);
-    }
-    */
 }
