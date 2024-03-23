@@ -1,36 +1,13 @@
 #include <stdio.h>
 #include "yawhashtable.h"
+#include "yaw.h"
 
 
-float calibratedYaw=0.0;
-float yawerror=0.0;
+float calibratedYaw= 0.0;
 float gainval= 1.618;
-float glob_steering =0.0;
-
-int floorToNearest5(int num) {
-    if (num % 5 != 0) {
-        int remainder = num % 5;
-        return num - remainder;
-    } 
-    else 
-    {
-        return num; 
-    }
-}
-
-int ceilToNearest5(int num) {
-    if (num % 5 != 0) {
-        int remainder = num % 5;
-        return num + (5 - remainder);
-    } 
-    else
-    {
-        return num;
-    }
-}
 
 // Put in velocity and steering values and get value from the lookupTable 
-float lookupTable(int velocity, int steering) {
+float lookupTable(int velocity, int steering, HashTable* yaw_hashtable) {
     // x-axis: velocity
     // y-axis: steering 
     int abssteer = steering; 
@@ -40,28 +17,29 @@ float lookupTable(int velocity, int steering) {
         abssteer = -1*steering; 
     }
      
-    glob_steering = abssteer;
+// Instead of Initalizing the hashtable here we do it ouside the while main loop
+// and then free the memory with the destroyHashTable method after 
 
-    HashTable* table = createHashTable();
-    initializeHashTable(table);
-    float yaw = get(table,velocity,abssteer);
-    destroyHashTable(table);
+   // HashTable* table = createHashTable();
+   // initializeHashTable(table);
+    float yaw = get(yaw_hashtable,velocity,abssteer);
+    //destroyHashTable(table);
     return yaw;
 }
 
 // Uses double linear interpolation for x and y axis
-float getYaw(int velocity, int steering) {
+float getYaw(int velocity, int steering, HashTable* yaw_hashtable) {
     int velocityFloor = floorToNearest5(velocity);
     int velocityCeiling = ceilToNearest5(velocity);
 
     int steeringFloor = floorToNearest5(steering);
     int steeringCeiling = ceilToNearest5(steering);
 
-    float floorFloor = lookupTable(velocityFloor, steeringFloor);
-    float ceilingFloor = lookupTable(velocityCeiling, steeringFloor);
+    float floorFloor = lookupTable(velocityFloor, steeringFloor, yaw_hashtable);
+    float ceilingFloor = lookupTable(velocityCeiling, steeringFloor, yaw_hashtable);
 
-    float floorCeiling = lookupTable(velocityFloor, steeringCeiling);
-    float ceilingCeiling = lookupTable(velocityCeiling, steeringCeiling);
+    float floorCeiling = lookupTable(velocityFloor, steeringCeiling, yaw_hashtable);
+    float ceilingCeiling = lookupTable(velocityCeiling, steeringCeiling, yaw_hashtable);
 
     float horizontal_Interp = (((ceilingFloor - floorFloor) / 5) + ((ceilingCeiling - floorCeiling) / 5)) / 2;
     float vertical_Interp = (((floorCeiling - floorFloor) / 5) + ((ceilingCeiling - ceilingFloor) / 5)) / 2;
@@ -69,30 +47,7 @@ float getYaw(int velocity, int steering) {
     int gainValueHoriz = velocity % 5;
     int gainValueVertical = steering % 5;
 
-     calibratedYaw = (gainValueHoriz * horizontal_Interp) + (gainValueVertical * vertical_Interp) + floorFloor;
-     
+    calibratedYaw = (gainValueHoriz * horizontal_Interp) + (gainValueVertical * vertical_Interp) + floorFloor;
 
     return calibratedYaw;
-}
-
-//the pid method goes in here to get the final yawrate value 
-//pid outputs yawmoment(yaw torque val )
-float getYawRateError(int velocity, int steering, int targetYaw)
-{
-    float yaw = getYaw(velocity, steering) * gainval;//what is the gain value?
-    yawerror = yaw - targetYaw;
-    
-    return yawerror;
-}
-
-int main() {
-   HashTable* table = createHashTable();
-    initializeHashTable(table);
-    
-    // Retrieve values
-    printf("Value for (velocity = %d, steering = %d): %.2f\n", 5, 5, lookupTable(5,5));
-    
-    // Destroy the hash table
-
-    return 0;
 }
