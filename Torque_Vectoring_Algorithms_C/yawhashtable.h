@@ -31,7 +31,7 @@ HashTable* createHashTable() {
     HashTable* table = (HashTable*)malloc(sizeof(HashTable));
     if (table == NULL) {
         fprintf(stderr, "Memory allocation failed\n");
-        exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE);// not for vcu 
     }
     for (int i = 0; i < TABLE_SIZE; i++) {
         table->entries[i] = NULL;
@@ -76,14 +76,14 @@ float get(HashTable* table, int key1, int key2) {
         }
         entry = entry->next;
     }
-    return NAN; // Key not found, return NaN
+    return NAN; // Key not found, return NaN saftey feature dont use NAN 
 }
 
-// Initialize the hash table with values from the lookup table
-void initializeHashTable(HashTable* table) {
+// Initialize the hash table with values from the YAWlookup table
+void initializeYawHashTable(HashTable* table) {
     float yawLookupTable[12][7] = {
-        // x-axis: velocity in increments of 5
-    // y-axis: steering in increments of 5
+        // x-axis: velocity in increments of 5(m/s)
+    // y-axis: steering in increments of 5 
     //   5  ,  10   , 15  , 20, , 25  , 30 ,  35
         {0.49, 1.00, 1.48, 1.95, 2.43, 2.93, 3.66},
         {1.48, 1.99, 2.97, 3.93, 4.87, 3.17, 3.69},
@@ -115,7 +115,7 @@ void destroyHashTable(HashTable* table) {
         HashEntry* current = table->entries[i];
         while (current != NULL) {
             HashEntry* next = current->next;
-            free(current);
+            free(current); 
             current = next;
         }
     }
