@@ -2,7 +2,7 @@
 #include "pid.h"
 #include "yawhashtable.h"
 #include "yaw.h"
-#include "slip.c"
+#include "slip.h"
 
 
 int main()

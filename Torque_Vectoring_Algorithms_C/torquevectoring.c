@@ -114,6 +114,9 @@ void seteverything(float torquePer, float mz, float frontbias)
 
 }
 
+
+//Low key just saftey stuff 
+
 float get_torque(float initalTorque )//checks and corrects overshoot of torque value 
 { 
     float torque = 0.0;
@@ -130,6 +133,13 @@ float get_torque(float initalTorque )//checks and corrects overshoot of torque v
             torque = -1 * motorPk;
         }
     return torque;
+}
+
+//can make 4 methods to call the pointers for each tq 
+
+float getFL()
+{
+    return Tf_FL; 
 }
 
 int main()
