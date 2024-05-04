@@ -398,6 +398,7 @@ BO_ 1213 DAQ_RR_Tire_Temp_Ch5_8: 8 DAQ
  SG_ RR_Temperature_7 : 32|16@0+ (0.001,-100) [0|100] "C" DAQ
  SG_ RR_Temperature_6 : 16|16@0+ (0.001,-100) [0|100] "C" DAQ
  SG_ RR_Temperature_5 : 0|16@0+ (0.001,-100) [0|100] "C" DAQ
+
 BO_ 1025 GPS_Speed: 8 Aceinna
  SG_ Speed : 0|16@1- (0.001,0) [-1000|1000] "kph" Vector__XXX
 

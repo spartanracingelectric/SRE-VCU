@@ -19,7 +19,13 @@ typedef struct DAQSensors {
     
     ubyte4 AccelX;
     ubyte4 AccelY;
+    ubyte4 AccelZ;
+
+    ubyte4 GyroX;
+    ubyte4 GyroY;
     ubyte4 GyroZ;
+
+    ubyte4 GpsSpeed;
 
 } _DAQSensors;
 
