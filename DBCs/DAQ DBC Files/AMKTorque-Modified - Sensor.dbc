@@ -1,7 +1,8 @@
 VERSION "HIPBNYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY/4/%%%/4/'%**4YYY///"
 
 
-BO_ 256 Detection_PCB: 8 Vector__XXX
+BO_ 1027 Detection_PCB: 8 DAQ
+ SG_ DetectionSignal : 0|8@1- (1,0) [0|1] "On/Off" VCU
 
 BO_ 1292 DRS_SAS: 8 DAQ
  SG_ Steering_Angle : 0|16@1- (1,0) [-100|100] "Degrees" VCU

@@ -52,5 +52,8 @@ void DAQ_parseCanMessage(_DAQSensors* me, IO_CAN_DATA_FRAME* daqCANMessage){
 
     } else if (daqCANMessage->id == 0x401) {
         me->GpsSpeed = (((ubyte4)daqCANMessage->data[0] << 8 | daqCANMessage->data[1])) * 0.001; //kph 
+
+    } else if (daqCANMessage->id == 0x403) {
+        me->DetectionPCB = daqCANMessage->data[0]; // On/Off
     }
 }

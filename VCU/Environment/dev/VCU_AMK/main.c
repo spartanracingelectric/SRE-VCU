@@ -391,10 +391,10 @@ void main(void)
 
         //MCM_inverterControl(mcm0, tps, bps, rtds);
 
-        DI_calculateInverterControl(invFL, &Sensor_HVILTerminationSense, tps, bps, rtds);
-        DI_calculateInverterControl(invFR, &Sensor_HVILTerminationSense, tps, bps, rtds);
-        DI_calculateInverterControl(invRL, &Sensor_HVILTerminationSense, tps, bps, rtds);
-        DI_calculateInverterControl(invRR, &Sensor_HVILTerminationSense, tps, bps, rtds);
+        DI_calculateInverterControl(invFL, &Sensor_HVILTerminationSense, tps, bps, rtds, d1);
+        DI_calculateInverterControl(invFR, &Sensor_HVILTerminationSense, tps, bps, rtds, d1);
+        DI_calculateInverterControl(invRL, &Sensor_HVILTerminationSense, tps, bps, rtds, d1);
+        DI_calculateInverterControl(invRR, &Sensor_HVILTerminationSense, tps, bps, rtds, d1);
 
         IO_ErrorType err = 0;
         //Comment out to disable shutdown board control

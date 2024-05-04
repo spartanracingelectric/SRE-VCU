@@ -27,6 +27,8 @@ typedef struct DAQSensors {
 
     ubyte4 GpsSpeed;
 
+    ubyte4 DetectionPCB;
+
 } _DAQSensors;
 
 _DAQSensors* DAQ_Sensor_new();

@@ -21,6 +21,7 @@
 #include "brakePressureSensor.h"
 #include "sensorCalculations.h"
 #include "readyToDriveSound.h"
+#include "daqSensors.h"
 
 extern Sensor Sensor_RTDButton;
 extern Sensor Sensor_HVILTerminationSense;
@@ -113,7 +114,7 @@ void DI_calculateCommands(_DriveInverter* me, TorqueEncoder *tps, BrakePressureS
 
 }
 
-void DI_calculateInverterControl(_DriveInverter* me, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds){
+void DI_calculateInverterControl(_DriveInverter* me, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds, _DAQSensors *d1){
      switch (me->startUpStage){ 
         case RELAY_OFF:
             if(Sensor_RTDButton.sensorValue == FALSE){
@@ -143,8 +144,7 @@ void DI_calculateInverterControl(_DriveInverter* me, Sensor *HVILTermSense, Torq
             if (HVILTermSense->sensorValue == TRUE && timestamp_Precharge == 0){
                 IO_RTC_StartTime(&timestamp_Precharge);
             } 
-            //Compare BMS voltage with HV sensing voltage and if TRUE: 
-            if(HVILTermSense->sensorValue == TRUE && IO_RTC_GetTimeUS(timestamp_Precharge) >= 10000000){ // After 10 Seconds
+            if(HVILTermSense->sensorValue == TRUE && IO_RTC_GetTimeUS(timestamp_Precharge) >= 10000000 && d1->DetectionPCB == 1){ // After 10 Seconds // Added Integration for DetectionPCB
                 me->AMK_bInverterOn = FALSE;
                 me->AMK_bDcOn = TRUE;
                 me->AMK_bEnable = FALSE;
