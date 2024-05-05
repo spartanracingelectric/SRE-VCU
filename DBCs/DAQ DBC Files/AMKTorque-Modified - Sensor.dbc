@@ -8,3 +8,11 @@ BO_ 1292 DRS_SAS: 8 DAQ
  SG_ Steering_Angle : 0|16@1- (1,0) [-100|100] "Degrees" VCU
  SG_ DRS_Enable : 16|8@1+ (1,0) [0|1] "Enable" VCU
  SG_ DRS_Mode : 24|8@1+ (1,0) [0|3] "Selection" VCU
+
+BO_ 1028 IMU_1: 8 DAQ
+
+BO_ 1029 IMU_2: 8 DAQ
+
+BO_ 1030 IMU_3: 8 DAQ
+
+BO_ 1031 IMU_4: 8 DAQ
