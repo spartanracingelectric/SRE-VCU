@@ -6,7 +6,7 @@ NS_ :
 	CM_
 	BA_DEF_
 	BA_
-	VAL_d
+	VAL_
 	CAT_DEF_
 	CAT_
 	FILTER
@@ -27,28 +27,26 @@ BS_:
 
 BU_: DBG VCU BMS MCM DCU DAQ S2C
 
-BO_ 1292 TV_Final_Torque_Values: 8 mcm
-	SG_ FLtq : 0|16@1+ (1,0) [-65535|65535] "nM" DAQ
-	SG_ FRtq : 16|16@1+ (1,0) [-65535|65535] "nM" DAQ
-	SG_ RLtf : 32|16@1+ (1,0) [-65535|65535] "nM" DAQ
-	SG_ RRtf : 48|16@1+ (1,0) [-65535|65535] "nM" DAQ
+BO_ 1292 TV_Final_Torque_Values: 8 MCM
+ SG_ FLtq : 0|16@1+ (1,0) [-65535|65535] "nM" DAQ
+ SG_ FRtq : 16|16@1+ (1,0) [-65535|65535] "nM" DAQ
+ SG_ RLtq : 32|16@1+ (1,0) [-65535|65535] "nM" DAQ
+ SG_ RRtq : 48|16@1+ (1,0) [-65535|65535] "nM" DAQ
 
-BO_ 1293 slip_PID_total_errors: 8 mcm
-	SG_ slip_PID_FL->total_error : 0|16@1+ (1,0) [-65535|65535] "" DAQ
-	SG_ slip_PID_FR->total_error : 16|16@1+ (1,0) [-65535|65535] "" DAQ
-	SG_ slip_PID_RL->total_error : 32|16@1+ (1,0) [-65535|65535] "" DAQ
-	SG_ slip_PID_RR->total_error : 48|16@1+ (1,0) [-65535|65535] "" DAQ
+BO_ 1293 slip_PID_total_errors: 8 MCM
+ SG_ slip_PID_FL_total_error : 0|16@1+ (1,0) [-65535|65535] "" DAQ
+ SG_ slip_PID_FR_total_error : 16|16@1+ (1,0) [-65535|65535] "" DAQ
+ SG_ slip_PID_RL_total_error : 32|16@1+ (1,0) [-65535|65535] "" DAQ
+ SG_ slip_PID_RR_total_error : 48|16@1+ (1,0) [-65535|65535] "" DAQ
 
-BO_ 1294 yaw_PID_hashtable_input/output: 8 mcm
-	SG_ yaw_PID->total_error : 0|16@1+ (1,0) [-65535|65535] "" DAQ
-	SG_ velocity : 16|16@1+ (1,0) [-65535|65535] "" DAQ
-	SG_ abssteer : 32|16@1+ (1,0) [-65535|65535] "" DAQ
-	SG_ table_yaw_value : 48|16@1+ (1,0) [-65535|65535] "" DAQ
+BO_ 1294 yaw_PID_hashtable_input_output: 8 MCM
+ SG_ yaw_PID_total_error : 0|16@1+ (1,0) [-65535|65535] "" DAQ
+ SG_ velocity : 16|16@1+ (1,0) [-65535|65535] "" DAQ
+ SG_ abssteer : 32|16@1+ (1,0) [-65535|65535] "" DAQ
+ SG_ table_yaw_value : 48|16@1+ (1,0) [-65535|65535] "" DAQ
 
-BO_ 1295 flags: 8 mcm
-	SG_ TV_enabled : 0|8@1+ (1,0) [-65535|65535] "" DAQ
-	SG_ TV_isActive : 8|8@1+ (1,0) [-65535|65535] "" DAQ
-	SG_ TV_isNegative : 16|8@1+ (1,0) [-65535|65535] "" DAQ
-	SG_ HashTable_isActive : 24|8@1+ (1,0) [-65535|65535] "" DAQ
-
-
+BO_ 1295 flags: 8 MCM
+ SG_ TV_enabled : 0|8@1+ (1,0) [0|255] "" DAQ
+ SG_ TV_isActive : 8|8@1+ (1,0) [0|255] "" DAQ
+ SG_ TV_isNegative : 16|8@1+ (1,0) [0|255] "" DAQ
+ SG_ HashTable_isActive : 24|8@1+ (1,0) [0|255] "" DAQ
