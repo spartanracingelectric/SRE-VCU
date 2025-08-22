@@ -1,5 +1,11 @@
 {
     "files.associations": {
-        "amkdrive.h": "c"
+        "amkdrive.h": "c",
+        "io_driver.h": "c",
+        "stdio.h": "c",
+        "io_rtc.h": "c",
+        "math.h": "c",
+        "pid.h": "c",
+        "stdlib.h": "c"
     }
 }
