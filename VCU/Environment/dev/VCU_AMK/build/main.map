@@ -4,8 +4,8 @@
 +--------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | tool          | TASKING VX-toolset for C166: Linker Locator v4.0r1 Build 163 SN 09002374                                                                     |
 | path          | c:\Program Files (x86)\TASKING\C166-VX v4.0r1\bin\lk166                                                                                      |
-| arguments     | -f cc33624a                                                                                                                                  |
-| file:cc33624a | -o build/main.elf -d../../../Environment/bsp/lsl/TTC60/application.lsl -DXC2287_96F -D__CPU__=xc2287 -D__CPU_XC2287__ -obuild/main.hex:IHEX  |
+| arguments     | -f cc10364a                                                                                                                                  |
+| file:cc10364a | -o build/main.elf -d../../../Environment/bsp/lsl/TTC60/application.lsl -DXC2287_96F -D__CPU__=xc2287 -D__CPU_XC2287__ -obuild/main.hex:IHEX  |
 |               | -obuild/main.s19:SREC -OtZXycL --error-limit=42 --map-file=build/main.mapxml:XML --map-file -mcrfiklSmNuQ                                    |
 |               | ../../../Environment/bsp/bin/bsp_cstart_ttc60.obj build/AMKDrive.obj build/avlTree.obj build/bms.obj build/brakePressureSensor.obj           |
 |               | build/canManager.obj build/cooling.obj build/daqSensors.obj build/initializations.obj build/instrumentCluster.obj build/main.obj             |
@@ -24,11 +24,11 @@
 |==================================================================|
 | spe:DPRAM |      0x0 |      0x0 | 0x000620 | 0x0001e0 | 0x000800 |
 | spe:DSRAM |      0x0 | 0x000eed | 0x001ffe | 0x001115 | 0x004000 |
-| spe:Flash | 0x0108e4 | 0x0021a6 | 0x010000 | 0x09d576 | 0x0c0000 |
+| spe:Flash | 0x0108e0 | 0x0021a6 | 0x010000 | 0x09d57a | 0x0c0000 |
 | spe:PSRAM |      0x0 | 0x00017f | 0x002800 | 0x00d681 | 0x010000 |
 | xram      |      0x0 |      0x0 | 0x080000 |      0x0 | 0x080000 |
 |------------------------------------------------------------------|
-| Total     | 0x0108e4 | 0x003212 | 0x094e1e | 0x0abeec | 0x154800 |
+| Total     | 0x0108e0 | 0x003212 | 0x094e1e | 0x0abef0 | 0x154800 |
 +------------------------------------------------------------------+
 
 * Space usage in bytes
@@ -38,15 +38,15 @@
 |==================================================================================================================|
 | spe:xc16x:bit   |             0x0 |             0x0 |          0x0 |  0x000100 |      0x0 |       0x0 | 0x000100 |
 | spe:xc16x:bita  |             0x0 |             0x0 |          0x0 |  0x000100 |      0x0 |       0x0 | 0x000100 |
-| spe:xc16x:code  |        0x0108e4 |             0x0 |     0x002325 |  0x092800 | 0x09d576 |  0x00d681 | 0x150000 |
-| spe:xc16x:far   |        0x00003c |             0x0 |     0x013aba |  0x094e1e | 0x09d576 |  0x00e976 | 0x154800 |
-| spe:xc16x:huge  |        0x000591 |        0x00106c |     0x0124f9 |  0x094e1e | 0x09d576 |  0x00e976 | 0x154800 |
+| spe:xc16x:code  |        0x0108e0 |             0x0 |     0x002325 |  0x092800 | 0x09d57a |  0x00d681 | 0x150000 |
+| spe:xc16x:far   |        0x00003c |             0x0 |     0x013ab6 |  0x094e1e | 0x09d57a |  0x00e976 | 0x154800 |
+| spe:xc16x:huge  |        0x000591 |        0x00106c |     0x0124f5 |  0x094e1e | 0x09d57a |  0x00e976 | 0x154800 |
 | spe:xc16x:iram  |             0x0 |             0x0 |          0x0 |  0x000620 |      0x0 |  0x0001e0 | 0x000800 |
-| spe:xc16x:near  |             0x0 |             0x0 |     0x004196 |  0x00261e | 0x003e6a |  0x0041e2 | 0x00e800 |
-| spe:xc16x:shuge |        0x001bd9 |             0x0 |     0x011f1d |  0x094e1e | 0x09d576 |  0x00e976 | 0x154800 |
+| spe:xc16x:near  |             0x0 |             0x0 |     0x0041bc |  0x00261e | 0x003e44 |  0x0041e2 | 0x00e800 |
+| spe:xc16x:shuge |        0x001bd9 |             0x0 |     0x011f19 |  0x094e1e | 0x09d57a |  0x00e976 | 0x154800 |
 |------------------------------------------------------------------------------------------------------------------|
-| Total           |        0x012a8a |        0x00106c |            - |         - |        - |         - |        - |
-| Largest gap     |               - |               - |            - |         - | 0x099709 |  0x009681 |        - |
+| Total           |        0x012a86 |        0x00106c |            - |         - |        - |         - |        - |
+| Largest gap     |               - |               - |            - |         - | 0x099735 |  0x009681 |        - |
 +------------------------------------------------------------------------------------------------------------------+
 
 Note:
@@ -863,7 +863,7 @@ other spaces is called "Foreign used" memory.
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | initializations.obj     | code_vcu_ADCWasteLoop (377)    | 0x000000f8      | 0x0          | code_vcu_ADCWasteLoop (377)                   | 0x000000f8       |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| initializations.obj     | code_vcu_initializeADC (376)   | 0x0000032a      | 0x0          | code_vcu_initializeADC (376)                  | 0x0000032a       |
+| initializations.obj     | code_vcu_initializeADC (376)   | 0x00000326      | 0x0          | code_vcu_initializeADC (376)                  | 0x00000326       |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | initializations.obj     | huge_Sensor_BPS0 (380)         | 0x0000001e      | 0x0          | huge_Sensor_BPS0 (380)                        | 0x0000001e       |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -3081,46 +3081,47 @@ Note:
 | spe:Flash |               | code_libfp (2320)                                   | 0x0000004e | 0x00c13632 | 0x00013632 | 0x00000002 |
 | spe:Flash |               | code_libfp (2329)                                   | 0x0000004c | 0x00c13680 | 0x00013680 | 0x00000002 |
 | spe:Flash |               | code_libfp (2303)                                   | 0x0000004a | 0x00c136cc | 0x000136cc | 0x00000002 |
-| spe:Flash |               | code_libfp (2333)                                   | 0x00000048 | 0x00c13716 | 0x00013716 | 0x00000002 |
-| spe:Flash |               | code_libfp (2315)                                   | 0x00000048 | 0x00c1375e | 0x0001375e | 0x00000002 |
-| spe:Flash |               | code_libfp (2316)                                   | 0x00000048 | 0x00c137a6 | 0x000137a6 | 0x00000002 |
-| spe:Flash |               | code_libfp (2312)                                   | 0x00000048 | 0x00c137ee | 0x000137ee | 0x00000002 |
-| spe:Flash |               | code_IO_RTC_Init (1376)                             | 0x00000046 | 0x00c13836 | 0x00013836 | 0x00000002 |
-| spe:Flash |               | code_RTDS_new (574)                                 | 0x00000042 | 0x00c1387c | 0x0001387c | 0x00000002 |
-| spe:Flash |               | code_libfp (2307)                                   | 0x00000042 | 0x00c138be | 0x000138be | 0x00000002 |
-| spe:Flash |               | code_IO_SHIFT_WriteMasked (1149)                    | 0x00000040 | 0x00c13900 | 0x00013900 | 0x00000002 |
-| spe:Flash |               | code_CoolingSystem_enactCooling (328)               | 0x0000003e | 0x00c13940 | 0x00013940 | 0x00000002 |
-| spe:Flash |               | code_IO_Tools_PWM_ResetPins (1413)                  | 0x0000003e | 0x00c1397e | 0x0001397e | 0x00000002 |
-| spe:Flash |               | code_libfp (2304)                                   | 0x0000003e | 0x00c139bc | 0x000139bc | 0x00000002 |
-| spe:Flash |               | code_libfp (2332)                                   | 0x0000003e | 0x00c139fa | 0x000139fa | 0x00000002 |
-| spe:Flash |               | code_IO_Tools_UnlockProtecReg (1404)                | 0x0000003c | 0x00c13a38 | 0x00013a38 | 0x00000002 |
-| spe:Flash |               | code_IO_RTC_StartTime (1377)                        | 0x0000003a | 0x00c13a74 | 0x00013a74 | 0x00000002 |
-| spe:Flash |               | code_BMS_relayControl (80)                          | 0x00000038 | 0x00c13aae | 0x00013aae | 0x00000002 |
-| spe:Flash |               | code_TorqueEncoder_getIndividualSensorPercent (757) | 0x00000038 | 0x00c13ae6 | 0x00013ae6 | 0x00000002 |
-| spe:Flash |               | code_IO_PWD_CC2_CC26_INT (1548)                     | 0x00000036 | 0x00c13b1e | 0x00013b1e | 0x00000002 |
-| spe:Flash |               | code_IO_PWD_CC2_CC27_INT (1549)                     | 0x00000036 | 0x00c13b54 | 0x00013b54 | 0x00000002 |
-| spe:Flash |               | code_IO_PWD_CC2_CC30_INT (1550)                     | 0x00000036 | 0x00c13b8a | 0x00013b8a | 0x00000002 |
-| spe:Flash |               | code_IO_PWD_CC2_CC31_INT (1551)                     | 0x00000036 | 0x00c13bc0 | 0x00013bc0 | 0x00000002 |
-| spe:Flash |               | code_SafetyChecker_parseCanMessage (611)            | 0x00000036 | 0x00c13bf6 | 0x00013bf6 | 0x00000002 |
-| spe:Flash |               | code_IO_Driver_TaskEnd (949)                        | 0x00000034 | 0x00c13c2c | 0x00013c2c | 0x00000002 |
-| spe:Flash |               | code_IO_PWD_CC60_SR1_INT (1556)                     | 0x00000032 | 0x00c13c60 | 0x00013c60 | 0x00000002 |
-| spe:Flash |               | code_IO_PWD_CC60_SR2_INT (1557)                     | 0x00000032 | 0x00c13c92 | 0x00013c92 | 0x00000002 |
-| spe:Flash |               | code_IO_PWD_CC62_SR0_INT (1558)                     | 0x00000032 | 0x00c13cc4 | 0x00013cc4 | 0x00000002 |
-| spe:Flash |               | code_IO_PWD_CC62_SR1_INT (1559)                     | 0x00000032 | 0x00c13cf6 | 0x00013cf6 | 0x00000002 |
-| spe:Flash |               | code_IO_PWD_CC62_SR2_INT (1560)                     | 0x00000032 | 0x00c13d28 | 0x00013d28 | 0x00000002 |
-| spe:Flash |               | code_IO_PWD_CC63_SR0_INT (1561)                     | 0x00000032 | 0x00c13d5a | 0x00013d5a | 0x00000002 |
-| spe:Flash |               | code_IO_PWD_CC63_SR1_INT (1562)                     | 0x00000032 | 0x00c13d8c | 0x00013d8c | 0x00000002 |
-| spe:Flash |               | code_IO_PWD_CC63_SR2_INT (1563)                     | 0x00000032 | 0x00c13dbe | 0x00013dbe | 0x00000002 |
-| spe:Flash |               | code_IO_PWD_GPT_T2_INT (1552)                       | 0x00000032 | 0x00c13df0 | 0x00013df0 | 0x00000002 |
-| spe:Flash |               | code_IO_PWD_GPT_T3_INT (1553)                       | 0x00000032 | 0x00c13e22 | 0x00013e22 | 0x00000002 |
-| spe:Flash |               | code_IO_PWD_GPT_T4_INT (1554)                       | 0x00000032 | 0x00c13e54 | 0x00013e54 | 0x00000002 |
-| spe:Flash |               | code_IO_PWD_GPT_T5_INT (1555)                       | 0x00000032 | 0x00c13e86 | 0x00013e86 | 0x00000002 |
-| spe:Flash |               | code_libc (2149)                                    | 0x00000032 | 0x00c13eb8 | 0x00013eb8 | 0x00000002 |
-| spe:Flash |               | code_libfp (2334)                                   | 0x00000032 | 0x00c13eea | 0x00013eea | 0x00000002 |
-| spe:Flash |               | code_libfp (2335)                                   | 0x00000030 | 0x00c13f1c | 0x00013f1c | 0x00000002 |
-| spe:Flash |               | code_librt (2377)                                   | 0x00000030 | 0x00c13f4c | 0x00013f4c | 0x00000002 |
-| spe:Flash |               | code_IO_GPIO_INT_PinSet (1051)                      | 0x0000002e | 0x00c13f7c | 0x00013f7c | 0x00000002 |
-| spe:Flash |               | code_IO_GPIO_INT_PinGet (1053)                      | 0x0000002c | 0x00c13faa | 0x00013faa | 0x00000002 |
+| spe:Flash |               | code_libfp (2315)                                   | 0x00000048 | 0x00c13716 | 0x00013716 | 0x00000002 |
+| spe:Flash |               | code_libfp (2316)                                   | 0x00000048 | 0x00c1375e | 0x0001375e | 0x00000002 |
+| spe:Flash |               | code_libfp (2312)                                   | 0x00000048 | 0x00c137a6 | 0x000137a6 | 0x00000002 |
+| spe:Flash |               | code_IO_RTC_Init (1376)                             | 0x00000046 | 0x00c137ee | 0x000137ee | 0x00000002 |
+| spe:Flash |               | code_BMS_getHighestCellTemp_d_degC (84)             | 0x00000042 | 0x00c13834 | 0x00013834 | 0x00000002 |
+| spe:Flash |               | code_RTDS_new (574)                                 | 0x00000042 | 0x00c13876 | 0x00013876 | 0x00000002 |
+| spe:Flash |               | code_libfp (2307)                                   | 0x00000042 | 0x00c138b8 | 0x000138b8 | 0x00000002 |
+| spe:Flash |               | code_IO_SHIFT_WriteMasked (1149)                    | 0x00000040 | 0x00c138fa | 0x000138fa | 0x00000002 |
+| spe:Flash |               | code_CoolingSystem_enactCooling (328)               | 0x0000003e | 0x00c1393a | 0x0001393a | 0x00000002 |
+| spe:Flash |               | code_IO_Tools_PWM_ResetPins (1413)                  | 0x0000003e | 0x00c13978 | 0x00013978 | 0x00000002 |
+| spe:Flash |               | code_libfp (2304)                                   | 0x0000003e | 0x00c139b6 | 0x000139b6 | 0x00000002 |
+| spe:Flash |               | code_libfp (2332)                                   | 0x0000003e | 0x00c139f4 | 0x000139f4 | 0x00000002 |
+| spe:Flash |               | code_IO_Tools_UnlockProtecReg (1404)                | 0x0000003c | 0x00c13a32 | 0x00013a32 | 0x00000002 |
+| spe:Flash |               | code_IO_RTC_StartTime (1377)                        | 0x0000003a | 0x00c13a6e | 0x00013a6e | 0x00000002 |
+| spe:Flash |               | code_BMS_relayControl (80)                          | 0x00000038 | 0x00c13aa8 | 0x00013aa8 | 0x00000002 |
+| spe:Flash |               | code_TorqueEncoder_getIndividualSensorPercent (757) | 0x00000038 | 0x00c13ae0 | 0x00013ae0 | 0x00000002 |
+| spe:Flash |               | code_IO_PWD_CC2_CC26_INT (1548)                     | 0x00000036 | 0x00c13b18 | 0x00013b18 | 0x00000002 |
+| spe:Flash |               | code_IO_PWD_CC2_CC27_INT (1549)                     | 0x00000036 | 0x00c13b4e | 0x00013b4e | 0x00000002 |
+| spe:Flash |               | code_IO_PWD_CC2_CC30_INT (1550)                     | 0x00000036 | 0x00c13b84 | 0x00013b84 | 0x00000002 |
+| spe:Flash |               | code_IO_PWD_CC2_CC31_INT (1551)                     | 0x00000036 | 0x00c13bba | 0x00013bba | 0x00000002 |
+| spe:Flash |               | code_SafetyChecker_parseCanMessage (611)            | 0x00000036 | 0x00c13bf0 | 0x00013bf0 | 0x00000002 |
+| spe:Flash |               | code_IO_Driver_TaskEnd (949)                        | 0x00000034 | 0x00c13c26 | 0x00013c26 | 0x00000002 |
+| spe:Flash |               | code_IO_PWD_CC60_SR1_INT (1556)                     | 0x00000032 | 0x00c13c5a | 0x00013c5a | 0x00000002 |
+| spe:Flash |               | code_IO_PWD_CC60_SR2_INT (1557)                     | 0x00000032 | 0x00c13c8c | 0x00013c8c | 0x00000002 |
+| spe:Flash |               | code_IO_PWD_CC62_SR0_INT (1558)                     | 0x00000032 | 0x00c13cbe | 0x00013cbe | 0x00000002 |
+| spe:Flash |               | code_IO_PWD_CC62_SR1_INT (1559)                     | 0x00000032 | 0x00c13cf0 | 0x00013cf0 | 0x00000002 |
+| spe:Flash |               | code_IO_PWD_CC62_SR2_INT (1560)                     | 0x00000032 | 0x00c13d22 | 0x00013d22 | 0x00000002 |
+| spe:Flash |               | code_IO_PWD_CC63_SR0_INT (1561)                     | 0x00000032 | 0x00c13d54 | 0x00013d54 | 0x00000002 |
+| spe:Flash |               | code_IO_PWD_CC63_SR1_INT (1562)                     | 0x00000032 | 0x00c13d86 | 0x00013d86 | 0x00000002 |
+| spe:Flash |               | code_IO_PWD_CC63_SR2_INT (1563)                     | 0x00000032 | 0x00c13db8 | 0x00013db8 | 0x00000002 |
+| spe:Flash |               | code_IO_PWD_GPT_T2_INT (1552)                       | 0x00000032 | 0x00c13dea | 0x00013dea | 0x00000002 |
+| spe:Flash |               | code_IO_PWD_GPT_T3_INT (1553)                       | 0x00000032 | 0x00c13e1c | 0x00013e1c | 0x00000002 |
+| spe:Flash |               | code_IO_PWD_GPT_T4_INT (1554)                       | 0x00000032 | 0x00c13e4e | 0x00013e4e | 0x00000002 |
+| spe:Flash |               | code_IO_PWD_GPT_T5_INT (1555)                       | 0x00000032 | 0x00c13e80 | 0x00013e80 | 0x00000002 |
+| spe:Flash |               | code_libc (2149)                                    | 0x00000032 | 0x00c13eb2 | 0x00013eb2 | 0x00000002 |
+| spe:Flash |               | code_libfp (2334)                                   | 0x00000032 | 0x00c13ee4 | 0x00013ee4 | 0x00000002 |
+| spe:Flash |               | code_libfp (2335)                                   | 0x00000030 | 0x00c13f16 | 0x00013f16 | 0x00000002 |
+| spe:Flash |               | code_librt (2377)                                   | 0x00000030 | 0x00c13f46 | 0x00013f46 | 0x00000002 |
+| spe:Flash |               | code_IO_GPIO_INT_PinSet (1051)                      | 0x0000002e | 0x00c13f76 | 0x00013f76 | 0x00000002 |
+| spe:Flash |               | code_IO_GPIO_INT_PinGet (1053)                      | 0x0000002c | 0x00c13fa4 | 0x00013fa4 | 0x00000002 |
+| spe:Flash |               | code_IO_Tools_CalcShiftPos (1411)                   | 0x0000002c | 0x00c13fd0 | 0x00013fd0 | 0x00000002 |
 | spe:Flash |               | code_libc (1940)                                    | 0x00000c72 | 0x00c14000 | 0x00014000 | 0x00000002 |
 | spe:Flash |               | code_canOutput_sendDebugMessage0 (270)              | 0x00000be6 | 0x00c14c72 | 0x00014c72 | 0x00000002 |
 | spe:Flash |               | code_BMS_parseCanMessage (78)                       | 0x00000af6 | 0x00c15858 | 0x00015858 | 0x00000002 |
@@ -3141,46 +3142,38 @@ Note:
 | spe:Flash |               | code_DAQ_parseCanMessage (356)                      | 0x00000384 | 0x00c1b388 | 0x0001b388 | 0x00000002 |
 | spe:Flash |               | code_IO_UART_Task (1481)                            | 0x00000372 | 0x00c1b70c | 0x0001b70c | 0x00000002 |
 | spe:Flash |               | code_CanManager_send (265)                          | 0x00000336 | 0x00c1ba7e | 0x0001ba7e | 0x00000002 |
-| spe:Flash |               | code_vcu_initializeADC (376)                        | 0x0000032a | 0x00c1bdb4 | 0x0001bdb4 | 0x00000002 |
-| spe:Flash |               | code_IO_PWM_INT_CC6Init (1064)                      | 0x000002d8 | 0x00c1c0de | 0x0001c0de | 0x00000002 |
-| spe:Flash |               | code_IO_CAN_Init (863)                              | 0x000002d6 | 0x00c1c3b6 | 0x0001c3b6 | 0x00000002 |
-| spe:Flash |               | code_IO_DI_Init (916)                               | 0x00000294 | 0x00c1c68c | 0x0001c68c | 0x00000002 |
-| spe:Flash |               | code_IO_PWD_INT_CCU6_GetPwmPulse (1539)             | 0x0000028a | 0x00c1c920 | 0x0001c920 | 0x00000002 |
-| spe:Flash |               | code_IO_PWM_Config (1329)                           | 0x0000027a | 0x00c1cbaa | 0x0001cbaa | 0x00000002 |
-| spe:Flash |               | code_DI_parseCanMessage (9)                         | 0x00000268 | 0x00c1ce24 | 0x0001ce24 | 0x00000002 |
-| spe:Flash |               | code_BrakePressureSensor_update (188)               | 0x00000266 | 0x00c1d08c | 0x0001d08c | 0x00000002 |
-| spe:Flash |               | code_TorqueEncoder_update (751)                     | 0x00000246 | 0x00c1d2f2 | 0x0001d2f2 | 0x00000002 |
-| spe:Flash |               | code_libfp (2327)                                   | 0x00000246 | 0x00c1d538 | 0x0001d538 | 0x00000002 |
-| spe:Flash |               | code_ADC0_viSRN0 (1010)                             | 0x0000023e | 0x00c1d77e | 0x0001d77e | 0x00000002 |
-| spe:Flash |               | code_ADC1_viSRN0 (1011)                             | 0x0000023e | 0x00c1d9bc | 0x0001d9bc | 0x00000002 |
-| spe:Flash |               | code_canOutput_sendDebugMessage1 (271)              | 0x0000023a | 0x00c1dbfa | 0x0001dbfa | 0x00000002 |
-| spe:Flash |               | code_IO_PWM_INT_CC2Init (1063)                      | 0x0000022e | 0x00c1de34 | 0x0001de34 | 0x00000002 |
-| spe:Flash |               | code_IO_PWM_Init (1334)                             | 0x0000022e | 0x00c1e062 | 0x0001e062 | 0x00000002 |
-| spe:Flash |               | code_IO_SPI_Init (1173)                             | 0x0000022c | 0x00c1e290 | 0x0001e290 | 0x00000002 |
-| spe:Flash |               | code_libc (1691)                                    | 0x0000022a | 0x00c1e4bc | 0x0001e4bc | 0x00000002 |
-| spe:Flash |               | code_IO_PWM_SetDuty (1338)                          | 0x00000224 | 0x00c1e6e6 | 0x0001e6e6 | 0x00000002 |
-| spe:Flash |               | code_IO_POWER_Set (1229)                            | 0x0000021a | 0x00c1e90a | 0x0001e90a | 0x00000002 |
-| spe:Flash |               | code_libc (1813)                                    | 0x0000020c | 0x00c1eb24 | 0x0001eb24 | 0x00000002 |
-| spe:Flash |               | code_CanManager_read (266)                          | 0x00000208 | 0x00c1ed30 | 0x0001ed30 | 0x00000002 |
-| spe:Flash |               | code_IO_UART_TransferQueue (1473)                   | 0x00000200 | 0x00c1ef38 | 0x0001ef38 | 0x00000002 |
-| spe:Flash |               | code_IO_DI_Get (923)                                | 0x000001ce | 0x00c1f138 | 0x0001f138 | 0x00000002 |
-| spe:Flash |               | code_IO_PWD_INT_CCU6IntHandler (1521)               | 0x000001b6 | 0x00c1f306 | 0x0001f306 | 0x00000002 |
-| spe:Flash |               | code_IO_ADC_INT_StartConv (1005)                    | 0x000001a8 | 0x00c1f4bc | 0x0001f4bc | 0x00000002 |
-| spe:Flash |               | code_AmkDriver_new (5)                              | 0x000001a4 | 0x00c1f664 | 0x0001f664 | 0x00000002 |
-| spe:Flash |               | code_BrakePressureSensor_calibrationCycle (193)     | 0x000001a2 | 0x00c1f808 | 0x0001f808 | 0x00000002 |
-| spe:Flash |               | code_libfp (2326)                                   | 0x00000190 | 0x00c1f9aa | 0x0001f9aa | 0x00000002 |
-| spe:Flash |               | code_IO_ADC_INT_MuxChannelDeInit (1009)             | 0x00000188 | 0x00c1fb3a | 0x0001fb3a | 0x00000002 |
-| spe:Flash |               | code_libc (2253)                                    | 0x00000182 | 0x00c1fcc2 | 0x0001fcc2 | 0x00000002 |
-| spe:Flash |               | code_SafetyChecker_reduceTorque (617)               | 0x00000178 | 0x00c1fe44 | 0x0001fe44 | 0x00000002 |
-| spe:Flash |               | code_BMS_getHighestCellTemp_d_degC (84)             | 0x00000042 | 0x00c1ffbc | 0x0001ffbc | 0x00000002 |
-| spe:Flash |               | _dcti_libc (1680)                                   | 0x0        | 0x00c1fffe | 0x0001fffe | 0x00000002 |
-| spe:Flash |               | _cptable_clr_bit_libc (2245)                        | 0x0        | 0x00c1fffe | 0x0001fffe | 0x00000002 |
-| spe:Flash |               | _cptable_clr_near_libc (2246)                       | 0x0        | 0x00c1fffe | 0x0001fffe | 0x00000002 |
-| spe:Flash |               | _cptable_clr_shuge_libc (2247)                      | 0x0        | 0x00c1fffe | 0x0001fffe | 0x00000002 |
-| spe:Flash |               | _cptable_cpy_bit_libc (2249)                        | 0x0        | 0x00c1fffe | 0x0001fffe | 0x00000002 |
-| spe:Flash |               | _cptable_cpy_near_libc (2250)                       | 0x0        | 0x00c1fffe | 0x0001fffe | 0x00000002 |
-| spe:Flash |               | _cptable_cpy_shuge_libc (2251)                      | 0x0        | 0x00c1fffe | 0x0001fffe | 0x00000002 |
-| spe:Flash |               | [huge__999001_cc2_initialized] (2439)               | 0x00000001 | 0x00c1fffe | 0x0001fffe | 0x00000001 |
+| spe:Flash |               | code_vcu_initializeADC (376)                        | 0x00000326 | 0x00c1bdb4 | 0x0001bdb4 | 0x00000002 |
+| spe:Flash |               | code_IO_PWM_INT_CC6Init (1064)                      | 0x000002d8 | 0x00c1c0da | 0x0001c0da | 0x00000002 |
+| spe:Flash |               | code_IO_CAN_Init (863)                              | 0x000002d6 | 0x00c1c3b2 | 0x0001c3b2 | 0x00000002 |
+| spe:Flash |               | code_IO_DI_Init (916)                               | 0x00000294 | 0x00c1c688 | 0x0001c688 | 0x00000002 |
+| spe:Flash |               | code_IO_PWD_INT_CCU6_GetPwmPulse (1539)             | 0x0000028a | 0x00c1c91c | 0x0001c91c | 0x00000002 |
+| spe:Flash |               | code_IO_PWM_Config (1329)                           | 0x0000027a | 0x00c1cba6 | 0x0001cba6 | 0x00000002 |
+| spe:Flash |               | code_DI_parseCanMessage (9)                         | 0x00000268 | 0x00c1ce20 | 0x0001ce20 | 0x00000002 |
+| spe:Flash |               | code_BrakePressureSensor_update (188)               | 0x00000266 | 0x00c1d088 | 0x0001d088 | 0x00000002 |
+| spe:Flash |               | code_TorqueEncoder_update (751)                     | 0x00000246 | 0x00c1d2ee | 0x0001d2ee | 0x00000002 |
+| spe:Flash |               | code_libfp (2327)                                   | 0x00000246 | 0x00c1d534 | 0x0001d534 | 0x00000002 |
+| spe:Flash |               | code_ADC0_viSRN0 (1010)                             | 0x0000023e | 0x00c1d77a | 0x0001d77a | 0x00000002 |
+| spe:Flash |               | code_ADC1_viSRN0 (1011)                             | 0x0000023e | 0x00c1d9b8 | 0x0001d9b8 | 0x00000002 |
+| spe:Flash |               | code_canOutput_sendDebugMessage1 (271)              | 0x0000023a | 0x00c1dbf6 | 0x0001dbf6 | 0x00000002 |
+| spe:Flash |               | code_IO_PWM_INT_CC2Init (1063)                      | 0x0000022e | 0x00c1de30 | 0x0001de30 | 0x00000002 |
+| spe:Flash |               | code_IO_PWM_Init (1334)                             | 0x0000022e | 0x00c1e05e | 0x0001e05e | 0x00000002 |
+| spe:Flash |               | code_IO_SPI_Init (1173)                             | 0x0000022c | 0x00c1e28c | 0x0001e28c | 0x00000002 |
+| spe:Flash |               | code_libc (1691)                                    | 0x0000022a | 0x00c1e4b8 | 0x0001e4b8 | 0x00000002 |
+| spe:Flash |               | code_IO_PWM_SetDuty (1338)                          | 0x00000224 | 0x00c1e6e2 | 0x0001e6e2 | 0x00000002 |
+| spe:Flash |               | code_IO_POWER_Set (1229)                            | 0x0000021a | 0x00c1e906 | 0x0001e906 | 0x00000002 |
+| spe:Flash |               | code_libc (1813)                                    | 0x0000020c | 0x00c1eb20 | 0x0001eb20 | 0x00000002 |
+| spe:Flash |               | code_CanManager_read (266)                          | 0x00000208 | 0x00c1ed2c | 0x0001ed2c | 0x00000002 |
+| spe:Flash |               | code_IO_UART_TransferQueue (1473)                   | 0x00000200 | 0x00c1ef34 | 0x0001ef34 | 0x00000002 |
+| spe:Flash |               | code_IO_DI_Get (923)                                | 0x000001ce | 0x00c1f134 | 0x0001f134 | 0x00000002 |
+| spe:Flash |               | code_IO_PWD_INT_CCU6IntHandler (1521)               | 0x000001b6 | 0x00c1f302 | 0x0001f302 | 0x00000002 |
+| spe:Flash |               | code_IO_ADC_INT_StartConv (1005)                    | 0x000001a8 | 0x00c1f4b8 | 0x0001f4b8 | 0x00000002 |
+| spe:Flash |               | code_AmkDriver_new (5)                              | 0x000001a4 | 0x00c1f660 | 0x0001f660 | 0x00000002 |
+| spe:Flash |               | code_BrakePressureSensor_calibrationCycle (193)     | 0x000001a2 | 0x00c1f804 | 0x0001f804 | 0x00000002 |
+| spe:Flash |               | code_libfp (2326)                                   | 0x00000190 | 0x00c1f9a6 | 0x0001f9a6 | 0x00000002 |
+| spe:Flash |               | code_IO_ADC_INT_MuxChannelDeInit (1009)             | 0x00000188 | 0x00c1fb36 | 0x0001fb36 | 0x00000002 |
+| spe:Flash |               | code_libc (2253)                                    | 0x00000182 | 0x00c1fcbe | 0x0001fcbe | 0x00000002 |
+| spe:Flash |               | code_SafetyChecker_reduceTorque (617)               | 0x00000178 | 0x00c1fe40 | 0x0001fe40 | 0x00000002 |
+| spe:Flash |               | code_libfp (2333)                                   | 0x00000048 | 0x00c1ffb8 | 0x0001ffb8 | 0x00000002 |
 | spe:Flash |               | .vector.0 (2566)                                    | 0x00000004 | 0x00c20000 | 0x00020000 | 0x00000002 |
 | spe:Flash |               | .vector.1 (2565)                                    | 0x00000004 | 0x00c20004 | 0x00020004 | 0x00000002 |
 | spe:Flash |               | .vector.2 (2564)                                    | 0x00000004 | 0x00c20008 | 0x00020008 | 0x00000002 |
@@ -3293,235 +3286,242 @@ Note:
 | spe:Flash |               | .vector.109 (2457)                                  | 0x00000004 | 0x00c201b4 | 0x000201b4 | 0x00000002 |
 | spe:Flash |               | .vector.110 (2456)                                  | 0x00000004 | 0x00c201b8 | 0x000201b8 | 0x00000002 |
 | spe:Flash |               | .vector.111 (2455)                                  | 0x00000004 | 0x00c201bc | 0x000201bc | 0x00000002 |
-| spe:Flash |               | code_IO_Tools_CalcShiftPos (1411)                   | 0x0000002c | 0x00c24000 | 0x00024000 | 0x00000002 |
-| spe:Flash |               | code_IO_Tools_DistanceFloat (1407)                  | 0x0000002c | 0x00c2402c | 0x0002402c | 0x00000002 |
-| spe:Flash |               | code_InstrumentCluster_new (436)                    | 0x0000002c | 0x00c24058 | 0x00024058 | 0x00000002 |
-| spe:Flash |               | code_libfp (2297)                                   | 0x0000002a | 0x00c24084 | 0x00024084 | 0x00000002 |
-| spe:Flash |               | code_libfp (2317)                                   | 0x0000002a | 0x00c240ae | 0x000240ae | 0x00000002 |
-| spe:Flash |               | code_libc (1974)                                    | 0x00000028 | 0x00c240d8 | 0x000240d8 | 0x00000002 |
-| spe:Flash |               | code_librt (2375)                                   | 0x00000026 | 0x00c24100 | 0x00024100 | 0x00000002 |
-| spe:Flash |               | code_libfp (2319)                                   | 0x00000022 | 0x00c24126 | 0x00024126 | 0x00000002 |
-| spe:Flash |               | code_BrakePressureSensor_getPedalTravel (196)       | 0x00000020 | 0x00c24148 | 0x00024148 | 0x00000002 |
-| spe:Flash |               | code_IO_RTC_GetTimeUS (1378)                        | 0x00000020 | 0x00c24168 | 0x00024168 | 0x00000002 |
-| spe:Flash |               | code_libc (2213)                                    | 0x00000020 | 0x00c24188 | 0x00024188 | 0x00000002 |
-| spe:Flash |               | code_libfp (2318)                                   | 0x00000020 | 0x00c241a8 | 0x000241a8 | 0x00000002 |
-| spe:Flash |               | code_IO_GPIO_INT_PortSet (1052)                     | 0x0000001e | 0x00c241c8 | 0x000241c8 | 0x00000002 |
-| spe:Flash |               | code_librt (2380)                                   | 0x0000001e | 0x00c241e6 | 0x000241e6 | 0x00000002 |
-| spe:Flash |               | code_libc (1968)                                    | 0x0000001a | 0x00c24204 | 0x00024204 | 0x00000002 |
-| spe:Flash |               | code_IO_RTC_getRTCval (1375)                        | 0x00000018 | 0x00c2421e | 0x0002421e | 0x00000002 |
-| spe:Flash |               | code_libc (1977)                                    | 0x00000018 | 0x00c24236 | 0x00024236 | 0x00000002 |
-| spe:Flash |               | code_librt (2382)                                   | 0x00000018 | 0x00c2424e | 0x0002424e | 0x00000002 |
-| spe:Flash |               | code_BMS_getHighestCellVoltage_mV (81)              | 0x00000016 | 0x00c24266 | 0x00024266 | 0x00000002 |
-| spe:Flash |               | code_libc (1967)                                    | 0x00000016 | 0x00c2427c | 0x0002427c | 0x00000002 |
-| spe:Flash |               | code_libc (1822)                                    | 0x00000016 | 0x00c24292 | 0x00024292 | 0x00000002 |
-| spe:Flash |               | code_librt (2356)                                   | 0x00000016 | 0x00c242a8 | 0x000242a8 | 0x00000002 |
-| spe:Flash |               | code_librt (2337)                                   | 0x00000016 | 0x00c242be | 0x000242be | 0x00000002 |
-| spe:Flash |               | code_IO_Tools_ConfigurePin (1406)                   | 0x00000014 | 0x00c242d4 | 0x000242d4 | 0x00000002 |
-| spe:Flash |               | code_libc (1802)                                    | 0x00000014 | 0x00c242e8 | 0x000242e8 | 0x00000002 |
-| spe:Flash |               | code_libc (2189)                                    | 0x00000014 | 0x00c242fc | 0x000242fc | 0x00000002 |
-| spe:Flash |               | code_libc (1804)                                    | 0x00000012 | 0x00c24310 | 0x00024310 | 0x00000002 |
-| spe:Flash |               | code_libc (1961)                                    | 0x00000012 | 0x00c24322 | 0x00024322 | 0x00000002 |
-| spe:Flash |               | code_libc (1945)                                    | 0x00000012 | 0x00c24334 | 0x00024334 | 0x00000002 |
-| spe:Flash |               | code_libc (1965)                                    | 0x00000012 | 0x00c24346 | 0x00024346 | 0x00000002 |
-| spe:Flash |               | code_libc (2159)                                    | 0x00000012 | 0x00c24358 | 0x00024358 | 0x00000002 |
-| spe:Flash |               | code_SafetyChecker_getFaults (614)                  | 0x00000010 | 0x00c2436a | 0x0002436a | 0x00000002 |
-| spe:Flash |               | code_libc (1696)                                    | 0x00000010 | 0x00c2437a | 0x0002437a | 0x00000002 |
-| spe:Flash |               | code_libc (1824)                                    | 0x00000010 | 0x00c2438a | 0x0002438a | 0x00000002 |
-| spe:Flash |               | code_libc (1979)                                    | 0x00000010 | 0x00c2439a | 0x0002439a | 0x00000002 |
-| spe:Flash |               | code_libc (1697)                                    | 0x00000010 | 0x00c243aa | 0x000243aa | 0x00000002 |
-| spe:Flash |               | code_libc (1825)                                    | 0x00000010 | 0x00c243ba | 0x000243ba | 0x00000002 |
-| spe:Flash |               | code_libc (1980)                                    | 0x00000010 | 0x00c243ca | 0x000243ca | 0x00000002 |
-| spe:Flash |               | code_libc (1694)                                    | 0x00000010 | 0x00c243da | 0x000243da | 0x00000002 |
-| spe:Flash |               | code_libc (1801)                                    | 0x00000010 | 0x00c243ea | 0x000243ea | 0x00000002 |
-| spe:Flash |               | code_libc (1958)                                    | 0x00000010 | 0x00c243fa | 0x000243fa | 0x00000002 |
-| spe:Flash |               | code_libc (1799)                                    | 0x00000010 | 0x00c2440a | 0x0002440a | 0x00000002 |
-| spe:Flash |               | code_libc (1821)                                    | 0x00000010 | 0x00c2441a | 0x0002441a | 0x00000002 |
-| spe:Flash |               | code_libc (1972)                                    | 0x0000000e | 0x00c2442a | 0x0002442a | 0x00000002 |
-| spe:Flash |               | code_libc (1971)                                    | 0x0000000e | 0x00c24438 | 0x00024438 | 0x00000002 |
-| spe:Flash |               | code_libc (1943)                                    | 0x0000000e | 0x00c24446 | 0x00024446 | 0x00000002 |
-| spe:Flash |               | code_libc (1941)                                    | 0x0000000e | 0x00c24454 | 0x00024454 | 0x00000002 |
-| spe:Flash |               | code_BMS_getLowestCellVoltage_mV (82)               | 0x0000000c | 0x00c24462 | 0x00024462 | 0x00000002 |
-| spe:Flash |               | code_BMS_getRelayState (90)                         | 0x0000000c | 0x00c2446e | 0x0002446e | 0x00000002 |
-| spe:Flash |               | code_DI_commandTorque (10)                          | 0x0000000c | 0x00c2447a | 0x0002447a | 0x00000002 |
-| spe:Flash |               | code_DI_getCommandedTorque (11)                     | 0x0000000c | 0x00c24486 | 0x00024486 | 0x00000002 |
-| spe:Flash |               | code_SafetyChecker_getNotices (616)                 | 0x0000000c | 0x00c24492 | 0x00024492 | 0x00000002 |
-| spe:Flash |               | code_SafetyChecker_getWarnings (615)                | 0x0000000c | 0x00c2449e | 0x0002449e | 0x00000002 |
-| spe:Flash |               | code_libc (1819)                                    | 0x0000000c | 0x00c244aa | 0x000244aa | 0x00000002 |
-| spe:Flash |               | code_libc (1950)                                    | 0x0000000c | 0x00c244b6 | 0x000244b6 | 0x00000002 |
-| spe:Flash |               | code_libc (1949)                                    | 0x0000000c | 0x00c244c2 | 0x000244c2 | 0x00000002 |
-| spe:Flash |               | code_libc (1812)                                    | 0x0000000c | 0x00c244ce | 0x000244ce | 0x00000002 |
-| spe:Flash |               | code_libc (1952)                                    | 0x0000000c | 0x00c244da | 0x000244da | 0x00000002 |
-| spe:Flash |               | code_libc (1953)                                    | 0x0000000c | 0x00c244e6 | 0x000244e6 | 0x00000002 |
-| spe:Flash |               | code_libc (1946)                                    | 0x0000000c | 0x00c244f2 | 0x000244f2 | 0x00000002 |
-| spe:Flash |               | code_libc (1954)                                    | 0x0000000c | 0x00c244fe | 0x000244fe | 0x00000002 |
-| spe:Flash |               | code_libc (1978)                                    | 0x0000000c | 0x00c2450a | 0x0002450a | 0x00000002 |
-| spe:Flash |               | code_libc (1963)                                    | 0x0000000c | 0x00c24516 | 0x00024516 | 0x00000002 |
-| spe:Flash |               | code_libc (1966)                                    | 0x0000000c | 0x00c24522 | 0x00024522 | 0x00000002 |
-| spe:Flash |               | code_libc (1818)                                    | 0x0000000c | 0x00c2452e | 0x0002452e | 0x00000002 |
-| spe:Flash |               | code_libc (1806)                                    | 0x0000000c | 0x00c2453a | 0x0002453a | 0x00000002 |
-| spe:Flash |               | code_libfp (2300)                                   | 0x0000000c | 0x00c24546 | 0x00024546 | 0x00000002 |
-| spe:Flash |               | code_BMS_getFaultFlags0 (88)                        | 0x0000000a | 0x00c24552 | 0x00024552 | 0x00000002 |
-| spe:Flash |               | code_BMS_getFaultFlags1 (89)                        | 0x0000000a | 0x00c2455c | 0x0002455c | 0x00000002 |
-| spe:Flash |               | code_libc (1808)                                    | 0x0000000a | 0x00c24566 | 0x00024566 | 0x00000002 |
-| spe:Flash |               | code_libc (1960)                                    | 0x0000000a | 0x00c24570 | 0x00024570 | 0x00000002 |
-| spe:Flash |               | code_libc (1955)                                    | 0x0000000a | 0x00c2457a | 0x0002457a | 0x00000002 |
-| spe:Flash |               | code_libc (1964)                                    | 0x0000000a | 0x00c24584 | 0x00024584 | 0x00000002 |
-| spe:Flash |               | code_libc (1975)                                    | 0x0000000a | 0x00c2458e | 0x0002458e | 0x00000002 |
-| spe:Flash |               | code_libc (1805)                                    | 0x0000000a | 0x00c24598 | 0x00024598 | 0x00000002 |
-| spe:Flash |               | code_libc (1797)                                    | 0x0000000a | 0x00c245a2 | 0x000245a2 | 0x00000002 |
-| spe:Flash |               | code_libc (1816)                                    | 0x0000000a | 0x00c245ac | 0x000245ac | 0x00000002 |
-| spe:Flash |               | code_libc (1692)                                    | 0x0000000a | 0x00c245b6 | 0x000245b6 | 0x00000002 |
-| spe:Flash |               | code_libc (1970)                                    | 0x0000000a | 0x00c245c0 | 0x000245c0 | 0x00000002 |
-| spe:Flash |               | code_libc (1959)                                    | 0x0000000a | 0x00c245ca | 0x000245ca | 0x00000002 |
-| spe:Flash |               | code_libc (1956)                                    | 0x0000000a | 0x00c245d4 | 0x000245d4 | 0x00000002 |
-| spe:Flash |               | code_libc (1957)                                    | 0x0000000a | 0x00c245de | 0x000245de | 0x00000002 |
-| spe:Flash |               | code_libc (1820)                                    | 0x0000000a | 0x00c245e8 | 0x000245e8 | 0x00000002 |
-| spe:Flash |               | code_libc (1815)                                    | 0x0000000a | 0x00c245f2 | 0x000245f2 | 0x00000002 |
-| spe:Flash |               | code_librt (2381)                                   | 0x0000000a | 0x00c245fc | 0x000245fc | 0x00000002 |
-| spe:Flash |               | code_librt (2378)                                   | 0x0000000a | 0x00c24606 | 0x00024606 | 0x00000002 |
-| spe:Flash |               | code_librt (2379)                                   | 0x0000000a | 0x00c24610 | 0x00024610 | 0x00000002 |
-| spe:Flash |               | code_libc (1942)                                    | 0x00000008 | 0x00c2461a | 0x0002461a | 0x00000002 |
-| spe:Flash |               | code_libc (1798)                                    | 0x00000008 | 0x00c24622 | 0x00024622 | 0x00000002 |
-| spe:Flash |               | code_libc (1800)                                    | 0x00000008 | 0x00c2462a | 0x0002462a | 0x00000002 |
-| spe:Flash |               | code_libc (1810)                                    | 0x00000008 | 0x00c24632 | 0x00024632 | 0x00000002 |
-| spe:Flash |               | code_libc (1809)                                    | 0x00000008 | 0x00c2463a | 0x0002463a | 0x00000002 |
-| spe:Flash |               | code_libc (1803)                                    | 0x00000008 | 0x00c24642 | 0x00024642 | 0x00000002 |
-| spe:Flash |               | code_libc (1947)                                    | 0x00000008 | 0x00c2464a | 0x0002464a | 0x00000002 |
-| spe:Flash |               | code_libc (1951)                                    | 0x00000008 | 0x00c24652 | 0x00024652 | 0x00000002 |
-| spe:Flash |               | code_libc (1973)                                    | 0x00000008 | 0x00c2465a | 0x0002465a | 0x00000002 |
-| spe:Flash |               | code_libc (1976)                                    | 0x00000008 | 0x00c24662 | 0x00024662 | 0x00000002 |
-| spe:Flash |               | code_libc (1969)                                    | 0x00000008 | 0x00c2466a | 0x0002466a | 0x00000002 |
-| spe:Flash |               | code_libc (1944)                                    | 0x00000008 | 0x00c24672 | 0x00024672 | 0x00000002 |
-| spe:Flash |               | code_libc (1807)                                    | 0x00000008 | 0x00c2467a | 0x0002467a | 0x00000002 |
-| spe:Flash |               | code_libc (1962)                                    | 0x00000008 | 0x00c24682 | 0x00024682 | 0x00000002 |
-| spe:Flash |               | code_libfp (2301)                                   | 0x00000008 | 0x00c2468a | 0x0002468a | 0x00000002 |
-| spe:Flash |               | code_libfp (2302)                                   | 0x00000008 | 0x00c24692 | 0x00024692 | 0x00000002 |
-| spe:Flash |               | code_libc (1817)                                    | 0x00000006 | 0x00c2469a | 0x0002469a | 0x00000002 |
-| spe:Flash |               | code_libc (1948)                                    | 0x00000006 | 0x00c246a0 | 0x000246a0 | 0x00000002 |
-| spe:Flash |               | code_libc (1693)                                    | 0x00000006 | 0x00c246a6 | 0x000246a6 | 0x00000002 |
-| spe:Flash |               | code_librt (2374)                                   | 0x00000006 | 0x00c246ac | 0x000246ac | 0x00000002 |
-| spe:Flash |               | code_libfp (2321)                                   | 0x00000004 | 0x00c246b2 | 0x000246b2 | 0x00000002 |
-| spe:Flash |               | code_librt (2336)                                   | 0x00000004 | 0x00c246b6 | 0x000246b6 | 0x00000002 |
-| spe:Flash |               | code_librt (2355)                                   | 0x00000004 | 0x00c246ba | 0x000246ba | 0x00000002 |
-| spe:Flash |               | code_libc (2204)                                    | 0x00000002 | 0x00c246be | 0x000246be | 0x00000002 |
-| spe:Flash |               | _init_cpy_table_libc (1678)                         | 0x00000020 | 0x00c246c0 | 0x000246c0 | 0x00000002 |
-| spe:Flash |               | _init_clr_table_libc (1679)                         | 0x0000001c | 0x00c246e0 | 0x000246e0 | 0x00000002 |
-| spe:Flash |               | _init_libc (1676)                                   | 0x000000c6 | 0x00c246fc | 0x000246fc | 0x00000002 |
-| spe:Flash |               | _cptable_cpy_huge_libc (2252)                       | 0x00000026 | 0x00c247c2 | 0x000247c2 | 0x00000002 |
-| spe:Flash |               | _cptable_clr_huge_libc (2248)                       | 0x00000024 | 0x00c247e8 | 0x000247e8 | 0x00000002 |
-| spe:Flash |               | shuge__1_swt (267)                                  | 0x0000077e | 0x00c2480c | 0x0002480c | 0x00000002 |
-| spe:Flash |               | shuge__3_swt (79)                                   | 0x000001fa | 0x00c24f8a | 0x00024f8a | 0x00000002 |
-| spe:Flash |               | shuge__11_swt (841)                                 | 0x00000078 | 0x00c25184 | 0x00025184 | 0x00000002 |
-| spe:Flash |               | shuge__1_swt (829)                                  | 0x00000052 | 0x00c251fc | 0x000251fc | 0x00000002 |
-| spe:Flash |               | shuge__1_swt (1067)                                 | 0x00000020 | 0x00c2524e | 0x0002524e | 0x00000002 |
-| spe:Flash |               | shuge__4_swt (1075)                                 | 0x00000020 | 0x00c2526e | 0x0002526e | 0x00000002 |
-| spe:Flash |               | shuge__2_swt (830)                                  | 0x0000001e | 0x00c2528e | 0x0002528e | 0x00000002 |
-| spe:Flash |               | shuge__3_swt (831)                                  | 0x0000001e | 0x00c252ac | 0x000252ac | 0x00000002 |
-| spe:Flash |               | shuge__4_swt (832)                                  | 0x0000001e | 0x00c252ca | 0x000252ca | 0x00000002 |
-| spe:Flash |               | shuge__5_swt (833)                                  | 0x0000001e | 0x00c252e8 | 0x000252e8 | 0x00000002 |
-| spe:Flash |               | shuge_libc (1814)                                   | 0x0000001a | 0x00c25306 | 0x00025306 | 0x00000002 |
-| spe:Flash |               | shuge__1_swt (730)                                  | 0x00000010 | 0x00c25320 | 0x00025320 | 0x00000002 |
-| spe:Flash |               | shuge__1_swt (8)                                    | 0x0000000e | 0x00c25330 | 0x00025330 | 0x00000002 |
-| spe:Flash |               | shuge__2_swt (1070)                                 | 0x00000008 | 0x00c2533e | 0x0002533e | 0x00000002 |
-| spe:Flash |               | shuge__5_swt (1076)                                 | 0x00000008 | 0x00c25346 | 0x00025346 | 0x00000002 |
-| spe:Flash |               | shuge__6_swt (1077)                                 | 0x00000008 | 0x00c2534e | 0x0002534e | 0x00000002 |
-| spe:Flash |               | shuge__7_swt (1078)                                 | 0x00000008 | 0x00c25356 | 0x00025356 | 0x00000002 |
-| spe:Flash |               | shuge__8_swt (1079)                                 | 0x00000008 | 0x00c2535e | 0x0002535e | 0x00000002 |
-| spe:Flash |               | shuge__9_swt (1080)                                 | 0x00000008 | 0x00c25366 | 0x00025366 | 0x00000002 |
-| spe:Flash |               | _init_switch_table_libc (1677)                      | 0x00000008 | 0x00c2536e | 0x0002536e | 0x00000002 |
-| spe:Flash |               | shuge__12_swt (842)                                 | 0x00000006 | 0x00c25376 | 0x00025376 | 0x00000002 |
-| spe:Flash |               | shuge__1_swt (917)                                  | 0x00000006 | 0x00c2537c | 0x0002537c | 0x00000002 |
-| spe:Flash |               | shuge__3_swt (921)                                  | 0x00000006 | 0x00c25382 | 0x00025382 | 0x00000002 |
-| spe:Flash |               | shuge__4_swt (924)                                  | 0x00000006 | 0x00c25388 | 0x00025388 | 0x00000002 |
-| spe:Flash |               | shuge__5_swt (1236)                                 | 0x00000006 | 0x00c2538e | 0x0002538e | 0x00000002 |
-| spe:Flash |               | shuge__1_swt (758)                                  | 0x00000004 | 0x00c25394 | 0x00025394 | 0x00000002 |
-| spe:Flash |               | shuge__2_swt (918)                                  | 0x00000004 | 0x00c25398 | 0x00025398 | 0x00000002 |
-| spe:Flash |               | shuge__1_swt (1232)                                 | 0x00000004 | 0x00c2539c | 0x0002539c | 0x00000002 |
-| spe:Flash |               | shuge__2_swt (1233)                                 | 0x00000004 | 0x00c253a0 | 0x000253a0 | 0x00000002 |
-| spe:Flash |               | shuge__3_swt (1234)                                 | 0x00000004 | 0x00c253a4 | 0x000253a4 | 0x00000002 |
-| spe:Flash |               | shuge__4_swt (1235)                                 | 0x00000004 | 0x00c253a8 | 0x000253a8 | 0x00000002 |
-| spe:Flash |               | shuge__1_swt (1474)                                 | 0x00000004 | 0x00c253ac | 0x000253ac | 0x00000002 |
-| spe:Flash |               | shuge__6_swt (1482)                                 | 0x00000004 | 0x00c253b0 | 0x000253b0 | 0x00000002 |
-| spe:Flash |               | shuge__1_swt (1523)                                 | 0x00000004 | 0x00c253b4 | 0x000253b4 | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2449)                | 0x0000061e | 0x00c253b8 | 0x000253b8 | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2408)                | 0x00000200 | 0x00c259d6 | 0x000259d6 | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2448)                | 0x00000192 | 0x00c25bd6 | 0x00025bd6 | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2451)                | 0x0000011e | 0x00c25d68 | 0x00025d68 | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2426)                | 0x00000078 | 0x00c25e86 | 0x00025e86 | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2450)                | 0x00000070 | 0x00c25efe | 0x00025efe | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2406)                | 0x00000068 | 0x00c25f6e | 0x00025f6e | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2411)                | 0x00000054 | 0x00c25fd6 | 0x00025fd6 | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2446)                | 0x00000048 | 0x00c2602a | 0x0002602a | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2419)                | 0x00000040 | 0x00c26072 | 0x00026072 | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2420)                | 0x00000040 | 0x00c260b2 | 0x000260b2 | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2428)                | 0x00000040 | 0x00c260f2 | 0x000260f2 | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2436)                | 0x00000040 | 0x00c26132 | 0x00026132 | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2427)                | 0x00000034 | 0x00c26172 | 0x00026172 | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2445)                | 0x00000028 | 0x00c261a6 | 0x000261a6 | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2447)                | 0x0000001e | 0x00c261ce | 0x000261ce | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2417)                | 0x00000012 | 0x00c261ec | 0x000261ec | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2418)                | 0x0000000c | 0x00c261fe | 0x000261fe | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2429)                | 0x0000000c | 0x00c2620a | 0x0002620a | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2435)                | 0x0000000c | 0x00c26216 | 0x00026216 | 0x00000001 |
-| spe:Flash |               | [huge_io_driver_data_section] (2442)                | 0x0000000c | 0x00c26222 | 0x00026222 | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2430)                | 0x0000000a | 0x00c2622e | 0x0002622e | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2412)                | 0x00000008 | 0x00c26238 | 0x00026238 | 0x00000001 |
-| spe:Flash |               | [huge_io_driver_data_section] (2438)                | 0x00000004 | 0x00c26240 | 0x00026240 | 0x00000001 |
-| spe:Flash |               | [huge_libc] (2452)                                  | 0x00000004 | 0x00c26244 | 0x00026244 | 0x00000002 |
-| spe:Flash |               | [huge_timestamp_Precharge] (2404)                   | 0x00000004 | 0x00c26248 | 0x00026248 | 0x00000002 |
-| spe:Flash |               | [huge_timestamp_SoftBSPD] (2405)                    | 0x00000004 | 0x00c2624c | 0x0002624c | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2409)                | 0x00000002 | 0x00c26250 | 0x00026250 | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2410)                | 0x00000002 | 0x00c26252 | 0x00026252 | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2443)                | 0x00000002 | 0x00c26254 | 0x00026254 | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2444)                | 0x00000002 | 0x00c26256 | 0x00026256 | 0x00000002 |
-| spe:Flash |               | [huge_io_driver_data_section] (2407)                | 0x00000001 | 0x00c26258 | 0x00026258 | 0x00000001 |
-| spe:Flash |               | [huge_io_driver_data_section] (2413)                | 0x00000001 | 0x00c26259 | 0x00026259 | 0x00000001 |
-| spe:Flash |               | [huge_io_driver_data_section] (2414)                | 0x00000001 | 0x00c2625a | 0x0002625a | 0x00000001 |
-| spe:Flash |               | [huge_io_driver_data_section] (2415)                | 0x00000001 | 0x00c2625b | 0x0002625b | 0x00000001 |
-| spe:Flash |               | [huge_io_driver_data_section] (2416)                | 0x00000001 | 0x00c2625c | 0x0002625c | 0x00000001 |
-| spe:Flash |               | [huge_io_driver_data_section] (2421)                | 0x00000001 | 0x00c2625d | 0x0002625d | 0x00000001 |
-| spe:Flash |               | [huge_io_driver_data_section] (2422)                | 0x00000001 | 0x00c2625e | 0x0002625e | 0x00000001 |
-| spe:Flash |               | [huge_io_driver_data_section] (2423)                | 0x00000001 | 0x00c2625f | 0x0002625f | 0x00000001 |
-| spe:Flash |               | [huge_io_driver_data_section] (2424)                | 0x00000001 | 0x00c26260 | 0x00026260 | 0x00000001 |
-| spe:Flash |               | [huge_io_driver_data_section] (2425)                | 0x00000001 | 0x00c26261 | 0x00026261 | 0x00000001 |
-| spe:Flash |               | [huge_io_driver_data_section] (2431)                | 0x00000001 | 0x00c26262 | 0x00026262 | 0x00000001 |
-| spe:Flash |               | [huge_io_driver_data_section] (2432)                | 0x00000001 | 0x00c26263 | 0x00026263 | 0x00000001 |
-| spe:Flash |               | [huge_io_driver_data_section] (2433)                | 0x00000001 | 0x00c26264 | 0x00026264 | 0x00000001 |
-| spe:Flash |               | [huge_io_driver_data_section] (2434)                | 0x00000001 | 0x00c26265 | 0x00026265 | 0x00000001 |
-| spe:Flash |               | [huge_io_driver_data_section] (2437)                | 0x00000001 | 0x00c26266 | 0x00026266 | 0x00000001 |
-| spe:Flash |               | [huge_io_driver_data_section] (2440)                | 0x00000001 | 0x00c26267 | 0x00026267 | 0x00000001 |
-| spe:Flash |               | [huge_io_driver_data_section] (2441)                | 0x00000001 | 0x00c26268 | 0x00026268 | 0x00000001 |
-| spe:Flash |               | table (2402)                                        | 0x0000017b | 0x00c2626a | 0x0002626a | 0x00000002 |
-| spe:Flash |               | huge_adc_temp_table (845)                           | 0x00000042 | 0x00c263e6 | 0x000263e6 | 0x00000002 |
-| spe:Flash |               | huge_adc_var_duty (846)                             | 0x0000001c | 0x00c26428 | 0x00026428 | 0x00000002 |
-| spe:Flash |               | huge_io_adc_5V_tb (1421)                            | 0x00000030 | 0x00c26444 | 0x00026444 | 0x00000002 |
-| spe:Flash |               | huge_io_adc_cur_tb (1420)                           | 0x00000008 | 0x00c26474 | 0x00026474 | 0x00000002 |
-| spe:Flash |               | huge_io_adc_tb (1423)                               | 0x00000048 | 0x00c2647c | 0x0002647c | 0x00000002 |
-| spe:Flash |               | huge_io_adc_var_tb (1422)                           | 0x00000050 | 0x00c264c4 | 0x000264c4 | 0x00000002 |
-| spe:Flash |               | huge_io_comp_pwd_tb (1428)                          | 0x00000008 | 0x00c26514 | 0x00026514 | 0x00000002 |
-| spe:Flash |               | huge_io_di_tb (1426)                                | 0x00000024 | 0x00c2651c | 0x0002651c | 0x00000002 |
-| spe:Flash |               | huge_io_do_tb (1424)                                | 0x00000030 | 0x00c26540 | 0x00026540 | 0x00000002 |
-| spe:Flash |               | huge_io_func_adc_do_tb (1425)                       | 0x00000060 | 0x00c26570 | 0x00026570 | 0x00000002 |
-| spe:Flash |               | huge_io_func_pwd_tb (1431)                          | 0x00000048 | 0x00c265d0 | 0x000265d0 | 0x00000002 |
-| spe:Flash |               | huge_io_func_pwm_pwd_tb (1419)                      | 0x00000040 | 0x00c26618 | 0x00026618 | 0x00000002 |
-| spe:Flash |               | huge_io_inc_pwd_tb (1429)                           | 0x00000018 | 0x00c26658 | 0x00026658 | 0x00000002 |
-| spe:Flash |               | huge_io_int_prio (1417)                             | 0x00000080 | 0x00c26670 | 0x00026670 | 0x00000002 |
-| spe:Flash |               | huge_io_pwd_lb_tb (1418)                            | 0x00000020 | 0x00c266f0 | 0x000266f0 | 0x00000002 |
-| spe:Flash |               | huge_io_pwm_tb (1414)                               | 0x00000040 | 0x00c26710 | 0x00026710 | 0x00000002 |
-| spe:Flash |               | huge_io_uart_tb (1427)                              | 0x00000006 | 0x00c26750 | 0x00026750 | 0x00000002 |
-| spe:Flash |               | huge_libc (1985)                                    | 0x00000008 | 0x00c26756 | 0x00026756 | 0x00000002 |
-| spe:Flash |               | huge_libc (1986)                                    | 0x00000008 | 0x00c2675e | 0x0002675e | 0x00000002 |
-| spe:Flash |               | huge_multiplex_pins (828)                           | 0x00000004 | 0x00c26766 | 0x00026766 | 0x00000002 |
-| spe:Flash |               | huge__1_ini (1184)                                  | 0x00000005 | 0x00c2676a | 0x0002676a | 0x00000001 |
-| spe:Flash |               | huge__1_str (91)                                    | 0x0000001f | 0x00c2676f | 0x0002676f | 0x00000001 |
-| spe:Flash |               | huge__1_str (619)                                   | 0x00000023 | 0x00c2678e | 0x0002678e | 0x00000001 |
-| spe:Flash |               | huge__2_str (620)                                   | 0x00000019 | 0x00c267b1 | 0x000267b1 | 0x00000001 |
-| spe:Flash |               | huge__2_str (92)                                    | 0x0000001c | 0x00c267ca | 0x000267ca | 0x00000001 |
-| spe:Flash |               | huge_libc (1983)                                    | 0x00000004 | 0x00c267e6 | 0x000267e6 | 0x00000001 |
-| spe:Flash |               | huge_libc (1981)                                    | 0x00000004 | 0x00c267ea | 0x000267ea | 0x00000001 |
-| spe:Flash |               | huge_libc (1984)                                    | 0x00000004 | 0x00c267ee | 0x000267ee | 0x00000001 |
-| spe:Flash |               | huge_libc (1982)                                    | 0x00000004 | 0x00c267f2 | 0x000267f2 | 0x00000001 |
-| spe:Flash |               | huge_libc (2198)                                    | 0x00000101 | 0x00c267f6 | 0x000267f6 | 0x00000001 |
+| spe:Flash |               | code_IO_Tools_DistanceFloat (1407)                  | 0x0000002c | 0x00c24000 | 0x00024000 | 0x00000002 |
+| spe:Flash |               | code_InstrumentCluster_new (436)                    | 0x0000002c | 0x00c2402c | 0x0002402c | 0x00000002 |
+| spe:Flash |               | code_libfp (2297)                                   | 0x0000002a | 0x00c24058 | 0x00024058 | 0x00000002 |
+| spe:Flash |               | code_libfp (2317)                                   | 0x0000002a | 0x00c24082 | 0x00024082 | 0x00000002 |
+| spe:Flash |               | code_libc (1974)                                    | 0x00000028 | 0x00c240ac | 0x000240ac | 0x00000002 |
+| spe:Flash |               | code_librt (2375)                                   | 0x00000026 | 0x00c240d4 | 0x000240d4 | 0x00000002 |
+| spe:Flash |               | code_libfp (2319)                                   | 0x00000022 | 0x00c240fa | 0x000240fa | 0x00000002 |
+| spe:Flash |               | code_BrakePressureSensor_getPedalTravel (196)       | 0x00000020 | 0x00c2411c | 0x0002411c | 0x00000002 |
+| spe:Flash |               | code_IO_RTC_GetTimeUS (1378)                        | 0x00000020 | 0x00c2413c | 0x0002413c | 0x00000002 |
+| spe:Flash |               | code_libc (2213)                                    | 0x00000020 | 0x00c2415c | 0x0002415c | 0x00000002 |
+| spe:Flash |               | code_libfp (2318)                                   | 0x00000020 | 0x00c2417c | 0x0002417c | 0x00000002 |
+| spe:Flash |               | code_IO_GPIO_INT_PortSet (1052)                     | 0x0000001e | 0x00c2419c | 0x0002419c | 0x00000002 |
+| spe:Flash |               | code_librt (2380)                                   | 0x0000001e | 0x00c241ba | 0x000241ba | 0x00000002 |
+| spe:Flash |               | code_libc (1968)                                    | 0x0000001a | 0x00c241d8 | 0x000241d8 | 0x00000002 |
+| spe:Flash |               | code_IO_RTC_getRTCval (1375)                        | 0x00000018 | 0x00c241f2 | 0x000241f2 | 0x00000002 |
+| spe:Flash |               | code_libc (1977)                                    | 0x00000018 | 0x00c2420a | 0x0002420a | 0x00000002 |
+| spe:Flash |               | code_librt (2382)                                   | 0x00000018 | 0x00c24222 | 0x00024222 | 0x00000002 |
+| spe:Flash |               | code_BMS_getHighestCellVoltage_mV (81)              | 0x00000016 | 0x00c2423a | 0x0002423a | 0x00000002 |
+| spe:Flash |               | code_libc (1967)                                    | 0x00000016 | 0x00c24250 | 0x00024250 | 0x00000002 |
+| spe:Flash |               | code_libc (1822)                                    | 0x00000016 | 0x00c24266 | 0x00024266 | 0x00000002 |
+| spe:Flash |               | code_librt (2356)                                   | 0x00000016 | 0x00c2427c | 0x0002427c | 0x00000002 |
+| spe:Flash |               | code_librt (2337)                                   | 0x00000016 | 0x00c24292 | 0x00024292 | 0x00000002 |
+| spe:Flash |               | code_IO_Tools_ConfigurePin (1406)                   | 0x00000014 | 0x00c242a8 | 0x000242a8 | 0x00000002 |
+| spe:Flash |               | code_libc (1802)                                    | 0x00000014 | 0x00c242bc | 0x000242bc | 0x00000002 |
+| spe:Flash |               | code_libc (2189)                                    | 0x00000014 | 0x00c242d0 | 0x000242d0 | 0x00000002 |
+| spe:Flash |               | code_libc (1804)                                    | 0x00000012 | 0x00c242e4 | 0x000242e4 | 0x00000002 |
+| spe:Flash |               | code_libc (1961)                                    | 0x00000012 | 0x00c242f6 | 0x000242f6 | 0x00000002 |
+| spe:Flash |               | code_libc (1945)                                    | 0x00000012 | 0x00c24308 | 0x00024308 | 0x00000002 |
+| spe:Flash |               | code_libc (1965)                                    | 0x00000012 | 0x00c2431a | 0x0002431a | 0x00000002 |
+| spe:Flash |               | code_libc (2159)                                    | 0x00000012 | 0x00c2432c | 0x0002432c | 0x00000002 |
+| spe:Flash |               | code_SafetyChecker_getFaults (614)                  | 0x00000010 | 0x00c2433e | 0x0002433e | 0x00000002 |
+| spe:Flash |               | code_libc (1696)                                    | 0x00000010 | 0x00c2434e | 0x0002434e | 0x00000002 |
+| spe:Flash |               | code_libc (1824)                                    | 0x00000010 | 0x00c2435e | 0x0002435e | 0x00000002 |
+| spe:Flash |               | code_libc (1979)                                    | 0x00000010 | 0x00c2436e | 0x0002436e | 0x00000002 |
+| spe:Flash |               | code_libc (1697)                                    | 0x00000010 | 0x00c2437e | 0x0002437e | 0x00000002 |
+| spe:Flash |               | code_libc (1825)                                    | 0x00000010 | 0x00c2438e | 0x0002438e | 0x00000002 |
+| spe:Flash |               | code_libc (1980)                                    | 0x00000010 | 0x00c2439e | 0x0002439e | 0x00000002 |
+| spe:Flash |               | code_libc (1694)                                    | 0x00000010 | 0x00c243ae | 0x000243ae | 0x00000002 |
+| spe:Flash |               | code_libc (1801)                                    | 0x00000010 | 0x00c243be | 0x000243be | 0x00000002 |
+| spe:Flash |               | code_libc (1958)                                    | 0x00000010 | 0x00c243ce | 0x000243ce | 0x00000002 |
+| spe:Flash |               | code_libc (1799)                                    | 0x00000010 | 0x00c243de | 0x000243de | 0x00000002 |
+| spe:Flash |               | code_libc (1821)                                    | 0x00000010 | 0x00c243ee | 0x000243ee | 0x00000002 |
+| spe:Flash |               | code_libc (1972)                                    | 0x0000000e | 0x00c243fe | 0x000243fe | 0x00000002 |
+| spe:Flash |               | code_libc (1971)                                    | 0x0000000e | 0x00c2440c | 0x0002440c | 0x00000002 |
+| spe:Flash |               | code_libc (1943)                                    | 0x0000000e | 0x00c2441a | 0x0002441a | 0x00000002 |
+| spe:Flash |               | code_libc (1941)                                    | 0x0000000e | 0x00c24428 | 0x00024428 | 0x00000002 |
+| spe:Flash |               | code_BMS_getLowestCellVoltage_mV (82)               | 0x0000000c | 0x00c24436 | 0x00024436 | 0x00000002 |
+| spe:Flash |               | code_BMS_getRelayState (90)                         | 0x0000000c | 0x00c24442 | 0x00024442 | 0x00000002 |
+| spe:Flash |               | code_DI_commandTorque (10)                          | 0x0000000c | 0x00c2444e | 0x0002444e | 0x00000002 |
+| spe:Flash |               | code_DI_getCommandedTorque (11)                     | 0x0000000c | 0x00c2445a | 0x0002445a | 0x00000002 |
+| spe:Flash |               | code_SafetyChecker_getNotices (616)                 | 0x0000000c | 0x00c24466 | 0x00024466 | 0x00000002 |
+| spe:Flash |               | code_SafetyChecker_getWarnings (615)                | 0x0000000c | 0x00c24472 | 0x00024472 | 0x00000002 |
+| spe:Flash |               | code_libc (1819)                                    | 0x0000000c | 0x00c2447e | 0x0002447e | 0x00000002 |
+| spe:Flash |               | code_libc (1950)                                    | 0x0000000c | 0x00c2448a | 0x0002448a | 0x00000002 |
+| spe:Flash |               | code_libc (1949)                                    | 0x0000000c | 0x00c24496 | 0x00024496 | 0x00000002 |
+| spe:Flash |               | code_libc (1812)                                    | 0x0000000c | 0x00c244a2 | 0x000244a2 | 0x00000002 |
+| spe:Flash |               | code_libc (1952)                                    | 0x0000000c | 0x00c244ae | 0x000244ae | 0x00000002 |
+| spe:Flash |               | code_libc (1953)                                    | 0x0000000c | 0x00c244ba | 0x000244ba | 0x00000002 |
+| spe:Flash |               | code_libc (1946)                                    | 0x0000000c | 0x00c244c6 | 0x000244c6 | 0x00000002 |
+| spe:Flash |               | code_libc (1954)                                    | 0x0000000c | 0x00c244d2 | 0x000244d2 | 0x00000002 |
+| spe:Flash |               | code_libc (1978)                                    | 0x0000000c | 0x00c244de | 0x000244de | 0x00000002 |
+| spe:Flash |               | code_libc (1963)                                    | 0x0000000c | 0x00c244ea | 0x000244ea | 0x00000002 |
+| spe:Flash |               | code_libc (1966)                                    | 0x0000000c | 0x00c244f6 | 0x000244f6 | 0x00000002 |
+| spe:Flash |               | code_libc (1818)                                    | 0x0000000c | 0x00c24502 | 0x00024502 | 0x00000002 |
+| spe:Flash |               | code_libc (1806)                                    | 0x0000000c | 0x00c2450e | 0x0002450e | 0x00000002 |
+| spe:Flash |               | code_libfp (2300)                                   | 0x0000000c | 0x00c2451a | 0x0002451a | 0x00000002 |
+| spe:Flash |               | code_BMS_getFaultFlags0 (88)                        | 0x0000000a | 0x00c24526 | 0x00024526 | 0x00000002 |
+| spe:Flash |               | code_BMS_getFaultFlags1 (89)                        | 0x0000000a | 0x00c24530 | 0x00024530 | 0x00000002 |
+| spe:Flash |               | code_libc (1808)                                    | 0x0000000a | 0x00c2453a | 0x0002453a | 0x00000002 |
+| spe:Flash |               | code_libc (1960)                                    | 0x0000000a | 0x00c24544 | 0x00024544 | 0x00000002 |
+| spe:Flash |               | code_libc (1955)                                    | 0x0000000a | 0x00c2454e | 0x0002454e | 0x00000002 |
+| spe:Flash |               | code_libc (1964)                                    | 0x0000000a | 0x00c24558 | 0x00024558 | 0x00000002 |
+| spe:Flash |               | code_libc (1975)                                    | 0x0000000a | 0x00c24562 | 0x00024562 | 0x00000002 |
+| spe:Flash |               | code_libc (1805)                                    | 0x0000000a | 0x00c2456c | 0x0002456c | 0x00000002 |
+| spe:Flash |               | code_libc (1797)                                    | 0x0000000a | 0x00c24576 | 0x00024576 | 0x00000002 |
+| spe:Flash |               | code_libc (1816)                                    | 0x0000000a | 0x00c24580 | 0x00024580 | 0x00000002 |
+| spe:Flash |               | code_libc (1692)                                    | 0x0000000a | 0x00c2458a | 0x0002458a | 0x00000002 |
+| spe:Flash |               | code_libc (1970)                                    | 0x0000000a | 0x00c24594 | 0x00024594 | 0x00000002 |
+| spe:Flash |               | code_libc (1959)                                    | 0x0000000a | 0x00c2459e | 0x0002459e | 0x00000002 |
+| spe:Flash |               | code_libc (1956)                                    | 0x0000000a | 0x00c245a8 | 0x000245a8 | 0x00000002 |
+| spe:Flash |               | code_libc (1957)                                    | 0x0000000a | 0x00c245b2 | 0x000245b2 | 0x00000002 |
+| spe:Flash |               | code_libc (1820)                                    | 0x0000000a | 0x00c245bc | 0x000245bc | 0x00000002 |
+| spe:Flash |               | code_libc (1815)                                    | 0x0000000a | 0x00c245c6 | 0x000245c6 | 0x00000002 |
+| spe:Flash |               | code_librt (2381)                                   | 0x0000000a | 0x00c245d0 | 0x000245d0 | 0x00000002 |
+| spe:Flash |               | code_librt (2378)                                   | 0x0000000a | 0x00c245da | 0x000245da | 0x00000002 |
+| spe:Flash |               | code_librt (2379)                                   | 0x0000000a | 0x00c245e4 | 0x000245e4 | 0x00000002 |
+| spe:Flash |               | code_libc (1942)                                    | 0x00000008 | 0x00c245ee | 0x000245ee | 0x00000002 |
+| spe:Flash |               | code_libc (1798)                                    | 0x00000008 | 0x00c245f6 | 0x000245f6 | 0x00000002 |
+| spe:Flash |               | code_libc (1800)                                    | 0x00000008 | 0x00c245fe | 0x000245fe | 0x00000002 |
+| spe:Flash |               | code_libc (1810)                                    | 0x00000008 | 0x00c24606 | 0x00024606 | 0x00000002 |
+| spe:Flash |               | code_libc (1809)                                    | 0x00000008 | 0x00c2460e | 0x0002460e | 0x00000002 |
+| spe:Flash |               | code_libc (1803)                                    | 0x00000008 | 0x00c24616 | 0x00024616 | 0x00000002 |
+| spe:Flash |               | code_libc (1947)                                    | 0x00000008 | 0x00c2461e | 0x0002461e | 0x00000002 |
+| spe:Flash |               | code_libc (1951)                                    | 0x00000008 | 0x00c24626 | 0x00024626 | 0x00000002 |
+| spe:Flash |               | code_libc (1973)                                    | 0x00000008 | 0x00c2462e | 0x0002462e | 0x00000002 |
+| spe:Flash |               | code_libc (1976)                                    | 0x00000008 | 0x00c24636 | 0x00024636 | 0x00000002 |
+| spe:Flash |               | code_libc (1969)                                    | 0x00000008 | 0x00c2463e | 0x0002463e | 0x00000002 |
+| spe:Flash |               | code_libc (1944)                                    | 0x00000008 | 0x00c24646 | 0x00024646 | 0x00000002 |
+| spe:Flash |               | code_libc (1807)                                    | 0x00000008 | 0x00c2464e | 0x0002464e | 0x00000002 |
+| spe:Flash |               | code_libc (1962)                                    | 0x00000008 | 0x00c24656 | 0x00024656 | 0x00000002 |
+| spe:Flash |               | code_libfp (2301)                                   | 0x00000008 | 0x00c2465e | 0x0002465e | 0x00000002 |
+| spe:Flash |               | code_libfp (2302)                                   | 0x00000008 | 0x00c24666 | 0x00024666 | 0x00000002 |
+| spe:Flash |               | code_libc (1817)                                    | 0x00000006 | 0x00c2466e | 0x0002466e | 0x00000002 |
+| spe:Flash |               | code_libc (1948)                                    | 0x00000006 | 0x00c24674 | 0x00024674 | 0x00000002 |
+| spe:Flash |               | code_libc (1693)                                    | 0x00000006 | 0x00c2467a | 0x0002467a | 0x00000002 |
+| spe:Flash |               | code_librt (2374)                                   | 0x00000006 | 0x00c24680 | 0x00024680 | 0x00000002 |
+| spe:Flash |               | code_libfp (2321)                                   | 0x00000004 | 0x00c24686 | 0x00024686 | 0x00000002 |
+| spe:Flash |               | code_librt (2336)                                   | 0x00000004 | 0x00c2468a | 0x0002468a | 0x00000002 |
+| spe:Flash |               | code_librt (2355)                                   | 0x00000004 | 0x00c2468e | 0x0002468e | 0x00000002 |
+| spe:Flash |               | code_libc (2204)                                    | 0x00000002 | 0x00c24692 | 0x00024692 | 0x00000002 |
+| spe:Flash |               | _init_cpy_table_libc (1678)                         | 0x00000020 | 0x00c24694 | 0x00024694 | 0x00000002 |
+| spe:Flash |               | _init_clr_table_libc (1679)                         | 0x0000001c | 0x00c246b4 | 0x000246b4 | 0x00000002 |
+| spe:Flash |               | _init_libc (1676)                                   | 0x000000c6 | 0x00c246d0 | 0x000246d0 | 0x00000002 |
+| spe:Flash |               | _cptable_cpy_huge_libc (2252)                       | 0x00000026 | 0x00c24796 | 0x00024796 | 0x00000002 |
+| spe:Flash |               | _cptable_clr_huge_libc (2248)                       | 0x00000024 | 0x00c247bc | 0x000247bc | 0x00000002 |
+| spe:Flash |               | shuge__1_swt (267)                                  | 0x0000077e | 0x00c247e0 | 0x000247e0 | 0x00000002 |
+| spe:Flash |               | _dcti_libc (1680)                                   | 0x0        | 0x00c247e0 | 0x000247e0 | 0x00000002 |
+| spe:Flash |               | _cptable_clr_bit_libc (2245)                        | 0x0        | 0x00c247e0 | 0x000247e0 | 0x00000002 |
+| spe:Flash |               | _cptable_clr_near_libc (2246)                       | 0x0        | 0x00c247e0 | 0x000247e0 | 0x00000002 |
+| spe:Flash |               | _cptable_clr_shuge_libc (2247)                      | 0x0        | 0x00c247e0 | 0x000247e0 | 0x00000002 |
+| spe:Flash |               | _cptable_cpy_bit_libc (2249)                        | 0x0        | 0x00c247e0 | 0x000247e0 | 0x00000002 |
+| spe:Flash |               | _cptable_cpy_near_libc (2250)                       | 0x0        | 0x00c247e0 | 0x000247e0 | 0x00000002 |
+| spe:Flash |               | _cptable_cpy_shuge_libc (2251)                      | 0x0        | 0x00c247e0 | 0x000247e0 | 0x00000002 |
+| spe:Flash |               | shuge__3_swt (79)                                   | 0x000001fa | 0x00c24f5e | 0x00024f5e | 0x00000002 |
+| spe:Flash |               | shuge__11_swt (841)                                 | 0x00000078 | 0x00c25158 | 0x00025158 | 0x00000002 |
+| spe:Flash |               | shuge__1_swt (829)                                  | 0x00000052 | 0x00c251d0 | 0x000251d0 | 0x00000002 |
+| spe:Flash |               | shuge__1_swt (1067)                                 | 0x00000020 | 0x00c25222 | 0x00025222 | 0x00000002 |
+| spe:Flash |               | shuge__4_swt (1075)                                 | 0x00000020 | 0x00c25242 | 0x00025242 | 0x00000002 |
+| spe:Flash |               | shuge__2_swt (830)                                  | 0x0000001e | 0x00c25262 | 0x00025262 | 0x00000002 |
+| spe:Flash |               | shuge__3_swt (831)                                  | 0x0000001e | 0x00c25280 | 0x00025280 | 0x00000002 |
+| spe:Flash |               | shuge__4_swt (832)                                  | 0x0000001e | 0x00c2529e | 0x0002529e | 0x00000002 |
+| spe:Flash |               | shuge__5_swt (833)                                  | 0x0000001e | 0x00c252bc | 0x000252bc | 0x00000002 |
+| spe:Flash |               | shuge_libc (1814)                                   | 0x0000001a | 0x00c252da | 0x000252da | 0x00000002 |
+| spe:Flash |               | shuge__1_swt (730)                                  | 0x00000010 | 0x00c252f4 | 0x000252f4 | 0x00000002 |
+| spe:Flash |               | shuge__1_swt (8)                                    | 0x0000000e | 0x00c25304 | 0x00025304 | 0x00000002 |
+| spe:Flash |               | shuge__2_swt (1070)                                 | 0x00000008 | 0x00c25312 | 0x00025312 | 0x00000002 |
+| spe:Flash |               | shuge__5_swt (1076)                                 | 0x00000008 | 0x00c2531a | 0x0002531a | 0x00000002 |
+| spe:Flash |               | shuge__6_swt (1077)                                 | 0x00000008 | 0x00c25322 | 0x00025322 | 0x00000002 |
+| spe:Flash |               | shuge__7_swt (1078)                                 | 0x00000008 | 0x00c2532a | 0x0002532a | 0x00000002 |
+| spe:Flash |               | shuge__8_swt (1079)                                 | 0x00000008 | 0x00c25332 | 0x00025332 | 0x00000002 |
+| spe:Flash |               | shuge__9_swt (1080)                                 | 0x00000008 | 0x00c2533a | 0x0002533a | 0x00000002 |
+| spe:Flash |               | _init_switch_table_libc (1677)                      | 0x00000008 | 0x00c25342 | 0x00025342 | 0x00000002 |
+| spe:Flash |               | shuge__12_swt (842)                                 | 0x00000006 | 0x00c2534a | 0x0002534a | 0x00000002 |
+| spe:Flash |               | shuge__1_swt (917)                                  | 0x00000006 | 0x00c25350 | 0x00025350 | 0x00000002 |
+| spe:Flash |               | shuge__3_swt (921)                                  | 0x00000006 | 0x00c25356 | 0x00025356 | 0x00000002 |
+| spe:Flash |               | shuge__4_swt (924)                                  | 0x00000006 | 0x00c2535c | 0x0002535c | 0x00000002 |
+| spe:Flash |               | shuge__5_swt (1236)                                 | 0x00000006 | 0x00c25362 | 0x00025362 | 0x00000002 |
+| spe:Flash |               | shuge__1_swt (758)                                  | 0x00000004 | 0x00c25368 | 0x00025368 | 0x00000002 |
+| spe:Flash |               | shuge__2_swt (918)                                  | 0x00000004 | 0x00c2536c | 0x0002536c | 0x00000002 |
+| spe:Flash |               | shuge__1_swt (1232)                                 | 0x00000004 | 0x00c25370 | 0x00025370 | 0x00000002 |
+| spe:Flash |               | shuge__2_swt (1233)                                 | 0x00000004 | 0x00c25374 | 0x00025374 | 0x00000002 |
+| spe:Flash |               | shuge__3_swt (1234)                                 | 0x00000004 | 0x00c25378 | 0x00025378 | 0x00000002 |
+| spe:Flash |               | shuge__4_swt (1235)                                 | 0x00000004 | 0x00c2537c | 0x0002537c | 0x00000002 |
+| spe:Flash |               | shuge__1_swt (1474)                                 | 0x00000004 | 0x00c25380 | 0x00025380 | 0x00000002 |
+| spe:Flash |               | shuge__6_swt (1482)                                 | 0x00000004 | 0x00c25384 | 0x00025384 | 0x00000002 |
+| spe:Flash |               | shuge__1_swt (1523)                                 | 0x00000004 | 0x00c25388 | 0x00025388 | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2449)                | 0x0000061e | 0x00c2538c | 0x0002538c | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2408)                | 0x00000200 | 0x00c259aa | 0x000259aa | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2448)                | 0x00000192 | 0x00c25baa | 0x00025baa | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2451)                | 0x0000011e | 0x00c25d3c | 0x00025d3c | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2426)                | 0x00000078 | 0x00c25e5a | 0x00025e5a | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2450)                | 0x00000070 | 0x00c25ed2 | 0x00025ed2 | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2406)                | 0x00000068 | 0x00c25f42 | 0x00025f42 | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2411)                | 0x00000054 | 0x00c25faa | 0x00025faa | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2446)                | 0x00000048 | 0x00c25ffe | 0x00025ffe | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2419)                | 0x00000040 | 0x00c26046 | 0x00026046 | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2420)                | 0x00000040 | 0x00c26086 | 0x00026086 | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2428)                | 0x00000040 | 0x00c260c6 | 0x000260c6 | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2436)                | 0x00000040 | 0x00c26106 | 0x00026106 | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2427)                | 0x00000034 | 0x00c26146 | 0x00026146 | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2445)                | 0x00000028 | 0x00c2617a | 0x0002617a | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2447)                | 0x0000001e | 0x00c261a2 | 0x000261a2 | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2417)                | 0x00000012 | 0x00c261c0 | 0x000261c0 | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2418)                | 0x0000000c | 0x00c261d2 | 0x000261d2 | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2429)                | 0x0000000c | 0x00c261de | 0x000261de | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2435)                | 0x0000000c | 0x00c261ea | 0x000261ea | 0x00000001 |
+| spe:Flash |               | [huge_io_driver_data_section] (2442)                | 0x0000000c | 0x00c261f6 | 0x000261f6 | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2430)                | 0x0000000a | 0x00c26202 | 0x00026202 | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2412)                | 0x00000008 | 0x00c2620c | 0x0002620c | 0x00000001 |
+| spe:Flash |               | [huge_io_driver_data_section] (2438)                | 0x00000004 | 0x00c26214 | 0x00026214 | 0x00000001 |
+| spe:Flash |               | [huge_libc] (2452)                                  | 0x00000004 | 0x00c26218 | 0x00026218 | 0x00000002 |
+| spe:Flash |               | [huge_timestamp_Precharge] (2404)                   | 0x00000004 | 0x00c2621c | 0x0002621c | 0x00000002 |
+| spe:Flash |               | [huge_timestamp_SoftBSPD] (2405)                    | 0x00000004 | 0x00c26220 | 0x00026220 | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2409)                | 0x00000002 | 0x00c26224 | 0x00026224 | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2410)                | 0x00000002 | 0x00c26226 | 0x00026226 | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2443)                | 0x00000002 | 0x00c26228 | 0x00026228 | 0x00000002 |
+| spe:Flash |               | [huge_io_driver_data_section] (2444)                | 0x00000002 | 0x00c2622a | 0x0002622a | 0x00000002 |
+| spe:Flash |               | [huge__999001_cc2_initialized] (2439)               | 0x00000001 | 0x00c2622c | 0x0002622c | 0x00000001 |
+| spe:Flash |               | [huge_io_driver_data_section] (2407)                | 0x00000001 | 0x00c2622d | 0x0002622d | 0x00000001 |
+| spe:Flash |               | [huge_io_driver_data_section] (2413)                | 0x00000001 | 0x00c2622e | 0x0002622e | 0x00000001 |
+| spe:Flash |               | [huge_io_driver_data_section] (2414)                | 0x00000001 | 0x00c2622f | 0x0002622f | 0x00000001 |
+| spe:Flash |               | [huge_io_driver_data_section] (2415)                | 0x00000001 | 0x00c26230 | 0x00026230 | 0x00000001 |
+| spe:Flash |               | [huge_io_driver_data_section] (2416)                | 0x00000001 | 0x00c26231 | 0x00026231 | 0x00000001 |
+| spe:Flash |               | [huge_io_driver_data_section] (2421)                | 0x00000001 | 0x00c26232 | 0x00026232 | 0x00000001 |
+| spe:Flash |               | [huge_io_driver_data_section] (2422)                | 0x00000001 | 0x00c26233 | 0x00026233 | 0x00000001 |
+| spe:Flash |               | [huge_io_driver_data_section] (2423)                | 0x00000001 | 0x00c26234 | 0x00026234 | 0x00000001 |
+| spe:Flash |               | [huge_io_driver_data_section] (2424)                | 0x00000001 | 0x00c26235 | 0x00026235 | 0x00000001 |
+| spe:Flash |               | [huge_io_driver_data_section] (2425)                | 0x00000001 | 0x00c26236 | 0x00026236 | 0x00000001 |
+| spe:Flash |               | [huge_io_driver_data_section] (2431)                | 0x00000001 | 0x00c26237 | 0x00026237 | 0x00000001 |
+| spe:Flash |               | [huge_io_driver_data_section] (2432)                | 0x00000001 | 0x00c26238 | 0x00026238 | 0x00000001 |
+| spe:Flash |               | [huge_io_driver_data_section] (2433)                | 0x00000001 | 0x00c26239 | 0x00026239 | 0x00000001 |
+| spe:Flash |               | [huge_io_driver_data_section] (2434)                | 0x00000001 | 0x00c2623a | 0x0002623a | 0x00000001 |
+| spe:Flash |               | [huge_io_driver_data_section] (2437)                | 0x00000001 | 0x00c2623b | 0x0002623b | 0x00000001 |
+| spe:Flash |               | [huge_io_driver_data_section] (2440)                | 0x00000001 | 0x00c2623c | 0x0002623c | 0x00000001 |
+| spe:Flash |               | [huge_io_driver_data_section] (2441)                | 0x00000001 | 0x00c2623d | 0x0002623d | 0x00000001 |
+| spe:Flash |               | table (2402)                                        | 0x0000017b | 0x00c2623e | 0x0002623e | 0x00000002 |
+| spe:Flash |               | huge_adc_temp_table (845)                           | 0x00000042 | 0x00c263ba | 0x000263ba | 0x00000002 |
+| spe:Flash |               | huge_adc_var_duty (846)                             | 0x0000001c | 0x00c263fc | 0x000263fc | 0x00000002 |
+| spe:Flash |               | huge_io_adc_5V_tb (1421)                            | 0x00000030 | 0x00c26418 | 0x00026418 | 0x00000002 |
+| spe:Flash |               | huge_io_adc_cur_tb (1420)                           | 0x00000008 | 0x00c26448 | 0x00026448 | 0x00000002 |
+| spe:Flash |               | huge_io_adc_tb (1423)                               | 0x00000048 | 0x00c26450 | 0x00026450 | 0x00000002 |
+| spe:Flash |               | huge_io_adc_var_tb (1422)                           | 0x00000050 | 0x00c26498 | 0x00026498 | 0x00000002 |
+| spe:Flash |               | huge_io_comp_pwd_tb (1428)                          | 0x00000008 | 0x00c264e8 | 0x000264e8 | 0x00000002 |
+| spe:Flash |               | huge_io_di_tb (1426)                                | 0x00000024 | 0x00c264f0 | 0x000264f0 | 0x00000002 |
+| spe:Flash |               | huge_io_do_tb (1424)                                | 0x00000030 | 0x00c26514 | 0x00026514 | 0x00000002 |
+| spe:Flash |               | huge_io_func_adc_do_tb (1425)                       | 0x00000060 | 0x00c26544 | 0x00026544 | 0x00000002 |
+| spe:Flash |               | huge_io_func_pwd_tb (1431)                          | 0x00000048 | 0x00c265a4 | 0x000265a4 | 0x00000002 |
+| spe:Flash |               | huge_io_func_pwm_pwd_tb (1419)                      | 0x00000040 | 0x00c265ec | 0x000265ec | 0x00000002 |
+| spe:Flash |               | huge_io_inc_pwd_tb (1429)                           | 0x00000018 | 0x00c2662c | 0x0002662c | 0x00000002 |
+| spe:Flash |               | huge_io_int_prio (1417)                             | 0x00000080 | 0x00c26644 | 0x00026644 | 0x00000002 |
+| spe:Flash |               | huge_io_pwd_lb_tb (1418)                            | 0x00000020 | 0x00c266c4 | 0x000266c4 | 0x00000002 |
+| spe:Flash |               | huge_io_pwm_tb (1414)                               | 0x00000040 | 0x00c266e4 | 0x000266e4 | 0x00000002 |
+| spe:Flash |               | huge_io_uart_tb (1427)                              | 0x00000006 | 0x00c26724 | 0x00026724 | 0x00000002 |
+| spe:Flash |               | huge_libc (1985)                                    | 0x00000008 | 0x00c2672a | 0x0002672a | 0x00000002 |
+| spe:Flash |               | huge_libc (1986)                                    | 0x00000008 | 0x00c26732 | 0x00026732 | 0x00000002 |
+| spe:Flash |               | huge_multiplex_pins (828)                           | 0x00000004 | 0x00c2673a | 0x0002673a | 0x00000002 |
+| spe:Flash |               | huge__1_ini (1184)                                  | 0x00000005 | 0x00c2673e | 0x0002673e | 0x00000001 |
+| spe:Flash |               | huge__1_str (91)                                    | 0x0000001f | 0x00c26743 | 0x00026743 | 0x00000001 |
+| spe:Flash |               | huge__1_str (619)                                   | 0x00000023 | 0x00c26762 | 0x00026762 | 0x00000001 |
+| spe:Flash |               | huge__2_str (620)                                   | 0x00000019 | 0x00c26785 | 0x00026785 | 0x00000001 |
+| spe:Flash |               | huge__2_str (92)                                    | 0x0000001c | 0x00c2679e | 0x0002679e | 0x00000001 |
+| spe:Flash |               | huge_libc (1983)                                    | 0x00000004 | 0x00c267ba | 0x000267ba | 0x00000001 |
+| spe:Flash |               | huge_libc (1981)                                    | 0x00000004 | 0x00c267be | 0x000267be | 0x00000001 |
+| spe:Flash |               | huge_libc (1984)                                    | 0x00000004 | 0x00c267c2 | 0x000267c2 | 0x00000001 |
+| spe:Flash |               | huge_libc (1982)                                    | 0x00000004 | 0x00c267c6 | 0x000267c6 | 0x00000001 |
+| spe:Flash |               | huge_libc (2198)                                    | 0x00000101 | 0x00c267ca | 0x000267ca | 0x00000001 |
 | spe:PSRAM | my_huge_ram   | hheap (2403)                                        | 0x00002800 | 0x00e04000 | 0x00004000 | 0x00000002 |
 | spe:PSRAM | my_huge_ram   | huge_Sensor_BPS0 (380)                              | 0x0000001e | 0x00e06800 | 0x00006800 | 0x00000002 |
 | spe:PSRAM | my_huge_ram   | huge_Sensor_BPS1 (381)                              | 0x0000001e | 0x00e0681e | 0x0000681e | 0x00000002 |
@@ -3579,47 +3579,47 @@ Note:
 | .vector.23                                | 0x00c12c8a |
 | .vector.24_loop                           | 0x00c20060 |
 | .vector.25_loop                           | 0x00c20064 |
-| .vector.26                                | 0x00c13b1e |
-| .vector.27                                | 0x00c13b54 |
+| .vector.26                                | 0x00c13b18 |
+| .vector.27                                | 0x00c13b4e |
 | .vector.28                                | 0x00c12cfc |
 | .vector.29                                | 0x00c12d6e |
 | .vector.2_loop                            | 0x00c20008 |
-| .vector.30                                | 0x00c13b8a |
-| .vector.31                                | 0x00c13bc0 |
-| .vector.32                                | 0x00c13df0 |
-| .vector.33                                | 0x00c13e22 |
-| .vector.34                                | 0x00c13e54 |
-| .vector.35                                | 0x00c13e86 |
+| .vector.30                                | 0x00c13b84 |
+| .vector.31                                | 0x00c13bba |
+| .vector.32                                | 0x00c13dea |
+| .vector.33                                | 0x00c13e1c |
+| .vector.34                                | 0x00c13e4e |
+| .vector.35                                | 0x00c13e80 |
 | .vector.36                                | 0x00c134fa |
 | .vector.37_loop                           | 0x00c20094 |
 | .vector.38_loop                           | 0x00c20098 |
 | .vector.39_loop                           | 0x00c2009c |
 | .vector.3_loop                            | 0x00c2000c |
-| .vector.40                                | 0x00c1d77e |
+| .vector.40                                | 0x00c1d77a |
 | .vector.41_loop                           | 0x00c200a4 |
 | .vector.42_loop                           | 0x00c200a8 |
 | .vector.43_loop                           | 0x00c200ac |
-| .vector.44                                | 0x00c1d9bc |
+| .vector.44                                | 0x00c1d9b8 |
 | .vector.45_loop                           | 0x00c200b4 |
 | .vector.46_loop                           | 0x00c200b8 |
 | .vector.47_loop                           | 0x00c200bc |
 | .vector.48_loop                           | 0x00c200c0 |
-| .vector.49                                | 0x00c13c60 |
+| .vector.49                                | 0x00c13c5a |
 | .vector.4_loop                            | 0x00c20010 |
-| .vector.50                                | 0x00c13c92 |
+| .vector.50                                | 0x00c13c8c |
 | .vector.51                                | 0x00c11332 |
 | .vector.52_loop                           | 0x00c200d0 |
 | .vector.53_loop                           | 0x00c200d4 |
 | .vector.54_loop                           | 0x00c200d8 |
 | .vector.55                                | 0x00c11432 |
-| .vector.56                                | 0x00c13cc4 |
-| .vector.57                                | 0x00c13cf6 |
-| .vector.58                                | 0x00c13d28 |
+| .vector.56                                | 0x00c13cbe |
+| .vector.57                                | 0x00c13cf0 |
+| .vector.58                                | 0x00c13d22 |
 | .vector.59                                | 0x00c11532 |
 | .vector.5_loop                            | 0x00c20014 |
-| .vector.60                                | 0x00c13d5a |
-| .vector.61                                | 0x00c13d8c |
-| .vector.62                                | 0x00c13dbe |
+| .vector.60                                | 0x00c13d54 |
+| .vector.61                                | 0x00c13d86 |
+| .vector.62                                | 0x00c13db8 |
 | .vector.63                                | 0x00c11632 |
 | .vector.64_loop                           | 0x00c20100 |
 | .vector.65_loop                           | 0x00c20104 |
@@ -3688,133 +3688,133 @@ Note:
 | IO_PWD_GPT_T4_INT_trap                    | 0x00000022 |
 | IO_PWD_GPT_T5_INT_trap                    | 0x00000023 |
 | IO_PWD_GPT_T6_INT_trap                    | 0x00000024 |
-| _ADC0_viSRN0                              | 0x00c1d77e |
-| _ADC1_viSRN0                              | 0x00c1d9bc |
-| _AmkDriver_new                            | 0x00c1f664 |
-| _BMS_getFaultFlags0                       | 0x00c24552 |
-| _BMS_getFaultFlags1                       | 0x00c2455c |
-| _BMS_getHighestCellTemp_d_degC            | 0x00c1ffbc |
+| _ADC0_viSRN0                              | 0x00c1d77a |
+| _ADC1_viSRN0                              | 0x00c1d9b8 |
+| _AmkDriver_new                            | 0x00c1f660 |
+| _BMS_getFaultFlags0                       | 0x00c24526 |
+| _BMS_getFaultFlags1                       | 0x00c24530 |
+| _BMS_getHighestCellTemp_d_degC            | 0x00c13834 |
 | _BMS_getHighestCellTemp_degC              | 0x00c132f6 |
-| _BMS_getHighestCellVoltage_mV             | 0x00c24266 |
-| _BMS_getLowestCellVoltage_mV              | 0x00c24462 |
+| _BMS_getHighestCellVoltage_mV             | 0x00c2423a |
+| _BMS_getLowestCellVoltage_mV              | 0x00c24436 |
 | _BMS_getPower_W                           | 0x00c128ac |
-| _BMS_getRelayState                        | 0x00c2446e |
+| _BMS_getRelayState                        | 0x00c24442 |
 | _BMS_new                                  | 0x00c12396 |
 | _BMS_parseCanMessage                      | 0x00c15858 |
-| _BMS_relayControl                         | 0x00c13aae |
-| _BrakePressureSensor_calibrationCycle     | 0x00c1f808 |
-| _BrakePressureSensor_getPedalTravel       | 0x00c24148 |
+| _BMS_relayControl                         | 0x00c13aa8 |
+| _BrakePressureSensor_calibrationCycle     | 0x00c1f804 |
+| _BrakePressureSensor_getPedalTravel       | 0x00c2411c |
 | _BrakePressureSensor_new                  | 0x00c10dcc |
 | _BrakePressureSensor_startCalibration     | 0x00c11832 |
-| _BrakePressureSensor_update               | 0x00c1d08c |
+| _BrakePressureSensor_update               | 0x00c1d088 |
 | _CanManager_new                           | 0x00c19140 |
-| _CanManager_read                          | 0x00c1ed30 |
+| _CanManager_read                          | 0x00c1ed2c |
 | _CanManager_send                          | 0x00c1ba7e |
 | _CoolingSystem_calculations               | 0x00c1323e |
-| _CoolingSystem_enactCooling               | 0x00c13940 |
+| _CoolingSystem_enactCooling               | 0x00c1393a |
 | _CoolingSystem_new                        | 0x00c11130 |
 | _DAQ_Sensor_new                           | 0x00c12436 |
 | _DAQ_parseCanMessage                      | 0x00c1b388 |
 | _DI_calculateCommands                     | 0x00c12f8e |
 | _DI_calculateInverterControl              | 0x00c19620 |
-| _DI_commandTorque                         | 0x00c2447a |
-| _DI_getCommandedTorque                    | 0x00c24486 |
-| _DI_parseCanMessage                       | 0x00c1ce24 |
+| _DI_commandTorque                         | 0x00c2444e |
+| _DI_getCommandedTorque                    | 0x00c2445a |
+| _DI_parseCanMessage                       | 0x00c1ce20 |
 | _IO_ADC_ChannelInit                       | 0x00c1634e |
 | _IO_ADC_Get                               | 0x00c1772a |
 | _IO_ADC_INT_ChannelInit                   | 0x00c122f2 |
 | _IO_ADC_INT_Get                           | 0x00c1329a |
 | _IO_ADC_INT_KernelInit                    | 0x00c11e8a |
-| _IO_ADC_INT_MuxChannelDeInit              | 0x00c1fb3a |
+| _IO_ADC_INT_MuxChannelDeInit              | 0x00c1fb36 |
 | _IO_ADC_INT_MuxChannelInit                | 0x00c101f4 |
 | _IO_ADC_INT_MuxGet                        | 0x00c120d2 |
 | _IO_ADC_INT_MuxKernelInit                 | 0x00c11cd6 |
-| _IO_ADC_INT_StartConv                     | 0x00c1f4bc |
+| _IO_ADC_INT_StartConv                     | 0x00c1f4b8 |
 | _IO_CAN_ConfigFIFO                        | 0x00c18636 |
-| _IO_CAN_Init                              | 0x00c1c3b6 |
+| _IO_CAN_Init                              | 0x00c1c3b2 |
 | _IO_CAN_ReadFIFO                          | 0x00c19f4e |
 | _IO_CAN_WriteFIFO                         | 0x00c18c5a |
 | _IO_DI_DeInit                             | 0x00c10a00 |
-| _IO_DI_Get                                | 0x00c1f138 |
-| _IO_DI_Init                               | 0x00c1c68c |
+| _IO_DI_Get                                | 0x00c1f134 |
+| _IO_DI_Init                               | 0x00c1c688 |
 | _IO_DO_Init                               | 0x00c10616 |
 | _IO_DO_Set                                | 0x00c1a3a4 |
 | _IO_Driver_Init                           | 0x00c1271a |
 | _IO_Driver_TaskBegin                      | 0x00c10362 |
-| _IO_Driver_TaskEnd                        | 0x00c13c2c |
+| _IO_Driver_TaskEnd                        | 0x00c13c26 |
 | _IO_EEPROM_Init                           | 0x00c127a0 |
 | _IO_EEPROM_Task                           | 0x00c1abe4 |
-| _IO_GPIO_INT_PinGet                       | 0x00c13faa |
-| _IO_GPIO_INT_PinSet                       | 0x00c13f7c |
-| _IO_GPIO_INT_PortSet                      | 0x00c241c8 |
+| _IO_GPIO_INT_PinGet                       | 0x00c13fa4 |
+| _IO_GPIO_INT_PinSet                       | 0x00c13f76 |
+| _IO_GPIO_INT_PortSet                      | 0x00c2419c |
 | _IO_POWER_Init                            | 0x00c11232 |
-| _IO_POWER_Set                             | 0x00c1e90a |
+| _IO_POWER_Set                             | 0x00c1e906 |
 | _IO_PWD_CC2_CC22_INT                      | 0x00c12c18 |
 | _IO_PWD_CC2_CC23_INT                      | 0x00c12c8a |
-| _IO_PWD_CC2_CC26_INT                      | 0x00c13b1e |
-| _IO_PWD_CC2_CC27_INT                      | 0x00c13b54 |
+| _IO_PWD_CC2_CC26_INT                      | 0x00c13b18 |
+| _IO_PWD_CC2_CC27_INT                      | 0x00c13b4e |
 | _IO_PWD_CC2_CC28_INT                      | 0x00c12cfc |
 | _IO_PWD_CC2_CC29_INT                      | 0x00c12d6e |
-| _IO_PWD_CC2_CC30_INT                      | 0x00c13b8a |
-| _IO_PWD_CC2_CC31_INT                      | 0x00c13bc0 |
-| _IO_PWD_CC60_SR1_INT                      | 0x00c13c60 |
-| _IO_PWD_CC60_SR2_INT                      | 0x00c13c92 |
+| _IO_PWD_CC2_CC30_INT                      | 0x00c13b84 |
+| _IO_PWD_CC2_CC31_INT                      | 0x00c13bba |
+| _IO_PWD_CC60_SR1_INT                      | 0x00c13c5a |
+| _IO_PWD_CC60_SR2_INT                      | 0x00c13c8c |
 | _IO_PWD_CC60_SR3_INT                      | 0x00c11332 |
 | _IO_PWD_CC61_SR3_INT                      | 0x00c11432 |
-| _IO_PWD_CC62_SR0_INT                      | 0x00c13cc4 |
-| _IO_PWD_CC62_SR1_INT                      | 0x00c13cf6 |
-| _IO_PWD_CC62_SR2_INT                      | 0x00c13d28 |
+| _IO_PWD_CC62_SR0_INT                      | 0x00c13cbe |
+| _IO_PWD_CC62_SR1_INT                      | 0x00c13cf0 |
+| _IO_PWD_CC62_SR2_INT                      | 0x00c13d22 |
 | _IO_PWD_CC62_SR3_INT                      | 0x00c11532 |
-| _IO_PWD_CC63_SR0_INT                      | 0x00c13d5a |
-| _IO_PWD_CC63_SR1_INT                      | 0x00c13d8c |
-| _IO_PWD_CC63_SR2_INT                      | 0x00c13dbe |
+| _IO_PWD_CC63_SR0_INT                      | 0x00c13d54 |
+| _IO_PWD_CC63_SR1_INT                      | 0x00c13d86 |
+| _IO_PWD_CC63_SR2_INT                      | 0x00c13db8 |
 | _IO_PWD_CC63_SR3_INT                      | 0x00c11632 |
-| _IO_PWD_GPT_T2_INT                        | 0x00c13df0 |
-| _IO_PWD_GPT_T3_INT                        | 0x00c13e22 |
-| _IO_PWD_GPT_T4_INT                        | 0x00c13e54 |
-| _IO_PWD_GPT_T5_INT                        | 0x00c13e86 |
+| _IO_PWD_GPT_T2_INT                        | 0x00c13dea |
+| _IO_PWD_GPT_T3_INT                        | 0x00c13e1c |
+| _IO_PWD_GPT_T4_INT                        | 0x00c13e4e |
+| _IO_PWD_GPT_T5_INT                        | 0x00c13e80 |
 | _IO_PWD_GPT_T6_INT                        | 0x00c134fa |
-| _IO_PWD_INT_CCU6_GetPwmPulse              | 0x00c1c920 |
+| _IO_PWD_INT_CCU6_GetPwmPulse              | 0x00c1c91c |
 | _IO_PWD_INT_CCU6_PulseInit                | 0x00c10b48 |
 | _IO_PWD_INT_CCU6_StartPulseCap            | 0x00c12930 |
-| _IO_PWM_INT_CC2Init                       | 0x00c1de34 |
+| _IO_PWM_INT_CC2Init                       | 0x00c1de30 |
 | _IO_PWM_INT_CC2IntOff                     | 0x00c1223e |
 | _IO_PWM_INT_CC2SetDuty                    | 0x00c11db2 |
-| _IO_PWM_INT_CC6Init                       | 0x00c1c0de |
+| _IO_PWM_INT_CC6Init                       | 0x00c1c0da |
 | _IO_PWM_INT_CC6IntOff                     | 0x00c1101c |
 | _IO_PWM_INT_CC6SetDuty                    | 0x00c11b16 |
-| _IO_PWM_Init                              | 0x00c1e062 |
-| _IO_PWM_SetDuty                           | 0x00c1e6e6 |
-| _IO_RTC_GetTimeUS                         | 0x00c24168 |
-| _IO_RTC_Init                              | 0x00c13836 |
-| _IO_RTC_StartTime                         | 0x00c13a74 |
+| _IO_PWM_Init                              | 0x00c1e05e |
+| _IO_PWM_SetDuty                           | 0x00c1e6e2 |
+| _IO_RTC_GetTimeUS                         | 0x00c2413c |
+| _IO_RTC_Init                              | 0x00c137ee |
+| _IO_RTC_StartTime                         | 0x00c13a6e |
 | _IO_SHIFT_Init                            | 0x00c108b6 |
 | _IO_SHIFT_Task                            | 0x00c124d4 |
-| _IO_SHIFT_WriteMasked                     | 0x00c13900 |
-| _IO_SPI_Init                              | 0x00c1e290 |
+| _IO_SHIFT_WriteMasked                     | 0x00c138fa |
+| _IO_SPI_Init                              | 0x00c1e28c |
 | _IO_SPI_SetupDevice                       | 0x00c12568 |
 | _IO_SPI_Task                              | 0x00c19abe |
 | _IO_Timer_INT_CC2Setup                    | 0x00c12ba4 |
 | _IO_Timer_INT_CC6Setup                    | 0x00c12ff2 |
-| _IO_Tools_CalcShiftPos                    | 0x00c24000 |
-| _IO_Tools_ConfigurePin                    | 0x00c242d4 |
-| _IO_Tools_DistanceFloat                   | 0x00c2402c |
+| _IO_Tools_CalcShiftPos                    | 0x00c13fd0 |
+| _IO_Tools_ConfigurePin                    | 0x00c242a8 |
+| _IO_Tools_DistanceFloat                   | 0x00c24000 |
 | _IO_Tools_FETProtection                   | 0x00c11732 |
 | _IO_Tools_LockProtecReg                   | 0x00c13454 |
-| _IO_Tools_PWM_ResetPins                   | 0x00c1397e |
-| _IO_Tools_UnlockProtecReg                 | 0x00c13a38 |
+| _IO_Tools_PWM_ResetPins                   | 0x00c13978 |
+| _IO_Tools_UnlockProtecReg                 | 0x00c13a32 |
 | _IO_UART_Task                             | 0x00c1b70c |
-| _InstrumentCluster_new                    | 0x00c24058 |
+| _InstrumentCluster_new                    | 0x00c2402c |
 | _Light_set                                | 0x00c12de0 |
-| _RTDS_new                                 | 0x00c1387c |
+| _RTDS_new                                 | 0x00c13876 |
 | _RTDS_setVolume                           | 0x00c133a8 |
 | _RTDS_shutdownHelper                      | 0x00c12e52 |
-| _SafetyChecker_getFaults                  | 0x00c2436a |
-| _SafetyChecker_getNotices                 | 0x00c24492 |
-| _SafetyChecker_getWarnings                | 0x00c2449e |
+| _SafetyChecker_getFaults                  | 0x00c2433e |
+| _SafetyChecker_getNotices                 | 0x00c24466 |
+| _SafetyChecker_getWarnings                | 0x00c24472 |
 | _SafetyChecker_new                        | 0x00c11f52 |
-| _SafetyChecker_parseCanMessage            | 0x00c13bf6 |
-| _SafetyChecker_reduceTorque               | 0x00c1fe44 |
+| _SafetyChecker_parseCanMessage            | 0x00c13bf0 |
+| _SafetyChecker_reduceTorque               | 0x00c1fe40 |
 | _SafetyChecker_update                     | 0x00c16d56 |
 | _Sensor_BPS0                              | 0x00e06800 |
 | _Sensor_BPS1                              | 0x00e0681e |
@@ -3829,74 +3829,74 @@ Note:
 | _Sensor_TPS1                              | 0x00e0692c |
 | _Sensor_TVButton                          | 0x00e0694a |
 | _TorqueEncoder_calibrationCycle           | 0x00c1a7c6 |
-| _TorqueEncoder_getIndividualSensorPercent | 0x00c13ae6 |
+| _TorqueEncoder_getIndividualSensorPercent | 0x00c13ae0 |
 | _TorqueEncoder_new                        | 0x00c10c8c |
 | _TorqueEncoder_startCalibration           | 0x00c104bc |
-| _TorqueEncoder_update                     | 0x00c1d2f2 |
+| _TorqueEncoder_update                     | 0x00c1d2ee |
 | __Errno                                   | 0x00e06968 |
-| __Exit                                    | 0x00c246be |
+| __Exit                                    | 0x00c24692 |
 | __INDIRECT__                              | 0x0        |
-| ___ctype                                  | 0x00c267f6 |
-| ___hmalloc                                | 0x00c1e4bc |
+| ___ctype                                  | 0x00c267ca |
+| ___hmalloc                                | 0x00c1e4b8 |
 | ___hsbrk                                  | 0x00c13548 |
 | ___printf_float                           | 0x00c14000 |
 | ___printf_int2                            | 0x00c1afd8 |
 | __add_dpf                                 | 0x00c1008a |
 | __add_spf                                 | 0x00c10efe |
-| __bswitchs16shuge                         | 0x00c13f4c |
-| __c2dpf                                   | 0x00c13f1c |
-| __c2spf                                   | 0x00c24084 |
-| __cphnb                                   | 0x00c246ba |
-| __cphnw                                   | 0x00c246b6 |
-| __cptable_clr_bit                         | 0x00c1fffe |
-| __cptable_clr_huge                        | 0x00c247e8 |
-| __cptable_clr_near                        | 0x00c1fffe |
-| __cptable_clr_shuge                       | 0x00c1fffe |
-| __cptable_cpy_bit                         | 0x00c1fffe |
-| __cptable_cpy_huge                        | 0x00c247c2 |
-| __cptable_cpy_near                        | 0x00c1fffe |
-| __cptable_cpy_shuge                       | 0x00c1fffe |
+| __bswitchs16shuge                         | 0x00c13f46 |
+| __c2dpf                                   | 0x00c13f16 |
+| __c2spf                                   | 0x00c24058 |
+| __cphnb                                   | 0x00c2468e |
+| __cphnw                                   | 0x00c2468a |
+| __cptable_clr_bit                         | 0x00c247e0 |
+| __cptable_clr_huge                        | 0x00c247bc |
+| __cptable_clr_near                        | 0x00c247e0 |
+| __cptable_clr_shuge                       | 0x00c247e0 |
+| __cptable_cpy_bit                         | 0x00c247e0 |
+| __cptable_cpy_huge                        | 0x00c24796 |
+| __cptable_cpy_near                        | 0x00c247e0 |
+| __cptable_cpy_shuge                       | 0x00c247e0 |
 | __cstart                                  | 0x00c12188 |
-| __dcnvnan                                 | 0x00c13f16 |
-| __dcti                                    | 0x00c1fffe |
-| __ddvisr                                  | 0x00c13eea |
-| __ddvnsr                                  | 0x00c13efc |
-| __dinfsr                                  | 0x00c13eec |
-| __div_dpf                                 | 0x00c1d550 |
+| __dcnvnan                                 | 0x00c13f10 |
+| __dcti                                    | 0x00c247e0 |
+| __ddvisr                                  | 0x00c13ee4 |
+| __ddvnsr                                  | 0x00c13ef6 |
+| __dinfsr                                  | 0x00c13ee6 |
+| __div_dpf                                 | 0x00c1d54c |
 | __div_spf                                 | 0x00c11bf8 |
-| __divr_dpf                                | 0x00c1d538 |
-| __dnansr                                  | 0x00c13efc |
+| __divr_dpf                                | 0x00c1d534 |
+| __dnansr                                  | 0x00c13ef6 |
 | __doflt                                   | 0x00c14000 |
 | __doprint                                 | 0x00c1afd8 |
-| __dpf2c                                   | 0x00c246b2 |
+| __dpf2c                                   | 0x00c24686 |
 | __dpf2i                                   | 0x00c135e4 |
 | __dpf2s                                   | 0x00c135e4 |
 | __dpf2spf                                 | 0x00c134a8 |
 | __dpf2ul                                  | 0x00c12f26 |
-| __dunfsr                                  | 0x00c13f0c |
-| __fcnvnan                                 | 0x00c24142 |
-| __fdvisr                                  | 0x00c24126 |
-| __fdvnsr                                  | 0x00c24134 |
-| __finfsr                                  | 0x00c24128 |
-| __fnansr                                  | 0x00c24134 |
-| __funfsr                                  | 0x00c2413c |
-| __i2dpf                                   | 0x00c13f1e |
-| __i2spf                                   | 0x00c24086 |
-| __icall                                   | 0x00c246ac |
-| __init                                    | 0x00c246fc |
+| __dunfsr                                  | 0x00c13f06 |
+| __fcnvnan                                 | 0x00c24116 |
+| __fdvisr                                  | 0x00c240fa |
+| __fdvnsr                                  | 0x00c24108 |
+| __finfsr                                  | 0x00c240fc |
+| __fnansr                                  | 0x00c24108 |
+| __funfsr                                  | 0x00c24110 |
+| __i2dpf                                   | 0x00c13f18 |
+| __i2spf                                   | 0x00c2405a |
+| __icall                                   | 0x00c24680 |
+| __init                                    | 0x00c246d0 |
 | __io_putc                                 | 0x00c13056 |
-| __io_puts                                 | 0x00c13eb8 |
+| __io_puts                                 | 0x00c13eb2 |
 | __l2dpf                                   | 0x00c13632 |
 | __l2spf                                   | 0x00c133fe |
 | __larger_than_dpf                         | 0x00c1311a |
 | __larger_than_or_equal_dpf                | 0x00c1317c |
-| __larger_than_or_equal_spf                | 0x00c137a6 |
-| __larger_than_spf                         | 0x00c1375e |
+| __larger_than_or_equal_spf                | 0x00c1375e |
+| __larger_than_spf                         | 0x00c13716 |
 | __lc_base_dpp0                            | 0x00c10000 |
 | __lc_base_dpp1                            | 0x00c20000 |
 | __lc_base_dpp2                            | 0x00e00000 |
 | __lc_base_dpp3                            | 0x0000c000 |
-| __lc_copy_table                           | 0x00c2626a |
+| __lc_copy_table                           | 0x00c2623e |
 | __lc_gb_bl_near                           | 0x00c10000 |
 | __lc_gb_my_huge_dsram                     | 0x0000a000 |
 | __lc_gb_my_huge_ram                       | 0x00e04000 |
@@ -3907,7 +3907,7 @@ Note:
 | __lc_ge_my_near_dsram                     | 0x0000e000 |
 | __lc_ub_hheap                             | 0x00e04000 |
 | __lc_ub_system_stack                      | 0x0000fe00 |
-| __lc_ub_table                             | 0x00c2626a |
+| __lc_ub_table                             | 0x00c2623e |
 | __lc_ub_user_stack                        | 0x0000e000 |
 | __lc_ue_hheap                             | 0x00e06800 |
 | __lc_ue_system_stack                      | 0x0000f800 |
@@ -3915,86 +3915,86 @@ Note:
 | __lc_vector_table                         | 0x00c20000 |
 | __lc_vector_target                        | 0x0        |
 | __less_than_dpf                           | 0x00c130b8 |
-| __less_than_spf                           | 0x00c137ee |
-| __load64hb                                | 0x00c241e6 |
-| __load64na                                | 0x00c24606 |
-| __load64nb                                | 0x00c24610 |
-| __malloc                                  | 0x00c1e4bc |
-| __mul_dpf                                 | 0x00c1f9aa |
+| __less_than_spf                           | 0x00c137a6 |
+| __load64hb                                | 0x00c241ba |
+| __load64na                                | 0x00c245da |
+| __load64nb                                | 0x00c245e4 |
+| __malloc                                  | 0x00c1e4b8 |
+| __mul_dpf                                 | 0x00c1f9a6 |
 | __mul_spf                                 | 0x00c12012 |
-| __muldiv_dpf                              | 0x00c1f9fc |
+| __muldiv_dpf                              | 0x00c1f9f8 |
 | __not_equal_dpf                           | 0x00c13680 |
-| __pack_dpf                                | 0x00c13a18 |
-| __pack_r_dpf                              | 0x00c139fa |
-| __pack_r_spf                              | 0x00c240ae |
-| __pack_spf                                | 0x00c240c4 |
-| __pack_t_dpf                              | 0x00c13a0e |
-| __pack_t_spf                              | 0x00c240ba |
-| __pack_zero                               | 0x00c13a26 |
-| __pnearp32                                | 0x00c2424e |
-| __s2dpf                                   | 0x00c13f1e |
-| __s2spf                                   | 0x00c24086 |
-| __sdil                                    | 0x00c24100 |
-| __signbit                                 | 0x00c24188 |
-| __signbitl                                | 0x00c24188 |
-| __signedint                               | 0x00c13f2c |
+| __pack_dpf                                | 0x00c13a12 |
+| __pack_r_dpf                              | 0x00c139f4 |
+| __pack_r_spf                              | 0x00c24082 |
+| __pack_spf                                | 0x00c24098 |
+| __pack_t_dpf                              | 0x00c13a08 |
+| __pack_t_spf                              | 0x00c2408e |
+| __pack_zero                               | 0x00c13a20 |
+| __pnearp32                                | 0x00c24222 |
+| __s2dpf                                   | 0x00c13f18 |
+| __s2spf                                   | 0x00c2405a |
+| __sdil                                    | 0x00c240d4 |
+| __signbit                                 | 0x00c2415c |
+| __signbitl                                | 0x00c2415c |
+| __signedint                               | 0x00c13f26 |
 | __signedlong                              | 0x00c13652 |
-| __spf2c                                   | 0x00c2468a |
-| __spf2dpf                                 | 0x00c138be |
+| __spf2c                                   | 0x00c2465e |
+| __spf2dpf                                 | 0x00c138b8 |
 | __spf2i                                   | 0x00c136cc |
 | __spf2s                                   | 0x00c136cc |
-| __spf2uc                                  | 0x00c24692 |
-| __spf2ui                                  | 0x00c139bc |
+| __spf2uc                                  | 0x00c24666 |
+| __spf2ui                                  | 0x00c139b6 |
 | __spf2ul                                  | 0x00c131de |
-| __spf2us                                  | 0x00c139bc |
-| __store64na                               | 0x00c245fc |
+| __spf2us                                  | 0x00c139b6 |
+| __store64na                               | 0x00c245d0 |
 | __sub_dpf                                 | 0x00c10086 |
 | __sub_spf                                 | 0x00c10efa |
 | __subr_dpf                                | 0x00c10080 |
-| __uc2dpf                                  | 0x00c13f28 |
-| __uc2spf                                  | 0x00c24090 |
+| __uc2dpf                                  | 0x00c13f22 |
+| __uc2spf                                  | 0x00c24064 |
 | __udil                                    | 0x00c12a32 |
-| __ui2dpf                                  | 0x00c13f2a |
-| __ui2spf                                  | 0x00c24092 |
+| __ui2dpf                                  | 0x00c13f24 |
+| __ui2spf                                  | 0x00c24066 |
 | __ul2dpf                                  | 0x00c1364c |
 | __ul2spf                                  | 0x00c1340c |
-| __unpack_2dpf                             | 0x00c13716 |
-| __unpack_2spf                             | 0x00c241a8 |
-| __unpack_dpf                              | 0x00c13730 |
-| __unpack_spf                              | 0x00c241b6 |
-| __us2dpf                                  | 0x00c13f2a |
-| __us2spf                                  | 0x00c24092 |
+| __unpack_2dpf                             | 0x00c1ffb8 |
+| __unpack_2spf                             | 0x00c2417c |
+| __unpack_dpf                              | 0x00c1ffd2 |
+| __unpack_spf                              | 0x00c2418a |
+| __us2dpf                                  | 0x00c13f24 |
+| __us2spf                                  | 0x00c24066 |
 | _appl_db                                  | 0x00c10000 |
 | _canOutput_sendDebugMessage0              | 0x00c14c72 |
-| _canOutput_sendDebugMessage1              | 0x00c1dbfa |
+| _canOutput_sendDebugMessage1              | 0x00c1dbf6 |
 | _cstart_trap                              | 0x0        |
 | _errno                                    | 0x00e06968 |
-| _exit                                     | 0x00c246be |
+| _exit                                     | 0x00c24692 |
 | _fputc                                    | 0x0        |
 | _getPercent                               | 0x00c12ab2 |
-| _io_adc_5V_tb                             | 0x00c26444 |
-| _io_adc_cur_tb                            | 0x00c26474 |
-| _io_adc_tb                                | 0x00c2647c |
-| _io_adc_var_tb                            | 0x00c264c4 |
-| _io_comp_pwd_tb                           | 0x00c26514 |
-| _io_di_tb                                 | 0x00c2651c |
-| _io_do_tb                                 | 0x00c26540 |
-| _io_func_adc_do_tb                        | 0x00c26570 |
-| _io_func_pwd_tb                           | 0x00c265d0 |
-| _io_func_pwm_pwd_tb                       | 0x00c26618 |
-| _io_inc_pwd_tb                            | 0x00c26658 |
-| _io_int_prio                              | 0x00c26670 |
+| _io_adc_5V_tb                             | 0x00c26418 |
+| _io_adc_cur_tb                            | 0x00c26448 |
+| _io_adc_tb                                | 0x00c26450 |
+| _io_adc_var_tb                            | 0x00c26498 |
+| _io_comp_pwd_tb                           | 0x00c264e8 |
+| _io_di_tb                                 | 0x00c264f0 |
+| _io_do_tb                                 | 0x00c26514 |
+| _io_func_adc_do_tb                        | 0x00c26544 |
+| _io_func_pwd_tb                           | 0x00c265a4 |
+| _io_func_pwm_pwd_tb                       | 0x00c265ec |
+| _io_inc_pwd_tb                            | 0x00c2662c |
+| _io_int_prio                              | 0x00c26644 |
 | _io_pin_tb                                | 0x0000a514 |
-| _io_pwd_lb_tb                             | 0x00c266f0 |
-| _io_pwm_tb                                | 0x00c26710 |
+| _io_pwd_lb_tb                             | 0x00c266c4 |
+| _io_pwm_tb                                | 0x00c266e4 |
 | _io_uart_buffer_tb                        | 0x0000a8a6 |
-| _io_uart_tb                               | 0x00c26750 |
+| _io_uart_tb                               | 0x00c26724 |
 | _io_ugeb_v_state                          | 0x0000aed4 |
 | _main                                     | 0x00c17f86 |
-| _malloc                                   | 0x00c1e4bc |
-| _modf                                     | 0x00c1fcc2 |
-| _modfl                                    | 0x00c1fcc2 |
-| _multiplex_pins                           | 0x00c26766 |
+| _malloc                                   | 0x00c1e4b8 |
+| _modf                                     | 0x00c1fcbe |
+| _modfl                                    | 0x00c1fcbe |
+| _multiplex_pins                           | 0x00c2673a |
 | _pwd_ccu6_conf                            | 0x0000a30e |
 | _pwd_data                                 | 0x0000a072 |
 | _pwm_cur_data                             | 0x0000a054 |
@@ -4003,7 +4003,7 @@ Note:
 | _sensors_updateSensors                    | 0x00c10766 |
 | _sprintf                                  | 0x00c13596 |
 | _steering_degrees                         | 0x00c12ebc |
-| _strlen                                   | 0x00c242fc |
+| _strlen                                   | 0x00c242d0 |
 | _timestamp_Precharge                      | 0x00e06976 |
 | _timestamp_SoftBSPD                       | 0x00e0697a |
 | _vcu_ADCWasteLoop                         | 0x00c1192e |
@@ -4159,78 +4159,78 @@ Note:
 | 0x00c13680 | __not_equal_dpf                           |
 | 0x00c136cc | __spf2i                                   |
 | 0x00c136cc | __spf2s                                   |
-| 0x00c13716 | __unpack_2dpf                             |
-| 0x00c13730 | __unpack_dpf                              |
-| 0x00c1375e | __larger_than_spf                         |
-| 0x00c137a6 | __larger_than_or_equal_spf                |
-| 0x00c137ee | __less_than_spf                           |
-| 0x00c13836 | _IO_RTC_Init                              |
-| 0x00c1387c | _RTDS_new                                 |
-| 0x00c138be | __spf2dpf                                 |
-| 0x00c13900 | _IO_SHIFT_WriteMasked                     |
-| 0x00c13940 | _CoolingSystem_enactCooling               |
-| 0x00c1397e | _IO_Tools_PWM_ResetPins                   |
-| 0x00c139bc | __spf2ui                                  |
-| 0x00c139bc | __spf2us                                  |
-| 0x00c139fa | __pack_r_dpf                              |
-| 0x00c13a0e | __pack_t_dpf                              |
-| 0x00c13a18 | __pack_dpf                                |
-| 0x00c13a26 | __pack_zero                               |
-| 0x00c13a38 | _IO_Tools_UnlockProtecReg                 |
-| 0x00c13a74 | _IO_RTC_StartTime                         |
-| 0x00c13aae | _BMS_relayControl                         |
-| 0x00c13ae6 | _TorqueEncoder_getIndividualSensorPercent |
-| 0x00c13b1e | .vector.26                                |
-| 0x00c13b1e | _IO_PWD_CC2_CC26_INT                      |
-| 0x00c13b54 | .vector.27                                |
-| 0x00c13b54 | _IO_PWD_CC2_CC27_INT                      |
-| 0x00c13b8a | .vector.30                                |
-| 0x00c13b8a | _IO_PWD_CC2_CC30_INT                      |
-| 0x00c13bc0 | .vector.31                                |
-| 0x00c13bc0 | _IO_PWD_CC2_CC31_INT                      |
-| 0x00c13bf6 | _SafetyChecker_parseCanMessage            |
-| 0x00c13c2c | _IO_Driver_TaskEnd                        |
-| 0x00c13c60 | .vector.49                                |
-| 0x00c13c60 | _IO_PWD_CC60_SR1_INT                      |
-| 0x00c13c92 | .vector.50                                |
-| 0x00c13c92 | _IO_PWD_CC60_SR2_INT                      |
-| 0x00c13cc4 | .vector.56                                |
-| 0x00c13cc4 | _IO_PWD_CC62_SR0_INT                      |
-| 0x00c13cf6 | .vector.57                                |
-| 0x00c13cf6 | _IO_PWD_CC62_SR1_INT                      |
-| 0x00c13d28 | .vector.58                                |
-| 0x00c13d28 | _IO_PWD_CC62_SR2_INT                      |
-| 0x00c13d5a | .vector.60                                |
-| 0x00c13d5a | _IO_PWD_CC63_SR0_INT                      |
-| 0x00c13d8c | .vector.61                                |
-| 0x00c13d8c | _IO_PWD_CC63_SR1_INT                      |
-| 0x00c13dbe | .vector.62                                |
-| 0x00c13dbe | _IO_PWD_CC63_SR2_INT                      |
-| 0x00c13df0 | .vector.32                                |
-| 0x00c13df0 | _IO_PWD_GPT_T2_INT                        |
-| 0x00c13e22 | .vector.33                                |
-| 0x00c13e22 | _IO_PWD_GPT_T3_INT                        |
-| 0x00c13e54 | .vector.34                                |
-| 0x00c13e54 | _IO_PWD_GPT_T4_INT                        |
-| 0x00c13e86 | .vector.35                                |
-| 0x00c13e86 | _IO_PWD_GPT_T5_INT                        |
-| 0x00c13eb8 | __io_puts                                 |
-| 0x00c13eea | __ddvisr                                  |
-| 0x00c13eec | __dinfsr                                  |
-| 0x00c13efc | __ddvnsr                                  |
-| 0x00c13efc | __dnansr                                  |
-| 0x00c13f0c | __dunfsr                                  |
-| 0x00c13f16 | __dcnvnan                                 |
-| 0x00c13f1c | __c2dpf                                   |
-| 0x00c13f1e | __i2dpf                                   |
-| 0x00c13f1e | __s2dpf                                   |
-| 0x00c13f28 | __uc2dpf                                  |
-| 0x00c13f2a | __ui2dpf                                  |
-| 0x00c13f2a | __us2dpf                                  |
-| 0x00c13f2c | __signedint                               |
-| 0x00c13f4c | __bswitchs16shuge                         |
-| 0x00c13f7c | _IO_GPIO_INT_PinSet                       |
-| 0x00c13faa | _IO_GPIO_INT_PinGet                       |
+| 0x00c13716 | __larger_than_spf                         |
+| 0x00c1375e | __larger_than_or_equal_spf                |
+| 0x00c137a6 | __less_than_spf                           |
+| 0x00c137ee | _IO_RTC_Init                              |
+| 0x00c13834 | _BMS_getHighestCellTemp_d_degC            |
+| 0x00c13876 | _RTDS_new                                 |
+| 0x00c138b8 | __spf2dpf                                 |
+| 0x00c138fa | _IO_SHIFT_WriteMasked                     |
+| 0x00c1393a | _CoolingSystem_enactCooling               |
+| 0x00c13978 | _IO_Tools_PWM_ResetPins                   |
+| 0x00c139b6 | __spf2ui                                  |
+| 0x00c139b6 | __spf2us                                  |
+| 0x00c139f4 | __pack_r_dpf                              |
+| 0x00c13a08 | __pack_t_dpf                              |
+| 0x00c13a12 | __pack_dpf                                |
+| 0x00c13a20 | __pack_zero                               |
+| 0x00c13a32 | _IO_Tools_UnlockProtecReg                 |
+| 0x00c13a6e | _IO_RTC_StartTime                         |
+| 0x00c13aa8 | _BMS_relayControl                         |
+| 0x00c13ae0 | _TorqueEncoder_getIndividualSensorPercent |
+| 0x00c13b18 | .vector.26                                |
+| 0x00c13b18 | _IO_PWD_CC2_CC26_INT                      |
+| 0x00c13b4e | .vector.27                                |
+| 0x00c13b4e | _IO_PWD_CC2_CC27_INT                      |
+| 0x00c13b84 | .vector.30                                |
+| 0x00c13b84 | _IO_PWD_CC2_CC30_INT                      |
+| 0x00c13bba | .vector.31                                |
+| 0x00c13bba | _IO_PWD_CC2_CC31_INT                      |
+| 0x00c13bf0 | _SafetyChecker_parseCanMessage            |
+| 0x00c13c26 | _IO_Driver_TaskEnd                        |
+| 0x00c13c5a | .vector.49                                |
+| 0x00c13c5a | _IO_PWD_CC60_SR1_INT                      |
+| 0x00c13c8c | .vector.50                                |
+| 0x00c13c8c | _IO_PWD_CC60_SR2_INT                      |
+| 0x00c13cbe | .vector.56                                |
+| 0x00c13cbe | _IO_PWD_CC62_SR0_INT                      |
+| 0x00c13cf0 | .vector.57                                |
+| 0x00c13cf0 | _IO_PWD_CC62_SR1_INT                      |
+| 0x00c13d22 | .vector.58                                |
+| 0x00c13d22 | _IO_PWD_CC62_SR2_INT                      |
+| 0x00c13d54 | .vector.60                                |
+| 0x00c13d54 | _IO_PWD_CC63_SR0_INT                      |
+| 0x00c13d86 | .vector.61                                |
+| 0x00c13d86 | _IO_PWD_CC63_SR1_INT                      |
+| 0x00c13db8 | .vector.62                                |
+| 0x00c13db8 | _IO_PWD_CC63_SR2_INT                      |
+| 0x00c13dea | .vector.32                                |
+| 0x00c13dea | _IO_PWD_GPT_T2_INT                        |
+| 0x00c13e1c | .vector.33                                |
+| 0x00c13e1c | _IO_PWD_GPT_T3_INT                        |
+| 0x00c13e4e | .vector.34                                |
+| 0x00c13e4e | _IO_PWD_GPT_T4_INT                        |
+| 0x00c13e80 | .vector.35                                |
+| 0x00c13e80 | _IO_PWD_GPT_T5_INT                        |
+| 0x00c13eb2 | __io_puts                                 |
+| 0x00c13ee4 | __ddvisr                                  |
+| 0x00c13ee6 | __dinfsr                                  |
+| 0x00c13ef6 | __ddvnsr                                  |
+| 0x00c13ef6 | __dnansr                                  |
+| 0x00c13f06 | __dunfsr                                  |
+| 0x00c13f10 | __dcnvnan                                 |
+| 0x00c13f16 | __c2dpf                                   |
+| 0x00c13f18 | __i2dpf                                   |
+| 0x00c13f18 | __s2dpf                                   |
+| 0x00c13f22 | __uc2dpf                                  |
+| 0x00c13f24 | __ui2dpf                                  |
+| 0x00c13f24 | __us2dpf                                  |
+| 0x00c13f26 | __signedint                               |
+| 0x00c13f46 | __bswitchs16shuge                         |
+| 0x00c13f76 | _IO_GPIO_INT_PinSet                       |
+| 0x00c13fa4 | _IO_GPIO_INT_PinGet                       |
+| 0x00c13fd0 | _IO_Tools_CalcShiftPos                    |
 | 0x00c14000 | ___printf_float                           |
 | 0x00c14000 | __doflt                                   |
 | 0x00c14c72 | _canOutput_sendDebugMessage0              |
@@ -4254,47 +4254,41 @@ Note:
 | 0x00c1b70c | _IO_UART_Task                             |
 | 0x00c1ba7e | _CanManager_send                          |
 | 0x00c1bdb4 | _vcu_initializeADC                        |
-| 0x00c1c0de | _IO_PWM_INT_CC6Init                       |
-| 0x00c1c3b6 | _IO_CAN_Init                              |
-| 0x00c1c68c | _IO_DI_Init                               |
-| 0x00c1c920 | _IO_PWD_INT_CCU6_GetPwmPulse              |
-| 0x00c1ce24 | _DI_parseCanMessage                       |
-| 0x00c1d08c | _BrakePressureSensor_update               |
-| 0x00c1d2f2 | _TorqueEncoder_update                     |
-| 0x00c1d538 | __divr_dpf                                |
-| 0x00c1d550 | __div_dpf                                 |
-| 0x00c1d77e | .vector.40                                |
-| 0x00c1d77e | _ADC0_viSRN0                              |
-| 0x00c1d9bc | .vector.44                                |
-| 0x00c1d9bc | _ADC1_viSRN0                              |
-| 0x00c1dbfa | _canOutput_sendDebugMessage1              |
-| 0x00c1de34 | _IO_PWM_INT_CC2Init                       |
-| 0x00c1e062 | _IO_PWM_Init                              |
-| 0x00c1e290 | _IO_SPI_Init                              |
-| 0x00c1e4bc | ___hmalloc                                |
-| 0x00c1e4bc | __malloc                                  |
-| 0x00c1e4bc | _malloc                                   |
-| 0x00c1e6e6 | _IO_PWM_SetDuty                           |
-| 0x00c1e90a | _IO_POWER_Set                             |
-| 0x00c1ed30 | _CanManager_read                          |
-| 0x00c1f138 | _IO_DI_Get                                |
-| 0x00c1f4bc | _IO_ADC_INT_StartConv                     |
-| 0x00c1f664 | _AmkDriver_new                            |
-| 0x00c1f808 | _BrakePressureSensor_calibrationCycle     |
-| 0x00c1f9aa | __mul_dpf                                 |
-| 0x00c1f9fc | __muldiv_dpf                              |
-| 0x00c1fb3a | _IO_ADC_INT_MuxChannelDeInit              |
-| 0x00c1fcc2 | _modf                                     |
-| 0x00c1fcc2 | _modfl                                    |
-| 0x00c1fe44 | _SafetyChecker_reduceTorque               |
-| 0x00c1ffbc | _BMS_getHighestCellTemp_d_degC            |
-| 0x00c1fffe | __cptable_clr_bit                         |
-| 0x00c1fffe | __cptable_clr_near                        |
-| 0x00c1fffe | __cptable_clr_shuge                       |
-| 0x00c1fffe | __cptable_cpy_bit                         |
-| 0x00c1fffe | __cptable_cpy_near                        |
-| 0x00c1fffe | __cptable_cpy_shuge                       |
-| 0x00c1fffe | __dcti                                    |
+| 0x00c1c0da | _IO_PWM_INT_CC6Init                       |
+| 0x00c1c3b2 | _IO_CAN_Init                              |
+| 0x00c1c688 | _IO_DI_Init                               |
+| 0x00c1c91c | _IO_PWD_INT_CCU6_GetPwmPulse              |
+| 0x00c1ce20 | _DI_parseCanMessage                       |
+| 0x00c1d088 | _BrakePressureSensor_update               |
+| 0x00c1d2ee | _TorqueEncoder_update                     |
+| 0x00c1d534 | __divr_dpf                                |
+| 0x00c1d54c | __div_dpf                                 |
+| 0x00c1d77a | .vector.40                                |
+| 0x00c1d77a | _ADC0_viSRN0                              |
+| 0x00c1d9b8 | .vector.44                                |
+| 0x00c1d9b8 | _ADC1_viSRN0                              |
+| 0x00c1dbf6 | _canOutput_sendDebugMessage1              |
+| 0x00c1de30 | _IO_PWM_INT_CC2Init                       |
+| 0x00c1e05e | _IO_PWM_Init                              |
+| 0x00c1e28c | _IO_SPI_Init                              |
+| 0x00c1e4b8 | ___hmalloc                                |
+| 0x00c1e4b8 | __malloc                                  |
+| 0x00c1e4b8 | _malloc                                   |
+| 0x00c1e6e2 | _IO_PWM_SetDuty                           |
+| 0x00c1e906 | _IO_POWER_Set                             |
+| 0x00c1ed2c | _CanManager_read                          |
+| 0x00c1f134 | _IO_DI_Get                                |
+| 0x00c1f4b8 | _IO_ADC_INT_StartConv                     |
+| 0x00c1f660 | _AmkDriver_new                            |
+| 0x00c1f804 | _BrakePressureSensor_calibrationCycle     |
+| 0x00c1f9a6 | __mul_dpf                                 |
+| 0x00c1f9f8 | __muldiv_dpf                              |
+| 0x00c1fb36 | _IO_ADC_INT_MuxChannelDeInit              |
+| 0x00c1fcbe | _modf                                     |
+| 0x00c1fcbe | _modfl                                    |
+| 0x00c1fe40 | _SafetyChecker_reduceTorque               |
+| 0x00c1ffb8 | __unpack_2dpf                             |
+| 0x00c1ffd2 | __unpack_dpf                              |
 | 0x00c20000 | __lc_base_dpp1                            |
 | 0x00c20000 | __lc_vb_vector_table_0                    |
 | 0x00c20000 | __lc_vector_table                         |
@@ -4382,79 +4376,85 @@ Note:
 | 0x00c201b4 | .vector.109_loop                          |
 | 0x00c201b8 | .vector.110_loop                          |
 | 0x00c201bc | .vector.111_loop                          |
-| 0x00c24000 | _IO_Tools_CalcShiftPos                    |
-| 0x00c2402c | _IO_Tools_DistanceFloat                   |
-| 0x00c24058 | _InstrumentCluster_new                    |
-| 0x00c24084 | __c2spf                                   |
-| 0x00c24086 | __i2spf                                   |
-| 0x00c24086 | __s2spf                                   |
-| 0x00c24090 | __uc2spf                                  |
-| 0x00c24092 | __ui2spf                                  |
-| 0x00c24092 | __us2spf                                  |
-| 0x00c240ae | __pack_r_spf                              |
-| 0x00c240ba | __pack_t_spf                              |
-| 0x00c240c4 | __pack_spf                                |
-| 0x00c24100 | __sdil                                    |
-| 0x00c24126 | __fdvisr                                  |
-| 0x00c24128 | __finfsr                                  |
-| 0x00c24134 | __fdvnsr                                  |
-| 0x00c24134 | __fnansr                                  |
-| 0x00c2413c | __funfsr                                  |
-| 0x00c24142 | __fcnvnan                                 |
-| 0x00c24148 | _BrakePressureSensor_getPedalTravel       |
-| 0x00c24168 | _IO_RTC_GetTimeUS                         |
-| 0x00c24188 | __signbit                                 |
-| 0x00c24188 | __signbitl                                |
-| 0x00c241a8 | __unpack_2spf                             |
-| 0x00c241b6 | __unpack_spf                              |
-| 0x00c241c8 | _IO_GPIO_INT_PortSet                      |
-| 0x00c241e6 | __load64hb                                |
-| 0x00c2424e | __pnearp32                                |
-| 0x00c24266 | _BMS_getHighestCellVoltage_mV             |
-| 0x00c242d4 | _IO_Tools_ConfigurePin                    |
-| 0x00c242fc | _strlen                                   |
-| 0x00c2436a | _SafetyChecker_getFaults                  |
-| 0x00c24462 | _BMS_getLowestCellVoltage_mV              |
-| 0x00c2446e | _BMS_getRelayState                        |
-| 0x00c2447a | _DI_commandTorque                         |
-| 0x00c24486 | _DI_getCommandedTorque                    |
-| 0x00c24492 | _SafetyChecker_getNotices                 |
-| 0x00c2449e | _SafetyChecker_getWarnings                |
-| 0x00c24552 | _BMS_getFaultFlags0                       |
-| 0x00c2455c | _BMS_getFaultFlags1                       |
-| 0x00c245fc | __store64na                               |
-| 0x00c24606 | __load64na                                |
-| 0x00c24610 | __load64nb                                |
-| 0x00c2468a | __spf2c                                   |
-| 0x00c24692 | __spf2uc                                  |
-| 0x00c246ac | __icall                                   |
-| 0x00c246b2 | __dpf2c                                   |
-| 0x00c246b6 | __cphnw                                   |
-| 0x00c246ba | __cphnb                                   |
-| 0x00c246be | __Exit                                    |
-| 0x00c246be | _exit                                     |
-| 0x00c246fc | __init                                    |
-| 0x00c247c2 | __cptable_cpy_huge                        |
-| 0x00c247e8 | __cptable_clr_huge                        |
-| 0x00c2626a | __lc_copy_table                           |
-| 0x00c2626a | __lc_ub_table                             |
-| 0x00c26444 | _io_adc_5V_tb                             |
-| 0x00c26474 | _io_adc_cur_tb                            |
-| 0x00c2647c | _io_adc_tb                                |
-| 0x00c264c4 | _io_adc_var_tb                            |
-| 0x00c26514 | _io_comp_pwd_tb                           |
-| 0x00c2651c | _io_di_tb                                 |
-| 0x00c26540 | _io_do_tb                                 |
-| 0x00c26570 | _io_func_adc_do_tb                        |
-| 0x00c265d0 | _io_func_pwd_tb                           |
-| 0x00c26618 | _io_func_pwm_pwd_tb                       |
-| 0x00c26658 | _io_inc_pwd_tb                            |
-| 0x00c26670 | _io_int_prio                              |
-| 0x00c266f0 | _io_pwd_lb_tb                             |
-| 0x00c26710 | _io_pwm_tb                                |
-| 0x00c26750 | _io_uart_tb                               |
-| 0x00c26766 | _multiplex_pins                           |
-| 0x00c267f6 | ___ctype                                  |
+| 0x00c24000 | _IO_Tools_DistanceFloat                   |
+| 0x00c2402c | _InstrumentCluster_new                    |
+| 0x00c24058 | __c2spf                                   |
+| 0x00c2405a | __i2spf                                   |
+| 0x00c2405a | __s2spf                                   |
+| 0x00c24064 | __uc2spf                                  |
+| 0x00c24066 | __ui2spf                                  |
+| 0x00c24066 | __us2spf                                  |
+| 0x00c24082 | __pack_r_spf                              |
+| 0x00c2408e | __pack_t_spf                              |
+| 0x00c24098 | __pack_spf                                |
+| 0x00c240d4 | __sdil                                    |
+| 0x00c240fa | __fdvisr                                  |
+| 0x00c240fc | __finfsr                                  |
+| 0x00c24108 | __fdvnsr                                  |
+| 0x00c24108 | __fnansr                                  |
+| 0x00c24110 | __funfsr                                  |
+| 0x00c24116 | __fcnvnan                                 |
+| 0x00c2411c | _BrakePressureSensor_getPedalTravel       |
+| 0x00c2413c | _IO_RTC_GetTimeUS                         |
+| 0x00c2415c | __signbit                                 |
+| 0x00c2415c | __signbitl                                |
+| 0x00c2417c | __unpack_2spf                             |
+| 0x00c2418a | __unpack_spf                              |
+| 0x00c2419c | _IO_GPIO_INT_PortSet                      |
+| 0x00c241ba | __load64hb                                |
+| 0x00c24222 | __pnearp32                                |
+| 0x00c2423a | _BMS_getHighestCellVoltage_mV             |
+| 0x00c242a8 | _IO_Tools_ConfigurePin                    |
+| 0x00c242d0 | _strlen                                   |
+| 0x00c2433e | _SafetyChecker_getFaults                  |
+| 0x00c24436 | _BMS_getLowestCellVoltage_mV              |
+| 0x00c24442 | _BMS_getRelayState                        |
+| 0x00c2444e | _DI_commandTorque                         |
+| 0x00c2445a | _DI_getCommandedTorque                    |
+| 0x00c24466 | _SafetyChecker_getNotices                 |
+| 0x00c24472 | _SafetyChecker_getWarnings                |
+| 0x00c24526 | _BMS_getFaultFlags0                       |
+| 0x00c24530 | _BMS_getFaultFlags1                       |
+| 0x00c245d0 | __store64na                               |
+| 0x00c245da | __load64na                                |
+| 0x00c245e4 | __load64nb                                |
+| 0x00c2465e | __spf2c                                   |
+| 0x00c24666 | __spf2uc                                  |
+| 0x00c24680 | __icall                                   |
+| 0x00c24686 | __dpf2c                                   |
+| 0x00c2468a | __cphnw                                   |
+| 0x00c2468e | __cphnb                                   |
+| 0x00c24692 | __Exit                                    |
+| 0x00c24692 | _exit                                     |
+| 0x00c246d0 | __init                                    |
+| 0x00c24796 | __cptable_cpy_huge                        |
+| 0x00c247bc | __cptable_clr_huge                        |
+| 0x00c247e0 | __cptable_clr_bit                         |
+| 0x00c247e0 | __cptable_clr_near                        |
+| 0x00c247e0 | __cptable_clr_shuge                       |
+| 0x00c247e0 | __cptable_cpy_bit                         |
+| 0x00c247e0 | __cptable_cpy_near                        |
+| 0x00c247e0 | __cptable_cpy_shuge                       |
+| 0x00c247e0 | __dcti                                    |
+| 0x00c2623e | __lc_copy_table                           |
+| 0x00c2623e | __lc_ub_table                             |
+| 0x00c26418 | _io_adc_5V_tb                             |
+| 0x00c26448 | _io_adc_cur_tb                            |
+| 0x00c26450 | _io_adc_tb                                |
+| 0x00c26498 | _io_adc_var_tb                            |
+| 0x00c264e8 | _io_comp_pwd_tb                           |
+| 0x00c264f0 | _io_di_tb                                 |
+| 0x00c26514 | _io_do_tb                                 |
+| 0x00c26544 | _io_func_adc_do_tb                        |
+| 0x00c265a4 | _io_func_pwd_tb                           |
+| 0x00c265ec | _io_func_pwm_pwd_tb                       |
+| 0x00c2662c | _io_inc_pwd_tb                            |
+| 0x00c26644 | _io_int_prio                              |
+| 0x00c266c4 | _io_pwd_lb_tb                             |
+| 0x00c266e4 | _io_pwm_tb                                |
+| 0x00c26724 | _io_uart_tb                               |
+| 0x00c2673a | _multiplex_pins                           |
+| 0x00c267ca | ___ctype                                  |
 | 0x00e00000 | __lc_base_dpp2                            |
 | 0x00e04000 | __lc_gb_my_huge_ram                       |
 | 0x00e04000 | __lc_ub_hheap                             |
@@ -5156,183 +5156,183 @@ Note:
 | Section                                        | File                    | Library          | Symbol                                          | Reason       |
 |==============================================================================================================================================================|
 | shuge__1_swt (195)                             | brakePressureSensor.obj |                  |                                                 | unreferenced |
-| code_IO_PWM_GetCur (1340)                      | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_GetCur                                  | unreferenced |
+| code_IO_PWM_Curr_DeConfig (1332)               | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_Curr_DeConfig                           | unreferenced |
 | code_IO_PWM_DualDeInit (1337)                  | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_DualDeInit                              | unreferenced |
+| code_IO_PWD_IncSet (1258)                      | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_IncSet                                  | unreferenced |
+| code_IO_PWD_FreqInit (1263)                    | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_FreqInit                                | unreferenced |
+| code_IO_PWD_CountGet (1272)                    | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_CountGet                                | unreferenced |
+| code_IO_PWD_CountSet (1273)                    | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_CountSet                                | unreferenced |
+| code_IO_PWD_IncDeInit (1259)                   | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_IncDeInit                               | unreferenced |
+| code_IO_PWD_ComplexGet (1261)                  | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_ComplexGet                              | unreferenced |
+| code_IO_PWD_ComplexInit (1260)                 | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_ComplexInit                             | unreferenced |
+| code_IO_PWM_DualInit (1335)                    | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_DualInit                                | unreferenced |
+| code_IO_PWD_CountInit (1271)                   | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_CountInit                               | unreferenced |
+| code_IO_PWM_DeInit (1336)                      | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_DeInit                                  | unreferenced |
+| code_IO_PWM_GetCur (1340)                      | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_GetCur                                  | unreferenced |
 | code_IO_PWM_DualSetDuty (1339)                 | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_DualSetDuty                             | unreferenced |
 | code_IO_PWM_SetFreq (1341)                     | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_SetFreq                                 | unreferenced |
-| code_IO_PWM_DualInit (1335)                    | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_DualInit                                | unreferenced |
-| code_IO_PWM_DeInit (1336)                      | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_DeInit                                  | unreferenced |
+| code_IO_PWD_CountDeInit (1274)                 | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_CountDeInit                             | unreferenced |
+| code_IO_PWD_FreqGet (1265)                     | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_FreqGet                                 | unreferenced |
+| code_IO_PWM_DeConfig (1331)                    | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_DeConfig                                | unreferenced |
+| code_IO_PWD_PulseGet (1267)                    | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_PulseGet                                | unreferenced |
+| code_IO_PWD_FreqDeInit (1269)                  | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_FreqDeInit                              | unreferenced |
+| code_IO_PWD_PulseDeInit (1270)                 | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_PulseDeInit                             | unreferenced |
+| code_IO_RTC_PeriodicInit (1379)                | IO_RTC.obj              | xc2000_ttc60.lib | _IO_RTC_PeriodicInit                            | unreferenced |
+| code_IO_PWD_ComplexDeInit (1262)               | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_ComplexDeInit                           | unreferenced |
+| code_IO_RTC_PeriodicDeInit (1380)              | IO_RTC.obj              | xc2000_ttc60.lib | _IO_RTC_PeriodicDeInit                          | unreferenced |
+| code_IO_PWD_PulseInit (1264)                   | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_PulseInit                               | unreferenced |
 | code_IO_Tools_DistanceUbyte2 (1409)            | IO_Tools.obj            | xc2000_ttc60.lib | _IO_Tools_DistanceUbyte2                        | unreferenced |
+| code_IO_Tools_DistanceUbyte1 (1410)            | IO_Tools.obj            | xc2000_ttc60.lib | _IO_Tools_DistanceUbyte1                        | unreferenced |
+| code_IO_Tools_DistanceUbyte4 (1408)            | IO_Tools.obj            | xc2000_ttc60.lib | _IO_Tools_DistanceUbyte4                        | unreferenced |
+| code_IO_UART_Init (1475)                       | IO_UART.obj             | xc2000_ttc60.lib | _IO_UART_Init                                   | unreferenced |
+| code_IO_UART_GetRxStatus (1485)                | IO_UART.obj             | xc2000_ttc60.lib | _IO_UART_GetRxStatus                            | unreferenced |
+| code_IO_UART_Read (1483)                       | IO_UART.obj             | xc2000_ttc60.lib | _IO_UART_Read                                   | unreferenced |
 | code_IO_Tools_GetIdentificationRegisters       | IO_Tools.obj            | xc2000_ttc60.lib | _IO_Tools_GetIdentificationRegisters            | unreferenced |
 | (1416)                                         |                         |                  |                                                 |              |
-| code_IO_UART_Init (1475)                       | IO_UART.obj             | xc2000_ttc60.lib | _IO_UART_Init                                   | unreferenced |
-| code_IO_RTC_PeriodicDeInit (1380)              | IO_RTC.obj              | xc2000_ttc60.lib | _IO_RTC_PeriodicDeInit                          | unreferenced |
-| code_IO_Tools_DistanceUbyte1 (1410)            | IO_Tools.obj            | xc2000_ttc60.lib | _IO_Tools_DistanceUbyte1                        | unreferenced |
-| code_IO_Tools_CalcCRC16 (1415)                 | IO_Tools.obj            | xc2000_ttc60.lib | _IO_Tools_CalcCRC16                             | unreferenced |
-| code_IO_RTC_PeriodicInit (1379)                | IO_RTC.obj              | xc2000_ttc60.lib | _IO_RTC_PeriodicInit                            | unreferenced |
-| code_IO_UART_DeInit (1478)                     | IO_UART.obj             | xc2000_ttc60.lib | _IO_UART_DeInit                                 | unreferenced |
-| code_IO_Tools_DistanceUbyte4 (1408)            | IO_Tools.obj            | xc2000_ttc60.lib | _IO_Tools_DistanceUbyte4                        | unreferenced |
-| code_IO_UART_WriteQueue (1472)                 | IO_UART.obj             | xc2000_ttc60.lib | _IO_UART_WriteQueue                             | unreferenced |
-| code_IO_UART_Read (1483)                       | IO_UART.obj             | xc2000_ttc60.lib | _IO_UART_Read                                   | unreferenced |
-| code_IO_UART_GetTxStatus (1486)                | IO_UART.obj             | xc2000_ttc60.lib | _IO_UART_GetTxStatus                            | unreferenced |
 | code_IO_UART_Write (1484)                      | IO_UART.obj             | xc2000_ttc60.lib | _IO_UART_Write                                  | unreferenced |
-| code_IO_UART_GetRxStatus (1485)                | IO_UART.obj             | xc2000_ttc60.lib | _IO_UART_GetRxStatus                            | unreferenced |
-| code_IO_PWD_INT_CCU6_GetFreq (1536)            | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CCU6_GetFreq                        | unreferenced |
-| code_IO_PWD_INT_CCU6_FreqInit (1535)           | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CCU6_FreqInit                       | unreferenced |
-| code_IO_PWD_INT_CCU2_GetPulseFreq (1528)       | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CCU2_GetPulseFreq                   | unreferenced |
-| code_IO_PWD_INT_CCU2_DeInit (1527)             | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CCU2_DeInit                         | unreferenced |
-| code_IO_PWD_INT_CountInit (1532)               | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CountInit                           | unreferenced |
-| code_IO_PWD_INT_GetCount (1533)                | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_GetCount                            | unreferenced |
-| code_IO_PWD_INT_SetCount (1534)                | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_SetCount                            | unreferenced |
-| code_IO_PWD_INT_IncInit (1529)                 | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_IncInit                             | unreferenced |
+| code_IO_Tools_CalcCRC16 (1415)                 | IO_Tools.obj            | xc2000_ttc60.lib | _IO_Tools_CalcCRC16                             | unreferenced |
 | code_IO_PWD_INT_CCU2_Init (1526)               | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CCU2_Init                           | unreferenced |
+| code_IO_PWD_INT_CCU2_DeInit (1527)             | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CCU2_DeInit                         | unreferenced |
+| code_IO_PWD_INT_CCU2_GetPulseFreq (1528)       | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CCU2_GetPulseFreq                   | unreferenced |
+| code_IO_PWD_INT_IncInit (1529)                 | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_IncInit                             | unreferenced |
+| code_IO_UART_WriteQueue (1472)                 | IO_UART.obj             | xc2000_ttc60.lib | _IO_UART_WriteQueue                             | unreferenced |
+| code_IO_UART_DeInit (1478)                     | IO_UART.obj             | xc2000_ttc60.lib | _IO_UART_DeInit                                 | unreferenced |
+| code_IO_UART_GetTxStatus (1486)                | IO_UART.obj             | xc2000_ttc60.lib | _IO_UART_GetTxStatus                            | unreferenced |
+| code_IO_PWD_INT_AccumulateEdges (1524)         | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_AccumulateEdges                     | unreferenced |
 | code_IO_PWD_INT_GetInc (1530)                  | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_GetInc                              | unreferenced |
 | code_IO_PWD_INT_SetInc (1531)                  | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_SetInc                              | unreferenced |
-| code_IO_PWD_INT_AccumulateEdges (1524)         | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_AccumulateEdges                     | unreferenced |
+| code_IO_PWD_INT_GetCount (1533)                | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_GetCount                            | unreferenced |
+| code_IO_PWD_INT_SetCount (1534)                | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_SetCount                            | unreferenced |
+| code_IO_PWD_INT_CCU6_FreqInit (1535)           | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CCU6_FreqInit                       | unreferenced |
+| code_IO_PWD_INT_CCU6_GetFreq (1536)            | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CCU6_GetFreq                        | unreferenced |
+| code_IO_PWD_INT_CountInit (1532)               | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CountInit                           | unreferenced |
+| code_IO_PWD_INT_CCU6_GetPulse (1538)           | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CCU6_GetPulse                       | unreferenced |
 | code_IO_PWD_INT_CCU6_FreqPulseDeInit (1541)    | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CCU6_FreqPulseDeInit                | unreferenced |
 | code_IO_PWD_INT_CC6IntOn (1542)                | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CC6IntOn                            | unreferenced |
-| code_IO_PWD_INT_CCU6_GetPulse (1538)           | IO_INT_PWD.obj          | xc2000_ttc60.lib | _IO_PWD_INT_CCU6_GetPulse                       | unreferenced |
-| code_IO_PWD_PulseDeInit (1270)                 | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_PulseDeInit                             | unreferenced |
-| code_IO_PWD_IncDeInit (1259)                   | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_IncDeInit                               | unreferenced |
-| code_IO_PWD_PulseGet (1267)                    | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_PulseGet                                | unreferenced |
-| code_IO_PWD_CountInit (1271)                   | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_CountInit                               | unreferenced |
-| code_IO_PWD_FreqInit (1263)                    | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_FreqInit                                | unreferenced |
-| code_IO_PWD_CountSet (1273)                    | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_CountSet                                | unreferenced |
-| code_IO_PWD_CountDeInit (1274)                 | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_CountDeInit                             | unreferenced |
-| code_IO_PWD_ComplexDeInit (1262)               | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_ComplexDeInit                           | unreferenced |
-| code_IO_PWD_PulseInit (1264)                   | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_PulseInit                               | unreferenced |
-| code_IO_PWD_FreqGet (1265)                     | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_FreqGet                                 | unreferenced |
-| code_IO_PWD_IncSet (1258)                      | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_IncSet                                  | unreferenced |
-| code_IO_PWD_ComplexGet (1261)                  | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_ComplexGet                              | unreferenced |
-| code_IO_PWD_CountGet (1272)                    | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_CountGet                                | unreferenced |
-| code_IO_PWM_DeConfig (1331)                    | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_DeConfig                                | unreferenced |
-| code_IO_PWM_Curr_DeConfig (1332)               | IO_PWM.obj              | xc2000_ttc60.lib | _IO_PWM_Curr_DeConfig                           | unreferenced |
-| code_IO_PWD_FreqDeInit (1269)                  | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_FreqDeInit                              | unreferenced |
-| code_IO_PWD_ComplexInit (1260)                 | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_ComplexInit                             | unreferenced |
-| code_libc (2254)                               | expf.obj                | c166ch.lib       | _expf                                           | unreferenced |
-| code_libc (2225)                               | powf.obj                | c166ch.lib       | __restore_2                                     | unreferenced |
-| code_libc (2226)                               | powf.obj                | c166ch.lib       | __save_1                                        | unreferenced |
-| code_libc (2256)                               | expf.obj                | c166ch.lib       | __save_1                                        | unreferenced |
 | code_libc (2269)                               | logf.obj                | c166ch.lib       | __save_1                                        | unreferenced |
+| code_libc (2255)                               | expf.obj                | c166ch.lib       | __restore_2                                     | unreferenced |
+| code_libc (2256)                               | expf.obj                | c166ch.lib       | __save_1                                        | unreferenced |
 | code_libc (2267)                               | logf.obj                | c166ch.lib       | _logf                                           | unreferenced |
 | code_libc (2268)                               | logf.obj                | c166ch.lib       | __restore_2                                     | unreferenced |
-| code_libc (2255)                               | expf.obj                | c166ch.lib       | __restore_2                                     | unreferenced |
-| code_libc (2280)                               | floorf.obj              | c166ch.lib       | _floorf                                         | unreferenced |
 | code_libc (2281)                               | floorf.obj              | c166ch.lib       | _$cocofun_1                                     | unreferenced |
-| code_librt (2357)                              | cphnb.obj               | c166rth.lib      | ___memcphnb                                     | unreferenced |
+| code_libc (2280)                               | floorf.obj              | c166ch.lib       | _floorf                                         | unreferenced |
 | code_librt (2338)                              | cphnw.obj               | c166rth.lib      | ___memcphnw                                     | unreferenced |
-| code_SafetyChecker_allSafe (613)               | safety.obj              |                  | _SafetyChecker_allSafe                          | unreferenced |
-| code_rpm_to_mph (687)                          | sensorCalculations.obj  |                  | _rpm_to_mph                                     | unreferenced |
-| code_GetBrakePosition (685)                    | sensorCalculations.obj  |                  | _GetBrakePosition                               | unreferenced |
-| code_CalibrateBPS (684)                        | sensorCalculations.obj  |                  | _CalibrateBPS                                   | unreferenced |
+| code_librt (2357)                              | cphnb.obj               | c166rth.lib      | ___memcphnb                                     | unreferenced |
+| code_libc (2254)                               | expf.obj                | c166ch.lib       | _expf                                           | unreferenced |
+| code_libc (2226)                               | powf.obj                | c166ch.lib       | __save_1                                        | unreferenced |
+| code_libc (2225)                               | powf.obj                | c166ch.lib       | __restore_2                                     | unreferenced |
 | code_freq_to_rpm (686)                         | sensorCalculations.obj  |                  | _freq_to_rpm                                    | unreferenced |
+| code_rpm_to_mph (687)                          | sensorCalculations.obj  |                  | _rpm_to_mph                                     | unreferenced |
+| code_TorqueEncoder_loadCalibrationFromEEPROM   | torqueEncoder.obj       |                  | _TorqueEncoder_loadCalibrationFromEEPROM        | unreferenced |
+| (754)                                          |                         |                  |                                                 |              |
 | code_TorqueEncoder_resetCalibration (752)      | torqueEncoder.obj       |                  | _TorqueEncoder_resetCalibration                 | unreferenced |
 | code_TorqueEncoder_saveCalibrationToEEPROM     | torqueEncoder.obj       |                  | _TorqueEncoder_saveCalibrationToEEPROM          | unreferenced |
 | (753)                                          |                         |                  |                                                 |              |
-| code_TorqueEncoder_loadCalibrationFromEEPROM   | torqueEncoder.obj       |                  | _TorqueEncoder_loadCalibrationFromEEPROM        | unreferenced |
-| (754)                                          |                         |                  |                                                 |              |
-| code_IO_CAN_DeInitHandle (864)                 | IO_CAN.obj              | xc2000_ttc60.lib | _IO_CAN_DeInitHandle                            | unreferenced |
-| code_IO_ADC_ChannelDeInit (834)                | IO_ADC.obj              | xc2000_ttc60.lib | _IO_ADC_ChannelDeInit                           | unreferenced |
-| code_TorqueEncoder_getOutputPercent (759)      | torqueEncoder.obj       |                  | _TorqueEncoder_getOutputPercent                 | unreferenced |
-| code_IO_CAN_DeInit (865)                       | IO_CAN.obj              | xc2000_ttc60.lib | _IO_CAN_DeInit                                  | unreferenced |
 | code_IO_ADC_BoardTempFloat (843)               | IO_ADC.obj              | xc2000_ttc60.lib | _IO_ADC_BoardTempFloat                          | unreferenced |
-| code_IO_ADC_BoardTempSbyte (844)               | IO_ADC.obj              | xc2000_ttc60.lib | _IO_ADC_BoardTempSbyte                          | unreferenced |
-| code_IO_CAN_ReadMsg (867)                      | IO_CAN.obj              | xc2000_ttc60.lib | _IO_CAN_ReadMsg                                 | unreferenced |
-| code_IO_CAN_Status (872)                       | IO_CAN.obj              | xc2000_ttc60.lib | _IO_CAN_Status                                  | unreferenced |
+| code_TorqueEncoder_getOutputPercent (759)      | torqueEncoder.obj       |                  | _TorqueEncoder_getOutputPercent                 | unreferenced |
 | code_IO_CAN_ConfigMsg (866)                    | IO_CAN.obj              | xc2000_ttc60.lib | _IO_CAN_ConfigMsg                               | unreferenced |
+| code_IO_CAN_ReadMsg (867)                      | IO_CAN.obj              | xc2000_ttc60.lib | _IO_CAN_ReadMsg                                 | unreferenced |
 | code_IO_CAN_WriteMsg (868)                     | IO_CAN.obj              | xc2000_ttc60.lib | _IO_CAN_WriteMsg                                | unreferenced |
+| code_IO_ADC_BoardTempSbyte (844)               | IO_ADC.obj              | xc2000_ttc60.lib | _IO_ADC_BoardTempSbyte                          | unreferenced |
+| code_IO_CAN_DeInitHandle (864)                 | IO_CAN.obj              | xc2000_ttc60.lib | _IO_CAN_DeInitHandle                            | unreferenced |
+| code_IO_CAN_DeInit (865)                       | IO_CAN.obj              | xc2000_ttc60.lib | _IO_CAN_DeInit                                  | unreferenced |
+| code_IO_ADC_ChannelDeInit (834)                | IO_ADC.obj              | xc2000_ttc60.lib | _IO_ADC_ChannelDeInit                           | unreferenced |
 | code_IO_CAN_MsgStatus (873)                    | IO_CAN.obj              | xc2000_ttc60.lib | _IO_CAN_MsgStatus                               | unreferenced |
 | code_IO_CAN_FIFOStatus (874)                   | IO_CAN.obj              | xc2000_ttc60.lib | _IO_CAN_FIFOStatus                              | unreferenced |
-| code_IO_DO_DeInit (922)                        | IO_DIO.obj              | xc2000_ttc60.lib | _IO_DO_DeInit                                   | unreferenced |
 | code_IO_Driver_GetVersionOfDriver (947)        | IO_Driver.obj           | xc2000_ttc60.lib | _IO_Driver_GetVersionOfDriver                   | unreferenced |
-| code_IO_EEPROM_Read (971)                      | IO_EEPROM.obj           | xc2000_ttc60.lib | _IO_EEPROM_Read                                 | unreferenced |
-| code_IO_EEPROM_Write (972)                     | IO_EEPROM.obj           | xc2000_ttc60.lib | _IO_EEPROM_Write                                | unreferenced |
-| code_IO_EEPROM_GetStatus (973)                 | IO_EEPROM.obj           | xc2000_ttc60.lib | _IO_EEPROM_GetStatus                            | unreferenced |
+| code_IO_DO_DeInit (922)                        | IO_DIO.obj              | xc2000_ttc60.lib | _IO_DO_DeInit                                   | unreferenced |
+| code_IO_CAN_Status (872)                       | IO_CAN.obj              | xc2000_ttc60.lib | _IO_CAN_Status                                  | unreferenced |
 | code_IO_EEPROM_DeInit (970)                    | IO_EEPROM.obj           | xc2000_ttc60.lib | _IO_EEPROM_DeInit                               | unreferenced |
+| code_IO_EEPROM_Read (971)                      | IO_EEPROM.obj           | xc2000_ttc60.lib | _IO_EEPROM_Read                                 | unreferenced |
+| code_IO_EEPROM_GetStatus (973)                 | IO_EEPROM.obj           | xc2000_ttc60.lib | _IO_EEPROM_GetStatus                            | unreferenced |
+| code_IO_EEPROM_Write (972)                     | IO_EEPROM.obj           | xc2000_ttc60.lib | _IO_EEPROM_Write                                | unreferenced |
 | code_IO_ADC_INT_ChannelDeInit (1008)           | IO_INT_ADC.obj          | xc2000_ttc60.lib | _IO_ADC_INT_ChannelDeInit                       | unreferenced |
 | code_IO_PWM_INT_CC6SetFreq (1071)              | IO_INT_PWM.obj          | xc2000_ttc60.lib | _IO_PWM_INT_CC6SetFreq                          | unreferenced |
-| code_IO_PWM_INT_CC2Deinit (1073)               | IO_INT_PWM.obj          | xc2000_ttc60.lib | _IO_PWM_INT_CC2Deinit                           | unreferenced |
 | code_IO_PWM_INT_CC6Deinit (1074)               | IO_INT_PWM.obj          | xc2000_ttc60.lib | _IO_PWM_INT_CC6Deinit                           | unreferenced |
-| code_IO_SHIFT_Write (1148)                     | IO_INT_SHIFT.obj        | xc2000_ttc60.lib | _IO_SHIFT_Write                                 | unreferenced |
-| code_IO_SHIFT_Read (1150)                      | IO_INT_SHIFT.obj        | xc2000_ttc60.lib | _IO_SHIFT_Read                                  | unreferenced |
-| code_IO_SPI_DeInit (1174)                      | IO_INT_SPI.obj          | xc2000_ttc60.lib | _IO_SPI_DeInit                                  | unreferenced |
-| code_IO_SHIFT_DeInit (1147)                    | IO_INT_SHIFT.obj        | xc2000_ttc60.lib | _IO_SHIFT_DeInit                                | unreferenced |
+| code_IO_PWM_INT_CC2Deinit (1073)               | IO_INT_PWM.obj          | xc2000_ttc60.lib | _IO_PWM_INT_CC2Deinit                           | unreferenced |
 | code_IO_PWM_INT_CalcPwmData (1089)             | IO_INT_PWM.obj          | xc2000_ttc60.lib | _IO_PWM_INT_CalcPwmData                         | unreferenced |
+| code_IO_SHIFT_DeInit (1147)                    | IO_INT_SHIFT.obj        | xc2000_ttc60.lib | _IO_SHIFT_DeInit                                | unreferenced |
+| code_IO_SHIFT_Read (1150)                      | IO_INT_SHIFT.obj        | xc2000_ttc60.lib | _IO_SHIFT_Read                                  | unreferenced |
+| code_IO_SHIFT_Write (1148)                     | IO_INT_SHIFT.obj        | xc2000_ttc60.lib | _IO_SHIFT_Write                                 | unreferenced |
 | code_IO_SPI_RemoveDevice (1176)                | IO_INT_SPI.obj          | xc2000_ttc60.lib | _IO_SPI_RemoveDevice                            | unreferenced |
+| code_IO_SPI_DeInit (1174)                      | IO_INT_SPI.obj          | xc2000_ttc60.lib | _IO_SPI_DeInit                                  | unreferenced |
 | code_IO_Timer_INT_GPTTimerEnable (1202)        | IO_INT_Timer.obj        | xc2000_ttc60.lib | _IO_Timer_INT_GPTTimerEnable                    | unreferenced |
-| code_IO_Timer_INT_GPTTimerStop (1205)          | IO_INT_Timer.obj        | xc2000_ttc60.lib | _IO_Timer_INT_GPTTimerStop                      | unreferenced |
 | code_IO_Timer_INT_GPTTimerInit (1203)          | IO_INT_Timer.obj        | xc2000_ttc60.lib | _IO_Timer_INT_GPTTimerInit                      | unreferenced |
 | code_IO_Timer_INT_GPTTimerStart (1204)         | IO_INT_Timer.obj        | xc2000_ttc60.lib | _IO_Timer_INT_GPTTimerStart                     | unreferenced |
-| code_IO_POWER_DeInit (1228)                    | IO_POWER.obj            | xc2000_ttc60.lib | _IO_POWER_DeInit                                | unreferenced |
+| code_IO_Timer_INT_GPTTimerStop (1205)          | IO_INT_Timer.obj        | xc2000_ttc60.lib | _IO_Timer_INT_GPTTimerStop                      | unreferenced |
 | code_IO_PWD_IncGet (1257)                      | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_IncGet                                  | unreferenced |
-| code_IO_PWD_IncInit (1255)                     | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_IncInit                                 | unreferenced |
+| code_IO_POWER_DeInit (1228)                    | IO_POWER.obj            | xc2000_ttc60.lib | _IO_POWER_DeInit                                | unreferenced |
 | code_IO_PWD_IntPulseDeInit (1254)              | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_IntPulseDeInit                          | unreferenced |
 | code_IO_POWER_GetStatus (1237)                 | IO_POWER.obj            | xc2000_ttc60.lib | _IO_POWER_GetStatus                             | unreferenced |
+| code_IO_PWD_IncInit (1255)                     | IO_PWD.obj              | xc2000_ttc60.lib | _IO_PWD_IncInit                                 | unreferenced |
+| code_SafetyChecker_allSafe (613)               | safety.obj              |                  | _SafetyChecker_allSafe                          | unreferenced |
+| code_CalibrateBPS (684)                        | sensorCalculations.obj  |                  | _CalibrateBPS                                   | unreferenced |
+| code_GetBrakePosition (685)                    | sensorCalculations.obj  |                  | _GetBrakePosition                               | unreferenced |
 | code_libc (2180)                               | memcpy.obj              | c166ch.lib       | _memcpy                                         | unreferenced |
 | code_libc (2222)                               | powf.obj                | c166ch.lib       | _powf                                           | unreferenced |
-| code_libc (2224)                               | powf.obj                | c166ch.lib       | _$cocofun_1                                     | unreferenced |
 | code_libc (2223)                               | powf.obj                | c166ch.lib       | _$cocofun_2                                     | unreferenced |
+| code_libc (2224)                               | powf.obj                | c166ch.lib       | _$cocofun_1                                     | unreferenced |
 | code_libc (1695)                               | __hmalloc.obj           | c166ch.lib       | ___hfree                                        | unreferenced |
 | code_libc (1760)                               | __dohfree.obj           | c166ch.lib       | ___dohfree                                      | unreferenced |
-| code_libc (1761)                               | __dohfree.obj           | c166ch.lib       | _$cocofun_1                                     | unreferenced |
 | code_libc (1762)                               | __dohfree.obj           | c166ch.lib       | __restore_2                                     | unreferenced |
-| code_libc (1763)                               | __dohfree.obj           | c166ch.lib       | __save_1                                        | unreferenced |
 | code_libc (1787)                               | printf_int.obj          | c166ch.lib       | _dummy                                          | unreferenced |
-| code_swap_int32 (498)                          | mathFunctions.obj       |                  | _swap_int32                                     | unreferenced |
-| code_swap_int16 (496)                          | mathFunctions.obj       |                  | _swap_int16                                     | unreferenced |
-| code_RTDS_delete (575)                         | readyToDriveSound.obj   |                  | _RTDS_delete                                    | unreferenced |
-| code_swap_uint32 (497)                         | mathFunctions.obj       |                  | _swap_uint32                                    | unreferenced |
-| code_swap_uint16 (495)                         | mathFunctions.obj       |                  | _swap_uint16                                    | unreferenced |
+| code_libc (1761)                               | __dohfree.obj           | c166ch.lib       | _$cocofun_1                                     | unreferenced |
+| code_libc (1763)                               | __dohfree.obj           | c166ch.lib       | __save_1                                        | unreferenced |
 | code_AVL_insert (64)                           | avlTree.obj             |                  | _AVL_insert                                     | unreferenced |
-| code_BrakePressureSensor_resetCalibration      | brakePressureSensor.obj |                  | _BrakePressureSensor_resetCalibration           | unreferenced |
-| (189)                                          |                         |                  |                                                 |              |
 | code_BrakePressureSensor_saveCalibrationToEEPR | brakePressureSensor.obj |                  | _BrakePressureSensor_saveCalibrationToEEPROM    | unreferenced |
 | OM (190)                                       |                         |                  |                                                 |              |
-| code_BrakePressureSensor_loadCalibrationFromEE | brakePressureSensor.obj |                  | _BrakePressureSensor_loadCalibrationFromEEPROM  | unreferenced |
-| PROM (191)                                     |                         |                  |                                                 |              |
 | code_BrakePressureSensor_getIndividualSensorPe | brakePressureSensor.obj |                  | _BrakePressureSensor_getIndividualSensorPercent | unreferenced |
 | rcent (194)                                    |                         |                  |                                                 |              |
-| huge_prevHVILState (13)                        | AMKDrive.obj            |                  | _prevHVILState                                  | unreferenced |
-| code_BMS_getPackVoltage (83)                   | bms.obj                 |                  | _BMS_getPackVoltage                             | unreferenced |
-| code_BMS_getPower_uW (86)                      | bms.obj                 |                  | _BMS_getPower_uW                                | unreferenced |
+| code_BrakePressureSensor_resetCalibration      | brakePressureSensor.obj |                  | _BrakePressureSensor_resetCalibration           | unreferenced |
+| (189)                                          |                         |                  |                                                 |              |
 | code_CanManager_getReadStatus (268)            | canManager.obj          |                  | _CanManager_getReadStatus                       | unreferenced |
 | code_canOutput_sendSensorMessages (269)        | canManager.obj          |                  | _canOutput_sendSensorMessages                   | unreferenced |
-| code_IC_parseCanMessage (437)                  | instrumentCluster.obj   |                  | _IC_parseCanMessage                             | unreferenced |
+| code_BrakePressureSensor_loadCalibrationFromEE | brakePressureSensor.obj |                  | _BrakePressureSensor_loadCalibrationFromEEPROM  | unreferenced |
+| PROM (191)                                     |                         |                  |                                                 |              |
+| huge_prevHVILState (13)                        | AMKDrive.obj            |                  | _prevHVILState                                  | unreferenced |
+| code_BMS_getPower_uW (86)                      | bms.obj                 |                  | _BMS_getPower_uW                                | unreferenced |
+| code_BMS_getPackVoltage (83)                   | bms.obj                 |                  | _BMS_getPackVoltage                             | unreferenced |
 | code_IC_getTorqueMapMode (438)                 | instrumentCluster.obj   |                  | _IC_getTorqueMapMode                            | unreferenced |
-| code_IC_getLaunchControlSensitivity (439)      | instrumentCluster.obj   |                  | _IC_getLaunchControlSensitivity                 | unreferenced |
-| huge_Sensor_TCSKnob (384)                      | initializations.obj     |                  | _Sensor_TCSKnob                                 | unreferenced |
-| code_swap_int8 (494)                           | mathFunctions.obj       |                  | _swap_int8                                      | unreferenced |
-| code_blink (492)                               | mathFunctions.obj       |                  | _blink                                          | unreferenced |
-| code_min (491)                                 | mathFunctions.obj       |                  | _min                                            | unreferenced |
+| code_IC_parseCanMessage (437)                  | instrumentCluster.obj   |                  | _IC_parseCanMessage                             | unreferenced |
 | code_max (490)                                 | mathFunctions.obj       |                  | _max                                            | unreferenced |
+| code_min (491)                                 | mathFunctions.obj       |                  | _min                                            | unreferenced |
+| code_blink (492)                               | mathFunctions.obj       |                  | _blink                                          | unreferenced |
+| huge_Sensor_TCSKnob (384)                      | initializations.obj     |                  | _Sensor_TCSKnob                                 | unreferenced |
+| code_IC_getLaunchControlSensitivity (439)      | instrumentCluster.obj   |                  | _IC_getLaunchControlSensitivity                 | unreferenced |
 | code_swap_uint8 (493)                          | mathFunctions.obj       |                  | _swap_uint8                                     | unreferenced |
-| shuge__8_swt (837)                             | IO_ADC.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
-| shuge__7_swt (836)                             | IO_ADC.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
-| shuge__9_swt (838)                             | IO_ADC.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
-| huge__1_ini (879)                              | IO_CAN.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
+| code_swap_int8 (494)                           | mathFunctions.obj       |                  | _swap_int8                                      | unreferenced |
+| code_swap_uint16 (495)                         | mathFunctions.obj       |                  | _swap_uint16                                    | unreferenced |
+| code_swap_uint32 (497)                         | mathFunctions.obj       |                  | _swap_uint32                                    | unreferenced |
+| code_swap_int16 (496)                          | mathFunctions.obj       |                  | _swap_int16                                     | unreferenced |
+| code_swap_int32 (498)                          | mathFunctions.obj       |                  | _swap_int32                                     | unreferenced |
+| code_RTDS_delete (575)                         | readyToDriveSound.obj   |                  | _RTDS_delete                                    | unreferenced |
 | shuge__6_swt (835)                             | IO_ADC.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
+| shuge__8_swt (837)                             | IO_ADC.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
+| huge__1_ini (879)                              | IO_CAN.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
+| shuge__9_swt (838)                             | IO_ADC.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
 | shuge__10_swt (839)                            | IO_ADC.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
+| shuge__7_swt (836)                             | IO_ADC.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
 | shuge__3_swt (1072)                            | IO_INT_PWM.obj          | xc2000_ttc60.lib |                                                 | unreferenced |
-| huge__999002_gpt_initialized (1208)            | IO_INT_Timer.obj        | xc2000_ttc60.lib |                                                 | unreferenced |
 | huge__999001_sens_state (1241)                 | IO_POWER.obj            | xc2000_ttc60.lib |                                                 | unreferenced |
-| shuge__1_swt (1266)                            | IO_PWD.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
 | shuge__2_swt (1268)                            | IO_PWD.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
+| shuge__1_swt (1266)                            | IO_PWD.obj              | xc2000_ttc60.lib |                                                 | unreferenced |
+| huge__999002_gpt_initialized (1208)            | IO_INT_Timer.obj        | xc2000_ttc60.lib |                                                 | unreferenced |
+| shuge__5_swt (1480)                            | IO_UART.obj             | xc2000_ttc60.lib |                                                 | unreferenced |
+| huge__1_ini (1432)                             | IO_Tools.obj            | xc2000_ttc60.lib |                                                 | unreferenced |
+| shuge__3_swt (1477)                            | IO_UART.obj             | xc2000_ttc60.lib |                                                 | unreferenced |
 | shuge__2_swt (1543)                            | IO_INT_PWD.obj          | xc2000_ttc60.lib |                                                 | unreferenced |
 | shuge__3_swt (1544)                            | IO_INT_PWD.obj          | xc2000_ttc60.lib |                                                 | unreferenced |
-| shuge__4_swt (1545)                            | IO_INT_PWD.obj          | xc2000_ttc60.lib |                                                 | unreferenced |
-| shuge__6_swt (1547)                            | IO_INT_PWD.obj          | xc2000_ttc60.lib |                                                 | unreferenced |
-| shuge__5_swt (1546)                            | IO_INT_PWD.obj          | xc2000_ttc60.lib |                                                 | unreferenced |
 | shuge__4_swt (1479)                            | IO_UART.obj             | xc2000_ttc60.lib |                                                 | unreferenced |
-| huge__1_ini (1432)                             | IO_Tools.obj            | xc2000_ttc60.lib |                                                 | unreferenced |
+| shuge__4_swt (1545)                            | IO_INT_PWD.obj          | xc2000_ttc60.lib |                                                 | unreferenced |
+| shuge__5_swt (1546)                            | IO_INT_PWD.obj          | xc2000_ttc60.lib |                                                 | unreferenced |
+| shuge__6_swt (1547)                            | IO_INT_PWD.obj          | xc2000_ttc60.lib |                                                 | unreferenced |
 | shuge__2_swt (1476)                            | IO_UART.obj             | xc2000_ttc60.lib |                                                 | unreferenced |
-| shuge__3_swt (1477)                            | IO_UART.obj             | xc2000_ttc60.lib |                                                 | unreferenced |
-| shuge__5_swt (1480)                            | IO_UART.obj             | xc2000_ttc60.lib |                                                 | unreferenced |
-| code_libfp (2298)                              | cl2spf.obj              | c166fph.lib      | __ll2spf                                        | unreferenced |
-| code_libfp (2313)                              | lt_e_spf.obj            | c166fph.lib      | __less_than_or_equal_spf                        | unreferenced |
-| code_libfp (2314)                              | neq_spf.obj             | c166fph.lib      | __not_equal_spf                                 | unreferenced |
-| code_libc (2295)                               | ldexpf.obj              | c166ch.lib       | __ldexp_spf                                     | unreferenced |
 | code_libc (2294)                               | modff.obj               | c166ch.lib       | __modf_spf                                      | unreferenced |
-| code_libfp (2305)                              | cspf2l.obj              | c166fph.lib      | __spf2l                                         | unreferenced |
 | code_libc (2296)                               | frexpf.obj              | c166ch.lib       | __frexp_spf                                     | unreferenced |
 | code_libfp (2311)                              | is_0_spf.obj            | c166fph.lib      | __is_zero_spf                                   | unreferenced |
+| code_libfp (2313)                              | lt_e_spf.obj            | c166fph.lib      | __less_than_or_equal_spf                        | unreferenced |
+| code_libfp (2298)                              | cl2spf.obj              | c166fph.lib      | __ll2spf                                        | unreferenced |
+| code_libfp (2314)                              | neq_spf.obj             | c166fph.lib      | __not_equal_spf                                 | unreferenced |
+| code_libc (2295)                               | ldexpf.obj              | c166ch.lib       | __ldexp_spf                                     | unreferenced |
+| code_libfp (2305)                              | cspf2l.obj              | c166fph.lib      | __spf2l                                         | unreferenced |
 +--------------------------------------------------------------------------------------------------------------------------------------------------------------+

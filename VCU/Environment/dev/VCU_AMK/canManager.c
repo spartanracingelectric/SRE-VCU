@@ -814,6 +814,29 @@ void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressu
     // canMessages[canMessageCount - 1].data[byteNum++] = mcm->kwRequestEstimate >> 8;
     // canMessages[canMessageCount - 1].length = byteNum;
 
+
+    //----------------------------------------------------------------------------
+    //Additional sensors
+    //----------------------------------------------------------------------------
+
+    //Place the can messsages into the FIFO queue ---------------------------------------------------
+    //IO_CAN_WriteFIFO(canFifoHandle_HiPri_Write, canMessages, canMessageCount);  //Important: Only transmit one message (the MCU message)
+    CanManager_send(me, CAN0_HIPRI, canMessages, canMessageCount);  //Important: Only transmit one message (the MCU message)
+    //IO_CAN_WriteFIFO(canFifoHandle_LoPri_Write, canMessages, canMessageCount);  
+
+}
+
+void canOutput_sendDebugMessage1(CanManager *me, TorqueEncoder *tps, BrakePressureSensor *bps, InstrumentCluster *ic, BatteryManagementSystem *bms, SafetyChecker *sc, _DAQSensors *d1, _DriveInverter *inv1, _DriveInverter *inv2)
+{
+    IO_CAN_DATA_FRAME canMessages[me->can1_write_messageLimit]; 
+    ubyte1 errorCount;
+    float4 tempPedalPercent;   //Pedal percent float (a decimal between 0 and 1
+    ubyte1 tps0Percent;  //Pedal percent int   (a number from 0 to 100)
+    ubyte1 tps1Percent;
+    ubyte2 canMessageCount = 0;
+    ubyte2 canMessageID = 0x500;
+    ubyte1 byteNum;
+
     //Inverter 1 FL Command Message
     canMessageCount++;
     canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
@@ -843,28 +866,7 @@ void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressu
     canMessages[canMessageCount - 1].data[6] = inv2->AMK_TorqueLimitNegativ;
     canMessages[canMessageCount - 1].data[7] = inv2->AMK_TorqueLimitNegativ >> 8;
     canMessages[canMessageCount - 1].length = 8;
-    //----------------------------------------------------------------------------
-    //Additional sensors
-    //----------------------------------------------------------------------------
-
-    //Place the can messsages into the FIFO queue ---------------------------------------------------
-    //IO_CAN_WriteFIFO(canFifoHandle_HiPri_Write, canMessages, canMessageCount);  //Important: Only transmit one message (the MCU message)
-    CanManager_send(me, CAN0_HIPRI, canMessages, canMessageCount);  //Important: Only transmit one message (the MCU message)
-    //IO_CAN_WriteFIFO(canFifoHandle_LoPri_Write, canMessages, canMessageCount);  
-
-}
-
-void canOutput_sendDebugMessage1(CanManager *me, TorqueEncoder *tps, BrakePressureSensor *bps, InstrumentCluster *ic, BatteryManagementSystem *bms, SafetyChecker *sc, _DAQSensors *d1, _DriveInverter *inv1, _DriveInverter *inv2)
-{
-    IO_CAN_DATA_FRAME canMessages[me->can1_write_messageLimit]; 
-    ubyte1 errorCount;
-    float4 tempPedalPercent;   //Pedal percent float (a decimal between 0 and 1
-    ubyte1 tps0Percent;  //Pedal percent int   (a number from 0 to 100)
-    ubyte1 tps1Percent;
-    ubyte2 canMessageCount = 0;
-    ubyte2 canMessageID = 0x500;
-    ubyte1 byteNum;
-
+    
     //Inverter 3 RL Command Message
     canMessageCount++;
     canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
