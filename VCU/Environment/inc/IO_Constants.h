@@ -1,6 +1,6 @@
 /**************************************************************************
  * Copyright (c) 2010 TTTControl. All rights reserved. Confidential proprietory
- * Schönbrunnerstraße 7, A-1040 Wien, Austria. office@ttcontrol.com
+ * Schï¿½nbrunnerstraï¿½e 7, A-1040 Wien, Austria. office@ttcontrol.com
  **************************************************************************/
 /**********************************************************************//**
  * \file IO_Constants.h
@@ -929,6 +929,7 @@ typedef ubyte2  IO_ErrorType;
 #define IO_ADC_11               IO_PIN_267          /**< main function: \ref dev_cplx_timer_in "digital timer input" \ref dev_dig_in_pwd "digital timer input" */
 #define IO_ADC_SENSOR_SUPPLY_0  IO_PIN_136          /**< no main function, feedback input for sensor supply 0 */
 #define IO_ADC_SENSOR_SUPPLY_1  IO_PIN_135          /**< no main function, feedback input for sensor supply 1*/
+#define IO_ADC_SENSOR_SUPPLY_2  IO_PIN_147          /**< no main function, feedback input for sensor supply 2*/
 #define IO_BOARD_TEMP           IO_INT_PIN_TEMP     /**< no main function, feedback input for board temperature */
 #define IO_SENSOR_SUPPLY_VAR    IO_PIN_269          /**< no main function, feedback input for variable sensor supply */
 #define IO_ADC_UBAT             IO_PIN_101          /**< no main function, feedback input for battery voltage */

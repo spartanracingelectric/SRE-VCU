@@ -224,10 +224,10 @@ void main(void)
     // ubyte2 tps0_calibMax = 0x9876;  //me->tps0->sensorValue;
     // ubyte2 tps1_calibMin = 0x5432;  //me->tps1->sensorValue;
     // ubyte2 tps1_calibMax = 0xCDEF;  //me->tps1->sensorValue;
-    ubyte2 tps0_calibMin = 3800;  //me->tps0->sensorValue;
+    ubyte2 tps0_calibMin = 400;  //me->tps0->sensorValue;
     ubyte2 tps0_calibMax = 1400; //me->tps0->sensorValue;
     ubyte2 tps1_calibMin = 1800; //me->tps1->sensorValue;
-    ubyte2 tps1_calibMax = 4040; //me->tps1->sensorValue;
+    ubyte2 tps1_calibMax = 4000; //me->tps1->sensorValue;
 
     /*******************************************/
     /*       PERIODIC APPLICATION CODE         */
@@ -323,7 +323,7 @@ void main(void)
         }
         TorqueEncoder_update(tps);
         //Every cycle: if the calibration was started and hasn't finished, check the values again
-        TorqueEncoder_calibrationCycle(tps, &calibrationErrors); //Todo: deal with calibration errors
+        // TorqueEncoder_calibrationCycle(tps, &calibrationErrors); //Todo: deal with calibration errors
         BrakePressureSensor_update(bps, bench);
         BrakePressureSensor_calibrationCycle(bps, &calibrationErrors);
 

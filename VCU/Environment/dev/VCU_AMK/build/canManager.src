@@ -1,5 +1,5 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc7224a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2025 -DRTS_TTC_FLASH_DATE_MONTH=9 -DRTS_TTC_FLASH_DATE_DAY=4 -DRTS_TTC_FLASH_DATE_HOUR=12 -DRTS_TTC_FLASH_DATE_MINUTE=6 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\canManager.src
+	; Options: -f cc3668a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2025 -DRTS_TTC_FLASH_DATE_MONTH=9 -DRTS_TTC_FLASH_DATE_DAY=4 -DRTS_TTC_FLASH_DATE_HOUR=12 -DRTS_TTC_FLASH_DATE_MINUTE=25 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\canManager.src
 	; Module start
 	.source	'canManager.c'
 code_CanManager_new	.section	code, cluster 'CanManager_new', new
@@ -137,27 +137,27 @@ _260:
 	addw	r2,#0x24
 	addcw	r11,#0x0
 	movw	[r15+#0x2],r11
-_2625:
+_2658:
 	movw	[r15+#0x4],r2
-_2626:
+_2659:
 	movw	r12,#0x7ff
 _2:
 	movw	r14,r2
-_2627:
+_2660:
 	movw	r13,#0x0
-_2628:
+_2661:
 	movw	r4,r11
 	exts	r4,#0x1
 	movw	[r14],r13
 	addw	r14,#0x2
 	addcw	r4,#0x0
-_2629:
+_2662:
 	addw	r2,#0x4
 	addcw	r11,#0x0
-_2630:
+_2663:
 	exts	r4,#0x1
 	movw	[r14],r13
-_2631:
+_2664:
 	subw	r12,#0x1
 	jmp+	cc_uge,_2
 _261:
@@ -169,27 +169,27 @@ _261:
 	movw	r12,r0
 	addw	r11,#0x20
 	addcw	r12,#0x0
-_2632:
+_2665:
 
 ; canManager.c	    89  
 ; canManager.c	    90      //Activate the CAN channels --------------------------------------------------
 ; canManager.c	    91      me->ioErr_can0_Init = IO_CAN_Init(IO_CAN_CHANNEL_0, can0_busSpeed, 0, 0, 0);
 	movb	rl2,#0x3a
-_2633:
+_2666:
 	exts	r12,#0x1
 	movw	[r11],r8
 	addw	r11,#0x2
 	addcw	r12,#0x0
-_2634:
+_2667:
 	movw	r8,r0
 _731:
 	exts	r12,#0x1
 	movw	[r11],r9
-_2635:
+_2668:
 	movw	r9,r1
 	addw	r9,#0xc
 	addcw	r8,#0x0
-_2636:
+_2669:
 	movw	r3,r10
 _732:
 	movb	rh2,#0x0
@@ -199,16 +199,16 @@ _732:
 _733:
 	exts	r8,#0x1
 	movw	[r9],r2
-_2637:
+_2670:
 
 ; canManager.c	    92      me->ioErr_can1_Init = IO_CAN_Init(IO_CAN_CHANNEL_1, can1_busSpeed, 0, 0, 0);
 	movw	r9,r1
 	movw	r8,r0
 	addw	r9,#0xe
 	addcw	r8,#0x0
-_2638:
+_2671:
 	movb	rl2,#0x3b
-_2639:
+_2672:
 	movw	r3,r7
 _734:
 	movb	rh2,#0x0
@@ -218,7 +218,7 @@ _734:
 _735:
 	exts	r8,#0x1
 	movw	[r9],r2
-_2640:
+_2673:
 
 ; canManager.c	    93  
 ; canManager.c	    94      //Configure the FIFO queues
@@ -232,9 +232,9 @@ _2640:
 	movw	r3,r0
 	addw	r2,#0x2
 	addcw	r3,#0x0
-_2641:
+_2674:
 	movb	rl4,#0x3a
-_2642:
+_2675:
 	movb	rh4,rh6
 _736:
 	movb	rl5,#0x0
@@ -251,9 +251,9 @@ _737:
 	movw	r3,r0
 	addw	r2,#0x4
 	addcw	r3,#0x0
-_2643:
+_2676:
 	movb	rl4,#0x3a
-_2644:
+_2677:
 	movb	rh4,rl6
 _738:
 	movb	rl5,#0x1
@@ -270,9 +270,9 @@ _739:
 	movw	r3,r0
 	addw	r2,#0x7
 	addcw	r3,#0x0
-_2645:
+_2678:
 	movb	rl4,#0x3b
-_2646:
+_2679:
 	movb	rh4,[r15]
 _740:
 	movb	rl5,#0x0
@@ -289,9 +289,9 @@ _741:
 	movw	r3,r0
 	addw	r2,#0x9
 	addcw	r3,#0x0
-_2647:
+_2680:
 	movb	rl4,#0x3b
-_2648:
+_2681:
 	movb	rh4,[r15+#0x1]
 _742:
 	movb	rl5,#0x1
@@ -310,12 +310,12 @@ _743:
 	movw	r12,r0
 	addw	r11,#0x18
 	addcw	r12,#0x0
-_2649:
+_2682:
 	movw	r13,#0x2f
-_2650:
+_2683:
 	exts	r12,#0x1
 	movw	[r11],r13
-_2651:
+_2684:
 
 ; canManager.c	   107      me->ioErr_can0_write = IO_E_CAN_BUS_OFF;
 	movw	r11,r1
@@ -339,7 +339,7 @@ _264:
 _265:
 	exts	r12,#0x1
 	movw	[r11],r13
-_2652:
+_2685:
 	movw	r11,r1
 	movw	r12,r0
 	addw	r11,#0x1c
@@ -349,7 +349,7 @@ _266:
 _267:
 	exts	r12,#0x1
 	movw	[r11],r13
-_2653:
+_2686:
 	movw	r11,r1
 	movw	r12,r0
 	addw	r11,#0x1e
@@ -367,20 +367,20 @@ _270:
 	movw	r13,[r11]
 	addw	r11,#0x2
 	addcw	r12,#0x0
-_2654:
+_2687:
 
 ; canManager.c	   119      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 8000; 
 ; canManager.c	   120      me->canMessageHistory[messageID]->required = TRUE;
 	movb	rh2,#0x1
-_2655:
+_2688:
 	exts	r12,#0x1
 	movw	r11,[r11]
-_2656:
+_2689:
 	addw	r13,#0x8
 	addcw	r11,#0x0
-_2657:
+_2690:
 	movw	r12,#0x0
-_2658:
+_2691:
 	exts	r11,#0x1
 	movw	[r13],r12
 	addw	r13,#0x2
@@ -392,7 +392,7 @@ _273:
 _274:
 	exts	r11,#0x1
 	movw	[r13],r12
-_2659:
+_2692:
 	movw	r11,r4
 	movw	r13,r5
 	exts	r13,#0x1
@@ -401,19 +401,19 @@ _2659:
 	addcw	r13,#0x0
 	exts	r13,#0x1
 	movw	r11,[r11]
-_2660:
+_2693:
 	addw	r14,#0x12
 	addcw	r11,#0x0
-_2661:
+_2694:
 	movw	r13,#0x1f40
-_2662:
+_2695:
 	exts	r11,#0x1
 	movw	[r14],r13
 	addw	r14,#0x2
 	addcw	r11,#0x0
 	exts	r11,#0x1
 	movw	[r14],r12
-_2663:
+_2696:
 	movw	r11,r4
 	movw	r12,r5
 	exts	r12,#0x1
@@ -422,10 +422,10 @@ _2663:
 	addcw	r12,#0x0
 	exts	r12,#0x1
 	movw	r11,[r11]
-_2664:
+_2697:
 	addw	r13,#0x10
 	addcw	r11,#0x0
-_2665:
+_2698:
 	exts	r11,#0x1
 	movb	[r13],rh2
 _3:
@@ -435,19 +435,19 @@ _3:
 	movw	r14,[r2]
 	addw	r2,#0x2
 	addcw	r13,#0x0
-_2666:
+_2699:
 	movbz	r11,rl3
 	movw	r12,#0x0
-_2667:
+_2700:
 	addw	r11,r14
 	exts	r13,#0x1
 	addcw	r12,[r2]
-_2668:
+_2701:
 	movb	rh2,#0x0
-_2669:
+_2702:
 	exts	r12,#0x1
 	movb	[r11],rh2
-_2670:
+_2703:
 	cmpi1	r3,#0x7
 	jmp+	cc_ult,_3
 _275:
@@ -459,11 +459,11 @@ _275:
 	addcw	r5,#0x0
 	exts	r5,#0x1
 	movw	r3,[r4]
-_2671:
+_2704:
 	addw	r2,#0xc
 	addcw	r3,#0x0
 	call	_IO_RTC_StartTime
-_2672:
+_2705:
 
 ; canManager.c	   123  
 ; canManager.c	   124      messageID = 0x185;  //Inverter FR 2 Command Message
@@ -472,27 +472,27 @@ _2672:
 	movw	r5,r0
 	addw	r4,#0x638
 	addcw	r5,#0x0
-_2673:
+_2706:
 	movw	r11,r4
 	movw	r12,r5
 	exts	r12,#0x1
 	movw	r13,[r11]
 	addw	r11,#0x2
 	addcw	r12,#0x0
-_2674:
+_2707:
 
 ; canManager.c	   126      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 8000;
 ; canManager.c	   127      me->canMessageHistory[messageID]->required = TRUE;
 	movb	rh2,#0x1
-_2675:
+_2708:
 	exts	r12,#0x1
 	movw	r11,[r11]
-_2676:
+_2709:
 	addw	r13,#0x8
 	addcw	r11,#0x0
-_2677:
+_2710:
 	movw	r12,#0x0
-_2678:
+_2711:
 	exts	r11,#0x1
 	movw	[r13],r12
 	addw	r13,#0x2
@@ -504,7 +504,7 @@ _278:
 _279:
 	exts	r11,#0x1
 	movw	[r13],r12
-_2679:
+_2712:
 	movw	r11,r4
 	movw	r13,r5
 	exts	r13,#0x1
@@ -513,19 +513,19 @@ _2679:
 	addcw	r13,#0x0
 	exts	r13,#0x1
 	movw	r11,[r11]
-_2680:
+_2713:
 	addw	r14,#0x12
 	addcw	r11,#0x0
-_2681:
+_2714:
 	movw	r13,#0x1f40
-_2682:
+_2715:
 	exts	r11,#0x1
 	movw	[r14],r13
 	addw	r14,#0x2
 	addcw	r11,#0x0
 	exts	r11,#0x1
 	movw	[r14],r12
-_2683:
+_2716:
 	movw	r11,r4
 	movw	r12,r5
 	exts	r12,#0x1
@@ -534,10 +534,10 @@ _2683:
 	addcw	r12,#0x0
 	exts	r12,#0x1
 	movw	r11,[r11]
-_2684:
+_2717:
 	addw	r13,#0x10
 	addcw	r11,#0x0
-_2685:
+_2718:
 	exts	r11,#0x1
 	movb	[r13],rh2
 _4:
@@ -547,19 +547,19 @@ _4:
 	movw	r14,[r2]
 	addw	r2,#0x2
 	addcw	r13,#0x0
-_2686:
+_2719:
 	movbz	r11,rl3
 	movw	r12,#0x0
-_2687:
+_2720:
 	addw	r11,r14
 	exts	r13,#0x1
 	addcw	r12,[r2]
-_2688:
+_2721:
 	movb	rh2,#0x0
-_2689:
+_2722:
 	exts	r12,#0x1
 	movb	[r11],rh2
-_2690:
+_2723:
 	cmpi1	r3,#0x7
 	jmp+	cc_ult,_4
 _280:
@@ -571,11 +571,11 @@ _280:
 	addcw	r5,#0x0
 	exts	r5,#0x1
 	movw	r3,[r4]
-_2691:
+_2724:
 	addw	r2,#0xc
 	addcw	r3,#0x0
 	call	_IO_RTC_StartTime
-_2692:
+_2725:
 
 ; canManager.c	   130  
 ; canManager.c	   131      messageID = 0x188;  //Inverter RL 1 Command Message
@@ -584,27 +584,27 @@ _2692:
 	movw	r5,r0
 	addw	r4,#0x644
 	addcw	r5,#0x0
-_2693:
+_2726:
 	movw	r11,r4
 	movw	r12,r5
 	exts	r12,#0x1
 	movw	r13,[r11]
 	addw	r11,#0x2
 	addcw	r12,#0x0
-_2694:
+_2727:
 
 ; canManager.c	   133      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 8000;
 ; canManager.c	   134      me->canMessageHistory[messageID]->required = TRUE;
 	movb	rh2,#0x1
-_2695:
+_2728:
 	exts	r12,#0x1
 	movw	r11,[r11]
-_2696:
+_2729:
 	addw	r13,#0x8
 	addcw	r11,#0x0
-_2697:
+_2730:
 	movw	r12,#0x0
-_2698:
+_2731:
 	exts	r11,#0x1
 	movw	[r13],r12
 	addw	r13,#0x2
@@ -616,7 +616,7 @@ _283:
 _284:
 	exts	r11,#0x1
 	movw	[r13],r12
-_2699:
+_2732:
 	movw	r11,r4
 	movw	r13,r5
 	exts	r13,#0x1
@@ -625,19 +625,19 @@ _2699:
 	addcw	r13,#0x0
 	exts	r13,#0x1
 	movw	r11,[r11]
-_2700:
+_2733:
 	addw	r14,#0x12
 	addcw	r11,#0x0
-_2701:
+_2734:
 	movw	r13,#0x1f40
-_2702:
+_2735:
 	exts	r11,#0x1
 	movw	[r14],r13
 	addw	r14,#0x2
 	addcw	r11,#0x0
 	exts	r11,#0x1
 	movw	[r14],r12
-_2703:
+_2736:
 	movw	r11,r4
 	movw	r12,r5
 	exts	r12,#0x1
@@ -646,10 +646,10 @@ _2703:
 	addcw	r12,#0x0
 	exts	r12,#0x1
 	movw	r11,[r11]
-_2704:
+_2737:
 	addw	r13,#0x10
 	addcw	r11,#0x0
-_2705:
+_2738:
 	exts	r11,#0x1
 	movb	[r13],rh2
 _5:
@@ -659,19 +659,19 @@ _5:
 	movw	r14,[r2]
 	addw	r2,#0x2
 	addcw	r13,#0x0
-_2706:
+_2739:
 	movbz	r11,rl3
 	movw	r12,#0x0
-_2707:
+_2740:
 	addw	r11,r14
 	exts	r13,#0x1
 	addcw	r12,[r2]
-_2708:
+_2741:
 	movb	rh2,#0x0
-_2709:
+_2742:
 	exts	r12,#0x1
 	movb	[r11],rh2
-_2710:
+_2743:
 	cmpi1	r3,#0x7
 	jmp+	cc_ult,_5
 _285:
@@ -683,11 +683,11 @@ _285:
 	addcw	r5,#0x0
 	exts	r5,#0x1
 	movw	r3,[r4]
-_2711:
+_2744:
 	addw	r2,#0xc
 	addcw	r3,#0x0
 	call	_IO_RTC_StartTime
-_2712:
+_2745:
 
 ; canManager.c	   137  
 ; canManager.c	   138      messageID = 0x189;  //Inverter RR 2 Command Message
@@ -696,27 +696,27 @@ _2712:
 	movw	r5,r0
 	addw	r4,#0x648
 	addcw	r5,#0x0
-_2713:
+_2746:
 	movw	r11,r4
 	movw	r12,r5
 	exts	r12,#0x1
 	movw	r13,[r11]
 	addw	r11,#0x2
 	addcw	r12,#0x0
-_2714:
+_2747:
 
 ; canManager.c	   140      me->canMessageHistory[messageID]->timeBetweenMessages_Max = 8000;
 ; canManager.c	   141      me->canMessageHistory[messageID]->required = TRUE;
 	movb	rh2,#0x1
-_2715:
+_2748:
 	exts	r12,#0x1
 	movw	r11,[r11]
-_2716:
+_2749:
 	addw	r13,#0x8
 	addcw	r11,#0x0
-_2717:
+_2750:
 	movw	r12,#0x0
-_2718:
+_2751:
 	exts	r11,#0x1
 	movw	[r13],r12
 	addw	r13,#0x2
@@ -728,7 +728,7 @@ _288:
 _289:
 	exts	r11,#0x1
 	movw	[r13],r12
-_2719:
+_2752:
 	movw	r11,r4
 	movw	r13,r5
 	exts	r13,#0x1
@@ -737,19 +737,19 @@ _2719:
 	addcw	r13,#0x0
 	exts	r13,#0x1
 	movw	r11,[r11]
-_2720:
+_2753:
 	addw	r14,#0x12
 	addcw	r11,#0x0
-_2721:
+_2754:
 	movw	r13,#0x1f40
-_2722:
+_2755:
 	exts	r11,#0x1
 	movw	[r14],r13
 	addw	r14,#0x2
 	addcw	r11,#0x0
 	exts	r11,#0x1
 	movw	[r14],r12
-_2723:
+_2756:
 	movw	r11,r4
 	movw	r12,r5
 	exts	r12,#0x1
@@ -758,10 +758,10 @@ _2723:
 	addcw	r12,#0x0
 	exts	r12,#0x1
 	movw	r11,[r11]
-_2724:
+_2757:
 	addw	r13,#0x10
 	addcw	r11,#0x0
-_2725:
+_2758:
 	exts	r11,#0x1
 	movb	[r13],rh2
 _6:
@@ -771,19 +771,19 @@ _6:
 	movw	r14,[r2]
 	addw	r2,#0x2
 	addcw	r13,#0x0
-_2726:
+_2759:
 	movbz	r11,rl3
 	movw	r12,#0x0
-_2727:
+_2760:
 	addw	r11,r14
 	exts	r13,#0x1
 	addcw	r12,[r2]
-_2728:
+_2761:
 	movb	rh2,#0x0
-_2729:
+_2762:
 	exts	r12,#0x1
 	movb	[r11],rh2
-_2730:
+_2763:
 	cmpi1	r3,#0x7
 	jmp+	cc_ult,_6
 _290:
@@ -793,7 +793,7 @@ _290:
 	movw	r2,[r4]
 	addw	r4,#0x2
 	addcw	r5,#0x0
-_2731:
+_2764:
 
 ; canManager.c	   144  
 ; canManager.c	   145      for (messageID = 0x500; messageID <= 0x515; messageID++)
@@ -801,11 +801,11 @@ _2731:
 _744:
 	exts	r5,#0x1
 	movw	r3,[r4]
-_2732:
+_2765:
 	addw	r2,#0xc
 	addcw	r3,#0x0
 	call	_IO_RTC_StartTime
-_2733:
+_2766:
 
 ; canManager.c	   146      {
 ; canManager.c	   147          me->canMessageHistory[messageID]->timeBetweenMessages_Min = 50000;
@@ -821,60 +821,60 @@ _7:
 	movw	r13,[r11]
 	addw	r11,#0x2
 	addcw	r12,#0x0
-_2734:
+_2767:
 	movw	r14,#0x0
-_2735:
+_2768:
 	exts	r12,#0x1
 	movw	r11,[r11]
-_2736:
+_2769:
 	addw	r13,#0x8
 	addcw	r11,#0x0
-_2737:
+_2770:
 	movw	r12,#0xc350
-_2738:
+_2771:
 	exts	r11,#0x1
 	movw	[r13],r12
 	addw	r13,#0x2
 	addcw	r11,#0x0
-_2739:
+_2772:
 
 ; canManager.c	   148          me->canMessageHistory[messageID]->timeBetweenMessages_Max = 250000;
 	movw	r12,r10
-_2740:
+_2773:
 	exts	r11,#0x1
 	movw	[r13],r14
-_2741:
+_2774:
 	movw	r11,r9
-_2742:
+_2775:
 	movw	r14,#0x3
-_2743:
+_2776:
 	exts	r12,#0x1
 	movw	r13,[r11]
 	addw	r11,#0x2
 	addcw	r12,#0x0
-_2744:
+_2777:
 
 ; canManager.c	   149          me->canMessageHistory[messageID]->required = TRUE;
 	movb	rh4,#0x1
-_2745:
+_2778:
 	exts	r12,#0x1
 	movw	r11,[r11]
-_2746:
+_2779:
 	addw	r13,#0x12
 	addcw	r11,#0x0
-_2747:
+_2780:
 	movw	r12,#0xd090
-_2748:
+_2781:
 	exts	r11,#0x1
 	movw	[r13],r12
 	addw	r13,#0x2
 	addcw	r11,#0x0
-_2749:
+_2782:
 	movw	r12,r10
-_2750:
+_2783:
 	exts	r11,#0x1
 	movw	[r13],r14
-_2751:
+_2784:
 	movw	r11,r9
 _293:
 
@@ -887,10 +887,10 @@ _294:
 	addcw	r12,#0x0
 	exts	r12,#0x1
 	movw	r11,[r11]
-_2752:
+_2785:
 	addw	r13,#0x10
 	addcw	r11,#0x0
-_2753:
+_2786:
 	exts	r11,#0x1
 	movb	[r13],rh4
 _8:
@@ -900,19 +900,19 @@ _8:
 	movw	r14,[r2]
 	addw	r2,#0x2
 	addcw	r13,#0x0
-_2754:
+_2787:
 	movbz	r11,rl5
 	movw	r12,#0x0
-_2755:
+_2788:
 	addw	r11,r14
 	exts	r13,#0x1
 	addcw	r12,[r2]
-_2756:
+_2789:
 	movb	rh4,#0x0
-_2757:
+_2790:
 	exts	r12,#0x1
 	movb	[r11],rh4
-_2758:
+_2791:
 	cmpi1	r5,#0x7
 	jmp+	cc_ult,_8
 _295:
@@ -924,20 +924,20 @@ _295:
 	movw	r2,[r11]
 	addw	r11,#0x2
 	addcw	r12,#0x0
-_2759:
+_2792:
 	addw	r9,#0x4
 	addcw	r10,#0x0
-_2760:
+_2793:
 	exts	r12,#0x1
 	movw	r3,[r11]
-_2761:
+_2794:
 	addw	r2,#0xc
 	addcw	r3,#0x0
 	call	_IO_RTC_StartTime
-_2762:
+_2795:
 	cmpi1	r8,#0x515
 	jmp+	cc_ult,_7
-_2763:
+_2796:
 
 ; canManager.c	   152      }
 ; canManager.c	   153  
@@ -968,7 +968,7 @@ _2763:
 ; canManager.c	   178      return me;
 	movw	r2,r1
 	movw	r3,r0
-_2764:
+_2797:
 
 ; canManager.c	   179  }
 	addw	r15,#0x6
@@ -1029,7 +1029,7 @@ _811:
 	subw	r15,#0x12
 _822:
 	movw	r8,r15
-_2769:
+_2802:
 
 ; canManager.c	   194  {
 ; canManager.c	   195      //SerialManager_send(me->sm, "Do you even send?\n");
@@ -1042,7 +1042,7 @@ _2769:
 _1082:
 	movw	r14,#0xe
 	mulu	r13,r14
-_2770:
+_2803:
 	movw	[r8+#0xc],r2
 	movw	[r8+#0xe],r3
 	movb	[r8+#0x10],rl4
@@ -1096,9 +1096,9 @@ _11:
 	movw	r12,r1
 	addw	r11,#0xa
 	addcw	r12,#0x0
-_2771:
+_2804:
 	movw	r13,[r8+#0x8]
-_2772:
+_2805:
 	exts	r12,#0x1
 	movw	r11,[r11]
 _1090:
@@ -1108,7 +1108,7 @@ _1090:
 	addw	r11,r11
 	addcw	r12,r12
 	movw	r14,[r8+#0x6]
-_2773:
+_2806:
 	addw	r13,r11
 	addcw	r14,r12
 	movw	r11,r13
@@ -1118,12 +1118,12 @@ _1091:
 	movw	r9,[r11]
 	addw	r11,#0x2
 	addcw	r12,#0x0
-_2774:
+_2807:
 	movb	rl6,#0x0
 _1092:
 	exts	r12,#0x1
 	movw	r0,[r11]
-_2775:
+_2808:
 
 ; canManager.c	   216          sendMessage = FALSE;
 	movb	[r8+#0x2],rl6
@@ -1146,7 +1146,7 @@ _1097:
 
 ; canManager.c	   222          if (firstTimeMessage)
 	jmp-	cc_eq,_13
-_2776:
+_2809:
 
 ; canManager.c	   223          {
 ; canManager.c	   224              me->canMessageHistory[outboundMessageID]->timeBetweenMessages_Min = 25000;
@@ -1154,19 +1154,19 @@ _2776:
 	movw	r12,r0
 	addw	r11,#0x8
 	addcw	r12,#0x0
-_2777:
+_2810:
 	movw	r4,#0x61a8
 _1096:
 	exts	r12,#0x1
 	movw	[r11],r4
 	addw	r11,#0x2
 	addcw	r12,#0x0
-_2778:
+_2811:
 	movw	r5,#0x0
-_2779:
+_2812:
 	exts	r12,#0x1
 	movw	[r11],r5
-_2780:
+_2813:
 
 ; canManager.c	   225              me->canMessageHistory[outboundMessageID]->timeBetweenMessages_Max = 125000;
 	movw	r11,r13
@@ -1175,43 +1175,43 @@ _2780:
 	movw	r4,[r11]
 	addw	r11,#0x2
 	addcw	r12,#0x0
-_2781:
+_2814:
 	movw	r5,#0x1
-_2782:
+_2815:
 	exts	r12,#0x1
 	movw	r11,[r11]
-_2783:
+_2816:
 	addw	r4,#0x12
 	addcw	r11,#0x0
-_2784:
+_2817:
 	movw	r12,#0xe848
-_2785:
+_2818:
 	exts	r11,#0x1
 	movw	[r4],r12
 	addw	r4,#0x2
 	addcw	r11,#0x0
-_2786:
+_2819:
 
 ; canManager.c	   226              me->canMessageHistory[outboundMessageID]->required = TRUE;
 	movw	r12,r14
-_2787:
+_2820:
 	exts	r11,#0x1
 	movw	[r4],r5
-_2788:
+_2821:
 	movw	r11,r13
-_2789:
+_2822:
 	movb	rh4,#0x1
-_2790:
+_2823:
 	exts	r12,#0x1
 	movw	r5,[r11]
 	addw	r11,#0x2
 	addcw	r12,#0x0
 	exts	r12,#0x1
 	movw	r11,[r11]
-_2791:
+_2824:
 	addw	r5,#0x10
 	addcw	r11,#0x0
-_2792:
+_2825:
 	exts	r11,#0x1
 	movb	[r5],rh4
 _317:
@@ -1225,19 +1225,19 @@ _14:
 	movw	r3,[r2]
 	addw	r2,#0x2
 	addcw	r4,#0x0
-_2793:
+_2826:
 	movbz	r11,rl5
 	movw	r12,#0x0
-_2794:
+_2827:
 	addw	r11,r3
 	exts	r4,#0x1
 	addcw	r12,[r2]
-_2795:
+_2828:
 	movb	rh4,#0x0
-_2796:
+_2829:
 	exts	r12,#0x1
 	movb	[r11],rh4
-_2797:
+_2830:
 	cmpi1	r5,#0x7
 	jmp+	cc_ult,_14
 _318:
@@ -1250,12 +1250,12 @@ _318:
 	addcw	r14,#0x0
 	exts	r14,#0x1
 	movw	r12,[r13]
-_2798:
+_2831:
 	addw	r11,#0xc
 	addcw	r12,#0x0
-_2799:
+_2832:
 	movw	r13,#0x0
-_2800:
+_2833:
 	exts	r12,#0x1
 	movw	[r11],r13
 	addw	r11,#0x2
@@ -1275,7 +1275,7 @@ _13:
 	movw	r11,r0
 	movw	r12,[r8]
 	movw	r13,r1
-_2801:
+_2834:
 	movw	r5,#0x0
 _15:
 
@@ -1284,14 +1284,14 @@ _15:
 ; canManager.c	   239              ubyte1 newData = canMessages[messagePosition].data[dataPosition];
 	exts	r13,#0x1
 	movb	rh4,[r12]
-_2802:
+_2835:
 
 ; canManager.c	   240              //if any data byte is changed, then probably want to send the message
 ; canManager.c	   241              if (oldData == newData)
 	exts	r11,#0x1
 	cmpb	rh4,[r2]
 	jmp+	cc_eq,_16
-_2803:
+_2836:
 
 ; canManager.c	   242              {
 ; canManager.c	   243                  //data has not changed.  No action required (DO NOT SET)
@@ -1306,7 +1306,7 @@ _16:
 	addcw	r11,#0x0
 	addw	r12,#0x1
 	addcw	r13,#0x0
-_2804:
+_2837:
 	cmpi1	r5,#0x7
 	jmp+	cc_ult,_15
 _320:
@@ -1328,24 +1328,24 @@ _320:
 	movw	r2,[r11]
 	addw	r11,#0x2
 	addcw	r12,#0x0
-_2805:
+_2838:
 	addw	r9,#0x8
 	addcw	r0,#0x0
-_2806:
+_2839:
 	exts	r12,#0x1
 	movw	r3,[r11]
 	call	_IO_RTC_GetTimeUS
-_2807:
+_2840:
 	exts	r0,#0x1
 	movw	r11,[r9]
 	addw	r9,#0x2
 	addcw	r0,#0x0
-_2808:
+_2841:
 	movb	rh6,#0x0
 _1098:
 	exts	r0,#0x1
 	movw	r12,[r9]
-_2809:
+_2842:
 	cmpw	r2,r11
 	subcw	r3,r12
 	jmp	cc_ult,_17
@@ -1360,7 +1360,7 @@ _17:
 	exts	r10,#0x1
 	movw	r3,[r7]
 	call	_IO_RTC_GetTimeUS
-_2810:
+_2843:
 	movb	rh4,#0x0
 _1099:
 	cmpw	r2,#0xc350
@@ -1377,12 +1377,12 @@ _18:
 	movb	rl4,[r8+#0x4]
 _1100:
 	jmp-	cc_ne,_19
-_2811:
+_2844:
 
 ; canManager.c	   262             || (dataChanged && minTimeExceeded)
 	cmpb	rl6,#0x0
 	jmp+	cc_eq,_20
-_2812:
+_2845:
 	cmpb	rh6,#0x0
 	jmp-	cc_ne,_21
 _20:
@@ -1390,7 +1390,7 @@ _20:
 ; canManager.c	   263             || (!dataChanged && maxTimeExceeded)
 	cmpb	rl6,#0x0
 	jmp	cc_ne,_22
-_2813:
+_2846:
 	cmpb	rh4,#0x0
 	jmp+	cc_eq,_23
 _21:
@@ -1414,7 +1414,7 @@ _22:
 	movb	rh4,[r8+#0x2]
 _1102:
 	jmp+	cc_eq,_24
-_2814:
+_2847:
 
 ; canManager.c	   273          {
 ; canManager.c	   274              //copy the message that needs to be sent into the outgoing messages array
@@ -1430,7 +1430,7 @@ _1104:
 	movw	r2,[r8+#0xa]
 _1106:
 	addw	r2,MDL
-_2815:
+_2848:
 	movw	r3,#0x7
 	movw	r4,[r8]
 _1101:
@@ -1448,7 +1448,7 @@ _1108:
 	addw	r11,#0xe
 	addcw	r1,#0x0
 	movw	[r8],r11
-_2816:
+_2849:
 	subb	rh4,#0x1
 	movb	[r8+#0x3],rh4
 	jmp+	cc_ne,_11
@@ -1478,7 +1478,7 @@ _1109:
 	movb	rh4,[r8+#0x5]
 _1111:
 	jmp	cc_eq,_25
-_2817:
+_2850:
 
 ; canManager.c	   293      {
 ; canManager.c	   294          //Send the messages to send to the appropriate FIFO queue
@@ -1486,11 +1486,11 @@ _2817:
 	movb	rh4,[r8+#0x10]
 _1112:
 	jmp	cc_ne,_26
-_2818:
+_2851:
 	movw	r11,[r8+#0xc]
 	movw	r12,[r8+#0xe]
 	addw	r11,#0x4
-_2819:
+_2852:
 	jmp	_27
 _26:
 	movw	r11,[r8+#0xc]
@@ -1502,7 +1502,7 @@ _27:
 	movb	rh4,[r11]
 _1113:
 	movbz	r2,rh4
-_2820:
+_2853:
 	movw	r4,[r8+#0xa]
 _1114:
 	movw	r5,r4
@@ -1526,11 +1526,11 @@ _1117:
 	movb	rh4,[r8+#0x10]
 _1118:
 	jmp	cc_ne,_29
-_2821:
+_2854:
 	movw	r11,[r8+#0xc]
 	movw	r12,[r8+#0xe]
 	addw	r11,#0x1a
-_2822:
+_2855:
 	jmp	_30
 _29:
 	movw	r11,[r8+#0xc]
@@ -1538,21 +1538,21 @@ _29:
 	addw	r11,#0x1e
 _30:
 	addcw	r12,#0x0
-_2823:
+_2856:
 	exts	r12,#0x1
 	movw	[r11],r9
-_2824:
+_2857:
 
 ; canManager.c	   297  
 ; canManager.c	   298          //Update the outgoing message tree with message sent timestamps
 ; canManager.c	   299          if ((channel == CAN0_HIPRI ? me->ioErr_can0_write : me->ioErr_can1_write) == IO_E_OK)
 	cmpb	rh4,#0x0
 	jmp	cc_ne,_31
-_2825:
+_2858:
 	movw	r11,[r8+#0xc]
 	movw	r12,[r8+#0xe]
 	addw	r11,#0x1a
-_2826:
+_2859:
 	jmp	_32
 _31:
 	movw	r11,[r8+#0xc]
@@ -1560,12 +1560,12 @@ _31:
 	addw	r11,#0x1e
 _32:
 	addcw	r12,#0x0
-_2827:
+_2860:
 	exts	r12,#0x1
 	movw	r11,[r11]
-_2828:
+_2861:
 	jmp-	cc_ne,_33
-_2829:
+_2862:
 
 ; canManager.c	   300          {
 ; canManager.c	   301              //Loop through the messages that we sent...
@@ -1597,26 +1597,26 @@ _34:
 	addcw	r11,r11
 	movw	r13,r7
 	movw	r14,r0
-_2830:
+_2863:
 	addw	r13,r12
 	addcw	r14,r11
-_2831:
+_2864:
 	addw	r10,#0xe
-_2832:
+_2865:
 	exts	r14,#0x1
 	movw	r2,[r13]
 	addw	r13,#0x2
 	addcw	r14,#0x0
-_2833:
+_2866:
 	addb	rh6,#0x1
-_2834:
+_2867:
 	exts	r14,#0x1
 	movw	r3,[r13]
-_2835:
+_2868:
 	addw	r2,#0xc
 	addcw	r3,#0x0
 	call	_IO_RTC_StartTime
-_2836:
+_2869:
 	movb	rh4,[r8+#0x5]
 _1120:
 	cmpb	rh6,rh4
@@ -1703,16 +1703,16 @@ _1463:
 	movw	r6,[r8+#0x2c]
 _1464:
 	movb	rl4,rl4
-_2841:
+_2874:
 
 ; canManager.c	   323  {
 ; canManager.c	   324      IO_CAN_DATA_FRAME canMessages[(channel == CAN0_HIPRI ? me->can0_read_messageLimit : me->can1_read_messageLimit)];
 	jmp	cc_ne,_36
-_2842:
+_2875:
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x3
-_2843:
+_2876:
 	jmp	_37
 _36:
 	movw	r11,r2
@@ -1723,7 +1723,7 @@ _37:
 	exts	r12,#0x1
 	movb	rh4,[r11]
 	movbz	r11,rh4
-_2844:
+_2877:
 	movw	r12,#0xe
 	mulu	r11,r12
 	movw	r12,r15
@@ -1744,11 +1744,11 @@ _1469:
 ; canManager.c	   328      *(channel == CAN0_HIPRI ? &me->ioErr_can0_read : &me->ioErr_can1_read) =
 	cmpb	rl4,#0x0
 	jmp	cc_ne,_38
-_2845:
+_2878:
 	movw	r9,r2
 	movw	r7,r3
 	addw	r9,#0x18
-_2846:
+_2879:
 	jmp	_39
 _38:
 	movw	r9,r2
@@ -1756,17 +1756,17 @@ _38:
 	addw	r9,#0x1c
 _39:
 	addcw	r7,#0x0
-_2847:
+_2880:
 
 ; canManager.c	   329      IO_CAN_ReadFIFO((channel == CAN0_HIPRI ? me->can0_readHandle : me->can1_readHandle)
 	cmpb	rl4,#0x0
 	jmp	cc_ne,_40
-_2848:
+_2881:
 	movw	r11,r2
 _1468:
 	movw	r12,r3
 	addw	r11,#0x2
-_2849:
+_2882:
 	jmp	_41
 _40:
 	movw	r11,r2
@@ -1778,13 +1778,13 @@ _41:
 	exts	r12,#0x1
 	movb	rh4,[r11]
 	movbz	r11,rh4
-_2850:
+_2883:
 
 ; canManager.c	   330                      , canMessages
 ; canManager.c	   331                      , (channel == CAN0_HIPRI ? me->can0_read_messageLimit : me->can1_read_messageLimit)
 	cmpb	rl4,#0x0
 	jmp	cc_ne,_42
-_2851:
+_2884:
 	addw	r2,#0x3
 _1465:
 	jmp	_43
@@ -1795,9 +1795,9 @@ _43:
 	exts	r3,#0x1
 	movb	rh4,[r2]
 	movbz	r3,rh4
-_2852:
+_2885:
 	movw	r2,r11
-_2853:
+_2886:
 	movw	r11,[r8+#0xe]
 _1471:
 	movw	r5,r11
@@ -1834,7 +1834,7 @@ _1473:
 	movw	r7,[r8+#0xe]
 _1474:
 	movb	rh4,[r8]
-_2854:
+_2887:
 	jmp-	cc_eq,_45
 _46:
 
@@ -1843,7 +1843,7 @@ _46:
 ; canManager.c	   338          switch (canMessages[currMessage].id)
 	movw	r11,[r7+#0xc]
 	movw	r12,[r7+#0xa]
-_2855:
+_2888:
 	subw	r12,#0x283
 	subcw	r11,#0x0
 	cmpw	r12,#0x3be
@@ -2858,7 +2858,7 @@ _93:
 	movw	r2,r1
 	movw	r3,r0
 	call	_DI_parseCanMessage
-_2856:
+_2889:
 
 ; canManager.c	   358              break;
 	jmp	_94
@@ -2885,7 +2885,7 @@ _95:
 	movw	r2,r10
 	movw	r3,r6
 	call	_DI_parseCanMessage
-_2857:
+_2890:
 
 ; canManager.c	   363              break;
 	jmp	_96
@@ -3078,10 +3078,10 @@ _94:
 _47:
 	addw	r7,#0xe
 	addw	r9,#0x1
-_2858:
+_2891:
 	movb	rh4,[r8]
 	movbz	r11,rh4
-_2859:
+_2892:
 	cmpw	r9,r11
 	jmp+	cc_slt,_46
 _45:
@@ -3126,9 +3126,9 @@ _CanManager_getReadStatus	.proc	far
 ; canManager.c	   460      return (channel == CAN0_HIPRI) ? me->ioErr_can0_read : me->ioErr_can1_read;
 	cmpb	rl4,#0x0
 	jmp	cc_ne,_102
-_3440:
+_3481:
 	addw	r2,#0x18
-_3441:
+_3482:
 	jmp	_103
 _102:
 	addw	r2,#0x1c
@@ -3137,7 +3137,7 @@ _103:
 _1481:
 	exts	r3,#0x1
 	movw	r2,[r2]
-_3442:
+_3483:
 
 ; canManager.c	   461  }
 	ret
@@ -3205,7 +3205,7 @@ _1548:
 	subw	r15,#0x24
 _1559:
 	movw	r8,r15
-_2868:
+_2901:
 
 ; canManager.c	   487  {
 ; canManager.c	   488      IO_CAN_DATA_FRAME canMessages[me->can0_write_messageLimit];
@@ -3220,35 +3220,35 @@ _2868:
 ; canManager.c	   497      TorqueEncoder_getIndividualSensorPercent(tps, 0, &tempPedalPercent); //borrow the pedal percent variable
 	movw	r7,r8
 	andw	r7,#0x3fff
-_2869:
+_2902:
 	movw	[r8+#0x22],r2
 	movw	[r8+#0x20],r3
-_2870:
+_2903:
 	addw	r2,#0x5
 _2243:
 	addcw	r3,#0x0
-_2871:
+_2904:
 	movw	[r8+#0x6],r5
 	movw	[r8+#0x10],r11
 	movw	[r8+#0x12],r12
 	movw	r11,[r8+#0x32]
 _2239:
-	movw	[r8+#0x1e],r11
+	movw	[r8+#0x16],r11
 	movw	r11,[r8+#0x34]
-	movw	[r8+#0x1c],r11
+	movw	[r8+#0x14],r11
 	movw	r11,[r8+#0x36]
 	movw	[r8+#0xe],r11
 	movw	r11,[r8+#0x38]
 	movw	[r8+#0xc],r11
 	movw	r11,[r8+#0x3a]
-	movw	[r8+#0x14],r11
-	movw	r11,[r8+#0x3c]
-	movw	[r8+#0x16],r11
-	movw	r11,[r8+#0x3e]
 	movw	[r8+#0x18],r11
-	movw	r11,[r8+#0x40]
+	movw	r11,[r8+#0x3c]
 	movw	[r8+#0x1a],r11
-_2872:
+	movw	r11,[r8+#0x3e]
+	movw	[r8+#0x1c],r11
+	movw	r11,[r8+#0x40]
+	movw	[r8+#0x1e],r11
+_2905:
 	exts	r3,#0x1
 	movb	rh2,[r2]
 	movbz	r11,rh2
@@ -3258,14 +3258,14 @@ _2872:
 	movw	r11,MDL
 	addw	r11,#0x2
 	subw	r15,r11
-_2873:
+_2906:
 	orw	r7,#@sof(__lc_ub_user_stack+0xffff) & 0xc000
 	movw	r10,#@seg(__lc_ub_user_stack+0xffff)
-_2874:
+_2907:
 	movw	[r15],r12
-_2875:
+_2908:
 	movw	r0,r4
-_2876:
+_2909:
 	movw	r2,r4
 	movw	r3,r5
 	movb	rl4,#0x0
@@ -3278,9 +3278,9 @@ _2240:
 ; canManager.c	   498      tps0Percent = 0xFF * tempPedalPercent;
 	movw	r3,[r8+#0x2]
 	movw	r2,[r8]
-_2877:
+_2910:
 	movw	r5,#0x437f
-_2878:
+_2911:
 	movw	r4,#0x0
 	call	__mul_spf
 	call	__spf2uc
@@ -3295,14 +3295,14 @@ _2247:
 	movw	r11,r7
 	movw	r12,r10
 	call	_TorqueEncoder_getIndividualSensorPercent
-_2879:
+_2912:
 
 ; canManager.c	   500      tps1Percent = 0xFF * (tempPedalPercent);
 	movw	r3,[r8+#0x2]
 	movw	r2,[r8]
-_2880:
+_2913:
 	movw	r5,#0x437f
-_2881:
+_2914:
 	movw	r4,#0x0
 	call	__mul_spf
 	call	__spf2uc
@@ -3326,28 +3326,28 @@ _363:
 	movw	r2,[r11]
 	addw	r11,#0x2
 	addcw	r12,#0x0
-_2882:
+_2915:
 	movw	r5,#0x437f
-_2883:
+_2916:
 	exts	r12,#0x1
 	movw	r3,[r11]
 	movw	r4,#0x0
 	call	__mul_spf
-_2884:
+_2917:
 
 ; canManager.c	   504  
 ; canManager.c	   505      BrakePressureSensor_getPedalTravel(bps, &errorCount, &tempPedalPercent); //getThrottlePercent(TRUE, &errorCount);
 	movw	r4,#0x4
-_2885:
+_2918:
 	call	__spf2uc
-_2886:
+_2919:
 	addw	r4,r8
 _2250:
 	movb	[r8+#0x9],rh2
 _2251:
 	andw	r4,#0x3fff
 	orw	r4,#@sof(__lc_ub_user_stack+0xffff) & 0xc000
-_2887:
+_2920:
 	movw	r2,[r8+#0x10]
 	movw	r3,[r8+#0x12]
 	movw	r5,r10
@@ -3359,12 +3359,12 @@ _368:
 ; canManager.c	   506      ubyte1 brakePercent = 0xFF * tempPedalPercent;
 	movw	r3,[r8+#0x2]
 	movw	r2,[r8]
-_2888:
+_2921:
 	movw	r5,#0x437f
-_2889:
+_2922:
 	movw	r4,#0x0
 	call	__mul_spf
-_2890:
+_2923:
 
 ; canManager.c	   507  
 ; canManager.c	   508      //500: TPS 0
@@ -3372,70 +3372,70 @@ _2890:
 ; canManager.c	   510      byteNum = 0;
 ; canManager.c	   511      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	rl4,#0x0
-_2891:
+_2924:
 	movb	[r9+#0x9],rl4
-_2892:
+_2925:
 
 ; canManager.c	   512      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1; //500
 	movw	r11,#0x500
-_2893:
+_2926:
 	movw	[r9+#0xa],r11
-_2894:
+_2927:
 	movw	r13,#0x0
-_2895:
+_2928:
 	movw	[r9+#0xc],r13
-_2896:
+_2929:
 
 ; canManager.c	   513      canMessages[canMessageCount - 1].data[byteNum++] = throttlePercent;
 	movb	rh4,[r8+#0x9]
 _2252:
 	movb	[r9],rh4
-_2897:
+_2930:
 
 ; canManager.c	   514      canMessages[canMessageCount - 1].data[byteNum++] = tps0Percent;
 	movb	rh4,[r8+#0x8]
 _2253:
 	movb	[r9+#0x1],rh4
-_2898:
+_2931:
 
 ; canManager.c	   515      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_TPS0.sensorValue; // tps->tps0_value;
 	exts	#@seg(_Sensor_TPS0+0x8),#0x1
 	movw	r5,@sof(_Sensor_TPS0+0x8)
-_2899:
+_2932:
 	movb	[r9+#0x2],rl5
-_2900:
+_2933:
 
 ; canManager.c	   516      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_TPS0.sensorValue >> 8; //tps->tps0_value >> 8;
 	exts	#@seg(_Sensor_TPS0+0x8),#0x1
 	movw	r5,@sof(_Sensor_TPS0+0x8)
-_2901:
+_2934:
 	movb	rl5,rh5
-_2902:
+_2935:
 	movb	[r9+#0x3],rl5
-_2903:
+_2936:
 
 ; canManager.c	   517      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps0_calibMin;
 	movw	r11,r0
 	movw	r12,[r8+#0x6]
 	addw	r11,#0xa
 	addcw	r12,#0x0
-_2904:
+_2937:
 	call	__spf2uc
-_2905:
+_2938:
 	exts	r12,#0x1
 	movw	r5,[r11]
-_2906:
+_2939:
 	movb	[r9+#0x4],rl5
-_2907:
+_2940:
 
 ; canManager.c	   518      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps0_calibMin >> 8;
 	exts	r12,#0x1
 	movw	r5,[r11]
-_2908:
+_2941:
 	movb	rl5,rh5
-_2909:
+_2942:
 	movb	[r9+#0x5],rl5
-_2910:
+_2943:
 
 ; canManager.c	   519      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps0_calibMax;
 	movw	r11,r0
@@ -3447,24 +3447,24 @@ _2255:
 _2256:
 	exts	r12,#0x1
 	movw	r5,[r11]
-_2911:
+_2944:
 	movb	[r9+#0x6],rl5
-_2912:
+_2945:
 
 ; canManager.c	   520      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps0_calibMax >> 8;
 	exts	r12,#0x1
 	movw	r5,[r11]
-_2913:
+_2946:
 	movb	rl5,rh5
-_2914:
+_2947:
 	movb	[r9+#0x7],rl5
-_2915:
+_2948:
 
 ; canManager.c	   521      canMessages[canMessageCount - 1].length = byteNum;
 	movb	rh5,#0x8
-_2916:
+_2949:
 	movb	[r9+#0x8],rh5
-_2917:
+_2950:
 
 ; canManager.c	   522  
 ; canManager.c	   523      //TPS 1
@@ -3472,26 +3472,26 @@ _2917:
 ; canManager.c	   525      byteNum = 0;
 ; canManager.c	   526      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	[r9+#0x17],rl4
-_2918:
+_2951:
 
 ; canManager.c	   527      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r11,#0x501
-_2919:
+_2952:
 	movw	[r9+#0x18],r11
 	movw	[r9+#0x1a],r13
-_2920:
+_2953:
 
 ; canManager.c	   528      canMessages[canMessageCount - 1].data[byteNum++] = throttlePercent;
 	movb	rh4,[r8+#0x9]
 _2254:
 	movb	[r9+#0xe],rh4
-_2921:
+_2954:
 
 ; canManager.c	   529      canMessages[canMessageCount - 1].data[byteNum++] = tps1Percent;
 	movb	rh4,[r8+#0xa]
 _2257:
 	movb	[r9+#0xf],rh4
-_2922:
+_2955:
 
 ; canManager.c	   530      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_value;
 	movw	r11,r0
@@ -3500,18 +3500,18 @@ _2922:
 	addcw	r12,#0x0
 	exts	r12,#0x1
 	movw	r2,[r11]
-_2923:
+_2956:
 	movb	[r9+#0x10],rl2
-_2924:
+_2957:
 
 ; canManager.c	   531      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_value >> 8;
 	exts	r12,#0x1
 	movw	r2,[r11]
-_2925:
+_2958:
 	movb	rl2,rh2
-_2926:
+_2959:
 	movb	[r9+#0x11],rl2
-_2927:
+_2960:
 
 ; canManager.c	   532      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_calibMin;
 	movw	r11,r0
@@ -3520,18 +3520,18 @@ _2927:
 	addcw	r12,#0x0
 	exts	r12,#0x1
 	movw	r2,[r11]
-_2928:
+_2961:
 	movb	[r9+#0x12],rl2
-_2929:
+_2962:
 
 ; canManager.c	   533      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_calibMin >> 8;
 	exts	r12,#0x1
 	movw	r2,[r11]
-_2930:
+_2963:
 	movb	rl2,rh2
-_2931:
+_2964:
 	movb	[r9+#0x13],rl2
-_2932:
+_2965:
 
 ; canManager.c	   534      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_calibMax;
 	movw	r11,[r8+#0x6]
@@ -3541,22 +3541,22 @@ _2260:
 	addcw	r11,#0x0
 	exts	r11,#0x1
 	movw	r2,[r0]
-_2933:
+_2966:
 	movb	[r9+#0x14],rl2
-_2934:
+_2967:
 
 ; canManager.c	   535      canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_calibMax >> 8;
 	exts	r11,#0x1
 	movw	r2,[r0]
-_2935:
+_2968:
 	movb	rl2,rh2
-_2936:
+_2969:
 	movb	[r9+#0x15],rl2
-_2937:
+_2970:
 
 ; canManager.c	   536      canMessages[canMessageCount - 1].length = byteNum;
 	movb	[r9+#0x16],rh5
-_2938:
+_2971:
 
 ; canManager.c	   537  
 ; canManager.c	   538      //BPS0
@@ -3564,22 +3564,22 @@ _2938:
 ; canManager.c	   540      byteNum = 0;
 ; canManager.c	   541      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	[r9+#0x25],rl4
-_2939:
+_2972:
 
 ; canManager.c	   542      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r11,#0x502
-_2940:
+_2973:
 	movw	[r9+#0x26],r11
 	movw	[r9+#0x28],r13
-_2941:
+_2974:
 
 ; canManager.c	   543      canMessages[canMessageCount - 1].data[byteNum++] = brakePercent; //This should be bps0Percent, but for now bps0Percent = brakePercent
 	movb	[r9+#0x1c],rh7
-_2942:
+_2975:
 
 ; canManager.c	   544      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x1d],rl4
-_2943:
+_2976:
 
 ; canManager.c	   545      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_value;
 	movw	r11,[r8+#0x10]
@@ -3588,18 +3588,18 @@ _2943:
 	addcw	r12,#0x0
 	exts	r12,#0x1
 	movw	r2,[r11]
-_2944:
+_2977:
 	movb	[r9+#0x1e],rl2
-_2945:
+_2978:
 
 ; canManager.c	   546      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_value >> 8;
 	exts	r12,#0x1
 	movw	r2,[r11]
-_2946:
+_2979:
 	shr	r2,#0x8
-_2947:
+_2980:
 	movb	[r9+#0x1f],rl2
-_2948:
+_2981:
 
 ; canManager.c	   547      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_calibMin;
 	movw	r11,[r8+#0x10]
@@ -3608,18 +3608,18 @@ _2948:
 	addcw	r12,#0x0
 	exts	r12,#0x1
 	movw	r2,[r11]
-_2949:
+_2982:
 	movb	[r9+#0x20],rl2
-_2950:
+_2983:
 
 ; canManager.c	   548      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_calibMin >> 8;
 	exts	r12,#0x1
 	movw	r2,[r11]
-_2951:
+_2984:
 	shr	r2,#0x8
-_2952:
+_2985:
 	movb	[r9+#0x21],rl2
-_2953:
+_2986:
 
 ; canManager.c	   549      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_calibMax;
 	movw	r11,[r8+#0x10]
@@ -3628,22 +3628,22 @@ _2953:
 	addcw	r12,#0x0
 	exts	r12,#0x1
 	movw	r2,[r11]
-_2954:
+_2987:
 	movb	[r9+#0x22],rl2
-_2955:
+_2988:
 
 ; canManager.c	   550      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_calibMax >> 8;
 	exts	r12,#0x1
 	movw	r2,[r11]
-_2956:
+_2989:
 	shr	r2,#0x8
-_2957:
+_2990:
 	movb	[r9+#0x23],rl2
-_2958:
+_2991:
 
 ; canManager.c	   551      canMessages[canMessageCount - 1].length = byteNum;
 	movb	[r9+#0x24],rh5
-_2959:
+_2992:
 
 ; canManager.c	   552  
 ; canManager.c	   553      //WSS mm/s output //UNUSED
@@ -3651,50 +3651,50 @@ _2959:
 ; canManager.c	   555      byteNum = 0;
 ; canManager.c	   556      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	[r9+#0x33],rl4
-_2960:
+_2993:
 
 ; canManager.c	   557      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r11,#0x503
-_2961:
+_2994:
 	movw	[r9+#0x34],r11
 	movw	[r9+#0x36],r13
-_2962:
+_2995:
 
 ; canManager.c	   558      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x2a],rl4
-_2963:
+_2996:
 
 ; canManager.c	   559      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x2b],rl4
-_2964:
+_2997:
 
 ; canManager.c	   560      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x2c],rl4
-_2965:
+_2998:
 
 ; canManager.c	   561      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x2d],rl4
-_2966:
+_2999:
 
 ; canManager.c	   562      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x2e],rl4
-_2967:
+_3000:
 
 ; canManager.c	   563      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x2f],rl4
-_2968:
+_3001:
 
 ; canManager.c	   564      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x30],rl4
-_2969:
+_3002:
 
 ; canManager.c	   565      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x31],rl4
-_2970:
+_3003:
 
 ; canManager.c	   566      canMessages[canMessageCount - 1].length = byteNum;
 	movb	[r9+#0x32],rh5
-_2971:
+_3004:
 
 ; canManager.c	   567  
 ; canManager.c	   568      //WSS RPM non-interpolated output //UNUSED
@@ -3702,50 +3702,50 @@ _2971:
 ; canManager.c	   570      byteNum = 0;
 ; canManager.c	   571      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	[r9+#0x41],rl4
-_2972:
+_3005:
 
 ; canManager.c	   572      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r11,#0x504
-_2973:
+_3006:
 	movw	[r9+#0x42],r11
 	movw	[r9+#0x44],r13
-_2974:
+_3007:
 
 ; canManager.c	   573      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x38],rl4
-_2975:
+_3008:
 
 ; canManager.c	   574      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x39],rl4
-_2976:
+_3009:
 
 ; canManager.c	   575      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x3a],rl4
-_2977:
+_3010:
 
 ; canManager.c	   576      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x3b],rl4
-_2978:
+_3011:
 
 ; canManager.c	   577      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x3c],rl4
-_2979:
+_3012:
 
 ; canManager.c	   578      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x3d],rl4
-_2980:
+_3013:
 
 ; canManager.c	   579      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x3e],rl4
-_2981:
+_3014:
 
 ; canManager.c	   580      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x3f],rl4
-_2982:
+_3015:
 
 ; canManager.c	   581      canMessages[canMessageCount - 1].length = byteNum;
 	movb	[r9+#0x40],rh5
-_2983:
+_3016:
 
 ; canManager.c	   582  
 ; canManager.c	   583      /*
@@ -3786,50 +3786,50 @@ _2983:
 ; canManager.c	   618      byteNum = 0;
 ; canManager.c	   619      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	[r9+#0x4f],rl4
-_2984:
+_3017:
 
 ; canManager.c	   620      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r11,#0x505
-_2985:
+_3018:
 	movw	[r9+#0x50],r11
 	movw	[r9+#0x52],r13
-_2986:
+_3019:
 
 ; canManager.c	   621      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x46],rl4
-_2987:
+_3020:
 
 ; canManager.c	   622      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x47],rl4
-_2988:
+_3021:
 
 ; canManager.c	   623      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x48],rl4
-_2989:
+_3022:
 
 ; canManager.c	   624      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x49],rl4
-_2990:
+_3023:
 
 ; canManager.c	   625      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x4a],rl4
-_2991:
+_3024:
 
 ; canManager.c	   626      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x4b],rl4
-_2992:
+_3025:
 
 ; canManager.c	   627      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x4c],rl4
-_2993:
+_3026:
 
 ; canManager.c	   628      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x4d],rl4
-_2994:
+_3027:
 
 ; canManager.c	   629      canMessages[canMessageCount - 1].length = byteNum;
 	movb	[r9+#0x4e],rh5
-_2995:
+_3028:
 
 ; canManager.c	   630  
 ; canManager.c	   631      //506: Safety Checker
@@ -3837,14 +3837,14 @@ _2995:
 ; canManager.c	   633      byteNum = 0;
 ; canManager.c	   634      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	[r9+#0x5d],rl4
-_2996:
+_3029:
 
 ; canManager.c	   635      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r11,#0x506
-_2997:
+_3030:
 	movw	[r9+#0x5e],r11
 	movw	[r9+#0x60],r13
-_2998:
+_3031:
 
 ; canManager.c	   636      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getFaults(sc);
 	movw	r2,[r8+#0xe]
@@ -3852,75 +3852,75 @@ _2998:
 	call	_SafetyChecker_getFaults
 _2258:
 	movb	[r9+#0x54],rl2
-_2999:
+_3032:
 
 ; canManager.c	   637      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getFaults(sc) >> 8;
 	movw	r2,[r8+#0xe]
 	movw	r3,[r8+#0xc]
 	call	_SafetyChecker_getFaults
-_3000:
+_3033:
 	movb	rl2,rh2
-_3001:
+_3034:
 	movb	[r9+#0x55],rl2
-_3002:
+_3035:
 
 ; canManager.c	   638      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getFaults(sc) >> 16;
 	movw	r2,[r8+#0xe]
 	movw	r3,[r8+#0xc]
 	call	_SafetyChecker_getFaults
-_3003:
+_3036:
 	movb	[r9+#0x56],rl3
-_3004:
+_3037:
 
 ; canManager.c	   639      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getFaults(sc) >> 24;
 	movw	r2,[r8+#0xe]
 	movw	r3,[r8+#0xc]
 	call	_SafetyChecker_getFaults
-_3005:
+_3038:
 	shr	r3,#0x8
-_3006:
+_3039:
 	movb	[r9+#0x57],rl3
-_3007:
+_3040:
 
 ; canManager.c	   640      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getWarnings(sc);
 	movw	r2,[r8+#0xe]
 	movw	r3,[r8+#0xc]
 	call	_SafetyChecker_getWarnings
-_3008:
+_3041:
 	movb	[r9+#0x58],rl2
-_3009:
+_3042:
 
 ; canManager.c	   641      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getWarnings(sc) >> 8;
 	movw	r2,[r8+#0xe]
 	movw	r3,[r8+#0xc]
 	call	_SafetyChecker_getWarnings
-_3010:
+_3043:
 	movb	rl2,rh2
-_3011:
+_3044:
 	movb	[r9+#0x59],rl2
-_3012:
+_3045:
 
 ; canManager.c	   642      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getNotices(sc);
 	movw	r2,[r8+#0xe]
 	movw	r3,[r8+#0xc]
 	call	_SafetyChecker_getNotices
-_3013:
+_3046:
 	movb	[r9+#0x5a],rl2
-_3014:
+_3047:
 
 ; canManager.c	   643      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getNotices(sc) >> 8;
 	movw	r2,[r8+#0xe]
 	movw	r3,[r8+#0xc]
 	call	_SafetyChecker_getNotices
-_3015:
+_3048:
 	movb	rl2,rh2
-_3016:
+_3049:
 	movb	[r9+#0x5b],rl2
-_3017:
+_3050:
 
 ; canManager.c	   644      canMessages[canMessageCount - 1].length = byteNum;
 	movb	rh4,#0x8
-_3018:
+_3051:
 	movb	[r9+#0x5c],rh4
 _371:
 
@@ -3936,34 +3936,34 @@ _371:
 	movw	r2,r12
 	movw	r3,r13
 	call	__ul2spf
-_3019:
+_3052:
 	movw	r11,r13
 	cmpw	r12,#0x31ba
 	subcw	r11,#0x0
 	jmp+	cc_uge,_105
-_3020:
+_3053:
 	subw	r15,#0x2
 _1570:
 	movw	r4,#0xc000
 	movw	r5,#0x460f
-_3021:
+_3054:
 	movb	[r15],ZEROS
-_3022:
+_3055:
 	movw	r11,#0xe800
 	movw	r12,#0x4646
 	call	_getPercent
 	addw	r15,#0x2
 _1581:
 	movw	r11,#0x999a
-_3023:
+_3056:
 	call	__spf2dpf
-_3024:
+_3057:
 	movw	r12,#0x9999
 	movw	r14,#0x3fb9
-_3025:
+_3058:
 	movw	r13,r12
 	call	__mul_dpf
-_3026:
+_3059:
 	jmp	_106
 _105:
 
@@ -3972,171 +3972,21 @@ _105:
 	cmpw	r12,#0x3242
 	subcw	r11,#0x0
 	jmp+	cc_uge,_107
-_3027:
+_3060:
 
 ; canManager.c	   651          LVBatterySOC = .1 + .1 * getPercent(Sensor_LVBattery.sensorValue, 12730, 12866, FALSE);
 	subw	r15,#0x2
 _1592:
 	movw	r4,#0xe800
 	movw	r5,#0x4646
-_3028:
+_3061:
 	movb	[r15],ZEROS
-_3029:
+_3062:
 	movw	r11,#0x800
 	movw	r12,#0x4649
 	call	_getPercent
 	addw	r15,#0x2
 _1603:
-	movw	r11,#0x999a
-_3030:
-	call	__spf2dpf
-_3031:
-	movw	r12,#0x9999
-	movw	r14,#0x3fb9
-_3032:
-	movw	r13,r12
-	call	__mul_dpf
-_3033:
-	movw	r11,#0x999a
-	movw	r12,#0x9999
-	movw	r14,#0x3fb9
-_3034:
-	jmp	_108
-_107:
-
-; canManager.c	   652      else if (Sensor_LVBattery.sensorValue < 12996)
-	movw	r11,r13
-	cmpw	r12,#0x32c4
-	subcw	r11,#0x0
-	jmp+	cc_uge,_109
-_3035:
-
-; canManager.c	   653          LVBatterySOC = .2 + .1 * getPercent(Sensor_LVBattery.sensorValue, 12866, 12996, FALSE);
-	subw	r15,#0x2
-_1614:
-	movw	r4,#0x800
-	movw	r5,#0x4649
-_3036:
-	movb	[r15],ZEROS
-_3037:
-	movw	r11,#0x1000
-	movw	r12,#0x464b
-	call	_getPercent
-	addw	r15,#0x2
-_1625:
-	movw	r11,#0x999a
-_3038:
-	call	__spf2dpf
-_3039:
-	movw	r12,#0x9999
-	movw	r14,#0x3fb9
-_3040:
-	movw	r13,r12
-	call	__mul_dpf
-_3041:
-	movw	r11,#0x999a
-	movw	r12,#0x9999
-	movw	r14,#0x3fc9
-_3042:
-	jmp	_110
-_109:
-
-; canManager.c	   654      else if (Sensor_LVBattery.sensorValue < 13104)
-	movw	r11,r13
-	cmpw	r12,#0x3330
-	subcw	r11,#0x0
-	jmp+	cc_uge,_111
-_3043:
-
-; canManager.c	   655          LVBatterySOC = .3 + .1 * getPercent(Sensor_LVBattery.sensorValue, 12996, 13104, FALSE);
-	subw	r15,#0x2
-_1636:
-	movw	r4,#0x1000
-	movw	r5,#0x464b
-_3044:
-	movb	[r15],ZEROS
-_3045:
-	movw	r11,#0xc000
-	movw	r12,#0x464c
-	call	_getPercent
-	addw	r15,#0x2
-_1647:
-	movw	r11,#0x999a
-_3046:
-	call	__spf2dpf
-_3047:
-	movw	r12,#0x9999
-	movw	r14,#0x3fb9
-_3048:
-	movw	r13,r12
-	call	__mul_dpf
-_3049:
-	movw	r11,#0x3333
-	movw	r14,#0x3fd3
-_3050:
-	movw	r12,r11
-	movw	r13,r11
-_3051:
-	jmp	_112
-_111:
-
-; canManager.c	   656      else if (Sensor_LVBattery.sensorValue < 13116)
-	movw	r11,r13
-	cmpw	r12,#0x333c
-	subcw	r11,#0x0
-	jmp+	cc_uge,_113
-_3052:
-
-; canManager.c	   657          LVBatterySOC = .4 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13104, 13116, FALSE);
-	subw	r15,#0x2
-_1658:
-	movw	r4,#0xc000
-	movw	r5,#0x464c
-_3053:
-	movb	[r15],ZEROS
-_3054:
-	movw	r11,#0xf000
-	movw	r12,r5
-	call	_getPercent
-	addw	r15,#0x2
-_1669:
-	movw	r11,#0x999a
-_3055:
-	call	__spf2dpf
-_3056:
-	movw	r12,#0x9999
-	movw	r14,#0x3fb9
-_3057:
-	movw	r13,r12
-	call	__mul_dpf
-_3058:
-	movw	r11,#0x999a
-	movw	r12,#0x9999
-	movw	r14,#0x3fd9
-_3059:
-	jmp	_114
-_113:
-
-; canManager.c	   658      else if (Sensor_LVBattery.sensorValue < 13130)
-	movw	r11,r13
-	cmpw	r12,#0x334a
-	subcw	r11,#0x0
-	jmp+	cc_uge,_115
-_3060:
-
-; canManager.c	   659          LVBatterySOC = .5 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13116, 13130, FALSE);
-	subw	r15,#0x2
-_1680:
-	movw	r4,#0xf000
-	movw	r5,#0x464c
-_3061:
-	movb	[r15],ZEROS
-_3062:
-	movw	r11,#0x2800
-	movw	r12,#0x464d
-	call	_getPercent
-	addw	r15,#0x2
-_1691:
 	movw	r11,#0x999a
 _3063:
 	call	__spf2dpf
@@ -4147,12 +3997,162 @@ _3065:
 	movw	r13,r12
 	call	__mul_dpf
 _3066:
-	movw	r14,#0x3fe0
+	movw	r11,#0x999a
+	movw	r12,#0x9999
+	movw	r14,#0x3fb9
 _3067:
+	jmp	_108
+_107:
+
+; canManager.c	   652      else if (Sensor_LVBattery.sensorValue < 12996)
+	movw	r11,r13
+	cmpw	r12,#0x32c4
+	subcw	r11,#0x0
+	jmp+	cc_uge,_109
+_3068:
+
+; canManager.c	   653          LVBatterySOC = .2 + .1 * getPercent(Sensor_LVBattery.sensorValue, 12866, 12996, FALSE);
+	subw	r15,#0x2
+_1614:
+	movw	r4,#0x800
+	movw	r5,#0x4649
+_3069:
+	movb	[r15],ZEROS
+_3070:
+	movw	r11,#0x1000
+	movw	r12,#0x464b
+	call	_getPercent
+	addw	r15,#0x2
+_1625:
+	movw	r11,#0x999a
+_3071:
+	call	__spf2dpf
+_3072:
+	movw	r12,#0x9999
+	movw	r14,#0x3fb9
+_3073:
+	movw	r13,r12
+	call	__mul_dpf
+_3074:
+	movw	r11,#0x999a
+	movw	r12,#0x9999
+	movw	r14,#0x3fc9
+_3075:
+	jmp	_110
+_109:
+
+; canManager.c	   654      else if (Sensor_LVBattery.sensorValue < 13104)
+	movw	r11,r13
+	cmpw	r12,#0x3330
+	subcw	r11,#0x0
+	jmp+	cc_uge,_111
+_3076:
+
+; canManager.c	   655          LVBatterySOC = .3 + .1 * getPercent(Sensor_LVBattery.sensorValue, 12996, 13104, FALSE);
+	subw	r15,#0x2
+_1636:
+	movw	r4,#0x1000
+	movw	r5,#0x464b
+_3077:
+	movb	[r15],ZEROS
+_3078:
+	movw	r11,#0xc000
+	movw	r12,#0x464c
+	call	_getPercent
+	addw	r15,#0x2
+_1647:
+	movw	r11,#0x999a
+_3079:
+	call	__spf2dpf
+_3080:
+	movw	r12,#0x9999
+	movw	r14,#0x3fb9
+_3081:
+	movw	r13,r12
+	call	__mul_dpf
+_3082:
+	movw	r11,#0x3333
+	movw	r14,#0x3fd3
+_3083:
+	movw	r12,r11
+	movw	r13,r11
+_3084:
+	jmp	_112
+_111:
+
+; canManager.c	   656      else if (Sensor_LVBattery.sensorValue < 13116)
+	movw	r11,r13
+	cmpw	r12,#0x333c
+	subcw	r11,#0x0
+	jmp+	cc_uge,_113
+_3085:
+
+; canManager.c	   657          LVBatterySOC = .4 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13104, 13116, FALSE);
+	subw	r15,#0x2
+_1658:
+	movw	r4,#0xc000
+	movw	r5,#0x464c
+_3086:
+	movb	[r15],ZEROS
+_3087:
+	movw	r11,#0xf000
+	movw	r12,r5
+	call	_getPercent
+	addw	r15,#0x2
+_1669:
+	movw	r11,#0x999a
+_3088:
+	call	__spf2dpf
+_3089:
+	movw	r12,#0x9999
+	movw	r14,#0x3fb9
+_3090:
+	movw	r13,r12
+	call	__mul_dpf
+_3091:
+	movw	r11,#0x999a
+	movw	r12,#0x9999
+	movw	r14,#0x3fd9
+_3092:
+	jmp	_114
+_113:
+
+; canManager.c	   658      else if (Sensor_LVBattery.sensorValue < 13130)
+	movw	r11,r13
+	cmpw	r12,#0x334a
+	subcw	r11,#0x0
+	jmp+	cc_uge,_115
+_3093:
+
+; canManager.c	   659          LVBatterySOC = .5 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13116, 13130, FALSE);
+	subw	r15,#0x2
+_1680:
+	movw	r4,#0xf000
+	movw	r5,#0x464c
+_3094:
+	movb	[r15],ZEROS
+_3095:
+	movw	r11,#0x2800
+	movw	r12,#0x464d
+	call	_getPercent
+	addw	r15,#0x2
+_1691:
+	movw	r11,#0x999a
+_3096:
+	call	__spf2dpf
+_3097:
+	movw	r12,#0x9999
+	movw	r14,#0x3fb9
+_3098:
+	movw	r13,r12
+	call	__mul_dpf
+_3099:
+	movw	r14,#0x3fe0
+_3100:
 	movw	r11,#0x0
 	movw	r12,#0x0
 	movw	r13,#0x0
-_3068:
+_3101:
 	jmp	_116
 _115:
 
@@ -4161,37 +4161,37 @@ _115:
 	cmpw	r12,#0x3368
 	subcw	r11,#0x0
 	jmp+	cc_uge,_117
-_3069:
+_3102:
 
 ; canManager.c	   661          LVBatterySOC = .6 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13130, 13160, FALSE);
 	subw	r15,#0x2
 _1702:
 	movw	r4,#0x2800
 	movw	r5,#0x464d
-_3070:
+_3103:
 	movb	[r15],ZEROS
-_3071:
+_3104:
 	movw	r11,#0xa000
 	movw	r12,r5
 	call	_getPercent
 	addw	r15,#0x2
 _1713:
 	movw	r11,#0x999a
-_3072:
+_3105:
 	call	__spf2dpf
-_3073:
+_3106:
 	movw	r12,#0x9999
 	movw	r14,#0x3fb9
-_3074:
+_3107:
 	movw	r13,r12
 	call	__mul_dpf
-_3075:
+_3108:
 	movw	r11,#0x3333
 	movw	r14,#0x3fe3
-_3076:
+_3109:
 	movw	r12,r11
 	movw	r13,r11
-_3077:
+_3110:
 	jmp	_118
 _117:
 
@@ -4200,37 +4200,37 @@ _117:
 	cmpw	r12,#0x33d6
 	subcw	r11,#0x0
 	jmp+	cc_uge,_119
-_3078:
+_3111:
 
 ; canManager.c	   663          LVBatterySOC = .7 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13160, 13270, FALSE);
 	subw	r15,#0x2
 _1724:
 	movw	r4,#0xa000
 	movw	r5,#0x464d
-_3079:
+_3112:
 	movb	[r15],ZEROS
-_3080:
+_3113:
 	movw	r11,#0x5800
 	movw	r12,#0x464f
 	call	_getPercent
 	addw	r15,#0x2
 _1735:
 	movw	r11,#0x999a
-_3081:
+_3114:
 	call	__spf2dpf
-_3082:
+_3115:
 	movw	r12,#0x9999
 	movw	r14,#0x3fb9
-_3083:
+_3116:
 	movw	r13,r12
 	call	__mul_dpf
-_3084:
+_3117:
 	movw	r11,#0x6666
 	movw	r14,#0x3fe6
-_3085:
+_3118:
 	movw	r12,r11
 	movw	r13,r11
-_3086:
+_3119:
 	jmp	_120
 _119:
 
@@ -4238,35 +4238,35 @@ _119:
 	cmpw	r12,#0x33f4
 	subcw	r13,#0x0
 	jmp	cc_uge,_121
-_3087:
+_3120:
 
 ; canManager.c	   665          LVBatterySOC = .8 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13270, 13300, FALSE);
 	subw	r15,#0x2
 _1746:
 	movw	r4,#0x5800
 	movw	r5,#0x464f
-_3088:
+_3121:
 	movb	[r15],ZEROS
-_3089:
+_3122:
 	movw	r11,#0xd000
 	movw	r12,r5
 	call	_getPercent
 	addw	r15,#0x2
 _1757:
 	movw	r11,#0x999a
-_3090:
+_3123:
 	call	__spf2dpf
-_3091:
+_3124:
 	movw	r12,#0x9999
 	movw	r14,#0x3fb9
-_3092:
+_3125:
 	movw	r13,r12
 	call	__mul_dpf
-_3093:
+_3126:
 	movw	r11,#0x999a
 	movw	r12,#0x9999
 	movw	r14,#0x3fe9
-_3094:
+_3127:
 	jmp	_122
 _121:
 
@@ -4276,24 +4276,24 @@ _121:
 _1768:
 	movw	r4,#0xd000
 	movw	r5,#0x464f
-_3095:
+_3128:
 	movb	[r15],ZEROS
-_3096:
+_3129:
 	movw	r11,#0x1000
 	movw	r12,#0x4660
 	call	_getPercent
 	addw	r15,#0x2
 _1779:
 	movw	r11,#0x999a
-_3097:
+_3130:
 	call	__spf2dpf
-_3098:
+_3131:
 	movw	r12,#0x9999
 	movw	r14,#0x3fb9
-_3099:
+_3132:
 	movw	r13,r12
 	call	__mul_dpf
-_3100:
+_3133:
 	movw	r11,#0xcccd
 	movw	r12,#0xcccc
 	movw	r14,#0x3fec
@@ -4309,7 +4309,7 @@ _120:
 	call	__add_dpf
 _106:
 	call	__dpf2spf
-_3101:
+_3134:
 
 ; canManager.c	   668  
 ; canManager.c	   669      canMessageCount++;
@@ -4317,71 +4317,71 @@ _3101:
 ; canManager.c	   671      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r11,#0x507
 	movw	r12,#0x0
-_3102:
+_3135:
 	movw	[r9+#0x6c],r11
 	movw	[r9+#0x6e],r12
-_3103:
+_3136:
 
 ; canManager.c	   672      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	rh4,#0x0
-_3104:
+_3137:
 	movb	[r9+#0x6b],rh4
-_3105:
+_3138:
 
 ; canManager.c	   673      canMessages[canMessageCount - 1].data[byteNum++] = (ubyte1)Sensor_LVBattery.sensorValue;
 	exts	#@seg(_Sensor_LVBattery+0x8),#0x1
 	movw	r4,@sof(_Sensor_LVBattery+0x8)
-_3106:
+_3139:
 	movb	[r9+#0x62],rl4
-_3107:
+_3140:
 
 ; canManager.c	   674      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_LVBattery.sensorValue >> 8;
 	exts	#@seg(_Sensor_LVBattery+0x8),#0x1
 	movw	r4,@sof(_Sensor_LVBattery+0x8)
-_3108:
+_3141:
 	movb	rl4,rh4
-_3109:
+_3142:
 	movb	[r9+#0x63],rl4
-_3110:
+_3143:
 
 ; canManager.c	   675      canMessages[canMessageCount - 1].data[byteNum++] = (sbyte1)(100 * LVBatterySOC);
 	movw	r5,#0x42c8
-_3111:
+_3144:
 	movw	r4,#0x0
 	call	__mul_spf
-_3112:
+_3145:
 	call	__spf2c
-_3113:
+_3146:
 	movb	[r9+#0x64],rh2
-_3114:
+_3147:
 
 ; canManager.c	   676      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	rh5,#0x0
-_3115:
+_3148:
 	movb	[r9+#0x65],rh5
-_3116:
+_3149:
 
 ; canManager.c	   677      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x66],rh5
-_3117:
+_3150:
 
 ; canManager.c	   678      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x67],rh5
-_3118:
+_3151:
 
 ; canManager.c	   679      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x68],rh5
-_3119:
+_3152:
 
 ; canManager.c	   680      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x69],rh5
-_3120:
+_3153:
 
 ; canManager.c	   681      canMessages[canMessageCount - 1].length = byteNum;
 	movb	rl5,#0x8
-_3121:
+_3154:
 	movb	[r9+#0x6a],rl5
-_3122:
+_3155:
 
 ; canManager.c	   682  
 ; canManager.c	   683      //508: Regen settings (Need to be updated for the future)
@@ -4389,50 +4389,50 @@ _3122:
 ; canManager.c	   685      byteNum = 0;
 ; canManager.c	   686      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r11,#0x508
-_3123:
+_3156:
 	movw	[r9+#0x7a],r11
 	movw	[r9+#0x7c],r12
-_3124:
+_3157:
 
 ; canManager.c	   687      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	[r9+#0x79],rh5
-_3125:
+_3158:
 
 ; canManager.c	   688      canMessages[canMessageCount - 1].data[byteNum++] = 0; //MCM_getRegenMode(mcm);
 	movb	[r9+#0x70],rh5
-_3126:
+_3159:
 
 ; canManager.c	   689      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x71],rh5
-_3127:
+_3160:
 
 ; canManager.c	   690      canMessages[canMessageCount - 1].data[byteNum++] = 0; //MCM_getMaxTorqueDNm(mcm)/10;
 	movb	[r9+#0x72],rh5
-_3128:
+_3161:
 
 ; canManager.c	   691      canMessages[canMessageCount - 1].data[byteNum++] = 0; //MCM_getRegenTorqueLimitDNm(mcm)/10;
 	movb	[r9+#0x73],rh5
-_3129:
+_3162:
 
 ; canManager.c	   692      canMessages[canMessageCount - 1].data[byteNum++] = 0; //MCM_getRegenTorqueAtZeroPedalDNm(mcm)/10;
 	movb	[r9+#0x74],rh5
-_3130:
+_3163:
 
 ; canManager.c	   693      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x75],rh5
-_3131:
+_3164:
 
 ; canManager.c	   694      canMessages[canMessageCount - 1].data[byteNum++] = 0; //MCM_getRegenAPPSForMaxCoastingZeroToFF(mcm);
 	movb	[r9+#0x76],rh5
-_3132:
+_3165:
 
 ; canManager.c	   695      canMessages[canMessageCount - 1].data[byteNum++] = 0; //MCM_getRegenBPSForMaxRegenZeroToFF(mcm);
 	movb	[r9+#0x77],rh5
-_3133:
+_3166:
 
 ; canManager.c	   696      canMessages[canMessageCount - 1].length = byteNum;
 	movb	[r9+#0x78],rl5
-_3134:
+_3167:
 
 ; canManager.c	   697  
 ; canManager.c	   698      //509: MCM RTD Status
@@ -4440,58 +4440,58 @@ _3134:
 ; canManager.c	   700      byteNum = 0;
 ; canManager.c	   701      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r11,#0x509
-_3135:
+_3168:
 	movw	[r9+#0x88],r11
 	movw	[r9+#0x8a],r12
-_3136:
+_3169:
 
 ; canManager.c	   702      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	[r9+#0x87],rh5
-_3137:
+_3170:
 
 ; canManager.c	   703      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_HVILTerminationSense.sensorValue;
 	exts	#@seg(_Sensor_HVILTerminationSense+0x8),#0x1
 	movw	r4,@sof(_Sensor_HVILTerminationSense+0x8)
-_3138:
+_3171:
 	movb	[r9+#0x7e],rl4
-_3139:
+_3172:
 
 ; canManager.c	   704      canMessages[canMessageCount - 1].data[byteNum++] = Sensor_HVILTerminationSense.sensorValue >> 8;
 	exts	#@seg(_Sensor_HVILTerminationSense+0x8),#0x1
 	movw	r4,@sof(_Sensor_HVILTerminationSense+0x8)
-_3140:
+_3173:
 	movb	rl4,rh4
-_3141:
+_3174:
 	movb	[r9+#0x7f],rl4
-_3142:
+_3175:
 
 ; canManager.c	   705      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x80],rh5
-_3143:
+_3176:
 
 ; canManager.c	   706      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x81],rh5
-_3144:
+_3177:
 
 ; canManager.c	   707      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x82],rh5
-_3145:
+_3178:
 
 ; canManager.c	   708      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x83],rh5
-_3146:
+_3179:
 
 ; canManager.c	   709      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x84],rh5
-_3147:
+_3180:
 
 ; canManager.c	   710      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x85],rh5
-_3148:
+_3181:
 
 ; canManager.c	   711      canMessages[canMessageCount - 1].length = byteNum;
 	movb	[r9+#0x86],rl5
-_3149:
+_3182:
 
 ; canManager.c	   712  
 ; canManager.c	   713      //50A: Torque Vectoring Loopback (Future Needs)
@@ -4499,50 +4499,50 @@ _3149:
 ; canManager.c	   715      byteNum = 0;
 ; canManager.c	   716      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r11,#0x50a
-_3150:
+_3183:
 	movw	[r9+#0x96],r11
 	movw	[r9+#0x98],r12
-_3151:
+_3184:
 
 ; canManager.c	   717      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	[r9+#0x95],rh5
-_3152:
+_3185:
 
 ; canManager.c	   718      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x8c],rh5
-_3153:
+_3186:
 
 ; canManager.c	   719      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x8d],rh5
-_3154:
+_3187:
 
 ; canManager.c	   720      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x8e],rh5
-_3155:
+_3188:
 
 ; canManager.c	   721      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x8f],rh5
-_3156:
+_3189:
 
 ; canManager.c	   722      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x90],rh5
-_3157:
+_3190:
 
 ; canManager.c	   723      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x91],rh5
-_3158:
+_3191:
 
 ; canManager.c	   724      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x92],rh5
-_3159:
+_3192:
 
 ; canManager.c	   725      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x93],rh5
-_3160:
+_3193:
 
 ; canManager.c	   726      canMessages[canMessageCount - 1].length = byteNum;
 	movb	[r9+#0x94],rl5
-_3161:
+_3194:
 
 ; canManager.c	   727  
 ; canManager.c	   728      //50B: AMK VCU Debug
@@ -4550,64 +4550,68 @@ _3161:
 ; canManager.c	   730      byteNum = 0;
 ; canManager.c	   731      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r11,#0x50b
-_3162:
+_3195:
 	movw	[r9+#0xa4],r11
 	movw	[r9+#0xa6],r12
-_3163:
+_3196:
 
 ; canManager.c	   732      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	[r9+#0xa3],rh5
-_3164:
+_3197:
 
 ; canManager.c	   733      canMessages[canMessageCount - 1].data[byteNum++] = inv1->startUpStage;
-	movw	r11,[r8+#0x14]
-	movw	r13,[r8+#0x16]
+	movw	r11,[r8+#0x18]
+_2241:
+	movw	r13,[r8+#0x1a]
+_2261:
 	addw	r11,#0x6
 	addcw	r13,#0x0
 	exts	r13,#0x1
 	movw	r4,[r11]
-_3165:
+_3198:
 	movb	[r9+#0x9a],rl4
-_3166:
+_3199:
 
 ; canManager.c	   734      canMessages[canMessageCount - 1].data[byteNum++] = inv2->startUpStage;
-	movw	r11,[r8+#0x18]
-	movw	r13,[r8+#0x1a]
+	movw	r11,[r8+#0x1c]
+_2242:
+	movw	r13,[r8+#0x1e]
+_2262:
 	addw	r11,#0x6
 	addcw	r13,#0x0
 	exts	r13,#0x1
 	movw	r4,[r11]
-_3167:
+_3200:
 	movb	[r9+#0x9b],rl4
-_3168:
+_3201:
 
 ; canManager.c	   735      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x9c],rh5
-_3169:
+_3202:
 
 ; canManager.c	   736      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x9d],rh5
-_3170:
+_3203:
 
 ; canManager.c	   737      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x9e],rh5
-_3171:
+_3204:
 
 ; canManager.c	   738      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0x9f],rh5
-_3172:
+_3205:
 
 ; canManager.c	   739      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0xa0],rh5
-_3173:
+_3206:
 
 ; canManager.c	   740      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0xa1],rh5
-_3174:
+_3207:
 
 ; canManager.c	   741      canMessages[canMessageCount - 1].length = byteNum;
 	movb	[r9+#0xa2],rl5
-_3175:
+_3208:
 
 ; canManager.c	   742  
 ; canManager.c	   743      //50C: SAS (Steering Angle Sensor)
@@ -4615,60 +4619,60 @@ _3175:
 ; canManager.c	   745      byteNum = 0;
 ; canManager.c	   746      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r11,#0x50c
-_3176:
+_2263:
 	movw	[r9+#0xb2],r11
 	movw	[r9+#0xb4],r12
-_3177:
+_3209:
 
 ; canManager.c	   747      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	[r9+#0xb1],rh5
-_3178:
+_3210:
 
 ; canManager.c	   748      canMessages[canMessageCount - 1].data[byteNum++] = steering_degrees();
 	call	_steering_degrees
-_3179:
+_3211:
 	movb	[r9+#0xa8],rl2
-_3180:
+_3212:
 
 ; canManager.c	   749      canMessages[canMessageCount - 1].data[byteNum++] = steering_degrees() >> 8;
 	call	_steering_degrees
-_3181:
+_3213:
 	movb	rl2,rh2
-_3182:
+_3214:
 	movb	[r9+#0xa9],rl2
-_3183:
+_3215:
 
 ; canManager.c	   750      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	rh4,#0x0
-_3184:
+_3216:
 	movb	[r9+#0xaa],rh4
-_3185:
+_3217:
 
 ; canManager.c	   751      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0xab],rh4
-_3186:
+_3218:
 
 ; canManager.c	   752      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0xac],rh4
-_3187:
+_3219:
 
 ; canManager.c	   753      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0xad],rh4
-_3188:
+_3220:
 
 ; canManager.c	   754      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0xae],rh4
-_3189:
+_3221:
 
 ; canManager.c	   755      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0xaf],rh4
-_3190:
+_3222:
 
 ; canManager.c	   756      canMessages[canMessageCount - 1].length = byteNum;
 	movb	rl4,#0x8
-_3191:
+_3223:
 	movb	[r9+#0xb0],rl4
-_3192:
+_3224:
 
 ; canManager.c	   757  
 ; canManager.c	   758      //50D: BPS1 (TEMPORARY ADDRESS)
@@ -4676,23 +4680,23 @@ _3192:
 ; canManager.c	   760      byteNum = 0;
 ; canManager.c	   761      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	[r9+#0xbf],rh4
-_3193:
+_3225:
 
 ; canManager.c	   762      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r11,#0x50d
 	movw	r13,#0x0
-_3194:
+_3226:
 	movw	[r9+#0xc0],r11
 	movw	[r9+#0xc2],r13
-_3195:
+_3227:
 
 ; canManager.c	   763      canMessages[canMessageCount - 1].data[byteNum++] = brakePercent; //This should be bps0Percent, but for now bps0Percent = brakePercent
 	movb	[r9+#0xb6],rh7
-_3196:
+_3228:
 
 ; canManager.c	   764      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0xb7],rh4
-_3197:
+_3229:
 
 ; canManager.c	   765      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_value;
 	movw	r11,[r8+#0x10]
@@ -4701,18 +4705,18 @@ _3197:
 	addcw	r12,#0x0
 	exts	r12,#0x1
 	movw	r5,[r11]
-_3198:
+_3230:
 	movb	[r9+#0xb8],rl5
-_3199:
+_3231:
 
 ; canManager.c	   766      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_value >> 8;
 	exts	r12,#0x1
 	movw	r5,[r11]
-_3200:
+_3232:
 	shr	r5,#0x8
-_3201:
+_3233:
 	movb	[r9+#0xb9],rl5
-_3202:
+_3234:
 
 ; canManager.c	   767      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_calibMin;
 	movw	r11,[r8+#0x10]
@@ -4721,43 +4725,43 @@ _3202:
 	addcw	r12,#0x0
 	exts	r12,#0x1
 	movw	r5,[r11]
-_3203:
+_3235:
 	movb	[r9+#0xba],rl5
-_3204:
+_3236:
 
 ; canManager.c	   768      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_calibMin >> 8;
 	exts	r12,#0x1
 	movw	r5,[r11]
-_3205:
+_3237:
 	shr	r5,#0x8
-_3206:
+_3238:
 	movb	[r9+#0xbb],rl5
-_3207:
+_3239:
 
 ; canManager.c	   769      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_calibMax;
 	movw	r11,[r8+#0x10]
 	movw	r12,[r8+#0x12]
-_2261:
+_2264:
 	addw	r11,#0x18
 	addcw	r12,#0x0
 	exts	r12,#0x1
 	movw	r5,[r11]
-_3208:
+_3240:
 	movb	[r9+#0xbc],rl5
-_3209:
+_3241:
 
 ; canManager.c	   770      canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_calibMax >> 8;
 	exts	r12,#0x1
 	movw	r5,[r11]
-_3210:
+_3242:
 	shr	r5,#0x8
-_3211:
+_3243:
 	movb	[r9+#0xbd],rl5
-_3212:
+_3244:
 
 ; canManager.c	   771      canMessages[canMessageCount - 1].length = byteNum;
 	movb	[r9+#0xbe],rl4
-_3213:
+_3245:
 
 ; canManager.c	   772  
 ; canManager.c	   773      
@@ -4766,78 +4770,78 @@ _3213:
 ; canManager.c	   776      byteNum = 0;
 ; canManager.c	   777      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r11,#0x50e
-_2262:
+_2265:
 	movw	[r9+#0xce],r11
 	movw	[r9+#0xd0],r13
-_3214:
+_3246:
 
 ; canManager.c	   778      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	[r9+#0xcd],rh4
-_3215:
+_3247:
 
 ; canManager.c	   779      canMessages[canMessageCount - 1].data[byteNum++] = BMS_getFaultFlags0(bms);
-	movw	r2,[r8+#0x1e]
-	movw	r3,[r8+#0x1c]
+	movw	r2,[r8+#0x16]
+	movw	r3,[r8+#0x14]
 	call	_BMS_getFaultFlags0
-_3216:
+_3248:
 	movb	[r9+#0xc4],rl2
-_3217:
+_3249:
 
 ; canManager.c	   780      canMessages[canMessageCount - 1].data[byteNum++] = BMS_getFaultFlags1(bms);
-	movw	r2,[r8+#0x1e]
-	movw	r3,[r8+#0x1c]
+	movw	r2,[r8+#0x16]
+	movw	r3,[r8+#0x14]
 	call	_BMS_getFaultFlags1
-_3218:
+_3250:
 	movb	[r9+#0xc5],rl2
-_3219:
+_3251:
 
 ; canManager.c	   781      canMessages[canMessageCount - 1].data[byteNum++] = BMS_getRelayState(bms);
-	movw	r2,[r8+#0x1e]
-	movw	r3,[r8+#0x1c]
+	movw	r2,[r8+#0x16]
+	movw	r3,[r8+#0x14]
 	call	_BMS_getRelayState
-_3220:
+_3252:
 	movb	[r9+#0xc6],rl2
-_3221:
+_3253:
 
 ; canManager.c	   782      canMessages[canMessageCount - 1].data[byteNum++] = BMS_getHighestCellTemp_d_degC(bms);
-	movw	r2,[r8+#0x1e]
-	movw	r3,[r8+#0x1c]
+	movw	r2,[r8+#0x16]
+	movw	r3,[r8+#0x14]
 	call	_BMS_getHighestCellTemp_d_degC
-_3222:
+_3254:
 	movb	[r9+#0xc7],rl2
-_3223:
+_3255:
 
 ; canManager.c	   783      canMessages[canMessageCount - 1].data[byteNum++] = (BMS_getHighestCellTemp_d_degC(bms) >> 8);
-	movw	r2,[r8+#0x1e]
+	movw	r2,[r8+#0x16]
 _2238:
-	movw	r3,[r8+#0x1c]
-_2263:
+	movw	r3,[r8+#0x14]
+_2266:
 	call	_BMS_getHighestCellTemp_d_degC
-_2264:
+_2267:
 	ashr	r2,#0x8
-_3224:
+_3256:
 	movb	[r9+#0xc8],rl2
-_3225:
+_3257:
 
 ; canManager.c	   784      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	rh4,#0x0
-_3226:
+_3258:
 	movb	[r9+#0xc9],rh4
-_3227:
+_3259:
 
 ; canManager.c	   785      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0xca],rh4
-_3228:
+_3260:
 
 ; canManager.c	   786      canMessages[canMessageCount - 1].data[byteNum++] = 0;
 	movb	[r9+#0xcb],rh4
-_3229:
+_3261:
 
 ; canManager.c	   787      canMessages[canMessageCount - 1].length = byteNum;
 	movb	rl4,#0x8
-_3230:
+_3262:
 	movb	[r9+#0xcc],rl4
-_3231:
+_3263:
 
 ; canManager.c	   788  
 ; canManager.c	   789      //50F: Power Debug (Need adaption in the future)
@@ -4845,77 +4849,75 @@ _3231:
 ; canManager.c	   791      byteNum = 0;
 ; canManager.c	   792      canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
 	movw	r11,#0x50f
-_3232:
-	movw	[r9+#0xdc],r11
-_3233:
 	movw	r12,#0x0
-_3234:
+_3264:
+	movw	[r9+#0xdc],r11
 	movw	[r9+#0xde],r12
-_3235:
+_3265:
 
 ; canManager.c	   793      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
 	movb	[r9+#0xdb],rh4
-_3236:
+_3266:
 
 ; canManager.c	   794      canMessages[canMessageCount - 1].data[byteNum++] = 0; //MCM_getPower(mcm);
 	movb	[r9+#0xd2],rh4
-_3237:
+_3267:
 
 ; canManager.c	   795      canMessages[canMessageCount - 1].data[byteNum++] = 0; //(MCM_getPower(mcm) >> 8);
 	movb	[r9+#0xd3],rh4
-_3238:
+_3268:
 
 ; canManager.c	   796      canMessages[canMessageCount - 1].data[byteNum++] = 0; //(MCM_getPower(mcm) >> 16);
 	movb	[r9+#0xd4],rh4
-_3239:
+_3269:
 
 ; canManager.c	   797      canMessages[canMessageCount - 1].data[byteNum++] = 0; //(MCM_getPower(mcm) >> 24);
 	movb	[r9+#0xd5],rh4
-_3240:
+_3270:
 
 ; canManager.c	   798      canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getWarnings(sc);
 	movw	r2,[r8+#0xe]
 	movw	r3,[r8+#0xc]
 	call	_SafetyChecker_getWarnings
-_3241:
+_3271:
 	movb	[r9+#0xd6],rl2
-_3242:
+_3272:
 
 ; canManager.c	   799      canMessages[canMessageCount - 1].data[byteNum++] = (SafetyChecker_getWarnings(sc) >> 8);
 	movw	r2,[r8+#0xe]
 	movw	r3,[r8+#0xc]
 	call	_SafetyChecker_getWarnings
-_3243:
+_3273:
 	movb	rl2,rh2
-_3244:
+_3274:
 	movb	[r9+#0xd7],rl2
-_3245:
+_3275:
 
 ; canManager.c	   800      canMessages[canMessageCount - 1].data[byteNum++] = (SafetyChecker_getWarnings(sc) >> 16);
 	movw	r2,[r8+#0xe]
 	movw	r3,[r8+#0xc]
 	call	_SafetyChecker_getWarnings
-_3246:
+_3276:
 	movb	[r9+#0xd8],rl3
-_3247:
+_3277:
 
 ; canManager.c	   801      canMessages[canMessageCount - 1].data[byteNum++] = (SafetyChecker_getWarnings(sc) >> 24);
 	movw	r2,[r8+#0xe]
 _2244:
 	movw	r3,[r8+#0xc]
-_2265:
+_2268:
 	call	_SafetyChecker_getWarnings
-_2266:
+_2269:
 	shr	r3,#0x8
-_3248:
+_3278:
 	movb	[r9+#0xd9],rl3
-_3249:
+_3279:
 
 ; canManager.c	   802      canMessages[canMessageCount - 1].length = byteNum;
 	movb	rh4,#0x8
-_3250:
+_3280:
 	movb	[r9+#0xda],rh4
-_3251:
+_3281:
 
 ; canManager.c	   803  
 ; canManager.c	   804      //511: SoftBSPD
@@ -4931,291 +4933,16 @@ _3251:
 ; canManager.c	   814      // canMessages[canMessageCount - 1].data[byteNum++] = mcm->kwRequestEstimate >> 8;
 ; canManager.c	   815      // canMessages[canMessageCount - 1].length = byteNum;
 ; canManager.c	   816  
-; canManager.c	   817      //Inverter 1 FL Command Message
-; canManager.c	   818      canMessageCount++;
-; canManager.c	   819      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   817  
+; canManager.c	   818      //----------------------------------------------------------------------------
+; canManager.c	   819      //Additional sensors
+; canManager.c	   820      //----------------------------------------------------------------------------
+; canManager.c	   821  
+; canManager.c	   822      //Place the can messsages into the FIFO queue ---------------------------------------------------
+; canManager.c	   823      //IO_CAN_WriteFIFO(canFifoHandle_HiPri_Write, canMessages, canMessageCount);  //Important: Only transmit one message (the MCU message)
+; canManager.c	   824      CanManager_send(me, CAN0_HIPRI, canMessages, canMessageCount);  //Important: Only transmit one message (the MCU message)
 	movb	rl4,#0x0
-_3252:
-	movb	[r9+#0xe9],rl4
-_3253:
-
-; canManager.c	   820      canMessages[canMessageCount - 1].id = 0x184;
-	movw	r11,#0x184
-_3254:
-	movw	[r9+#0xea],r11
-_3255:
-	movw	r14,#0x0
-_3256:
-	movw	[r9+#0xec],r14
-_3257:
-
-; canManager.c	   821      canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
-	movb	[r9+#0xe0],rl4
-_3258:
-
-; canManager.c	   822      canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv1->AMK_bInverterOn << 0) | (inv1->AMK_bDcOn << 1) | (inv1->AMK_bEnable << 2) | (inv1->AMK_bErrorReset << 3));
-	movw	r12,[r8+#0x14]
-	movw	r13,[r8+#0x16]
-	addw	r12,#0x9
-	addcw	r13,#0x0
-_3259:
-	movw	r2,[r8+#0x14]
-	movw	r11,[r8+#0x16]
-	addw	r2,#0x8
-	addcw	r11,#0x0
-_3260:
-	exts	r13,#0x1
-	movb	rh5,[r12]
-_3261:
-	addb	rh5,rh5
-_3262:
-	exts	r11,#0x1
-	orb	rh5,[r2]
-_3263:
-	movw	r11,[r8+#0x14]
-	movw	r12,[r8+#0x16]
-	addw	r11,#0xa
-	addcw	r12,#0x0
-_3264:
-	movw	r3,r9
-	addw	r3,#0xe1
-_3265:
-	exts	r12,#0x1
-	movb	rl2,[r11]
-_3266:
-	movw	r11,[r8+#0x14]
-	movw	r12,[r8+#0x16]
-	addw	r11,#0xb
-	addcw	r12,#0x0
-_3267:
-	shl	r2,#0x2
-_3268:
-	orb	rh5,rl2
-_3269:
-	exts	r12,#0x1
-	movb	rl2,[r11]
-_3270:
-	shl	r2,#0x3
-_3271:
-	orb	rh5,rl2
-_3272:
-	movb	[r3],rh5
-_3273:
-
-; canManager.c	   823      canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
-	andb	rh5,#0xf
-	movb	[r3],rh5
-_3274:
-
-; canManager.c	   824      canMessages[canMessageCount - 1].data[2] = inv1->AMK_TorqueSetpoint;
-	movw	r11,[r8+#0x14]
-	movw	r12,[r8+#0x16]
-	addw	r11,#0xc
-	addcw	r12,#0x0
-	exts	r12,#0x1
-	movw	r5,[r11]
-_3275:
-	movb	[r9+#0xe2],rl5
-_3276:
-
-; canManager.c	   825      canMessages[canMessageCount - 1].data[3] = inv1->AMK_TorqueSetpoint >> 8;
-	exts	r12,#0x1
-	movw	r5,[r11]
-_3277:
-	ashr	r5,#0x8
-_3278:
-	movb	[r9+#0xe3],rl5
-_3279:
-
-; canManager.c	   826      canMessages[canMessageCount - 1].data[4] = inv1->AMK_TorqueLimitPositiv;
-	movw	r11,[r8+#0x14]
-	movw	r12,[r8+#0x16]
-	addw	r11,#0xe
-	addcw	r12,#0x0
-	exts	r12,#0x1
-	movw	r5,[r11]
-_3280:
-	movb	[r9+#0xe4],rl5
-_3281:
-
-; canManager.c	   827      canMessages[canMessageCount - 1].data[5] = inv1->AMK_TorqueLimitPositiv >> 8;
-	exts	r12,#0x1
-	movw	r5,[r11]
 _3282:
-	ashr	r5,#0x8
-_3283:
-	movb	[r9+#0xe5],rl5
-_3284:
-
-; canManager.c	   828      canMessages[canMessageCount - 1].data[6] = inv1->AMK_TorqueLimitNegativ;
-	movw	r11,[r8+#0x14]
-_2241:
-	movw	r12,[r8+#0x16]
-	addw	r11,#0x10
-	addcw	r12,#0x0
-	exts	r12,#0x1
-	movw	r5,[r11]
-_3285:
-	movb	[r9+#0xe6],rl5
-_3286:
-
-; canManager.c	   829      canMessages[canMessageCount - 1].data[7] = inv1->AMK_TorqueLimitNegativ >> 8;
-	exts	r12,#0x1
-	movw	r5,[r11]
-_3287:
-	ashr	r5,#0x8
-_3288:
-	movb	[r9+#0xe7],rl5
-_3289:
-
-; canManager.c	   830      canMessages[canMessageCount - 1].length = 8;
-	movb	[r9+#0xe8],rh4
-_3290:
-
-; canManager.c	   831  
-; canManager.c	   832      //Inverter 2 FR Command Message
-; canManager.c	   833      canMessageCount++;
-; canManager.c	   834      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-	movb	[r9+#0xf7],rl4
-_3291:
-
-; canManager.c	   835      canMessages[canMessageCount - 1].id = 0x185;
-	movw	r11,#0x185
-_3292:
-	movw	[r9+#0xf8],r11
-	movw	[r9+#0xfa],r14
-_3293:
-
-; canManager.c	   836      canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
-	movb	[r9+#0xee],rl4
-_3294:
-
-; canManager.c	   837      canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv2->AMK_bInverterOn << 0) | (inv2->AMK_bDcOn << 1) | (inv2->AMK_bEnable << 2) | (inv2->AMK_bErrorReset << 3));
-	movw	r12,[r8+#0x18]
-	movw	r13,[r8+#0x1a]
-	addw	r12,#0x9
-	addcw	r13,#0x0
-_3295:
-	movw	r2,[r8+#0x18]
-	movw	r11,[r8+#0x1a]
-	addw	r2,#0x8
-	addcw	r11,#0x0
-_3296:
-	exts	r13,#0x1
-	movb	rh5,[r12]
-_3297:
-	addb	rh5,rh5
-_3298:
-	exts	r11,#0x1
-	orb	rh5,[r2]
-_3299:
-	movw	r11,[r8+#0x18]
-	movw	r12,[r8+#0x1a]
-	addw	r11,#0xa
-	addcw	r12,#0x0
-_3300:
-	movw	r14,r9
-	addw	r14,#0xef
-_3301:
-	exts	r12,#0x1
-	movb	rl2,[r11]
-_3302:
-	movw	r11,[r8+#0x18]
-	movw	r12,[r8+#0x1a]
-	addw	r11,#0xb
-	addcw	r12,#0x0
-_3303:
-	shl	r2,#0x2
-_3304:
-	orb	rh5,rl2
-_3305:
-	exts	r12,#0x1
-	movb	rl2,[r11]
-_3306:
-	shl	r2,#0x3
-_3307:
-	orb	rh5,rl2
-_3308:
-	movb	[r14],rh5
-_3309:
-
-; canManager.c	   838      canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
-	andb	rh5,#0xf
-	movb	[r14],rh5
-_3310:
-
-; canManager.c	   839      canMessages[canMessageCount - 1].data[2] = inv2->AMK_TorqueSetpoint;
-	movw	r11,[r8+#0x18]
-	movw	r12,[r8+#0x1a]
-	addw	r11,#0xc
-	addcw	r12,#0x0
-	exts	r12,#0x1
-	movw	r5,[r11]
-_3311:
-	movb	[r9+#0xf0],rl5
-_3312:
-
-; canManager.c	   840      canMessages[canMessageCount - 1].data[3] = inv2->AMK_TorqueSetpoint >> 8;
-	exts	r12,#0x1
-	movw	r5,[r11]
-_3313:
-	ashr	r5,#0x8
-_3314:
-	movb	[r9+#0xf1],rl5
-_3315:
-
-; canManager.c	   841      canMessages[canMessageCount - 1].data[4] = inv2->AMK_TorqueLimitPositiv;
-	movw	r11,[r8+#0x18]
-	movw	r12,[r8+#0x1a]
-	addw	r11,#0xe
-	addcw	r12,#0x0
-	exts	r12,#0x1
-	movw	r5,[r11]
-_3316:
-	movb	[r9+#0xf2],rl5
-_3317:
-
-; canManager.c	   842      canMessages[canMessageCount - 1].data[5] = inv2->AMK_TorqueLimitPositiv >> 8;
-	exts	r12,#0x1
-	movw	r5,[r11]
-_3318:
-	ashr	r5,#0x8
-_3319:
-	movb	[r9+#0xf3],rl5
-_3320:
-
-; canManager.c	   843      canMessages[canMessageCount - 1].data[6] = inv2->AMK_TorqueLimitNegativ;
-	movw	r11,[r8+#0x18]
-_2242:
-	movw	r12,[r8+#0x1a]
-	addw	r11,#0x10
-	addcw	r12,#0x0
-	exts	r12,#0x1
-	movw	r5,[r11]
-_3321:
-	movb	[r9+#0xf4],rl5
-_3322:
-
-; canManager.c	   844      canMessages[canMessageCount - 1].data[7] = inv2->AMK_TorqueLimitNegativ >> 8;
-	exts	r12,#0x1
-	movw	r5,[r11]
-_3323:
-	ashr	r5,#0x8
-_3324:
-	movb	[r9+#0xf5],rl5
-_3325:
-
-; canManager.c	   845      canMessages[canMessageCount - 1].length = 8;
-	movb	[r9+#0xf6],rh4
-_3326:
-
-; canManager.c	   846      //----------------------------------------------------------------------------
-; canManager.c	   847      //Additional sensors
-; canManager.c	   848      //----------------------------------------------------------------------------
-; canManager.c	   849  
-; canManager.c	   850      //Place the can messsages into the FIFO queue ---------------------------------------------------
-; canManager.c	   851      //IO_CAN_WriteFIFO(canFifoHandle_HiPri_Write, canMessages, canMessageCount);  //Important: Only transmit one message (the MCU message)
-; canManager.c	   852      CanManager_send(me, CAN0_HIPRI, canMessages, canMessageCount);  //Important: Only transmit one message (the MCU message)
 	movw	r11,r9
 	movw	r12,r9
 	jmp	cc_z,_123
@@ -5226,16 +4953,16 @@ _3326:
 	bmov	r11.15,r12.1
 	shr	r12,#0x2
 _123:
-	movb	rh4,#0x12
+	movb	rh4,#0x10
 	movw	r2,[r8+#0x22]
 	movw	r3,[r8+#0x20]
-_2267:
+_2270:
 	call	_CanManager_send
 _364:
 
-; canManager.c	   853      //IO_CAN_WriteFIFO(canFifoHandle_LoPri_Write, canMessages, canMessageCount);  
-; canManager.c	   854  
-; canManager.c	   855  }
+; canManager.c	   825      //IO_CAN_WriteFIFO(canFifoHandle_LoPri_Write, canMessages, canMessageCount);  
+; canManager.c	   826  
+; canManager.c	   827  }
 	movw	r15,[r9+#0xfffe]
 _365:
 	addw	r15,#0x24
@@ -5262,461 +4989,859 @@ _237:
 code_canOutput_sendDebugMessage1	.section	code, cluster 'canOutput_sendDebugMessage1', new
 	.global	_canOutput_sendDebugMessage1
 
-; canManager.c	   856  
-; canManager.c	   857  void canOutput_sendDebugMessage1(CanManager *me, TorqueEncoder *tps, BrakePressureSensor *bps, InstrumentCluster *ic, BatteryManagementSystem *bms, SafetyChecker *sc, _DAQSensors *d1, _DriveInverter *inv1, _DriveInverter *inv2)
+; canManager.c	   828  
+; canManager.c	   829  void canOutput_sendDebugMessage1(CanManager *me, TorqueEncoder *tps, BrakePressureSensor *bps, InstrumentCluster *ic, BatteryManagementSystem *bms, SafetyChecker *sc, _DAQSensors *d1, _DriveInverter *inv1, _DriveInverter *inv2)
 ; Function _canOutput_sendDebugMessage1
 _198:
 _canOutput_sendDebugMessage1	.proc	far
 	movw	[-r15],r0
-_2268:
+_2271:
 	movw	[-r15],r1
-_2279:
+_2282:
 	movw	[-r15],r6
-_2290:
+_2293:
 	movw	[-r15],r7
-_2301:
+_2304:
 	movw	[-r15],r8
-_2312:
+_2315:
 	movw	[-r15],r9
-_2323:
+_2326:
 	movw	[-r15],r10
-_2334:
-	subw	r15,#0x2
-_2345:
+_2337:
+	subw	r15,#0x34
+_2348:
 	movw	r8,r15
-	movw	r1,r3
-_2610:
+_3287:
 
-; canManager.c	   858  {
-; canManager.c	   859      IO_CAN_DATA_FRAME canMessages[me->can1_write_messageLimit]; 
-	movw	r5,r15
-_2609:
-	movw	[r8],r2
-_3331:
-	addw	r2,#0xa
+; canManager.c	   830  {
+; canManager.c	   831      IO_CAN_DATA_FRAME canMessages[me->can1_write_messageLimit]; 
+	movw	r13,#0xe
 _2608:
+	movw	r12,r15
+_2607:
+	movw	[r8+#0x2e],r2
+	movw	[r8+#0x2c],r3
+_3288:
+	addw	r2,#0xa
+_2611:
 	addcw	r3,#0x0
-_3332:
-	movw	r11,[r8+#0x1c]
-_2604:
+_3289:
+	movw	r11,[r8+#0x4e]
+	movw	[r8+#0x24],r11
+	movw	r11,[r8+#0x50]
+	movw	[r8+#0x26],r11
+	movw	r11,[r8+#0x52]
+	movw	[r8+#0x28],r11
+	movw	r11,[r8+#0x54]
+	movw	[r8+#0x2a],r11
+_3290:
 	exts	r3,#0x1
 	movb	rh4,[r2]
-	movbz	r4,rh4
-	movw	r3,#0xe
-	mulu	r4,r3
-_3333:
-	movw	r12,[r8+#0x1e]
-_2606:
-	movw	r4,MDL
-	addw	r4,#0x2
-	subw	r15,r4
 _2612:
-	movw	r9,r15
+	movbz	r11,rh4
+	mulu	r11,r13
+_3291:
+
+; canManager.c	   832      ubyte1 errorCount;
+; canManager.c	   833      float4 tempPedalPercent;   //Pedal percent float (a decimal between 0 and 1
+; canManager.c	   834      ubyte1 tps0Percent;  //Pedal percent int   (a number from 0 to 100)
+; canManager.c	   835      ubyte1 tps1Percent;
+; canManager.c	   836      ubyte2 canMessageCount = 0;
+; canManager.c	   837      ubyte2 canMessageID = 0x500;
+; canManager.c	   838      ubyte1 byteNum;
+; canManager.c	   839  
+; canManager.c	   840      //Inverter 1 FL Command Message
+; canManager.c	   841      canMessageCount++;
+; canManager.c	   842      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+	movb	rh4,#0x0
+_3292:
+	movw	r11,MDL
+	addw	r11,#0x2
+	subw	r15,r11
 _2613:
-	addw	r9,#0x2
-_3334:
-	movw	r13,[r8+#0x20]
-_2605:
-	movw	r14,[r8+#0x22]
-_2607:
-	movw	[r15],r5
-_3335:
+	movw	r11,r15
+_2614:
+	addw	r11,#0x2
+	movw	[r15],r12
+	movw	[r8+#0x30],r11
+_2616:
+	movb	[r11+#0x9],rh4
+_3293:
 
-; canManager.c	   860      ubyte1 errorCount;
-; canManager.c	   861      float4 tempPedalPercent;   //Pedal percent float (a decimal between 0 and 1
-; canManager.c	   862      ubyte1 tps0Percent;  //Pedal percent int   (a number from 0 to 100)
-; canManager.c	   863      ubyte1 tps1Percent;
-; canManager.c	   864      ubyte2 canMessageCount = 0;
-; canManager.c	   865      ubyte2 canMessageID = 0x500;
-; canManager.c	   866      ubyte1 byteNum;
-; canManager.c	   867  
-; canManager.c	   868      //Inverter 3 RL Command Message
-; canManager.c	   869      canMessageCount++;
-; canManager.c	   870      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-	movb	rl4,#0x0
-_3336:
-	movb	[r9+#0x9],rl4
-_3337:
+; canManager.c	   843      canMessages[canMessageCount - 1].id = 0x184;
+	movw	r12,[r8+#0x30]
+_2615:
+	movw	r11,#0x184
+_3294:
+	movw	[r12+#0xa],r11
+_3295:
+	movw	r11,#0x0
+_3296:
+	movw	[r12+#0xc],r11
+_3297:
 
-; canManager.c	   871      canMessages[canMessageCount - 1].id = 0x188;
-	movw	r5,#0x188
-_3338:
-	movw	[r9+#0xa],r5
-_3339:
+; canManager.c	   844      canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
+	movw	r11,[r8+#0x30]
+_2617:
+	movb	[r11],rh4
+_3298:
 
-; canManager.c	   872      canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
-; canManager.c	   873      canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv1->AMK_bInverterOn << 0) | (inv1->AMK_bDcOn << 1) | (inv1->AMK_bEnable << 2) | (inv1->AMK_bErrorReset << 3));
-	movw	r5,r11
-	movw	r7,r12
-	addw	r5,#0x9
-	addcw	r7,#0x0
-_3340:
-	movw	r2,r11
-	movw	r10,r12
+; canManager.c	   845      canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv1->AMK_bInverterOn << 0) | (inv1->AMK_bDcOn << 1) | (inv1->AMK_bEnable << 2) | (inv1->AMK_bErrorReset << 3));
+	movw	r11,[r8+#0x24]
+_2618:
+	movw	[r8+#0x22],r11
+	movw	r11,[r8+#0x26]
+	movw	[r8+#0x20],r11
+	movw	r11,[r8+#0x22]
+	movw	r12,[r8+#0x20]
+	addw	r11,#0xb
+	addcw	r12,#0x0
+	movw	[r8+#0x22],r11
+	movw	[r8+#0x20],r12
+_3299:
+	movw	r11,[r8+#0x24]
+	movw	[r8+#0x1e],r11
+	movw	r11,[r8+#0x26]
+	movw	[r8+#0x1c],r11
+	movw	r11,[r8+#0x1e]
+	movw	r12,[r8+#0x1c]
+	addw	r11,#0xa
+	addcw	r12,#0x0
+	movw	[r8+#0x1e],r11
+	movw	[r8+#0x1c],r12
+_3300:
+	movw	r11,[r8+#0x24]
+	movw	[r8+#0x1a],r11
+	movw	r11,[r8+#0x26]
+	movw	[r8+#0x18],r11
+	movw	r11,[r8+#0x1a]
+	movw	r12,[r8+#0x18]
+	addw	r11,#0x9
+	addcw	r12,#0x0
+	movw	[r8+#0x1a],r11
+	movw	[r8+#0x18],r12
+_3301:
+	movw	r2,[r8+#0x24]
+	movw	r11,[r8+#0x26]
 	addw	r2,#0x8
-	addcw	r10,#0x0
-_3341:
-	movw	r6,#0x0
-_3342:
-	movw	[r9+#0xc],r6
-_3343:
-	movb	[r9],rl4
-_3344:
-	exts	r7,#0x1
-	movb	rh4,[r5]
-_3345:
+	addcw	r11,#0x0
+	movw	[r8+#0x16],r2
+	movw	[r8+#0x10],r11
+_3302:
+	movw	r12,[r8+#0x1a]
+	movw	r14,[r8+#0x18]
+	exts	r14,#0x1
+	movb	rh4,[r12]
+_3303:
 	addb	rh4,rh4
-_3346:
-	exts	r10,#0x1
+_3304:
+	exts	r11,#0x1
 	orb	rh4,[r2]
-_3347:
-	movw	r5,r11
-	movw	r2,r12
-	addw	r5,#0xa
-	addcw	r2,#0x0
-_3348:
+_3305:
+	movw	r11,[r8+#0x1e]
+	movw	r12,[r8+#0x1c]
+	exts	r12,#0x1
+	movb	rl5,[r11]
+_3306:
+	movw	r11,[r8+#0x22]
+_3307:
+	shl	r5,#0x2
+_3308:
+	movw	r12,[r8+#0x20]
+_3309:
+	orb	rh4,rl5
+_3310:
+	exts	r12,#0x1
+	movb	rl5,[r11]
+_3311:
+	movw	r11,[r8+#0x30]
+_2619:
+	shl	r5,#0x3
+_3312:
+	orb	rh4,rl5
+_3313:
+	movb	[r11+#0x1],rh4
+_3314:
 
-; canManager.c	   874      canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
-; canManager.c	   875      canMessages[canMessageCount - 1].data[2] = inv1->AMK_TorqueSetpoint;
-	movw	r10,r12
+; canManager.c	   846      canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
+	andb	rh4,#0xf
+	movb	[r11+#0x1],rh4
+_3315:
+
+; canManager.c	   847      canMessages[canMessageCount - 1].data[2] = inv1->AMK_TorqueSetpoint;
+	movw	r11,[r8+#0x24]
+_2620:
+	movw	[r8+#0x2],r11
+	movw	r11,[r8+#0x26]
+	movw	r12,[r8+#0x2]
+	addw	r12,#0xc
+	addcw	r11,#0x0
+	movw	[r8+#0x2],r12
+	movw	[r8],r11
+	exts	r11,#0x1
+	movw	r4,[r12]
+_3316:
+	movw	r11,[r8+#0x30]
+_2621:
+
+; canManager.c	   848      canMessages[canMessageCount - 1].data[3] = inv1->AMK_TorqueSetpoint >> 8;
+; canManager.c	   849      canMessages[canMessageCount - 1].data[4] = inv1->AMK_TorqueLimitPositiv;
+; canManager.c	   850      canMessages[canMessageCount - 1].data[5] = inv1->AMK_TorqueLimitPositiv >> 8;
+; canManager.c	   851      canMessages[canMessageCount - 1].data[6] = inv1->AMK_TorqueLimitNegativ;
+; canManager.c	   852      canMessages[canMessageCount - 1].data[7] = inv1->AMK_TorqueLimitNegativ >> 8;
+; canManager.c	   853      canMessages[canMessageCount - 1].length = 8;
+; canManager.c	   854  
+; canManager.c	   855      //Inverter 2 FR Command Message
+; canManager.c	   856      canMessageCount++;
+; canManager.c	   857      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+; canManager.c	   858      canMessages[canMessageCount - 1].id = 0x185;
+; canManager.c	   859      canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
+; canManager.c	   860      canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv2->AMK_bInverterOn << 0) | (inv2->AMK_bDcOn << 1) | (inv2->AMK_bEnable << 2) | (inv2->AMK_bErrorReset << 3));
+	movw	r14,#0xf
+_3317:
+	movb	[r11+#0x2],rl4
+_3318:
+	movw	r11,[r8+#0x2]
+_2622:
+	movw	r12,[r8]
+	exts	r12,#0x1
+	movw	r4,[r11]
+_3319:
+	movw	r11,[r8+#0x30]
+_2623:
+	ashr	r4,#0x8
+_3320:
+	movb	[r11+#0x3],rl4
+_3321:
+	movw	r1,[r8+#0x24]
+	movw	r7,[r8+#0x26]
+	addw	r1,r13
+	addcw	r7,#0x0
+	exts	r7,#0x1
+	movw	r4,[r1]
+_3322:
+	movb	[r11+#0x4],rl4
+_3323:
+	exts	r7,#0x1
+	movw	r4,[r1]
+_3324:
+	ashr	r4,#0x8
+_3325:
+	movb	[r11+#0x5],rl4
+_3326:
+	movw	r6,[r8+#0x24]
+	movw	r10,[r8+#0x26]
+	addw	r6,#0x10
+	addcw	r10,#0x0
+	exts	r10,#0x1
+	movw	r4,[r6]
+_3327:
+	movb	[r11+#0x6],rl4
+_3328:
+	exts	r10,#0x1
+	movw	r4,[r6]
+_3329:
+	ashr	r4,#0x8
+_3330:
+	movb	[r11+#0x7],rl4
+_3331:
+	movb	rh4,#0x8
+_3332:
+	movb	[r11+#0x8],rh4
+_3333:
+	movb	rh4,#0x0
+_3334:
+	movb	[r11+#0x17],rh4
+_3335:
+	movw	r12,[r8+#0x30]
+_2624:
+	movw	r11,#0x185
+_3336:
+	movw	[r12+#0x18],r11
+_3337:
+	movw	r11,#0x0
+_3338:
+	movw	[r12+#0x1a],r11
+_3339:
+	movw	r11,[r8+#0x30]
+_2625:
+	movb	[r11+#0xe],rh4
+_3340:
+	movw	r11,[r8+#0x28]
+_2626:
+	movw	[r8+#0x14],r11
+	movw	r11,[r8+#0x2a]
+	movw	[r8+#0x12],r11
+	movw	r11,[r8+#0x14]
+	movw	r12,[r8+#0x12]
+	addw	r11,#0xb
+	addcw	r12,#0x0
+	movw	[r8+#0x14],r11
+	movw	[r8+#0x12],r12
+_3341:
+	movw	r11,[r8+#0x28]
+	movw	[r8+#0xe],r11
+	movw	r11,[r8+#0x2a]
+	movw	[r8+#0xc],r11
+	movw	r11,[r8+#0xe]
+	movw	r12,[r8+#0xc]
+	addw	r11,#0xa
+	addcw	r12,#0x0
+	movw	[r8+#0xe],r11
+	movw	[r8+#0xc],r12
+_3342:
+	movw	r11,[r8+#0x28]
+	movw	[r8+#0xa],r11
+	movw	r11,[r8+#0x2a]
+	movw	[r8+#0x8],r11
+	movw	r11,[r8+#0xa]
+	movw	r12,[r8+#0x8]
+	addw	r11,#0x9
+	addcw	r12,#0x0
+	movw	[r8+#0xa],r11
+	movw	[r8+#0x8],r12
+_3343:
+	movw	r2,[r8+#0x28]
+	movw	r11,[r8+#0x2a]
+	addw	r2,#0x8
+	addcw	r11,#0x0
+	movw	[r8+#0x6],r2
+	movw	[r8+#0x4],r11
+_3344:
+	movw	r12,[r8+#0x30]
+_2627:
+	addw	r14,r12
+_3345:
+	movw	r12,[r8+#0xa]
+_2628:
+	movw	r13,[r8+#0x8]
+	exts	r13,#0x1
+	movb	rh4,[r12]
+_3346:
+	addb	rh4,rh4
+_3347:
+	exts	r11,#0x1
+	orb	rh4,[r2]
+_3348:
+	movw	r11,[r8+#0xe]
+	movw	r12,[r8+#0xc]
+	exts	r12,#0x1
+	movb	rl5,[r11]
 _3349:
-	exts	r2,#0x1
-	movb	rl5,[r5]
+	movw	r11,[r8+#0x14]
 _3350:
 	shl	r5,#0x2
 _3351:
-	orb	rh4,rl5
+	movw	r12,[r8+#0x12]
 _3352:
-	movw	r5,r11
-	movw	r2,r12
-	addw	r5,#0xb
-	addcw	r2,#0x0
+	orb	rh4,rl5
 _3353:
-
-; canManager.c	   876      canMessages[canMessageCount - 1].data[3] = inv1->AMK_TorqueSetpoint >> 8;
-; canManager.c	   877      canMessages[canMessageCount - 1].data[4] = inv1->AMK_TorqueLimitPositiv;
-; canManager.c	   878      canMessages[canMessageCount - 1].data[5] = inv1->AMK_TorqueLimitPositiv >> 8;
-; canManager.c	   879      canMessages[canMessageCount - 1].data[6] = inv1->AMK_TorqueLimitNegativ;
-; canManager.c	   880      canMessages[canMessageCount - 1].data[7] = inv1->AMK_TorqueLimitNegativ >> 8;
-; canManager.c	   881      canMessages[canMessageCount - 1].length = 8;
-; canManager.c	   882  
-; canManager.c	   883      //Inverter 4 RR Command Message
-; canManager.c	   884      canMessageCount++;
-; canManager.c	   885      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-; canManager.c	   886      canMessages[canMessageCount - 1].id = 0x189;
-; canManager.c	   887      canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
-; canManager.c	   888      canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv2->AMK_bInverterOn << 0) | (inv2->AMK_bDcOn << 1) | (inv2->AMK_bEnable << 2) | (inv2->AMK_bErrorReset << 3));
-	movw	r0,r13
+	exts	r12,#0x1
+	movb	rl5,[r11]
 _3354:
-	exts	r2,#0x1
-	movb	rl5,[r5]
+	shl	r5,#0x3
 _3355:
-	movw	r2,r11
-	addw	r2,#0xc
-	addcw	r10,#0x0
+	orb	rh4,rl5
 _3356:
-	shl	r5,#0x3
+	movb	[r14],rh4
 _3357:
-	orb	rh4,rl5
-_3358:
-	movb	[r9+#0x1],rh4
-_3359:
-	andb	rh4,#0xf
-	movb	[r9+#0x1],rh4
-_3360:
-	exts	r10,#0x1
-	movw	r5,[r2]
-_3361:
-	movb	[r9+#0x2],rl5
-_3362:
-	exts	r10,#0x1
-	movw	r5,[r2]
-_3363:
-	movw	r2,r11
-	movw	r10,r12
-	addw	r2,r3
-	addcw	r10,#0x0
-_3364:
-	ashr	r5,#0x8
-_3365:
-	movb	[r9+#0x3],rl5
-_3366:
-	exts	r10,#0x1
-	movw	r5,[r2]
-_3367:
-	movb	[r9+#0x4],rl5
-_3368:
-	exts	r10,#0x1
-	movw	r5,[r2]
-_3369:
-	movw	r2,r11
-	movw	r3,r12
-	addw	r2,#0x10
-	addcw	r3,#0x0
-_3370:
-	ashr	r5,#0x8
-_3371:
-	movb	[r9+#0x5],rl5
-_3372:
-	exts	r3,#0x1
-	movw	r5,[r2]
-_3373:
-	movb	[r9+#0x6],rl5
-_3374:
-	exts	r3,#0x1
-	movw	r5,[r2]
-_3375:
-	ashr	r5,#0x8
-_3376:
-	movb	[r9+#0x7],rl5
-_3377:
-	movb	rh3,#0x8
-_3378:
-	movb	[r9+#0x8],rh3
-_3379:
-	movb	[r9+#0x17],rl4
-_3380:
-	movw	r5,#0x189
-_3381:
-	movw	[r9+#0x18],r5
-_3382:
-	movw	r5,r14
-	addw	r0,#0x9
-	addcw	r5,#0x0
-_3383:
-	movw	r2,r13
-	movw	r7,r14
-	addw	r2,#0x8
-	addcw	r7,#0x0
-_3384:
-	movw	[r9+#0x1a],r6
-_3385:
-	movb	[r9+#0xe],rl4
-_3386:
-	exts	r5,#0x1
-	movb	rh4,[r0]
-_3387:
-	addb	rh4,rh4
-_3388:
-	exts	r7,#0x1
-	orb	rh4,[r2]
-_3389:
-	movw	r5,r13
-	movw	r2,r14
-	addw	r5,#0xa
-	addcw	r2,#0x0
-_3390:
-	movw	r10,#0xf
-	addw	r10,r9
-_3391:
-	exts	r2,#0x1
-	movb	rl5,[r5]
-_3392:
-	shl	r5,#0x2
-_3393:
-	orb	rh4,rl5
-_3394:
-	movw	r5,r13
-	movw	r2,r14
-	addw	r5,#0xb
-	addcw	r2,#0x0
-_3395:
 
-; canManager.c	   889      canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
-; canManager.c	   890      canMessages[canMessageCount - 1].data[2] = inv2->AMK_TorqueSetpoint;
-; canManager.c	   891      canMessages[canMessageCount - 1].data[3] = inv2->AMK_TorqueSetpoint >> 8;
-; canManager.c	   892      canMessages[canMessageCount - 1].data[4] = inv2->AMK_TorqueLimitPositiv;
-; canManager.c	   893      canMessages[canMessageCount - 1].data[5] = inv2->AMK_TorqueLimitPositiv >> 8;
-; canManager.c	   894      canMessages[canMessageCount - 1].data[6] = inv2->AMK_TorqueLimitNegativ;
-; canManager.c	   895      canMessages[canMessageCount - 1].data[7] = inv2->AMK_TorqueLimitNegativ >> 8;
-; canManager.c	   896      canMessages[canMessageCount - 1].length = 8;
-; canManager.c	   897  
-; canManager.c	   898      //50B: AMK VCU Debug (3/4 Inverters)
-; canManager.c	   899      canMessageCount++;
-; canManager.c	   900      byteNum = 0;
-; canManager.c	   901      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-; canManager.c	   902      canMessages[canMessageCount - 1].id = 0x50B;
-; canManager.c	   903      canMessages[canMessageCount - 1].data[byteNum++] = inv1->startUpStage;
-	addw	r11,#0x6
-_2611:
-	addcw	r12,#0x0
-_3396:
-	exts	r2,#0x1
-	movb	rl5,[r5]
-_3397:
-	shl	r5,#0x3
-_3398:
-	orb	rh4,rl5
-_3399:
-	movb	[r10],rh4
-_3400:
+; canManager.c	   861      canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
 	andb	rh4,#0xf
-	movb	[r10],rh4
+	movb	[r14],rh4
+_3358:
+
+; canManager.c	   862      canMessages[canMessageCount - 1].data[2] = inv2->AMK_TorqueSetpoint;
+	movw	r12,[r8+#0x30]
+_2629:
+	movw	r9,[r8+#0x28]
+	movw	r11,[r8+#0x2a]
+	addw	r9,#0xc
+	addcw	r11,#0x0
+	exts	r11,#0x1
+	movw	r4,[r9]
+_3359:
+	movb	[r12+#0x10],rl4
+_3360:
+
+; canManager.c	   863      canMessages[canMessageCount - 1].data[3] = inv2->AMK_TorqueSetpoint >> 8;
+	exts	r11,#0x1
+	movw	r4,[r9]
+_3361:
+	ashr	r4,#0x8
+_3362:
+	movb	[r12+#0x11],rl4
+_3363:
+
+; canManager.c	   864      canMessages[canMessageCount - 1].data[4] = inv2->AMK_TorqueLimitPositiv;
+	movw	r14,[r8+#0x30]
+_2630:
+	movw	r12,[r8+#0x28]
+	movw	r13,[r8+#0x2a]
+	addw	r12,#0xe
+	addcw	r13,#0x0
+	exts	r13,#0x1
+	movw	r4,[r12]
+_3364:
+	movb	[r14+#0x12],rl4
+_3365:
+
+; canManager.c	   865      canMessages[canMessageCount - 1].data[5] = inv2->AMK_TorqueLimitPositiv >> 8;
+	exts	r13,#0x1
+	movw	r4,[r12]
+_3366:
+	ashr	r4,#0x8
+_3367:
+	movb	[r14+#0x13],rl4
+_3368:
+
+; canManager.c	   866      canMessages[canMessageCount - 1].data[6] = inv2->AMK_TorqueLimitNegativ;
+	movw	r2,[r8+#0x30]
+_2631:
+	movw	r14,[r8+#0x28]
+	movw	r5,[r8+#0x2a]
+	addw	r14,#0x10
+	addcw	r5,#0x0
+	exts	r5,#0x1
+	movw	r4,[r14]
+_3369:
+	movb	[r2+#0x14],rl4
+_3370:
+
+; canManager.c	   867      canMessages[canMessageCount - 1].data[7] = inv2->AMK_TorqueLimitNegativ >> 8;
+	exts	r5,#0x1
+	movw	r4,[r14]
+_3371:
+	ashr	r4,#0x8
+_3372:
+	movb	[r2+#0x15],rl4
+_3373:
+	movb	rh4,#0x8
+_3374:
+
+; canManager.c	   868      canMessages[canMessageCount - 1].length = 8;
+	movb	[r2+#0x16],rh4
+_3375:
+	movb	rh4,#0x0
+_3376:
+
+; canManager.c	   869      
+; canManager.c	   870      //Inverter 3 RL Command Message
+; canManager.c	   871      canMessageCount++;
+; canManager.c	   872      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+	movb	[r2+#0x25],rh4
+_3377:
+
+; canManager.c	   873      canMessages[canMessageCount - 1].id = 0x188;
+	movw	r4,#0x188
+_3378:
+	movw	[r2+#0x26],r4
+_3379:
+	movw	r4,#0x0
+_3380:
+	movw	[r2+#0x28],r4
+_3381:
+	movb	rh4,#0x0
+_3382:
+
+; canManager.c	   874      canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
+	movb	[r2+#0x1c],rh4
+_3383:
+
+; canManager.c	   875      canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv1->AMK_bInverterOn << 0) | (inv1->AMK_bDcOn << 1) | (inv1->AMK_bEnable << 2) | (inv1->AMK_bErrorReset << 3));
+	movw	r2,[r8+#0x1a]
+_2632:
+	movw	r4,[r8+#0x18]
+	exts	r4,#0x1
+	movb	rh4,[r2]
+_3384:
+	movw	r2,[r8+#0x16]
+_3385:
+	movw	r0,[r8+#0x10]
+_3386:
+	addb	rh4,rh4
+_3387:
+	exts	r0,#0x1
+	orb	rh4,[r2]
+_3388:
+	movw	r3,[r8+#0x30]
+_2633:
+	movb	[r8+#0x32],rh4
+_3389:
+	movw	r4,[r8+#0x1e]
+_3390:
+	addw	r3,#0x1d
+_3391:
+	movw	r2,[r8+#0x1c]
+	exts	r2,#0x1
+	movb	rl2,[r4]
+_3392:
+	shl	r2,#0x2
+_3393:
+	movb	rh4,[r8+#0x32]
+	orb	rh4,rl2
+	movb	[r8+#0x32],rh4
+_3394:
+	movw	r4,[r8+#0x22]
+	movw	r2,[r8+#0x20]
+	exts	r2,#0x1
+	movb	rl2,[r4]
+_3395:
+	shl	r2,#0x3
+_3396:
+	movb	rh4,[r8+#0x32]
+	orb	rh4,rl2
+	movb	[r8+#0x32],rh4
+_3397:
+	movb	[r3],rh4
+_3398:
+
+; canManager.c	   876      canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
+	andb	rh4,#0xf
+	movb	[r3],rh4
+_3399:
+
+; canManager.c	   877      canMessages[canMessageCount - 1].data[2] = inv1->AMK_TorqueSetpoint;
+	movw	r4,[r8+#0x2]
+	movw	r2,[r8]
+	exts	r2,#0x1
+	movw	r4,[r4]
+_3400:
+	movw	r2,[r8+#0x30]
+_2634:
+	movb	[r2+#0x1e],rl4
 _3401:
-	movw	r2,r13
-	movw	r10,r14
-	addw	r2,#0xc
-	addcw	r10,#0x0
-	exts	r10,#0x1
-	movw	r5,[r2]
+
+; canManager.c	   878      canMessages[canMessageCount - 1].data[3] = inv1->AMK_TorqueSetpoint >> 8;
+	movw	r4,[r8+#0x2]
+	movw	r2,[r8]
+_2635:
+	exts	r2,#0x1
+	movw	r4,[r4]
 _3402:
-	movb	[r9+#0x10],rl5
+	movw	r2,[r8+#0x30]
+_2636:
+	ashr	r4,#0x8
 _3403:
-	exts	r10,#0x1
-	movw	r5,[r2]
+	movb	[r2+#0x1f],rl4
 _3404:
-	movw	r2,r13
-	movw	r10,r14
-	addw	r2,#0xe
-	addcw	r10,#0x0
+
+; canManager.c	   879      canMessages[canMessageCount - 1].data[4] = inv1->AMK_TorqueLimitPositiv;
+	exts	r7,#0x1
+	movw	r4,[r1]
 _3405:
-	ashr	r5,#0x8
+	movb	[r2+#0x20],rl4
 _3406:
-	movb	[r9+#0x11],rl5
+
+; canManager.c	   880      canMessages[canMessageCount - 1].data[5] = inv1->AMK_TorqueLimitPositiv >> 8;
+	exts	r7,#0x1
+	movw	r4,[r1]
 _3407:
-	exts	r10,#0x1
-	movw	r5,[r2]
+	ashr	r4,#0x8
 _3408:
-	movb	[r9+#0x12],rl5
+	movb	[r2+#0x21],rl4
 _3409:
+
+; canManager.c	   881      canMessages[canMessageCount - 1].data[6] = inv1->AMK_TorqueLimitNegativ;
 	exts	r10,#0x1
-	movw	r5,[r2]
+	movw	r4,[r6]
 _3410:
-	movw	r2,r13
-	movw	r10,r14
-	addw	r2,#0x10
-	addcw	r10,#0x0
+	movb	[r2+#0x22],rl4
 _3411:
 
-; canManager.c	   904      canMessages[canMessageCount - 1].data[byteNum++] = inv2->startUpStage;
-	addw	r13,#0x6
-_2614:
-	addcw	r14,#0x0
+; canManager.c	   882      canMessages[canMessageCount - 1].data[7] = inv1->AMK_TorqueLimitNegativ >> 8;
+	exts	r10,#0x1
+	movw	r4,[r6]
 _3412:
-	ashr	r5,#0x8
+	ashr	r4,#0x8
 _3413:
-	movb	[r9+#0x13],rl5
+	movb	[r2+#0x23],rl4
 _3414:
-	exts	r10,#0x1
-	movw	r5,[r2]
+	movb	rh4,#0x8
 _3415:
-	movb	[r9+#0x14],rl5
+
+; canManager.c	   883      canMessages[canMessageCount - 1].length = 8;
+	movb	[r2+#0x24],rh4
 _3416:
-	exts	r10,#0x1
-	movw	r5,[r2]
+	movb	rh4,#0x0
 _3417:
-	ashr	r5,#0x8
+
+; canManager.c	   884  
+; canManager.c	   885      //Inverter 4 RR Command Message
+; canManager.c	   886      canMessageCount++;
+; canManager.c	   887      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+	movb	[r2+#0x33],rh4
 _3418:
-	movb	[r9+#0x15],rl5
+
+; canManager.c	   888      canMessages[canMessageCount - 1].id = 0x189;
+	movw	r4,#0x189
 _3419:
-	movb	[r9+#0x16],rh3
+	movw	[r2+#0x34],r4
 _3420:
-	movb	[r9+#0x25],rl4
+	movw	r4,#0x0
 _3421:
-	movw	r5,#0x50b
+	movw	[r2+#0x36],r4
 _3422:
-	movw	[r9+#0x26],r5
-	movw	[r9+#0x28],r6
+	movb	rh4,#0x0
 _3423:
-	exts	r12,#0x1
-	movw	r5,[r11]
+
+; canManager.c	   889      canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
+	movb	[r2+#0x2a],rh4
 _3424:
-	movb	[r9+#0x1c],rl5
+
+; canManager.c	   890      canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv2->AMK_bInverterOn << 0) | (inv2->AMK_bDcOn << 1) | (inv2->AMK_bEnable << 2) | (inv2->AMK_bErrorReset << 3));
+	movw	r4,[r8+#0xa]
+	movw	r2,[r8+#0x8]
+_2637:
+	exts	r2,#0x1
+	movb	rh4,[r4]
 _3425:
-	exts	r14,#0x1
-	movw	r5,[r13]
+	movw	r2,[r8+#0x6]
 _3426:
-	movb	[r9+#0x1d],rl5
+	movw	r3,[r8+#0x4]
 _3427:
-
-; canManager.c	   905      canMessages[canMessageCount - 1].data[byteNum++] = 0;
-	movb	[r9+#0x1e],rl4
+	addb	rh4,rh4
 _3428:
-
-; canManager.c	   906      canMessages[canMessageCount - 1].data[byteNum++] = 0;
-	movb	[r9+#0x1f],rl4
+	exts	r3,#0x1
+	orb	rh4,[r2]
 _3429:
+	movw	r2,[r8+#0xe]
+_3430:
+	movw	r10,[r8+#0x30]
+_2638:
+	addw	r10,#0x2b
+_3431:
+	movw	r3,[r8+#0xc]
+	exts	r3,#0x1
+	movb	rl2,[r2]
+_3432:
+	shl	r2,#0x2
+_3433:
+	orb	rh4,rl2
+_3434:
+	movw	r2,[r8+#0x14]
+	movw	r3,[r8+#0x12]
+	exts	r3,#0x1
+	movb	rl2,[r2]
+_3435:
+	shl	r2,#0x3
+_3436:
+	orb	rh4,rl2
+_3437:
+	movb	[r10],rh4
+_3438:
+
+; canManager.c	   891      canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
+	andb	rh4,#0xf
+	movb	[r10],rh4
+_3439:
+
+; canManager.c	   892      canMessages[canMessageCount - 1].data[2] = inv2->AMK_TorqueSetpoint;
+	movw	r2,[r8+#0x30]
+_2639:
+	exts	r11,#0x1
+	movw	r4,[r9]
+_3440:
+	movb	[r2+#0x2c],rl4
+_3441:
+
+; canManager.c	   893      canMessages[canMessageCount - 1].data[3] = inv2->AMK_TorqueSetpoint >> 8;
+	exts	r11,#0x1
+	movw	r4,[r9]
+_3442:
+	movw	r11,[r8+#0x30]
+_2640:
+	ashr	r4,#0x8
+_3443:
+	movb	[r11+#0x2d],rl4
+_3444:
+
+; canManager.c	   894      canMessages[canMessageCount - 1].data[4] = inv2->AMK_TorqueLimitPositiv;
+	exts	r13,#0x1
+	movw	r4,[r12]
+_3445:
+	movb	[r11+#0x2e],rl4
+_3446:
+
+; canManager.c	   895      canMessages[canMessageCount - 1].data[5] = inv2->AMK_TorqueLimitPositiv >> 8;
+	exts	r13,#0x1
+	movw	r4,[r12]
+_3447:
+	ashr	r4,#0x8
+_3448:
+	movb	[r11+#0x2f],rl4
+_3449:
+
+; canManager.c	   896      canMessages[canMessageCount - 1].data[6] = inv2->AMK_TorqueLimitNegativ;
+	exts	r5,#0x1
+	movw	r4,[r14]
+_3450:
+	movb	[r11+#0x30],rl4
+_3451:
+
+; canManager.c	   897      canMessages[canMessageCount - 1].data[7] = inv2->AMK_TorqueLimitNegativ >> 8;
+	exts	r5,#0x1
+	movw	r4,[r14]
+_3452:
+	ashr	r4,#0x8
+_3453:
+	movb	[r11+#0x31],rl4
+_3454:
+	movb	rh4,#0x8
+_3455:
+
+; canManager.c	   898      canMessages[canMessageCount - 1].length = 8;
+	movb	[r11+#0x32],rh4
+_3456:
+	movb	rh4,#0x0
+_3457:
+
+; canManager.c	   899  
+; canManager.c	   900      //50B: AMK VCU Debug (3/4 Inverters)
+; canManager.c	   901      canMessageCount++;
+; canManager.c	   902      byteNum = 0;
+; canManager.c	   903      canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+	movb	[r11+#0x41],rh4
+_3458:
+
+; canManager.c	   904      canMessages[canMessageCount - 1].id = 0x50B;
+	movw	r12,[r8+#0x30]
+_2641:
+	movw	r11,#0x50b
+_3459:
+	movw	[r12+#0x42],r11
+_3460:
+	movw	r11,#0x0
+_3461:
+	movw	[r12+#0x44],r11
+_3462:
+
+; canManager.c	   905      canMessages[canMessageCount - 1].data[byteNum++] = inv1->startUpStage;
+	movw	r11,[r8+#0x24]
+_2609:
+	movw	r12,[r8+#0x26]
+_2642:
+	addw	r11,#0x6
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	r4,[r11]
+_3463:
+	movw	r11,[r8+#0x30]
+_2643:
+	movb	[r11+#0x38],rl4
+_3464:
+
+; canManager.c	   906      canMessages[canMessageCount - 1].data[byteNum++] = inv2->startUpStage;
+	movw	r11,[r8+#0x28]
+_2610:
+	movw	r12,[r8+#0x2a]
+_2644:
+	addw	r11,#0x6
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	r4,[r11]
+_3465:
+	movw	r11,[r8+#0x30]
+_2645:
+	movb	rh4,#0x0
+_3466:
+	movb	[r11+#0x39],rl4
+_3467:
 
 ; canManager.c	   907      canMessages[canMessageCount - 1].data[byteNum++] = 0;
-	movb	[r9+#0x20],rl4
-_3430:
+	movb	[r11+#0x3a],rh4
+_3468:
 
 ; canManager.c	   908      canMessages[canMessageCount - 1].data[byteNum++] = 0;
-	movb	[r9+#0x21],rl4
-_3431:
+	movb	[r11+#0x3b],rh4
+_3469:
 
 ; canManager.c	   909      canMessages[canMessageCount - 1].data[byteNum++] = 0;
-	movb	[r9+#0x22],rl4
-_3432:
+	movb	[r11+#0x3c],rh4
+_3470:
 
 ; canManager.c	   910      canMessages[canMessageCount - 1].data[byteNum++] = 0;
-	movb	[r9+#0x23],rl4
-_3433:
+	movb	[r11+#0x3d],rh4
+_3471:
 
-; canManager.c	   911      canMessages[canMessageCount - 1].length = byteNum;
-	movb	[r9+#0x24],rh3
-_3434:
+; canManager.c	   911      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+	movb	[r11+#0x3e],rh4
+_3472:
 
-; canManager.c	   912  
-; canManager.c	   913      //Place the can messsages into the FIFO queue ---------------------------------------------------
-; canManager.c	   914      //IO_CAN_WriteFIFO(canFifoHandle_HiPri_Write, canMessages, canMessageCount);  //Important: Only transmit one message (the MCU message)
-; canManager.c	   915      CanManager_send(me, CAN1_LOPRI, canMessages, canMessageCount);  //Send messages to CAN1
+; canManager.c	   912      canMessages[canMessageCount - 1].data[byteNum++] = 0;
+	movb	[r11+#0x3f],rh4
+_3473:
+	movb	rh4,#0x8
+_3474:
+
+; canManager.c	   913      canMessages[canMessageCount - 1].length = byteNum;
+	movb	[r11+#0x40],rh4
+_3475:
+
+; canManager.c	   914  
+; canManager.c	   915      //Place the can messsages into the FIFO queue ---------------------------------------------------
+; canManager.c	   916      //IO_CAN_WriteFIFO(canFifoHandle_HiPri_Write, canMessages, canMessageCount);  //Important: Only transmit one message (the MCU message)
+; canManager.c	   917      CanManager_send(me, CAN1_LOPRI, canMessages, canMessageCount);  //Send messages to CAN1
 	movb	rl4,#0x1
-_3435:
-	movw	r11,r9
-	movw	r12,r9
+_3476:
+	movw	r12,r11
 	jmp	cc_z,_124
 	shr	r12,#0xe
 	shl	r12,#0x1
 	movw	r12,[r12+#0xfe00]
 	bmov	r11.14,r12.0
+_2646:
 	bmov	r11.15,r12.1
 	shr	r12,#0x2
 _124:
-	movw	r2,[r8]
-_2615:
-	movw	r3,r1
-	movb	rh4,#0x3
+	movw	r2,[r8+#0x2e]
+	movw	r3,[r8+#0x2c]
+_2647:
+	movb	rh4,#0x5
 	call	_CanManager_send
-_2616:
+_2648:
 
-; canManager.c	   916      //IO_CAN_WriteFIFO(canFifoHandle_LoPri_Write, canMessages, canMessageCount);  
-; canManager.c	   917  
-; canManager.c	   917  }
+; canManager.c	   918      //IO_CAN_WriteFIFO(canFifoHandle_LoPri_Write, canMessages, canMessageCount);  
+; canManager.c	   919  
+; canManager.c	   919  }
 
-	movw	r15,[r9+#0xfffe]
+	movw	r11,[r8+#0x30]
+_2649:
 
 
-	addw	r15,#0x2
-_2356:
+	movw	r15,[r11+#0xfffe]
+
+
+	addw	r15,#0x34
+_2359:
 
 
 	movw	r10,[r15+]
-_2367:
+_2370:
 
 
 	movw	r9,[r15+]
-_2378:
+_2381:
 
 
 	movw	r8,[r15+]
-_2389:
+_2392:
 
 
 	movw	r7,[r15+]
-_2400:
+_2403:
 
 
 	movw	r6,[r15+]
-_2411:
+_2414:
 
 
 	movw	r1,[r15+]
-_2422:
+_2425:
 
 
 	movw	r0,[r15+]
-_2433:
+_2436:
 
 
 	ret
@@ -5765,7 +5890,7 @@ _242:
 	.calls	'_CanManager_getReadStatus','',4,0
 	.calls	'_canOutput_sendSensorMessages','',4,0
 	.calls	'_canOutput_sendDebugMessage0','',4,52
-	.calls	'_canOutput_sendDebugMessage1','',4,16
+	.calls	'_canOutput_sendDebugMessage1','',4,66
 	.extern	_malloc : far
 	.extern	_IO_UART_Task : far
 	.extern	_IO_CAN_Init : far
@@ -6620,11 +6745,11 @@ _211:
 
 	.debug		.debug_line
 _212:
-	.dl	_2618-_2617
-_2617:
+	.dl	_2651-_2650
+_2650:
 	.dw	3
-	.dl	_2620-_2619
-_2619:
+	.dl	_2653-_2652
+_2652:
 	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1
 	.db	'c:\\Program Files (x86)\\TASKING\\C166-VX v4.0r1\\include\\',0
 	.db	'..\\..\\..\\Environment\\inc',0,0
@@ -6649,8 +6774,8 @@ _2619:
 	.db	'IO_Constants.h',0,2,0,0
 	.db	'stdio.h',0,1,0,0
 	.db	'APDB.h',0,2,0,0,0
-_2620:
-_2618:
+_2653:
+_2651:
 	; End of section
 
 	.debug		.debug_pubnames
@@ -6799,14 +6924,14 @@ _214:
 
 	.debug		.debug_line, cluster 'CanManager_new'
 _215:
-	.dl	_2622-_2621
-_2621:
+	.dl	_2655-_2654
+_2654:
 	.dw	3
-	.dl	_2624-_2623
-_2623:
+	.dl	_2657-_2656
+_2656:
 	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
 	.db	'canManager.c',0,0,0,0,0
-_2624:
+_2657:
 	.db	5,13,7,0,5,2
 	.dl	_126
 	.db	3,197,0,1,5,42,9
@@ -6816,365 +6941,365 @@ _2624:
 	.db	1,5,11,9
 	.dw	_260-_722
 	.db	3,11,1,5,20,9
-	.dw	_2625-_260
+	.dw	_2658-_260
 	.db	3,117,1,5,36,9
-	.dw	_2626-_2625
+	.dw	_2659-_2658
 	.db	3,9,1,5,35,9
-	.dw	_2-_2626
+	.dw	_2-_2659
 	.db	3,2,1,5,37,9
-	.dw	_2627-_2
+	.dw	_2660-_2
 	.db	1,5,35,9
-	.dw	_2628-_2627
+	.dw	_2661-_2660
 	.db	1,5,40,9
-	.dw	_2629-_2628
+	.dw	_2662-_2661
 	.db	3,126,1,5,35,9
-	.dw	_2630-_2629
+	.dw	_2663-_2662
 	.db	3,2,1,5,36,9
-	.dw	_2631-_2630
+	.dw	_2664-_2663
 	.db	3,126,1,5,7,9
-	.dw	_261-_2631
+	.dw	_261-_2664
 	.db	3,5,1,5,39,9
-	.dw	_2632-_261
+	.dw	_2665-_261
 	.db	3,3,1,5,21,9
-	.dw	_2633-_2632
+	.dw	_2666-_2665
 	.db	3,125,1,5,7,9
-	.dw	_2634-_2633
+	.dw	_2667-_2666
 	.db	3,3,1,5,21,9
-	.dw	_731-_2634
+	.dw	_731-_2667
 	.db	3,125,1,5,7,9
-	.dw	_2635-_731
+	.dw	_2668-_731
 	.db	3,3,1,5,78,9
-	.dw	_2636-_2635
+	.dw	_2669-_2668
 	.db	1,5,25,9
-	.dw	_733-_2636
+	.dw	_733-_2669
 	.db	1,5,7,9
-	.dw	_2637-_733
+	.dw	_2670-_733
 	.db	3,1,1,5,39,9
-	.dw	_2638-_2637
+	.dw	_2671-_2670
 	.db	1,5,78,9
-	.dw	_2639-_2638
+	.dw	_2672-_2671
 	.db	1,5,25,9
-	.dw	_735-_2639
+	.dw	_735-_2672
 	.db	1,5,26,9
-	.dw	_2640-_735
+	.dw	_2673-_735
 	.db	3,8,1,5,45,9
-	.dw	_2641-_2640
+	.dw	_2674-_2673
 	.db	1,5,125,9
-	.dw	_2642-_2641
+	.dw	_2675-_2674
 	.db	1,5,26,9
-	.dw	_737-_2642
+	.dw	_737-_2675
 	.db	3,1,1,5,46,9
-	.dw	_2643-_737
+	.dw	_2676-_737
 	.db	1,5,128,1,9
-	.dw	_2644-_2643
+	.dw	_2677-_2676
 	.db	1,5,26,9
-	.dw	_739-_2644
+	.dw	_739-_2677
 	.db	3,1,1,5,45,9
-	.dw	_2645-_739
+	.dw	_2678-_739
 	.db	1,5,125,9
-	.dw	_2646-_2645
+	.dw	_2679-_2678
 	.db	1,5,26,9
-	.dw	_741-_2646
+	.dw	_741-_2679
 	.db	3,1,1,5,46,9
-	.dw	_2647-_741
+	.dw	_2680-_741
 	.db	1,5,128,1,9
-	.dw	_2648-_2647
+	.dw	_2681-_2680
 	.db	1,5,7,9
-	.dw	_743-_2648
+	.dw	_743-_2681
 	.db	3,3,1,5,27,9
-	.dw	_2649-_743
+	.dw	_2682-_743
 	.db	1,5,25,9
-	.dw	_2650-_2649
+	.dw	_2683-_2682
 	.db	1,5,7,9
-	.dw	_2651-_2650
+	.dw	_2684-_2683
 	.db	3,1,1,9
-	.dw	_264-_2651
+	.dw	_264-_2684
 	.db	3,11,1,5,26,9
 	.dw	_265-_264
 	.db	3,117,1,5,7,9
-	.dw	_2652-_265
+	.dw	_2685-_265
 	.db	3,1,1,9
-	.dw	_266-_2652
+	.dw	_266-_2685
 	.db	3,10,1,5,25,9
 	.dw	_267-_266
 	.db	3,118,1,5,7,9
-	.dw	_2653-_267
+	.dw	_2686-_267
 	.db	3,1,1,9
-	.dw	_268-_2653
+	.dw	_268-_2686
 	.db	3,9,1,5,26,9
 	.dw	_269-_268
 	.db	3,119,1,9
 	.dw	_270-_269
 	.db	3,9,1,5,50,9
-	.dw	_2654-_270
+	.dw	_2687-_270
 	.db	3,2,1,5,26,9
-	.dw	_2655-_2654
+	.dw	_2688-_2687
 	.db	3,126,1,5,37,9
-	.dw	_2656-_2655
+	.dw	_2689-_2688
 	.db	1,5,65,9
-	.dw	_2657-_2656
+	.dw	_2690-_2689
 	.db	1,5,63,9
-	.dw	_2658-_2657
+	.dw	_2691-_2690
 	.db	1,5,30,9
-	.dw	_273-_2658
+	.dw	_273-_2691
 	.db	3,3,1,5,63,9
 	.dw	_274-_273
 	.db	3,125,1,5,26,9
-	.dw	_2659-_274
+	.dw	_2692-_274
 	.db	3,1,1,5,37,9
-	.dw	_2660-_2659
+	.dw	_2693-_2692
 	.db	1,5,65,9
-	.dw	_2661-_2660
+	.dw	_2694-_2693
 	.db	1,5,63,9
-	.dw	_2662-_2661
+	.dw	_2695-_2694
 	.db	1,5,26,9
-	.dw	_2663-_2662
+	.dw	_2696-_2695
 	.db	3,1,1,5,37,9
-	.dw	_2664-_2663
+	.dw	_2697-_2696
 	.db	1,5,48,9
-	.dw	_2665-_2664
+	.dw	_2698-_2697
 	.db	1,5,77,9
-	.dw	_3-_2665
+	.dw	_3-_2698
 	.db	3,1,1,5,78,9
-	.dw	_2666-_3
+	.dw	_2699-_3
 	.db	1,5,77,9
-	.dw	_2667-_2666
+	.dw	_2700-_2699
 	.db	1,5,83,9
-	.dw	_2668-_2667
+	.dw	_2701-_2700
 	.db	1,5,81,9
-	.dw	_2669-_2668
+	.dw	_2702-_2701
 	.db	1,5,30,9
-	.dw	_2670-_2669
+	.dw	_2703-_2702
 	.db	1,5,44,9
-	.dw	_275-_2670
+	.dw	_275-_2703
 	.db	3,1,1,5,55,9
-	.dw	_2671-_275
+	.dw	_2704-_275
 	.db	1,5,7,9
-	.dw	_2672-_2671
+	.dw	_2705-_2704
 	.db	3,3,1,5,26,9
-	.dw	_2673-_2672
+	.dw	_2706-_2705
 	.db	1,5,50,9
-	.dw	_2674-_2673
+	.dw	_2707-_2706
 	.db	3,2,1,5,26,9
-	.dw	_2675-_2674
+	.dw	_2708-_2707
 	.db	3,126,1,5,37,9
-	.dw	_2676-_2675
+	.dw	_2709-_2708
 	.db	1,5,65,9
-	.dw	_2677-_2676
+	.dw	_2710-_2709
 	.db	1,5,63,9
-	.dw	_2678-_2677
+	.dw	_2711-_2710
 	.db	1,5,30,9
-	.dw	_278-_2678
+	.dw	_278-_2711
 	.db	3,3,1,5,63,9
 	.dw	_279-_278
 	.db	3,125,1,5,26,9
-	.dw	_2679-_279
+	.dw	_2712-_279
 	.db	3,1,1,5,37,9
-	.dw	_2680-_2679
+	.dw	_2713-_2712
 	.db	1,5,65,9
-	.dw	_2681-_2680
+	.dw	_2714-_2713
 	.db	1,5,63,9
-	.dw	_2682-_2681
+	.dw	_2715-_2714
 	.db	1,5,26,9
-	.dw	_2683-_2682
+	.dw	_2716-_2715
 	.db	3,1,1,5,37,9
-	.dw	_2684-_2683
+	.dw	_2717-_2716
 	.db	1,5,48,9
-	.dw	_2685-_2684
+	.dw	_2718-_2717
 	.db	1,5,77,9
-	.dw	_4-_2685
+	.dw	_4-_2718
 	.db	3,1,1,5,78,9
-	.dw	_2686-_4
+	.dw	_2719-_4
 	.db	1,5,77,9
-	.dw	_2687-_2686
+	.dw	_2720-_2719
 	.db	1,5,83,9
-	.dw	_2688-_2687
+	.dw	_2721-_2720
 	.db	1,5,81,9
-	.dw	_2689-_2688
+	.dw	_2722-_2721
 	.db	1,5,30,9
-	.dw	_2690-_2689
+	.dw	_2723-_2722
 	.db	1,5,44,9
-	.dw	_280-_2690
+	.dw	_280-_2723
 	.db	3,1,1,5,55,9
-	.dw	_2691-_280
+	.dw	_2724-_280
 	.db	1,5,7,9
-	.dw	_2692-_2691
+	.dw	_2725-_2724
 	.db	3,3,1,5,26,9
-	.dw	_2693-_2692
+	.dw	_2726-_2725
 	.db	1,5,50,9
-	.dw	_2694-_2693
+	.dw	_2727-_2726
 	.db	3,2,1,5,26,9
-	.dw	_2695-_2694
+	.dw	_2728-_2727
 	.db	3,126,1,5,37,9
-	.dw	_2696-_2695
+	.dw	_2729-_2728
 	.db	1,5,65,9
-	.dw	_2697-_2696
+	.dw	_2730-_2729
 	.db	1,5,63,9
-	.dw	_2698-_2697
+	.dw	_2731-_2730
 	.db	1,5,30,9
-	.dw	_283-_2698
+	.dw	_283-_2731
 	.db	3,3,1,5,63,9
 	.dw	_284-_283
 	.db	3,125,1,5,26,9
-	.dw	_2699-_284
+	.dw	_2732-_284
 	.db	3,1,1,5,37,9
-	.dw	_2700-_2699
-	.db	1,5,65,9
-	.dw	_2701-_2700
-	.db	1,5,63,9
-	.dw	_2702-_2701
-	.db	1,5,26,9
-	.dw	_2703-_2702
-	.db	3,1,1,5,37,9
-	.dw	_2704-_2703
-	.db	1,5,48,9
-	.dw	_2705-_2704
-	.db	1,5,77,9
-	.dw	_5-_2705
-	.db	3,1,1,5,78,9
-	.dw	_2706-_5
-	.db	1,5,77,9
-	.dw	_2707-_2706
-	.db	1,5,83,9
-	.dw	_2708-_2707
-	.db	1,5,81,9
-	.dw	_2709-_2708
-	.db	1,5,30,9
-	.dw	_2710-_2709
-	.db	1,5,44,9
-	.dw	_285-_2710
-	.db	3,1,1,5,55,9
-	.dw	_2711-_285
-	.db	1,5,7,9
-	.dw	_2712-_2711
-	.db	3,3,1,5,26,9
-	.dw	_2713-_2712
-	.db	1,5,50,9
-	.dw	_2714-_2713
-	.db	3,2,1,5,26,9
-	.dw	_2715-_2714
-	.db	3,126,1,5,37,9
-	.dw	_2716-_2715
-	.db	1,5,65,9
-	.dw	_2717-_2716
-	.db	1,5,63,9
-	.dw	_2718-_2717
-	.db	1,5,30,9
-	.dw	_288-_2718
-	.db	3,3,1,5,63,9
-	.dw	_289-_288
-	.db	3,125,1,5,26,9
-	.dw	_2719-_289
-	.db	3,1,1,5,37,9
-	.dw	_2720-_2719
-	.db	1,5,65,9
-	.dw	_2721-_2720
-	.db	1,5,63,9
-	.dw	_2722-_2721
-	.db	1,5,26,9
-	.dw	_2723-_2722
-	.db	3,1,1,5,37,9
-	.dw	_2724-_2723
-	.db	1,5,48,9
-	.dw	_2725-_2724
-	.db	1,5,77,9
-	.dw	_6-_2725
-	.db	3,1,1,5,78,9
-	.dw	_2726-_6
-	.db	1,5,77,9
-	.dw	_2727-_2726
-	.db	1,5,83,9
-	.dw	_2728-_2727
-	.db	1,5,81,9
-	.dw	_2729-_2728
-	.db	1,5,30,9
-	.dw	_2730-_2729
-	.db	1,5,44,9
-	.dw	_290-_2730
-	.db	3,1,1,5,20,9
-	.dw	_2731-_290
-	.db	3,2,1,5,44,9
-	.dw	_744-_2731
-	.db	3,126,1,5,55,9
-	.dw	_2732-_744
-	.db	1,5,31,9
 	.dw	_2733-_2732
-	.db	3,4,1,5,30,9
-	.dw	_724-_2733
-	.db	1,5,69,9
-	.dw	_2734-_724
-	.db	1,5,30,9
+	.db	1,5,65,9
+	.dw	_2734-_2733
+	.db	1,5,63,9
 	.dw	_2735-_2734
-	.db	1,5,41,9
+	.db	1,5,26,9
 	.dw	_2736-_2735
-	.db	1,5,69,9
+	.db	3,1,1,5,37,9
 	.dw	_2737-_2736
-	.db	1,5,67,9
+	.db	1,5,48,9
 	.dw	_2738-_2737
-	.db	1,5,30,9
-	.dw	_2739-_2738
-	.db	3,1,1,5,67,9
+	.db	1,5,77,9
+	.dw	_5-_2738
+	.db	3,1,1,5,78,9
+	.dw	_2739-_5
+	.db	1,5,77,9
 	.dw	_2740-_2739
-	.db	3,127,1,5,30,9
+	.db	1,5,83,9
 	.dw	_2741-_2740
-	.db	3,1,1,5,69,9
+	.db	1,5,81,9
 	.dw	_2742-_2741
 	.db	1,5,30,9
 	.dw	_2743-_2742
-	.db	1,5,54,9
-	.dw	_2744-_2743
-	.db	3,1,1,5,30,9
+	.db	1,5,44,9
+	.dw	_285-_2743
+	.db	3,1,1,5,55,9
+	.dw	_2744-_285
+	.db	1,5,7,9
 	.dw	_2745-_2744
-	.db	3,127,1,5,41,9
+	.db	3,3,1,5,26,9
 	.dw	_2746-_2745
-	.db	1,5,69,9
+	.db	1,5,50,9
 	.dw	_2747-_2746
-	.db	1,5,67,9
+	.db	3,2,1,5,26,9
 	.dw	_2748-_2747
-	.db	1,5,30,9
+	.db	3,126,1,5,37,9
 	.dw	_2749-_2748
-	.db	3,1,1,5,67,9
+	.db	1,5,65,9
 	.dw	_2750-_2749
-	.db	3,127,1,5,30,9
+	.db	1,5,63,9
 	.dw	_2751-_2750
+	.db	1,5,30,9
+	.dw	_288-_2751
+	.db	3,3,1,5,63,9
+	.dw	_289-_288
+	.db	3,125,1,5,26,9
+	.dw	_2752-_289
+	.db	3,1,1,5,37,9
+	.dw	_2753-_2752
+	.db	1,5,65,9
+	.dw	_2754-_2753
+	.db	1,5,63,9
+	.dw	_2755-_2754
+	.db	1,5,26,9
+	.dw	_2756-_2755
+	.db	3,1,1,5,37,9
+	.dw	_2757-_2756
+	.db	1,5,48,9
+	.dw	_2758-_2757
+	.db	1,5,77,9
+	.dw	_6-_2758
+	.db	3,1,1,5,78,9
+	.dw	_2759-_6
+	.db	1,5,77,9
+	.dw	_2760-_2759
+	.db	1,5,83,9
+	.dw	_2761-_2760
+	.db	1,5,81,9
+	.dw	_2762-_2761
+	.db	1,5,30,9
+	.dw	_2763-_2762
+	.db	1,5,44,9
+	.dw	_290-_2763
+	.db	3,1,1,5,20,9
+	.dw	_2764-_290
+	.db	3,2,1,5,44,9
+	.dw	_744-_2764
+	.db	3,126,1,5,55,9
+	.dw	_2765-_744
+	.db	1,5,31,9
+	.dw	_2766-_2765
+	.db	3,4,1,5,30,9
+	.dw	_724-_2766
+	.db	1,5,69,9
+	.dw	_2767-_724
+	.db	1,5,30,9
+	.dw	_2768-_2767
+	.db	1,5,41,9
+	.dw	_2769-_2768
+	.db	1,5,69,9
+	.dw	_2770-_2769
+	.db	1,5,67,9
+	.dw	_2771-_2770
+	.db	1,5,30,9
+	.dw	_2772-_2771
+	.db	3,1,1,5,67,9
+	.dw	_2773-_2772
+	.db	3,127,1,5,30,9
+	.dw	_2774-_2773
+	.db	3,1,1,5,69,9
+	.dw	_2775-_2774
+	.db	1,5,30,9
+	.dw	_2776-_2775
+	.db	1,5,54,9
+	.dw	_2777-_2776
+	.db	3,1,1,5,30,9
+	.dw	_2778-_2777
+	.db	3,127,1,5,41,9
+	.dw	_2779-_2778
+	.db	1,5,69,9
+	.dw	_2780-_2779
+	.db	1,5,67,9
+	.dw	_2781-_2780
+	.db	1,5,30,9
+	.dw	_2782-_2781
+	.db	3,1,1,5,67,9
+	.dw	_2783-_2782
+	.db	3,127,1,5,30,9
+	.dw	_2784-_2783
 	.db	3,1,1,5,34,9
-	.dw	_293-_2751
+	.dw	_293-_2784
 	.db	3,1,1,5,30,9
 	.dw	_294-_293
 	.db	3,127,1,5,41,9
-	.dw	_2752-_294
+	.dw	_2785-_294
 	.db	1,5,52,9
-	.dw	_2753-_2752
+	.dw	_2786-_2785
 	.db	1,5,81,9
-	.dw	_8-_2753
+	.dw	_8-_2786
 	.db	3,1,1,5,82,9
-	.dw	_2754-_8
+	.dw	_2787-_8
 	.db	1,5,81,9
-	.dw	_2755-_2754
+	.dw	_2788-_2787
 	.db	1,5,87,9
-	.dw	_2756-_2755
+	.dw	_2789-_2788
 	.db	1,5,85,9
-	.dw	_2757-_2756
+	.dw	_2790-_2789
 	.db	1,5,34,9
-	.dw	_2758-_2757
+	.dw	_2791-_2790
 	.db	1,5,48,9
-	.dw	_295-_2758
+	.dw	_295-_2791
 	.db	3,1,1,5,58,9
-	.dw	_2759-_295
+	.dw	_2792-_295
 	.db	3,122,1,5,48,9
-	.dw	_2760-_2759
+	.dw	_2793-_2792
 	.db	3,6,1,5,59,9
-	.dw	_2761-_2760
+	.dw	_2794-_2793
 	.db	1,5,47,9
-	.dw	_2762-_2761
+	.dw	_2795-_2794
 	.db	3,122,1,5,5,9
-	.dw	_2763-_2762
+	.dw	_2796-_2795
 	.db	3,33,1,5,1,9
-	.dw	_2764-_2763
+	.dw	_2797-_2796
 	.db	3,1,1,9
-	.dw	_217-_2764
+	.dw	_217-_2797
 	.db	0,1,1
-_2622:
+_2655:
 	; End of section
 
 	.debug		.debug_ranges, cluster 'CanManager_new'
@@ -7291,22 +7416,22 @@ _219:
 
 	.debug		.debug_line, cluster 'CanManager_send'
 _220:
-	.dl	_2766-_2765
-_2765:
+	.dl	_2799-_2798
+_2798:
 	.dw	3
-	.dl	_2768-_2767
-_2767:
+	.dl	_2801-_2800
+_2800:
 	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
 	.db	'canManager.c',0,0,0,0,0
-_2768:
+_2801:
 	.db	5,14,7,0,5,2
 	.dl	_138
 	.db	3,192,1,1,5,53,9
-	.dw	_2769-_138
+	.dw	_2802-_138
 	.db	3,7,1,5,14,9
-	.dw	_2770-_2769
+	.dw	_2803-_2802
 	.db	3,121,1,5,32,9
-	.dw	_1084-_2770
+	.dw	_1084-_2803
 	.db	3,6,1,5,53,9
 	.dw	_1085-_1084
 	.db	3,1,1,5,83,9
@@ -7318,213 +7443,213 @@ _2768:
 	.db	3,120,1,5,64,9
 	.dw	_11-_310
 	.db	3,7,1,5,45,9
-	.dw	_2771-_11
+	.dw	_2804-_11
 	.db	3,1,1,5,64,9
-	.dw	_2772-_2771
+	.dw	_2805-_2804
 	.db	3,127,1,5,45,9
-	.dw	_1090-_2772
+	.dw	_1090-_2805
 	.db	3,1,1,5,44,9
-	.dw	_2773-_1090
+	.dw	_2806-_1090
 	.db	1,5,26,9
-	.dw	_2774-_2773
+	.dw	_2807-_2806
 	.db	3,123,1,5,44,9
-	.dw	_1092-_2774
+	.dw	_1092-_2807
 	.db	3,5,1,5,21,9
-	.dw	_2775-_1092
+	.dw	_2808-_1092
 	.db	3,1,1,5,70,9
-	.dw	_1094-_2775
+	.dw	_1094-_2808
 	.db	3,5,1,5,26,9
 	.dw	_12-_1094
 	.db	1,5,9,9
 	.dw	_1097-_12
 	.db	3,1,1,5,53,7,9
-	.dw	_2776-_1097
+	.dw	_2809-_1097
 	.db	3,2,1,5,81,9
-	.dw	_2777-_2776
+	.dw	_2810-_2809
 	.db	1,5,79,9
-	.dw	_1096-_2777
+	.dw	_1096-_2810
 	.db	1,5,81,9
-	.dw	_2778-_1096
+	.dw	_2811-_1096
 	.db	1,5,79,9
-	.dw	_2779-_2778
+	.dw	_2812-_2811
 	.db	1,5,34,9
-	.dw	_2780-_2779
+	.dw	_2813-_2812
 	.db	3,1,1,5,81,9
-	.dw	_2781-_2780
+	.dw	_2814-_2813
 	.db	1,5,34,9
-	.dw	_2782-_2781
+	.dw	_2815-_2814
 	.db	1,5,53,9
-	.dw	_2783-_2782
+	.dw	_2816-_2815
 	.db	1,5,81,9
-	.dw	_2784-_2783
+	.dw	_2817-_2816
 	.db	1,5,79,9
-	.dw	_2785-_2784
+	.dw	_2818-_2817
 	.db	1,5,34,9
-	.dw	_2786-_2785
+	.dw	_2819-_2818
 	.db	3,1,1,5,79,9
-	.dw	_2787-_2786
+	.dw	_2820-_2819
 	.db	3,127,1,5,34,9
-	.dw	_2788-_2787
+	.dw	_2821-_2820
 	.db	3,1,1,5,66,9
-	.dw	_2789-_2788
+	.dw	_2822-_2821
 	.db	1,5,34,9
-	.dw	_2790-_2789
+	.dw	_2823-_2822
 	.db	1,5,53,9
-	.dw	_2791-_2790
+	.dw	_2824-_2823
 	.db	1,5,64,9
-	.dw	_2792-_2791
+	.dw	_2825-_2824
 	.db	1,5,38,9
-	.dw	_317-_2792
+	.dw	_317-_2825
 	.db	3,1,1,5,93,9
 	.dw	_14-_317
 	.db	1,5,94,9
-	.dw	_2793-_14
+	.dw	_2826-_14
 	.db	1,5,93,9
-	.dw	_2794-_2793
+	.dw	_2827-_2826
 	.db	1,5,99,9
-	.dw	_2795-_2794
+	.dw	_2828-_2827
 	.db	1,5,97,9
-	.dw	_2796-_2795
+	.dw	_2829-_2828
 	.db	1,5,38,9
-	.dw	_2797-_2796
+	.dw	_2830-_2829
 	.db	1,5,34,9
-	.dw	_318-_2797
+	.dw	_318-_2830
 	.db	3,2,1,5,53,9
-	.dw	_2798-_318
+	.dw	_2831-_318
 	.db	1,5,79,9
-	.dw	_2799-_2798
+	.dw	_2832-_2831
 	.db	1,5,77,9
-	.dw	_2800-_2799
+	.dw	_2833-_2832
 	.db	1,5,71,9
-	.dw	_13-_2800
+	.dw	_13-_2833
 	.db	3,7,1,5,55,9
-	.dw	_2801-_13
+	.dw	_2834-_13
 	.db	1,5,63,9
-	.dw	_15-_2801
+	.dw	_15-_2834
 	.db	3,3,1,5,13,9
-	.dw	_2802-_15
+	.dw	_2835-_15
 	.db	3,2,1,5,29,9
-	.dw	_2803-_2802
+	.dw	_2836-_2835
 	.db	3,7,1,5,69,9
-	.dw	_16-_2803
+	.dw	_16-_2836
 	.db	3,116,1,5,55,9
-	.dw	_2804-_16
+	.dw	_2837-_16
 	.db	1,5,57,9
-	.dw	_320-_2804
+	.dw	_320-_2837
 	.db	3,19,1,5,96,9
-	.dw	_2805-_320
+	.dw	_2838-_320
 	.db	1,5,57,9
-	.dw	_2806-_2805
+	.dw	_2839-_2838
 	.db	1,5,96,9
-	.dw	_2807-_2806
+	.dw	_2840-_2839
 	.db	1,5,82,9
-	.dw	_2808-_2807
+	.dw	_2841-_2840
 	.db	1,5,96,9
-	.dw	_1098-_2808
+	.dw	_1098-_2841
 	.db	1,5,82,9
-	.dw	_2809-_1098
+	.dw	_2842-_1098
 	.db	1,5,57,9
-	.dw	_17-_2809
+	.dw	_17-_2842
 	.db	3,1,1,5,82,9
-	.dw	_2810-_17
+	.dw	_2843-_17
 	.db	1,5,15,9
-	.dw	_18-_2810
+	.dw	_18-_2843
 	.db	3,5,1,5,16,9
-	.dw	_2811-_18
+	.dw	_2844-_18
 	.db	3,1,1,5,31,9
-	.dw	_2812-_2811
+	.dw	_2845-_2844
 	.db	1,5,17,9
-	.dw	_20-_2812
+	.dw	_20-_2845
 	.db	3,1,1,5,32,9
-	.dw	_2813-_20
+	.dw	_2846-_20
 	.db	1,5,25,9
-	.dw	_19-_2813
+	.dw	_19-_2846
 	.db	3,3,1,5,9,9
 	.dw	_22-_19
 	.db	3,6,1,5,28,9
-	.dw	_2814-_22
+	.dw	_2847-_22
 	.db	3,5,1,5,27,9
-	.dw	_1104-_2814
+	.dw	_1104-_2847
 	.db	1,5,51,9
-	.dw	_2815-_1104
+	.dw	_2848-_1104
 	.db	1,5,47,9
-	.dw	_1105-_2815
+	.dw	_1105-_2848
 	.db	1,5,81,9
 	.dw	_24-_1105
 	.db	3,186,127,1,5,49,9
-	.dw	_2816-_24
+	.dw	_2849-_24
 	.db	1,5,17,9
-	.dw	_10-_2816
+	.dw	_10-_2849
 	.db	3,208,0,1,5,29,9
 	.dw	_323-_10
 	.db	3,4,1,5,5,9
 	.dw	_1109-_323
 	.db	3,1,1,5,39,9
-	.dw	_2817-_1109
+	.dw	_2850-_1109
 	.db	3,3,1,5,67,9
-	.dw	_2818-_2817
+	.dw	_2851-_2850
 	.db	1,5,86,9
-	.dw	_2819-_2818
+	.dw	_2852-_2851
 	.db	1,5,90,9
-	.dw	_26-_2819
+	.dw	_26-_2852
 	.db	1,5,110,9
-	.dw	_2820-_26
+	.dw	_2853-_26
 	.db	1,5,126,9
-	.dw	_28-_2820
+	.dw	_28-_2853
 	.db	1,5,20,9
 	.dw	_1110-_28
 	.db	1,5,11,9
 	.dw	_1117-_1110
 	.db	3,1,1,5,40,9
-	.dw	_2821-_1117
+	.dw	_2854-_1117
 	.db	1,5,59,9
-	.dw	_2822-_2821
+	.dw	_2855-_2854
 	.db	1,5,64,9
-	.dw	_29-_2822
+	.dw	_29-_2855
 	.db	1,5,84,9
-	.dw	_2823-_29
+	.dw	_2856-_29
 	.db	1,5,14,9
-	.dw	_2824-_2823
+	.dw	_2857-_2856
 	.db	3,3,1,5,40,9
-	.dw	_2825-_2824
+	.dw	_2858-_2857
 	.db	1,5,59,9
-	.dw	_2826-_2825
+	.dw	_2859-_2858
 	.db	1,5,63,9
-	.dw	_31-_2826
+	.dw	_31-_2859
 	.db	1,5,36,9
-	.dw	_2827-_31
+	.dw	_2860-_31
 	.db	1,5,9,9
-	.dw	_2828-_2827
+	.dw	_2861-_2860
 	.db	1,5,34,7,9
-	.dw	_2829-_2828
+	.dw	_2862-_2861
 	.db	3,4,1,5,95,9
-	.dw	_1119-_2829
+	.dw	_1119-_2862
 	.db	1,5,25,9
 	.dw	_311-_1119
 	.db	3,168,127,1,5,88,9
 	.dw	_34-_311
 	.db	3,224,0,1,5,56,9
-	.dw	_2830-_34
+	.dw	_2863-_34
 	.db	1,5,93,9
-	.dw	_2831-_2830
+	.dw	_2864-_2863
 	.db	3,120,1,5,56,9
-	.dw	_2832-_2831
+	.dw	_2865-_2864
 	.db	3,8,1,5,93,9
-	.dw	_2833-_2832
+	.dw	_2866-_2865
 	.db	3,120,1,5,56,9
-	.dw	_2834-_2833
+	.dw	_2867-_2866
 	.db	3,8,1,5,92,9
-	.dw	_2835-_2834
+	.dw	_2868-_2867
 	.db	1,5,76,9
-	.dw	_2836-_2835
+	.dw	_2869-_2868
 	.db	3,120,1,5,5,9
-	.dw	_25-_2836
+	.dw	_25-_2869
 	.db	3,12,1,5,1,9
 	.dw	_1122-_25
 	.db	3,1,1,9
 	.dw	_222-_1122
 	.db	0,1,1
-_2766:
+_2799:
 	; End of section
 
 	.debug		.debug_ranges, cluster 'CanManager_send'
@@ -7608,56 +7733,56 @@ _224:
 
 	.debug		.debug_line, cluster 'CanManager_read'
 _225:
-	.dl	_2838-_2837
-_2837:
+	.dl	_2871-_2870
+_2870:
 	.dw	3
-	.dl	_2840-_2839
-_2839:
+	.dl	_2873-_2872
+_2872:
 	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
 	.db	'canManager.c',0,0,0,0,0
-_2840:
+_2873:
 	.db	5,6,7,0,5,2
 	.dl	_150
 	.db	3,193,2,1,5,36,9
-	.dw	_2841-_150
+	.dw	_2874-_150
 	.db	3,2,1,5,62,7,9
-	.dw	_2842-_2841
+	.dw	_2875-_2874
 	.db	1,5,87,9
-	.dw	_2843-_2842
+	.dw	_2876-_2875
 	.db	1,5,91,9
-	.dw	_36-_2843
+	.dw	_36-_2876
 	.db	1,5,116,9
-	.dw	_2844-_36
+	.dw	_2877-_36
 	.db	1,5,7,9
-	.dw	_1469-_2844
+	.dw	_1469-_2877
 	.db	3,4,1,5,34,9
-	.dw	_2845-_1469
+	.dw	_2878-_1469
 	.db	1,5,52,9
-	.dw	_2846-_2845
+	.dw	_2879-_2878
 	.db	1,5,57,9
-	.dw	_38-_2846
+	.dw	_38-_2879
 	.db	1,5,22,9
-	.dw	_2847-_38
+	.dw	_2880-_38
 	.db	3,1,1,5,48,9
-	.dw	_2848-_2847
+	.dw	_2881-_2880
 	.db	1,5,66,9
-	.dw	_2849-_2848
+	.dw	_2882-_2881
 	.db	1,5,70,9
-	.dw	_40-_2849
+	.dw	_40-_2882
 	.db	1,5,24,9
-	.dw	_2850-_40
+	.dw	_2883-_40
 	.db	3,2,1,5,50,9
-	.dw	_2851-_2850
+	.dw	_2884-_2883
 	.db	1,5,75,9
-	.dw	_1465-_2851
+	.dw	_1465-_2884
 	.db	1,5,79,9
 	.dw	_42-_1465
 	.db	1,5,44,9
-	.dw	_2852-_42
+	.dw	_2885-_42
 	.db	3,126,1,5,23,9
-	.dw	_2853-_2852
+	.dw	_2886-_2885
 	.db	3,1,1,5,24,9
-	.dw	_44-_2853
+	.dw	_44-_2886
 	.db	3,2,1,5,76,9
 	.dw	_1459-_44
 	.db	3,124,1,5,26,9
@@ -7667,21 +7792,21 @@ _2840:
 	.db	1,5,45,9
 	.dw	_1474-_1473
 	.db	1,5,60,9
-	.dw	_2854-_1474
+	.dw	_2887-_1474
 	.db	1,5,41,7,9
-	.dw	_46-_2854
+	.dw	_46-_2887
 	.db	3,3,1,5,9,9
-	.dw	_2855-_46
+	.dw	_2888-_46
 	.db	1,5,50,9
-	.dw	_48-_2855
+	.dw	_48-_2888
 	.db	3,19,1,5,13,9
-	.dw	_2856-_48
+	.dw	_2889-_48
 	.db	3,1,1,5,50,9
-	.dw	_49-_2856
+	.dw	_49-_2889
 	.db	3,4,1,5,13,9
-	.dw	_2857-_49
+	.dw	_2890-_49
 	.db	3,1,1,5,49,9
-	.dw	_56-_2857
+	.dw	_56-_2890
 	.db	3,15,1,5,13,9
 	.dw	_1477-_56
 	.db	3,1,1,5,50,9
@@ -7693,15 +7818,15 @@ _2840:
 	.db	3,16,1,5,73,9
 	.dw	_47-_60
 	.db	3,145,127,1,5,45,9
-	.dw	_2858-_47
+	.dw	_2891-_47
 	.db	1,5,60,9
-	.dw	_2859-_2858
+	.dw	_2892-_2891
 	.db	1,5,1,9
-	.dw	_45-_2859
+	.dw	_45-_2892
 	.db	3,249,0,1,9
 	.dw	_227-_45
 	.db	0,1,1
-_2838:
+_2871:
 	; End of section
 
 	.debug		.debug_ranges, cluster 'CanManager_read'
@@ -7749,20 +7874,20 @@ _229:
 
 	.debug		.debug_line, cluster 'canOutput_sendSensorMessages'
 _230:
-	.dl	_2861-_2860
-_2860:
+	.dl	_2894-_2893
+_2893:
 	.dw	3
-	.dl	_2863-_2862
-_2862:
+	.dl	_2896-_2895
+_2895:
 	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
 	.db	'canManager.c',0,0,0,0,0
-_2863:
+_2896:
 	.db	5,1,7,0,5,2
 	.dl	_174
 	.db	3,223,3,1,7,9
 	.dw	_232-_174
 	.db	0,1,1
-_2861:
+_2894:
 	; End of section
 
 	.debug		.debug_ranges, cluster 'canOutput_sendSensorMessages'
@@ -7861,52 +7986,52 @@ _234:
 
 	.debug		.debug_line, cluster 'canOutput_sendDebugMessage0'
 _235:
-	.dl	_2865-_2864
-_2864:
+	.dl	_2898-_2897
+_2897:
 	.dw	3
-	.dl	_2867-_2866
-_2866:
+	.dl	_2900-_2899
+_2899:
 	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
 	.db	'canManager.c',0,0,0,0,0
-_2867:
+_2900:
 	.db	5,6,7,0,5,2
 	.dl	_186
 	.db	3,229,3,1,5,55,9
-	.dw	_2868-_186
+	.dw	_2901-_186
 	.db	3,11,1,5,6,9
-	.dw	_2869-_2868
+	.dw	_2902-_2901
 	.db	3,117,1,5,37,9
-	.dw	_2870-_2869
+	.dw	_2903-_2902
 	.db	3,2,1,5,6,9
-	.dw	_2871-_2870
+	.dw	_2904-_2903
 	.db	3,126,1,5,62,9
-	.dw	_2872-_2871
+	.dw	_2905-_2904
 	.db	3,2,1,5,55,9
-	.dw	_2873-_2872
+	.dw	_2906-_2905
 	.db	3,9,1,5,62,9
-	.dw	_2874-_2873
+	.dw	_2907-_2906
 	.db	3,119,1,5,6,9
-	.dw	_2875-_2874
+	.dw	_2908-_2907
 	.db	3,126,1,5,55,9
-	.dw	_2876-_2875
+	.dw	_2909-_2908
 	.db	3,11,1,5,26,9
-	.dw	_2240-_2876
+	.dw	_2240-_2909
 	.db	3,1,1,5,19,9
-	.dw	_2877-_2240
+	.dw	_2910-_2240
 	.db	1,5,24,9
-	.dw	_2878-_2877
+	.dw	_2911-_2910
 	.db	1,5,17,9
-	.dw	_2246-_2878
+	.dw	_2246-_2911
 	.db	1,5,55,9
 	.dw	_2247-_2246
 	.db	3,1,1,5,27,9
-	.dw	_2879-_2247
+	.dw	_2912-_2247
 	.db	3,1,1,5,19,9
-	.dw	_2880-_2879
+	.dw	_2913-_2912
 	.db	1,5,24,9
-	.dw	_2881-_2880
+	.dw	_2914-_2913
 	.db	1,5,17,9
-	.dw	_2248-_2881
+	.dw	_2248-_2914
 	.db	1,5,40,9
 	.dw	_361-_2248
 	.db	3,3,1,5,62,9
@@ -7914,192 +8039,126 @@ _2867:
 	.db	3,113,1,5,40,9
 	.dw	_363-_362
 	.db	3,15,1,5,30,9
-	.dw	_2882-_363
+	.dw	_2915-_363
 	.db	1,5,35,9
-	.dw	_2883-_2882
+	.dw	_2916-_2915
 	.db	1,5,46,9
-	.dw	_2884-_2883
+	.dw	_2917-_2916
 	.db	3,2,1,5,35,9
-	.dw	_2885-_2884
+	.dw	_2918-_2917
 	.db	3,126,1,5,46,9
-	.dw	_2886-_2885
+	.dw	_2919-_2918
 	.db	3,2,1,5,28,9
-	.dw	_2250-_2886
+	.dw	_2250-_2919
 	.db	3,126,1,5,46,9
 	.dw	_2251-_2250
 	.db	3,2,1,5,59,9
-	.dw	_2887-_2251
+	.dw	_2920-_2251
 	.db	1,5,34,9
-	.dw	_368-_2887
+	.dw	_368-_2920
 	.db	3,1,1,5,27,9
-	.dw	_2888-_368
+	.dw	_2921-_368
 	.db	1,5,32,9
-	.dw	_2889-_2888
+	.dw	_2922-_2921
 	.db	1,5,50,9
-	.dw	_2890-_2889
+	.dw	_2923-_2922
 	.db	3,5,1,5,48,9
-	.dw	_2891-_2890
+	.dw	_2924-_2923
 	.db	1,5,74,9
-	.dw	_2892-_2891
+	.dw	_2925-_2924
 	.db	3,1,1,5,41,9
-	.dw	_2893-_2892
+	.dw	_2926-_2925
 	.db	1,5,74,9
-	.dw	_2894-_2893
+	.dw	_2927-_2926
 	.db	1,5,41,9
-	.dw	_2895-_2894
+	.dw	_2928-_2927
 	.db	1,5,54,9
-	.dw	_2896-_2895
+	.dw	_2929-_2928
 	.db	3,1,1,9
-	.dw	_2897-_2896
+	.dw	_2930-_2929
 	.db	3,1,1,5,67,9
-	.dw	_2898-_2897
+	.dw	_2931-_2930
 	.db	3,1,1,5,54,9
-	.dw	_2899-_2898
+	.dw	_2932-_2931
 	.db	1,5,67,9
-	.dw	_2900-_2899
+	.dw	_2933-_2932
 	.db	3,1,1,5,80,9
-	.dw	_2901-_2900
+	.dw	_2934-_2933
 	.db	1,5,54,9
-	.dw	_2902-_2901
+	.dw	_2935-_2934
 	.db	1,5,59,9
-	.dw	_2903-_2902
+	.dw	_2936-_2935
 	.db	3,1,1,5,32,9
-	.dw	_2904-_2903
+	.dw	_2937-_2936
 	.db	3,117,1,5,59,9
-	.dw	_2905-_2904
+	.dw	_2938-_2937
 	.db	3,11,1,5,54,9
-	.dw	_2906-_2905
+	.dw	_2939-_2938
 	.db	1,5,59,9
-	.dw	_2907-_2906
+	.dw	_2940-_2939
 	.db	3,1,1,5,75,9
-	.dw	_2908-_2907
+	.dw	_2941-_2940
 	.db	1,5,54,9
-	.dw	_2909-_2908
+	.dw	_2942-_2941
 	.db	1,5,59,9
-	.dw	_2910-_2909
+	.dw	_2943-_2942
 	.db	3,1,1,5,25,9
-	.dw	_2255-_2910
+	.dw	_2255-_2943
 	.db	3,115,1,5,59,9
 	.dw	_2256-_2255
 	.db	3,13,1,5,54,9
-	.dw	_2911-_2256
-	.db	1,5,59,9
-	.dw	_2912-_2911
-	.db	3,1,1,5,75,9
-	.dw	_2913-_2912
-	.db	1,5,54,9
-	.dw	_2914-_2913
-	.db	1,5,47,9
-	.dw	_2915-_2914
-	.db	3,1,1,5,45,9
-	.dw	_2916-_2915
-	.db	1,5,48,9
-	.dw	_2917-_2916
-	.db	3,5,1,5,74,9
-	.dw	_2918-_2917
-	.db	3,1,1,5,41,9
-	.dw	_2919-_2918
-	.db	1,5,54,9
-	.dw	_2920-_2919
-	.db	3,1,1,9
-	.dw	_2921-_2920
-	.db	3,1,1,5,59,9
-	.dw	_2922-_2921
-	.db	3,1,1,5,54,9
-	.dw	_2923-_2922
-	.db	1,5,59,9
-	.dw	_2924-_2923
-	.db	3,1,1,5,72,9
-	.dw	_2925-_2924
-	.db	1,5,54,9
-	.dw	_2926-_2925
-	.db	1,5,59,9
-	.dw	_2927-_2926
-	.db	3,1,1,5,54,9
-	.dw	_2928-_2927
-	.db	1,5,59,9
-	.dw	_2929-_2928
-	.db	3,1,1,5,75,9
-	.dw	_2930-_2929
-	.db	1,5,54,9
-	.dw	_2931-_2930
-	.db	1,5,59,9
-	.dw	_2932-_2931
-	.db	3,1,1,5,54,9
-	.dw	_2933-_2932
-	.db	1,5,59,9
-	.dw	_2934-_2933
-	.db	3,1,1,5,75,9
-	.dw	_2935-_2934
-	.db	1,5,54,9
-	.dw	_2936-_2935
-	.db	1,5,45,9
-	.dw	_2937-_2936
-	.db	3,1,1,5,48,9
-	.dw	_2938-_2937
-	.db	3,5,1,5,74,9
-	.dw	_2939-_2938
-	.db	3,1,1,5,41,9
-	.dw	_2940-_2939
-	.db	1,5,54,9
-	.dw	_2941-_2940
-	.db	3,1,1,9
-	.dw	_2942-_2941
-	.db	3,1,1,5,59,9
-	.dw	_2943-_2942
-	.db	3,1,1,5,54,9
-	.dw	_2944-_2943
+	.dw	_2944-_2256
 	.db	1,5,59,9
 	.dw	_2945-_2944
-	.db	3,1,1,5,72,9
+	.db	3,1,1,5,75,9
 	.dw	_2946-_2945
 	.db	1,5,54,9
 	.dw	_2947-_2946
-	.db	1,5,59,9
+	.db	1,5,47,9
 	.dw	_2948-_2947
-	.db	3,1,1,5,54,9
-	.dw	_2949-_2948
-	.db	1,5,59,9
-	.dw	_2950-_2949
-	.db	3,1,1,5,75,9
-	.dw	_2951-_2950
-	.db	1,5,54,9
-	.dw	_2952-_2951
-	.db	1,5,59,9
-	.dw	_2953-_2952
-	.db	3,1,1,5,54,9
-	.dw	_2954-_2953
-	.db	1,5,59,9
-	.dw	_2955-_2954
-	.db	3,1,1,5,75,9
-	.dw	_2956-_2955
-	.db	1,5,54,9
-	.dw	_2957-_2956
-	.db	1,5,45,9
-	.dw	_2958-_2957
-	.db	3,1,1,5,48,9
-	.dw	_2959-_2958
-	.db	3,5,1,5,74,9
-	.dw	_2960-_2959
-	.db	3,1,1,5,41,9
-	.dw	_2961-_2960
-	.db	1,5,54,9
-	.dw	_2962-_2961
-	.db	3,1,1,9
-	.dw	_2963-_2962
-	.db	3,1,1,9
-	.dw	_2964-_2963
-	.db	3,1,1,9
-	.dw	_2965-_2964
-	.db	3,1,1,9
-	.dw	_2966-_2965
-	.db	3,1,1,9
-	.dw	_2967-_2966
-	.db	3,1,1,9
-	.dw	_2968-_2967
-	.db	3,1,1,9
-	.dw	_2969-_2968
 	.db	3,1,1,5,45,9
+	.dw	_2949-_2948
+	.db	1,5,48,9
+	.dw	_2950-_2949
+	.db	3,5,1,5,74,9
+	.dw	_2951-_2950
+	.db	3,1,1,5,41,9
+	.dw	_2952-_2951
+	.db	1,5,54,9
+	.dw	_2953-_2952
+	.db	3,1,1,9
+	.dw	_2954-_2953
+	.db	3,1,1,5,59,9
+	.dw	_2955-_2954
+	.db	3,1,1,5,54,9
+	.dw	_2956-_2955
+	.db	1,5,59,9
+	.dw	_2957-_2956
+	.db	3,1,1,5,72,9
+	.dw	_2958-_2957
+	.db	1,5,54,9
+	.dw	_2959-_2958
+	.db	1,5,59,9
+	.dw	_2960-_2959
+	.db	3,1,1,5,54,9
+	.dw	_2961-_2960
+	.db	1,5,59,9
+	.dw	_2962-_2961
+	.db	3,1,1,5,75,9
+	.dw	_2963-_2962
+	.db	1,5,54,9
+	.dw	_2964-_2963
+	.db	1,5,59,9
+	.dw	_2965-_2964
+	.db	3,1,1,5,54,9
+	.dw	_2966-_2965
+	.db	1,5,59,9
+	.dw	_2967-_2966
+	.db	3,1,1,5,75,9
+	.dw	_2968-_2967
+	.db	1,5,54,9
+	.dw	_2969-_2968
+	.db	1,5,45,9
 	.dw	_2970-_2969
 	.db	3,1,1,5,48,9
 	.dw	_2971-_2970
@@ -8111,489 +8170,489 @@ _2867:
 	.dw	_2974-_2973
 	.db	3,1,1,9
 	.dw	_2975-_2974
-	.db	3,1,1,9
+	.db	3,1,1,5,59,9
 	.dw	_2976-_2975
-	.db	3,1,1,9
+	.db	3,1,1,5,54,9
 	.dw	_2977-_2976
-	.db	3,1,1,9
+	.db	1,5,59,9
 	.dw	_2978-_2977
-	.db	3,1,1,9
+	.db	3,1,1,5,72,9
 	.dw	_2979-_2978
-	.db	3,1,1,9
+	.db	1,5,54,9
 	.dw	_2980-_2979
-	.db	3,1,1,9
+	.db	1,5,59,9
 	.dw	_2981-_2980
-	.db	3,1,1,5,45,9
+	.db	3,1,1,5,54,9
 	.dw	_2982-_2981
-	.db	3,1,1,5,48,9
+	.db	1,5,59,9
 	.dw	_2983-_2982
-	.db	3,38,1,5,74,9
+	.db	3,1,1,5,75,9
 	.dw	_2984-_2983
-	.db	3,1,1,5,41,9
+	.db	1,5,54,9
 	.dw	_2985-_2984
-	.db	1,5,54,9
+	.db	1,5,59,9
 	.dw	_2986-_2985
-	.db	3,1,1,9
+	.db	3,1,1,5,54,9
 	.dw	_2987-_2986
-	.db	3,1,1,9
+	.db	1,5,59,9
 	.dw	_2988-_2987
-	.db	3,1,1,9
+	.db	3,1,1,5,75,9
 	.dw	_2989-_2988
-	.db	3,1,1,9
+	.db	1,5,54,9
 	.dw	_2990-_2989
-	.db	3,1,1,9
+	.db	1,5,45,9
 	.dw	_2991-_2990
-	.db	3,1,1,9
-	.dw	_2992-_2991
-	.db	3,1,1,9
-	.dw	_2993-_2992
-	.db	3,1,1,5,45,9
-	.dw	_2994-_2993
 	.db	3,1,1,5,48,9
-	.dw	_2995-_2994
+	.dw	_2992-_2991
 	.db	3,5,1,5,74,9
-	.dw	_2996-_2995
+	.dw	_2993-_2992
 	.db	3,1,1,5,41,9
+	.dw	_2994-_2993
+	.db	1,5,54,9
+	.dw	_2995-_2994
+	.db	3,1,1,9
+	.dw	_2996-_2995
+	.db	3,1,1,9
 	.dw	_2997-_2996
-	.db	1,5,80,9
+	.db	3,1,1,9
 	.dw	_2998-_2997
-	.db	3,1,1,5,54,9
-	.dw	_2258-_2998
-	.db	1,5,80,9
-	.dw	_2999-_2258
-	.db	3,1,1,5,84,9
+	.db	3,1,1,9
+	.dw	_2999-_2998
+	.db	3,1,1,9
 	.dw	_3000-_2999
-	.db	1,5,54,9
+	.db	3,1,1,9
 	.dw	_3001-_3000
-	.db	1,5,80,9
+	.db	3,1,1,9
 	.dw	_3002-_3001
-	.db	3,1,1,5,54,9
-	.dw	_3003-_3002
-	.db	1,5,80,9
-	.dw	_3004-_3003
-	.db	3,1,1,5,84,9
-	.dw	_3005-_3004
-	.db	1,5,54,9
-	.dw	_3006-_3005
-	.db	1,5,82,9
-	.dw	_3007-_3006
-	.db	3,1,1,5,54,9
-	.dw	_3008-_3007
-	.db	1,5,82,9
-	.dw	_3009-_3008
-	.db	3,1,1,5,86,9
-	.dw	_3010-_3009
-	.db	1,5,54,9
-	.dw	_3011-_3010
-	.db	1,5,81,9
-	.dw	_3012-_3011
-	.db	3,1,1,5,54,9
-	.dw	_3013-_3012
-	.db	1,5,81,9
-	.dw	_3014-_3013
-	.db	3,1,1,5,85,9
-	.dw	_3015-_3014
-	.db	1,5,54,9
-	.dw	_3016-_3015
-	.db	1,5,47,9
-	.dw	_3017-_3016
 	.db	3,1,1,5,45,9
+	.dw	_3003-_3002
+	.db	3,1,1,5,48,9
+	.dw	_3004-_3003
+	.db	3,5,1,5,74,9
+	.dw	_3005-_3004
+	.db	3,1,1,5,41,9
+	.dw	_3006-_3005
+	.db	1,5,54,9
+	.dw	_3007-_3006
+	.db	3,1,1,9
+	.dw	_3008-_3007
+	.db	3,1,1,9
+	.dw	_3009-_3008
+	.db	3,1,1,9
+	.dw	_3010-_3009
+	.db	3,1,1,9
+	.dw	_3011-_3010
+	.db	3,1,1,9
+	.dw	_3012-_3011
+	.db	3,1,1,9
+	.dw	_3013-_3012
+	.db	3,1,1,9
+	.dw	_3014-_3013
+	.db	3,1,1,5,45,9
+	.dw	_3015-_3014
+	.db	3,1,1,5,48,9
+	.dw	_3016-_3015
+	.db	3,38,1,5,74,9
+	.dw	_3017-_3016
+	.db	3,1,1,5,41,9
 	.dw	_3018-_3017
-	.db	1,5,61,9
-	.dw	_371-_3018
-	.db	3,5,1,5,5,9
-	.dw	_3019-_371
-	.db	3,127,1,5,88,9
+	.db	1,5,54,9
+	.dw	_3019-_3018
+	.db	3,1,1,9
 	.dw	_3020-_3019
-	.db	3,1,1,5,75,9
-	.dw	_1570-_3020
-	.db	1,5,88,9
-	.dw	_3021-_1570
-	.db	1,5,81,9
+	.db	3,1,1,9
+	.dw	_3021-_3020
+	.db	3,1,1,9
 	.dw	_3022-_3021
-	.db	1,5,29,9
-	.dw	_1581-_3022
-	.db	1,5,44,9
-	.dw	_3023-_1581
-	.db	1,5,29,9
+	.db	3,1,1,9
+	.dw	_3023-_3022
+	.db	3,1,1,9
 	.dw	_3024-_3023
-	.db	1,5,32,9
+	.db	3,1,1,9
 	.dw	_3025-_3024
-	.db	1,5,94,9
+	.db	3,1,1,9
 	.dw	_3026-_3025
-	.db	1,5,10,9
-	.dw	_105-_3026
-	.db	3,1,1,5,89,9
-	.dw	_3027-_105
-	.db	3,1,1,5,75,9
-	.dw	_1592-_3027
-	.db	1,5,89,9
-	.dw	_3028-_1592
-	.db	1,5,82,9
+	.db	3,1,1,5,45,9
+	.dw	_3027-_3026
+	.db	3,1,1,5,48,9
+	.dw	_3028-_3027
+	.db	3,5,1,5,74,9
 	.dw	_3029-_3028
-	.db	1,5,29,9
-	.dw	_1603-_3029
-	.db	1,5,44,9
-	.dw	_3030-_1603
-	.db	1,5,29,9
+	.db	3,1,1,5,41,9
+	.dw	_3030-_3029
+	.db	1,5,80,9
 	.dw	_3031-_3030
-	.db	1,5,32,9
-	.dw	_3032-_3031
-	.db	1,5,24,9
+	.db	3,1,1,5,54,9
+	.dw	_2258-_3031
+	.db	1,5,80,9
+	.dw	_3032-_2258
+	.db	3,1,1,5,84,9
 	.dw	_3033-_3032
-	.db	1,5,95,9
+	.db	1,5,54,9
 	.dw	_3034-_3033
-	.db	1,5,10,9
-	.dw	_107-_3034
-	.db	3,1,1,5,89,9
-	.dw	_3035-_107
-	.db	3,1,1,5,75,9
-	.dw	_1614-_3035
-	.db	1,5,89,9
-	.dw	_3036-_1614
-	.db	1,5,82,9
+	.db	1,5,80,9
+	.dw	_3035-_3034
+	.db	3,1,1,5,54,9
+	.dw	_3036-_3035
+	.db	1,5,80,9
 	.dw	_3037-_3036
-	.db	1,5,29,9
-	.dw	_1625-_3037
-	.db	1,5,44,9
-	.dw	_3038-_1625
-	.db	1,5,29,9
+	.db	3,1,1,5,84,9
+	.dw	_3038-_3037
+	.db	1,5,54,9
 	.dw	_3039-_3038
-	.db	1,5,32,9
+	.db	1,5,82,9
 	.dw	_3040-_3039
-	.db	1,5,24,9
+	.db	3,1,1,5,54,9
 	.dw	_3041-_3040
-	.db	1,5,95,9
+	.db	1,5,82,9
 	.dw	_3042-_3041
-	.db	1,5,10,9
-	.dw	_109-_3042
-	.db	3,1,1,5,89,9
-	.dw	_3043-_109
-	.db	3,1,1,5,75,9
-	.dw	_1636-_3043
-	.db	1,5,89,9
-	.dw	_3044-_1636
-	.db	1,5,82,9
+	.db	3,1,1,5,86,9
+	.dw	_3043-_3042
+	.db	1,5,54,9
+	.dw	_3044-_3043
+	.db	1,5,81,9
 	.dw	_3045-_3044
-	.db	1,5,29,9
-	.dw	_1647-_3045
-	.db	1,5,44,9
-	.dw	_3046-_1647
-	.db	1,5,29,9
+	.db	3,1,1,5,54,9
+	.dw	_3046-_3045
+	.db	1,5,81,9
 	.dw	_3047-_3046
-	.db	1,5,32,9
+	.db	3,1,1,5,85,9
 	.dw	_3048-_3047
-	.db	1,5,24,9
+	.db	1,5,54,9
 	.dw	_3049-_3048
-	.db	1,5,27,9
+	.db	1,5,47,9
 	.dw	_3050-_3049
-	.db	1,5,95,9
+	.db	3,1,1,5,45,9
 	.dw	_3051-_3050
-	.db	1,5,10,9
-	.dw	_111-_3051
-	.db	3,1,1,5,89,9
-	.dw	_3052-_111
+	.db	1,5,61,9
+	.dw	_371-_3051
+	.db	3,5,1,5,5,9
+	.dw	_3052-_371
+	.db	3,127,1,5,88,9
+	.dw	_3053-_3052
 	.db	3,1,1,5,75,9
-	.dw	_1658-_3052
-	.db	1,5,89,9
-	.dw	_3053-_1658
-	.db	1,5,82,9
-	.dw	_3054-_3053
+	.dw	_1570-_3053
+	.db	1,5,88,9
+	.dw	_3054-_1570
+	.db	1,5,81,9
+	.dw	_3055-_3054
 	.db	1,5,29,9
-	.dw	_1669-_3054
+	.dw	_1581-_3055
 	.db	1,5,44,9
-	.dw	_3055-_1669
+	.dw	_3056-_1581
 	.db	1,5,29,9
-	.dw	_3056-_3055
-	.db	1,5,32,9
 	.dw	_3057-_3056
-	.db	1,5,24,9
+	.db	1,5,32,9
 	.dw	_3058-_3057
-	.db	1,5,95,9
+	.db	1,5,94,9
 	.dw	_3059-_3058
 	.db	1,5,10,9
-	.dw	_113-_3059
+	.dw	_105-_3059
 	.db	3,1,1,5,89,9
-	.dw	_3060-_113
+	.dw	_3060-_105
 	.db	3,1,1,5,75,9
-	.dw	_1680-_3060
+	.dw	_1592-_3060
 	.db	1,5,89,9
-	.dw	_3061-_1680
+	.dw	_3061-_1592
 	.db	1,5,82,9
 	.dw	_3062-_3061
 	.db	1,5,29,9
-	.dw	_1691-_3062
+	.dw	_1603-_3062
 	.db	1,5,44,9
-	.dw	_3063-_1691
+	.dw	_3063-_1603
 	.db	1,5,29,9
 	.dw	_3064-_3063
 	.db	1,5,32,9
 	.dw	_3065-_3064
 	.db	1,5,24,9
 	.dw	_3066-_3065
-	.db	1,5,27,9
+	.db	1,5,95,9
 	.dw	_3067-_3066
-	.db	1,5,95,9
-	.dw	_3068-_3067
 	.db	1,5,10,9
-	.dw	_115-_3068
+	.dw	_107-_3067
 	.db	3,1,1,5,89,9
-	.dw	_3069-_115
+	.dw	_3068-_107
 	.db	3,1,1,5,75,9
-	.dw	_1702-_3069
+	.dw	_1614-_3068
 	.db	1,5,89,9
-	.dw	_3070-_1702
+	.dw	_3069-_1614
 	.db	1,5,82,9
-	.dw	_3071-_3070
+	.dw	_3070-_3069
 	.db	1,5,29,9
-	.dw	_1713-_3071
+	.dw	_1625-_3070
 	.db	1,5,44,9
-	.dw	_3072-_1713
+	.dw	_3071-_1625
 	.db	1,5,29,9
+	.dw	_3072-_3071
+	.db	1,5,32,9
 	.dw	_3073-_3072
-	.db	1,5,32,9
+	.db	1,5,24,9
 	.dw	_3074-_3073
-	.db	1,5,24,9
+	.db	1,5,95,9
 	.dw	_3075-_3074
-	.db	1,5,27,9
-	.dw	_3076-_3075
-	.db	1,5,95,9
-	.dw	_3077-_3076
 	.db	1,5,10,9
-	.dw	_117-_3077
+	.dw	_109-_3075
 	.db	3,1,1,5,89,9
-	.dw	_3078-_117
+	.dw	_3076-_109
 	.db	3,1,1,5,75,9
-	.dw	_1724-_3078
+	.dw	_1636-_3076
 	.db	1,5,89,9
-	.dw	_3079-_1724
+	.dw	_3077-_1636
 	.db	1,5,82,9
+	.dw	_3078-_3077
+	.db	1,5,29,9
+	.dw	_1647-_3078
+	.db	1,5,44,9
+	.dw	_3079-_1647
+	.db	1,5,29,9
 	.dw	_3080-_3079
-	.db	1,5,29,9
-	.dw	_1735-_3080
-	.db	1,5,44,9
-	.dw	_3081-_1735
-	.db	1,5,29,9
+	.db	1,5,32,9
+	.dw	_3081-_3080
+	.db	1,5,24,9
 	.dw	_3082-_3081
-	.db	1,5,32,9
-	.dw	_3083-_3082
-	.db	1,5,24,9
-	.dw	_3084-_3083
 	.db	1,5,27,9
-	.dw	_3085-_3084
+	.dw	_3083-_3082
 	.db	1,5,95,9
-	.dw	_3086-_3085
+	.dw	_3084-_3083
 	.db	1,5,10,9
-	.dw	_119-_3086
+	.dw	_111-_3084
 	.db	3,1,1,5,89,9
-	.dw	_3087-_119
+	.dw	_3085-_111
 	.db	3,1,1,5,75,9
-	.dw	_1746-_3087
+	.dw	_1658-_3085
 	.db	1,5,89,9
-	.dw	_3088-_1746
+	.dw	_3086-_1658
 	.db	1,5,82,9
-	.dw	_3089-_3088
+	.dw	_3087-_3086
 	.db	1,5,29,9
-	.dw	_1757-_3089
+	.dw	_1669-_3087
 	.db	1,5,44,9
-	.dw	_3090-_1757
+	.dw	_3088-_1669
 	.db	1,5,29,9
-	.dw	_3091-_3090
+	.dw	_3089-_3088
 	.db	1,5,32,9
-	.dw	_3092-_3091
+	.dw	_3090-_3089
 	.db	1,5,24,9
-	.dw	_3093-_3092
+	.dw	_3091-_3090
 	.db	1,5,95,9
-	.dw	_3094-_3093
+	.dw	_3092-_3091
+	.db	1,5,10,9
+	.dw	_113-_3092
+	.db	3,1,1,5,89,9
+	.dw	_3093-_113
+	.db	3,1,1,5,75,9
+	.dw	_1680-_3093
 	.db	1,5,89,9
-	.dw	_121-_3094
+	.dw	_3094-_1680
+	.db	1,5,82,9
+	.dw	_3095-_3094
+	.db	1,5,29,9
+	.dw	_1691-_3095
+	.db	1,5,44,9
+	.dw	_3096-_1691
+	.db	1,5,29,9
+	.dw	_3097-_3096
+	.db	1,5,32,9
+	.dw	_3098-_3097
+	.db	1,5,24,9
+	.dw	_3099-_3098
+	.db	1,5,27,9
+	.dw	_3100-_3099
+	.db	1,5,95,9
+	.dw	_3101-_3100
+	.db	1,5,10,9
+	.dw	_115-_3101
+	.db	3,1,1,5,89,9
+	.dw	_3102-_115
+	.db	3,1,1,5,75,9
+	.dw	_1702-_3102
+	.db	1,5,89,9
+	.dw	_3103-_1702
+	.db	1,5,82,9
+	.dw	_3104-_3103
+	.db	1,5,29,9
+	.dw	_1713-_3104
+	.db	1,5,44,9
+	.dw	_3105-_1713
+	.db	1,5,29,9
+	.dw	_3106-_3105
+	.db	1,5,32,9
+	.dw	_3107-_3106
+	.db	1,5,24,9
+	.dw	_3108-_3107
+	.db	1,5,27,9
+	.dw	_3109-_3108
+	.db	1,5,95,9
+	.dw	_3110-_3109
+	.db	1,5,10,9
+	.dw	_117-_3110
+	.db	3,1,1,5,89,9
+	.dw	_3111-_117
+	.db	3,1,1,5,75,9
+	.dw	_1724-_3111
+	.db	1,5,89,9
+	.dw	_3112-_1724
+	.db	1,5,82,9
+	.dw	_3113-_3112
+	.db	1,5,29,9
+	.dw	_1735-_3113
+	.db	1,5,44,9
+	.dw	_3114-_1735
+	.db	1,5,29,9
+	.dw	_3115-_3114
+	.db	1,5,32,9
+	.dw	_3116-_3115
+	.db	1,5,24,9
+	.dw	_3117-_3116
+	.db	1,5,27,9
+	.dw	_3118-_3117
+	.db	1,5,95,9
+	.dw	_3119-_3118
+	.db	1,5,10,9
+	.dw	_119-_3119
+	.db	3,1,1,5,89,9
+	.dw	_3120-_119
+	.db	3,1,1,5,75,9
+	.dw	_1746-_3120
+	.db	1,5,89,9
+	.dw	_3121-_1746
+	.db	1,5,82,9
+	.dw	_3122-_3121
+	.db	1,5,29,9
+	.dw	_1757-_3122
+	.db	1,5,44,9
+	.dw	_3123-_1757
+	.db	1,5,29,9
+	.dw	_3124-_3123
+	.db	1,5,32,9
+	.dw	_3125-_3124
+	.db	1,5,24,9
+	.dw	_3126-_3125
+	.db	1,5,95,9
+	.dw	_3127-_3126
+	.db	1,5,89,9
+	.dw	_121-_3127
 	.db	3,2,1,5,75,9
 	.dw	_1768-_121
 	.db	1,5,89,9
-	.dw	_3095-_1768
+	.dw	_3128-_1768
 	.db	1,5,82,9
-	.dw	_3096-_3095
-	.db	1,5,29,9
-	.dw	_1779-_3096
-	.db	1,5,44,9
-	.dw	_3097-_1779
-	.db	1,5,29,9
-	.dw	_3098-_3097
-	.db	1,5,32,9
-	.dw	_3099-_3098
-	.db	1,5,24,9
-	.dw	_3100-_3099
-	.db	1,5,27,9
-	.dw	_122-_3100
-	.db	1,5,74,9
-	.dw	_3101-_122
-	.db	3,4,1,5,41,9
-	.dw	_3102-_3101
-	.db	1,5,50,9
-	.dw	_3103-_3102
-	.db	3,1,1,5,48,9
-	.dw	_3104-_3103
-	.db	1,5,80,9
-	.dw	_3105-_3104
-	.db	3,1,1,5,54,9
-	.dw	_3106-_3105
-	.db	1,5,72,9
-	.dw	_3107-_3106
-	.db	3,1,1,5,85,9
-	.dw	_3108-_3107
-	.db	1,5,54,9
-	.dw	_3109-_3108
-	.db	1,5,65,9
-	.dw	_3110-_3109
-	.db	3,1,1,5,69,9
-	.dw	_3111-_3110
-	.db	1,5,56,9
-	.dw	_3112-_3111
-	.db	1,5,54,9
-	.dw	_3113-_3112
-	.db	1,5,56,9
-	.dw	_3114-_3113
-	.db	3,1,1,5,54,9
-	.dw	_3115-_3114
-	.db	1,9
-	.dw	_3116-_3115
-	.db	3,1,1,9
-	.dw	_3117-_3116
-	.db	3,1,1,9
-	.dw	_3118-_3117
-	.db	3,1,1,9
-	.dw	_3119-_3118
-	.db	3,1,1,5,47,9
-	.dw	_3120-_3119
-	.db	3,1,1,5,45,9
-	.dw	_3121-_3120
-	.db	1,5,74,9
-	.dw	_3122-_3121
-	.db	3,5,1,5,41,9
-	.dw	_3123-_3122
-	.db	1,5,48,9
-	.dw	_3124-_3123
-	.db	3,1,1,5,54,9
-	.dw	_3125-_3124
-	.db	3,1,1,9
-	.dw	_3126-_3125
-	.db	3,1,1,9
-	.dw	_3127-_3126
-	.db	3,1,1,9
-	.dw	_3128-_3127
-	.db	3,1,1,9
 	.dw	_3129-_3128
-	.db	3,1,1,9
-	.dw	_3130-_3129
-	.db	3,1,1,9
+	.db	1,5,29,9
+	.dw	_1779-_3129
+	.db	1,5,44,9
+	.dw	_3130-_1779
+	.db	1,5,29,9
 	.dw	_3131-_3130
-	.db	3,1,1,9
+	.db	1,5,32,9
 	.dw	_3132-_3131
-	.db	3,1,1,5,45,9
+	.db	1,5,24,9
 	.dw	_3133-_3132
-	.db	3,1,1,5,74,9
-	.dw	_3134-_3133
-	.db	3,5,1,5,41,9
+	.db	1,5,27,9
+	.dw	_122-_3133
+	.db	1,5,74,9
+	.dw	_3134-_122
+	.db	3,4,1,5,41,9
 	.dw	_3135-_3134
-	.db	1,5,48,9
+	.db	1,5,50,9
 	.dw	_3136-_3135
-	.db	3,1,1,5,83,9
+	.db	3,1,1,5,48,9
 	.dw	_3137-_3136
-	.db	3,1,1,5,54,9
+	.db	1,5,80,9
 	.dw	_3138-_3137
-	.db	1,5,83,9
-	.dw	_3139-_3138
-	.db	3,1,1,5,96,9
-	.dw	_3140-_3139
-	.db	1,5,54,9
-	.dw	_3141-_3140
-	.db	1,9
-	.dw	_3142-_3141
-	.db	3,1,1,9
-	.dw	_3143-_3142
-	.db	3,1,1,9
-	.dw	_3144-_3143
-	.db	3,1,1,9
-	.dw	_3145-_3144
-	.db	3,1,1,9
-	.dw	_3146-_3145
-	.db	3,1,1,9
-	.dw	_3147-_3146
-	.db	3,1,1,5,45,9
-	.dw	_3148-_3147
-	.db	3,1,1,5,74,9
-	.dw	_3149-_3148
-	.db	3,5,1,5,41,9
-	.dw	_3150-_3149
-	.db	1,5,48,9
-	.dw	_3151-_3150
 	.db	3,1,1,5,54,9
+	.dw	_3139-_3138
+	.db	1,5,72,9
+	.dw	_3140-_3139
+	.db	3,1,1,5,85,9
+	.dw	_3141-_3140
+	.db	1,5,54,9
+	.dw	_3142-_3141
+	.db	1,5,65,9
+	.dw	_3143-_3142
+	.db	3,1,1,5,69,9
+	.dw	_3144-_3143
+	.db	1,5,56,9
+	.dw	_3145-_3144
+	.db	1,5,54,9
+	.dw	_3146-_3145
+	.db	1,5,56,9
+	.dw	_3147-_3146
+	.db	3,1,1,5,54,9
+	.dw	_3148-_3147
+	.db	1,9
+	.dw	_3149-_3148
+	.db	3,1,1,9
+	.dw	_3150-_3149
+	.db	3,1,1,9
+	.dw	_3151-_3150
+	.db	3,1,1,9
 	.dw	_3152-_3151
-	.db	3,1,1,9
+	.db	3,1,1,5,47,9
 	.dw	_3153-_3152
-	.db	3,1,1,9
+	.db	3,1,1,5,45,9
 	.dw	_3154-_3153
-	.db	3,1,1,9
+	.db	1,5,74,9
 	.dw	_3155-_3154
-	.db	3,1,1,9
+	.db	3,5,1,5,41,9
 	.dw	_3156-_3155
-	.db	3,1,1,9
+	.db	1,5,48,9
 	.dw	_3157-_3156
-	.db	3,1,1,9
+	.db	3,1,1,5,54,9
 	.dw	_3158-_3157
 	.db	3,1,1,9
 	.dw	_3159-_3158
-	.db	3,1,1,5,45,9
+	.db	3,1,1,9
 	.dw	_3160-_3159
-	.db	3,1,1,5,74,9
+	.db	3,1,1,9
 	.dw	_3161-_3160
-	.db	3,5,1,5,41,9
+	.db	3,1,1,9
 	.dw	_3162-_3161
-	.db	1,5,48,9
+	.db	3,1,1,9
 	.dw	_3163-_3162
-	.db	3,1,1,5,60,9
+	.db	3,1,1,9
 	.dw	_3164-_3163
-	.db	3,1,1,5,54,9
+	.db	3,1,1,9
 	.dw	_3165-_3164
-	.db	1,5,60,9
-	.dw	_3166-_3165
-	.db	3,1,1,5,54,9
-	.dw	_3167-_3166
-	.db	1,9
-	.dw	_3168-_3167
-	.db	3,1,1,9
-	.dw	_3169-_3168
-	.db	3,1,1,9
-	.dw	_3170-_3169
-	.db	3,1,1,9
-	.dw	_3171-_3170
-	.db	3,1,1,9
-	.dw	_3172-_3171
-	.db	3,1,1,9
-	.dw	_3173-_3172
 	.db	3,1,1,5,45,9
-	.dw	_3174-_3173
+	.dw	_3166-_3165
 	.db	3,1,1,5,74,9
-	.dw	_3175-_3174
+	.dw	_3167-_3166
 	.db	3,5,1,5,41,9
-	.dw	_3176-_3175
+	.dw	_3168-_3167
 	.db	1,5,48,9
-	.dw	_3177-_3176
-	.db	3,1,1,5,72,9
-	.dw	_3178-_3177
+	.dw	_3169-_3168
+	.db	3,1,1,5,83,9
+	.dw	_3170-_3169
 	.db	3,1,1,5,54,9
-	.dw	_3179-_3178
-	.db	1,5,72,9
-	.dw	_3180-_3179
-	.db	3,1,1,5,75,9
-	.dw	_3181-_3180
+	.dw	_3171-_3170
+	.db	1,5,83,9
+	.dw	_3172-_3171
+	.db	3,1,1,5,96,9
+	.dw	_3173-_3172
 	.db	1,5,54,9
-	.dw	_3182-_3181
-	.db	1,5,56,9
-	.dw	_3183-_3182
-	.db	3,1,1,5,54,9
-	.dw	_3184-_3183
+	.dw	_3174-_3173
 	.db	1,9
+	.dw	_3175-_3174
+	.db	3,1,1,9
+	.dw	_3176-_3175
+	.db	3,1,1,9
+	.dw	_3177-_3176
+	.db	3,1,1,9
+	.dw	_3178-_3177
+	.db	3,1,1,9
+	.dw	_3179-_3178
+	.db	3,1,1,9
+	.dw	_3180-_3179
+	.db	3,1,1,5,45,9
+	.dw	_3181-_3180
+	.db	3,1,1,5,74,9
+	.dw	_3182-_3181
+	.db	3,5,1,5,41,9
+	.dw	_3183-_3182
+	.db	1,5,48,9
+	.dw	_3184-_3183
+	.db	3,1,1,5,54,9
 	.dw	_3185-_3184
 	.db	3,1,1,9
 	.dw	_3186-_3185
@@ -8603,294 +8662,208 @@ _2867:
 	.dw	_3188-_3187
 	.db	3,1,1,9
 	.dw	_3189-_3188
-	.db	3,1,1,5,47,9
-	.dw	_3190-_3189
-	.db	3,1,1,5,45,9
-	.dw	_3191-_3190
-	.db	1,5,48,9
-	.dw	_3192-_3191
-	.db	3,5,1,5,74,9
-	.dw	_3193-_3192
-	.db	3,1,1,5,41,9
-	.dw	_3194-_3193
-	.db	1,5,54,9
-	.dw	_3195-_3194
 	.db	3,1,1,9
+	.dw	_3190-_3189
+	.db	3,1,1,9
+	.dw	_3191-_3190
+	.db	3,1,1,9
+	.dw	_3192-_3191
+	.db	3,1,1,5,45,9
+	.dw	_3193-_3192
+	.db	3,1,1,5,74,9
+	.dw	_3194-_3193
+	.db	3,5,1,5,41,9
+	.dw	_3195-_3194
+	.db	1,5,48,9
 	.dw	_3196-_3195
-	.db	3,1,1,5,59,9
+	.db	3,1,1,5,60,9
 	.dw	_3197-_3196
 	.db	3,1,1,5,54,9
 	.dw	_3198-_3197
-	.db	1,5,59,9
+	.db	1,5,60,9
 	.dw	_3199-_3198
-	.db	3,1,1,5,72,9
+	.db	3,1,1,5,54,9
 	.dw	_3200-_3199
-	.db	1,5,54,9
+	.db	1,9
 	.dw	_3201-_3200
-	.db	1,5,59,9
+	.db	3,1,1,9
 	.dw	_3202-_3201
-	.db	3,1,1,5,54,9
+	.db	3,1,1,9
 	.dw	_3203-_3202
-	.db	1,5,59,9
+	.db	3,1,1,9
 	.dw	_3204-_3203
-	.db	3,1,1,5,75,9
+	.db	3,1,1,9
 	.dw	_3205-_3204
-	.db	1,5,54,9
+	.db	3,1,1,9
 	.dw	_3206-_3205
-	.db	1,5,59,9
+	.db	3,1,1,5,45,9
 	.dw	_3207-_3206
-	.db	3,1,1,5,54,9
-	.dw	_3208-_3207
-	.db	1,5,59,9
-	.dw	_3209-_3208
-	.db	3,1,1,5,75,9
-	.dw	_3210-_3209
-	.db	1,5,54,9
-	.dw	_3211-_3210
-	.db	1,5,45,9
-	.dw	_3212-_3211
 	.db	3,1,1,5,74,9
-	.dw	_3213-_3212
-	.db	3,6,1,5,41,9
-	.dw	_2262-_3213
+	.dw	_3208-_3207
+	.db	3,5,1,5,41,9
+	.dw	_2263-_3208
 	.db	1,5,48,9
-	.dw	_3214-_2262
+	.dw	_3209-_2263
+	.db	3,1,1,5,72,9
+	.dw	_3210-_3209
+	.db	3,1,1,5,54,9
+	.dw	_3211-_3210
+	.db	1,5,72,9
+	.dw	_3212-_3211
 	.db	3,1,1,5,75,9
+	.dw	_3213-_3212
+	.db	1,5,54,9
+	.dw	_3214-_3213
+	.db	1,5,56,9
 	.dw	_3215-_3214
 	.db	3,1,1,5,54,9
 	.dw	_3216-_3215
-	.db	1,5,75,9
-	.dw	_3217-_3216
-	.db	3,1,1,5,54,9
-	.dw	_3218-_3217
-	.db	1,5,74,9
-	.dw	_3219-_3218
-	.db	3,1,1,5,54,9
-	.dw	_3220-_3219
-	.db	1,5,86,9
-	.dw	_3221-_3220
-	.db	3,1,1,5,54,9
-	.dw	_3222-_3221
-	.db	1,5,87,9
-	.dw	_3223-_3222
-	.db	3,1,1,5,92,9
-	.dw	_2264-_3223
-	.db	1,5,54,9
-	.dw	_3224-_2264
-	.db	1,5,56,9
-	.dw	_3225-_3224
-	.db	3,1,1,5,54,9
-	.dw	_3226-_3225
 	.db	1,9
+	.dw	_3217-_3216
+	.db	3,1,1,9
+	.dw	_3218-_3217
+	.db	3,1,1,9
+	.dw	_3219-_3218
+	.db	3,1,1,9
+	.dw	_3220-_3219
+	.db	3,1,1,9
+	.dw	_3221-_3220
+	.db	3,1,1,5,47,9
+	.dw	_3222-_3221
+	.db	3,1,1,5,45,9
+	.dw	_3223-_3222
+	.db	1,5,48,9
+	.dw	_3224-_3223
+	.db	3,5,1,5,74,9
+	.dw	_3225-_3224
+	.db	3,1,1,5,41,9
+	.dw	_3226-_3225
+	.db	1,5,54,9
 	.dw	_3227-_3226
 	.db	3,1,1,9
 	.dw	_3228-_3227
-	.db	3,1,1,5,47,9
+	.db	3,1,1,5,59,9
 	.dw	_3229-_3228
-	.db	3,1,1,5,45,9
+	.db	3,1,1,5,54,9
 	.dw	_3230-_3229
-	.db	1,5,74,9
+	.db	1,5,59,9
 	.dw	_3231-_3230
-	.db	3,5,1,5,41,9
+	.db	3,1,1,5,72,9
 	.dw	_3232-_3231
-	.db	1,5,74,9
+	.db	1,5,54,9
 	.dw	_3233-_3232
-	.db	1,5,41,9
+	.db	1,5,59,9
 	.dw	_3234-_3233
-	.db	1,5,48,9
+	.db	3,1,1,5,54,9
 	.dw	_3235-_3234
-	.db	3,1,1,5,54,9
+	.db	1,5,59,9
 	.dw	_3236-_3235
-	.db	3,1,1,9
+	.db	3,1,1,5,75,9
 	.dw	_3237-_3236
-	.db	3,1,1,9
+	.db	1,5,54,9
 	.dw	_3238-_3237
-	.db	3,1,1,9
+	.db	1,5,59,9
 	.dw	_3239-_3238
-	.db	3,1,1,5,82,9
+	.db	3,1,1,5,54,9
 	.dw	_3240-_3239
-	.db	3,1,1,5,54,9
+	.db	1,5,59,9
 	.dw	_3241-_3240
-	.db	1,5,83,9
+	.db	3,1,1,5,75,9
 	.dw	_3242-_3241
-	.db	3,1,1,5,87,9
+	.db	1,5,54,9
 	.dw	_3243-_3242
-	.db	1,5,54,9
+	.db	1,5,45,9
 	.dw	_3244-_3243
-	.db	1,5,83,9
+	.db	3,1,1,5,74,9
 	.dw	_3245-_3244
-	.db	3,1,1,5,54,9
-	.dw	_3246-_3245
-	.db	1,5,83,9
+	.db	3,6,1,5,41,9
+	.dw	_2265-_3245
+	.db	1,5,48,9
+	.dw	_3246-_2265
+	.db	3,1,1,5,75,9
 	.dw	_3247-_3246
-	.db	3,1,1,5,87,9
-	.dw	_2266-_3247
-	.db	1,5,54,9
-	.dw	_3248-_2266
-	.db	1,5,47,9
+	.db	3,1,1,5,54,9
+	.dw	_3248-_3247
+	.db	1,5,75,9
 	.dw	_3249-_3248
-	.db	3,1,1,5,45,9
+	.db	3,1,1,5,54,9
 	.dw	_3250-_3249
-	.db	1,5,50,9
+	.db	1,5,74,9
 	.dw	_3251-_3250
-	.db	3,17,1,5,48,9
+	.db	3,1,1,5,54,9
 	.dw	_3252-_3251
-	.db	1,5,43,9
+	.db	1,5,86,9
 	.dw	_3253-_3252
-	.db	3,1,1,5,41,9
+	.db	3,1,1,5,54,9
 	.dw	_3254-_3253
-	.db	1,5,43,9
+	.db	1,5,87,9
 	.dw	_3255-_3254
-	.db	1,5,41,9
-	.dw	_3256-_3255
-	.db	1,5,46,9
+	.db	3,1,1,5,92,9
+	.dw	_2267-_3255
+	.db	1,5,54,9
+	.dw	_3256-_2267
+	.db	1,5,56,9
 	.dw	_3257-_3256
-	.db	3,1,1,5,93,9
+	.db	3,1,1,5,54,9
 	.dw	_3258-_3257
-	.db	3,1,1,5,62,9
+	.db	1,9
 	.dw	_3259-_3258
-	.db	1,5,93,9
+	.db	3,1,1,9
 	.dw	_3260-_3259
-	.db	1,5,105,9
+	.db	3,1,1,5,47,9
 	.dw	_3261-_3260
-	.db	1,5,86,9
+	.db	3,1,1,5,45,9
 	.dw	_3262-_3261
-	.db	1,5,118,9
+	.db	1,5,74,9
 	.dw	_3263-_3262
-	.db	1,5,42,9
+	.db	3,5,1,5,41,9
 	.dw	_3264-_3263
-	.db	1,5,118,9
+	.db	1,5,48,9
 	.dw	_3265-_3264
-	.db	1,5,145,1,9
+	.db	3,1,1,5,54,9
 	.dw	_3266-_3265
-	.db	1,5,132,1,9
+	.db	3,1,1,9
 	.dw	_3267-_3266
-	.db	1,5,111,9
+	.db	3,1,1,9
 	.dw	_3268-_3267
-	.db	1,5,145,1,9
+	.db	3,1,1,9
 	.dw	_3269-_3268
-	.db	1,5,163,1,9
+	.db	3,1,1,5,82,9
 	.dw	_3270-_3269
-	.db	1,5,138,1,9
+	.db	3,1,1,5,54,9
 	.dw	_3271-_3270
-	.db	1,5,46,9
+	.db	1,5,83,9
 	.dw	_3272-_3271
-	.db	1,9
+	.db	3,1,1,5,87,9
 	.dw	_3273-_3272
-	.db	3,1,1,5,52,9
+	.db	1,5,54,9
 	.dw	_3274-_3273
-	.db	3,1,1,5,46,9
+	.db	1,5,83,9
 	.dw	_3275-_3274
-	.db	1,5,52,9
+	.db	3,1,1,5,54,9
 	.dw	_3276-_3275
-	.db	3,1,1,5,73,9
+	.db	1,5,83,9
 	.dw	_3277-_3276
-	.db	1,5,46,9
-	.dw	_3278-_3277
-	.db	1,5,52,9
+	.db	3,1,1,5,87,9
+	.dw	_2269-_3277
+	.db	1,5,54,9
+	.dw	_3278-_2269
+	.db	1,5,47,9
 	.dw	_3279-_3278
-	.db	3,1,1,5,46,9
+	.db	3,1,1,5,45,9
 	.dw	_3280-_3279
-	.db	1,5,52,9
+	.db	1,5,25,9
 	.dw	_3281-_3280
-	.db	3,1,1,5,77,9
+	.db	3,22,1,5,37,9
 	.dw	_3282-_3281
-	.db	1,5,46,9
-	.dw	_3283-_3282
-	.db	1,5,52,9
-	.dw	_3284-_3283
-	.db	3,1,1,5,46,9
-	.dw	_3285-_3284
-	.db	1,5,52,9
-	.dw	_3286-_3285
-	.db	3,1,1,5,77,9
-	.dw	_3287-_3286
-	.db	1,5,46,9
-	.dw	_3288-_3287
-	.db	1,5,45,9
-	.dw	_3289-_3288
-	.db	3,1,1,5,48,9
-	.dw	_3290-_3289
-	.db	3,4,1,5,43,9
-	.dw	_3291-_3290
-	.db	3,1,1,5,41,9
-	.dw	_3292-_3291
-	.db	1,5,46,9
-	.dw	_3293-_3292
-	.db	3,1,1,5,93,9
-	.dw	_3294-_3293
-	.db	3,1,1,5,62,9
-	.dw	_3295-_3294
-	.db	1,5,93,9
-	.dw	_3296-_3295
-	.db	1,5,105,9
-	.dw	_3297-_3296
-	.db	1,5,86,9
-	.dw	_3298-_3297
-	.db	1,5,118,9
-	.dw	_3299-_3298
-	.db	1,5,42,9
-	.dw	_3300-_3299
-	.db	1,5,118,9
-	.dw	_3301-_3300
-	.db	1,5,145,1,9
-	.dw	_3302-_3301
-	.db	1,5,132,1,9
-	.dw	_3303-_3302
-	.db	1,5,111,9
-	.dw	_3304-_3303
-	.db	1,5,145,1,9
-	.dw	_3305-_3304
-	.db	1,5,163,1,9
-	.dw	_3306-_3305
-	.db	1,5,138,1,9
-	.dw	_3307-_3306
-	.db	1,5,46,9
-	.dw	_3308-_3307
-	.db	1,9
-	.dw	_3309-_3308
-	.db	3,1,1,5,52,9
-	.dw	_3310-_3309
-	.db	3,1,1,5,46,9
-	.dw	_3311-_3310
-	.db	1,5,52,9
-	.dw	_3312-_3311
-	.db	3,1,1,5,73,9
-	.dw	_3313-_3312
-	.db	1,5,46,9
-	.dw	_3314-_3313
-	.db	1,5,52,9
-	.dw	_3315-_3314
-	.db	3,1,1,5,46,9
-	.dw	_3316-_3315
-	.db	1,5,52,9
-	.dw	_3317-_3316
-	.db	3,1,1,5,77,9
-	.dw	_3318-_3317
-	.db	1,5,46,9
-	.dw	_3319-_3318
-	.db	1,5,52,9
-	.dw	_3320-_3319
-	.db	3,1,1,5,46,9
-	.dw	_3321-_3320
-	.db	1,5,52,9
-	.dw	_3322-_3321
-	.db	3,1,1,5,77,9
-	.dw	_3323-_3322
-	.db	1,5,46,9
-	.dw	_3324-_3323
-	.db	1,5,45,9
-	.dw	_3325-_3324
-	.db	3,1,1,5,37,9
-	.dw	_3326-_3325
-	.db	3,7,1,5,50,9
-	.dw	_123-_3326
+	.db	1,5,50,9
+	.dw	_123-_3282
 	.db	1,5,1,9
 	.dw	_364-_123
 	.db	3,3,1,9
 	.dw	_237-_364
 	.db	0,1,1
-_2865:
+_2898:
 	; End of section
 
 	.debug		.debug_ranges, cluster 'canOutput_sendDebugMessage0'
@@ -8925,39 +8898,39 @@ _238:
 	.db	2
 	.dl	_209
 	.db	3
-	.db	'canOutput_sendDebugMessage1',0,1,217,6,6,6,1,1,1
+	.db	'canOutput_sendDebugMessage1',0,1,189,6,6,6,1,1,1
 	.dl	_198,_242,_197
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,217,6,46,2
+	.db	'me',0,1,189,6,46,2
 	.dl	_248,_373
 	.db	4
-	.db	'tps',0,1,217,6,65,2
+	.db	'tps',0,1,189,6,65,2
 	.dl	_345,_374
 	.db	4
-	.db	'bps',0,1,217,6,91,2
+	.db	'bps',0,1,189,6,91,2
 	.dl	_347,_375
 	.db	4
-	.db	'ic',0,1,217,6,115,2
+	.db	'ic',0,1,189,6,115,2
 	.dl	_327,_376
 	.db	4
-	.db	'bms',0,1,217,6,144,1,2
+	.db	'bms',0,1,189,6,144,1,2
 	.dl	_329,_377
 	.db	4
-	.db	'sc',0,1,217,6,164,1,2
+	.db	'sc',0,1,189,6,164,1,2
 	.dl	_331,_378
 	.db	4
-	.db	'd1',0,1,217,6,181,1,2
+	.db	'd1',0,1,189,6,181,1,2
 	.dl	_333,_379
 	.db	4
-	.db	'inv1',0,1,217,6,201,1,2
+	.db	'inv1',0,1,189,6,201,1,2
 	.dl	_335,_380
 	.db	4
-	.db	'inv2',0,1,217,6,223,1,2
+	.db	'inv2',0,1,189,6,223,1,2
 	.dl	_335,_381
 	.db	5
 	.dl	_198,_242
 	.db	6
-	.db	'canMessages',0,1,219,6,23,2
+	.db	'canMessages',0,1,191,6,23,2
 	.dl	_305,_382
 	.db	0,0,0
 	; End of section
@@ -8971,144 +8944,244 @@ _239:
 
 	.debug		.debug_line, cluster 'canOutput_sendDebugMessage1'
 _240:
-	.dl	_3328-_3327
-_3327:
+	.dl	_3284-_3283
+_3283:
 	.dw	3
-	.dl	_3330-_3329
-_3329:
+	.dl	_3286-_3285
+_3285:
 	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
 	.db	'canManager.c',0,0,0,0,0
-_3330:
+_3286:
 	.db	5,6,7,0,5,2
 	.dl	_198
-	.db	3,216,6,1,5,62,9
-	.dw	_2610-_198
+	.db	3,188,6,1,5,62,9
+	.dw	_3287-_198
 	.db	3,2,1,5,6,9
-	.dw	_2609-_2610
+	.dw	_2607-_3287
 	.db	3,126,1,5,37,9
-	.dw	_3331-_2609
+	.dw	_3288-_2607
 	.db	3,2,1,5,6,9
-	.dw	_3332-_3331
+	.dw	_3289-_3288
 	.db	3,126,1,5,62,9
-	.dw	_2604-_3332
-	.db	3,2,1,5,6,9
-	.dw	_3333-_2604
-	.db	3,126,1,5,62,9
-	.dw	_2606-_3333
-	.db	3,2,1,5,6,9
-	.dw	_3334-_2606
-	.db	3,126,1,5,62,9
-	.dw	_2607-_3334
+	.dw	_3290-_3289
 	.db	3,2,1,5,50,9
-	.dw	_3335-_2607
-	.db	3,11,1,5,48,9
-	.dw	_3336-_3335
+	.dw	_3291-_3290
+	.db	3,11,1,5,62,9
+	.dw	_3292-_3291
+	.db	3,117,1,5,48,9
+	.dw	_2616-_3292
+	.db	3,11,1,5,41,9
+	.dw	_3293-_2616
+	.db	3,1,1,5,43,9
+	.dw	_2615-_3293
+	.db	1,5,41,9
+	.dw	_3294-_2615
+	.db	1,5,43,9
+	.dw	_3295-_3294
+	.db	1,5,41,9
+	.dw	_3296-_3295
+	.db	1,5,46,9
+	.dw	_3297-_3296
+	.db	3,1,1,5,145,1,9
+	.dw	_3298-_3297
+	.db	3,1,1,5,118,9
+	.dw	_3299-_3298
+	.db	1,5,93,9
+	.dw	_3300-_3299
+	.db	1,5,62,9
+	.dw	_3301-_3300
+	.db	1,5,93,9
+	.dw	_3302-_3301
+	.db	1,5,105,9
+	.dw	_3303-_3302
+	.db	1,5,86,9
+	.dw	_3304-_3303
+	.db	1,5,118,9
+	.dw	_3305-_3304
+	.db	1,5,145,1,9
+	.dw	_3306-_3305
+	.db	1,5,132,1,9
+	.dw	_3307-_3306
+	.db	1,5,145,1,9
+	.dw	_3308-_3307
+	.db	1,5,111,9
+	.dw	_3309-_3308
+	.db	1,5,145,1,9
+	.dw	_3310-_3309
+	.db	1,5,46,9
+	.dw	_3311-_3310
+	.db	1,5,163,1,9
+	.dw	_2619-_3311
+	.db	1,5,138,1,9
+	.dw	_3312-_2619
+	.db	1,5,46,9
+	.dw	_3313-_3312
+	.db	1,9
+	.dw	_3314-_3313
+	.db	3,1,1,5,52,9
+	.dw	_3315-_3314
+	.db	3,1,1,5,46,9
+	.dw	_3316-_3315
+	.db	1,5,42,9
+	.dw	_2621-_3316
+	.db	3,13,1,5,46,9
+	.dw	_3317-_2621
+	.db	3,115,1,5,52,9
+	.dw	_3318-_3317
+	.db	3,1,1,5,46,9
+	.dw	_3319-_3318
+	.db	1,5,73,9
+	.dw	_2623-_3319
+	.db	1,5,46,9
+	.dw	_3320-_2623
+	.db	1,5,52,9
+	.dw	_3321-_3320
+	.db	3,1,1,5,46,9
+	.dw	_3322-_3321
+	.db	1,5,52,9
+	.dw	_3323-_3322
+	.db	3,1,1,5,77,9
+	.dw	_3324-_3323
+	.db	1,5,46,9
+	.dw	_3325-_3324
+	.db	1,5,52,9
+	.dw	_3326-_3325
+	.db	3,1,1,5,46,9
+	.dw	_3327-_3326
+	.db	1,5,52,9
+	.dw	_3328-_3327
+	.db	3,1,1,5,77,9
+	.dw	_3329-_3328
+	.db	1,5,46,9
+	.dw	_3330-_3329
+	.db	1,5,47,9
+	.dw	_3331-_3330
+	.db	3,1,1,5,45,9
+	.dw	_3332-_3331
+	.db	1,5,50,9
+	.dw	_3333-_3332
+	.db	3,117,1,5,48,9
+	.dw	_3334-_3333
+	.db	3,15,1,5,41,9
+	.dw	_3335-_3334
+	.db	3,1,1,5,43,9
+	.dw	_2624-_3335
+	.db	1,5,41,9
+	.dw	_3336-_2624
 	.db	1,5,43,9
 	.dw	_3337-_3336
-	.db	3,1,1,5,41,9
+	.db	3,113,1,5,41,9
 	.dw	_3338-_3337
-	.db	1,5,93,9
+	.db	3,15,1,5,46,9
 	.dw	_3339-_3338
-	.db	3,2,1,5,62,9
+	.db	3,1,1,5,145,1,9
 	.dw	_3340-_3339
-	.db	1,5,43,9
+	.db	3,1,1,5,118,9
 	.dw	_3341-_3340
-	.db	3,126,1,5,41,9
+	.db	1,5,93,9
 	.dw	_3342-_3341
-	.db	1,5,46,9
+	.db	1,5,62,9
 	.dw	_3343-_3342
-	.db	3,1,1,5,93,9
+	.db	1,5,42,9
 	.dw	_3344-_3343
-	.db	3,1,1,5,105,9
+	.db	1,5,93,9
 	.dw	_3345-_3344
-	.db	1,5,86,9
+	.db	1,5,105,9
 	.dw	_3346-_3345
-	.db	1,5,118,9
-	.dw	_3347-_3346
-	.db	1,5,52,9
-	.dw	_3348-_3347
-	.db	3,2,1,5,118,9
-	.dw	_3349-_3348
-	.db	3,126,1,5,132,1,9
-	.dw	_3350-_3349
-	.db	1,5,111,9
-	.dw	_3351-_3350
-	.db	1,5,145,1,9
-	.dw	_3352-_3351
-	.db	1,5,93,9
-	.dw	_3353-_3352
-	.db	3,15,1,5,145,1,9
-	.dw	_3354-_3353
-	.db	3,113,1,5,52,9
-	.dw	_3355-_3354
-	.db	3,2,1,5,163,1,9
-	.dw	_3356-_3355
-	.db	3,126,1,5,138,1,9
-	.dw	_3357-_3356
-	.db	1,5,46,9
-	.dw	_3358-_3357
-	.db	1,9
-	.dw	_3359-_3358
-	.db	3,1,1,5,52,9
-	.dw	_3360-_3359
-	.db	3,1,1,5,46,9
-	.dw	_3361-_3360
-	.db	1,5,52,9
-	.dw	_3362-_3361
-	.db	3,1,1,9
-	.dw	_3363-_3362
-	.db	3,1,1,5,73,9
-	.dw	_3364-_3363
-	.db	3,127,1,5,46,9
-	.dw	_3365-_3364
-	.db	1,5,52,9
-	.dw	_3366-_3365
-	.db	3,1,1,5,46,9
-	.dw	_3367-_3366
-	.db	1,5,52,9
-	.dw	_3368-_3367
-	.db	3,1,1,9
-	.dw	_3369-_3368
-	.db	3,1,1,5,77,9
-	.dw	_3370-_3369
-	.db	3,127,1,5,46,9
-	.dw	_3371-_3370
-	.db	1,5,52,9
-	.dw	_3372-_3371
-	.db	3,1,1,5,46,9
-	.dw	_3373-_3372
-	.db	1,5,52,9
-	.dw	_3374-_3373
-	.db	3,1,1,5,77,9
-	.dw	_3375-_3374
-	.db	1,5,46,9
-	.dw	_3376-_3375
-	.db	1,5,47,9
-	.dw	_3377-_3376
-	.db	3,1,1,5,45,9
-	.dw	_3378-_3377
-	.db	1,5,48,9
-	.dw	_3379-_3378
-	.db	3,4,1,5,43,9
-	.dw	_3380-_3379
-	.db	3,1,1,5,41,9
-	.dw	_3381-_3380
-	.db	1,5,93,9
-	.dw	_3382-_3381
-	.db	3,2,1,5,62,9
-	.dw	_3383-_3382
-	.db	1,5,41,9
-	.dw	_3384-_3383
-	.db	3,126,1,5,46,9
-	.dw	_3385-_3384
-	.db	3,1,1,5,93,9
-	.dw	_3386-_3385
-	.db	3,1,1,5,105,9
-	.dw	_3387-_3386
 	.db	1,5,86,9
-	.dw	_3388-_3387
+	.dw	_3347-_3346
 	.db	1,5,118,9
-	.dw	_3389-_3388
+	.dw	_3348-_3347
+	.db	1,5,145,1,9
+	.dw	_3349-_3348
+	.db	1,5,132,1,9
+	.dw	_3350-_3349
+	.db	1,5,145,1,9
+	.dw	_3351-_3350
+	.db	1,5,111,9
+	.dw	_3352-_3351
+	.db	1,5,145,1,9
+	.dw	_3353-_3352
+	.db	1,5,163,1,9
+	.dw	_3354-_3353
+	.db	1,5,138,1,9
+	.dw	_3355-_3354
+	.db	1,5,46,9
+	.dw	_3356-_3355
+	.db	1,9
+	.dw	_3357-_3356
+	.db	3,1,1,9
+	.dw	_3358-_3357
+	.db	3,1,1,5,52,9
+	.dw	_2629-_3358
+	.db	1,5,46,9
+	.dw	_3359-_2629
+	.db	1,5,52,9
+	.dw	_3360-_3359
+	.db	3,1,1,5,73,9
+	.dw	_3361-_3360
+	.db	1,5,46,9
+	.dw	_3362-_3361
+	.db	1,9
+	.dw	_3363-_3362
+	.db	3,1,1,5,52,9
+	.dw	_2630-_3363
+	.db	1,5,46,9
+	.dw	_3364-_2630
+	.db	1,5,52,9
+	.dw	_3365-_3364
+	.db	3,1,1,5,77,9
+	.dw	_3366-_3365
+	.db	1,5,46,9
+	.dw	_3367-_3366
+	.db	1,9
+	.dw	_3368-_3367
+	.db	3,1,1,5,52,9
+	.dw	_2631-_3368
+	.db	1,5,46,9
+	.dw	_3369-_2631
+	.db	1,5,52,9
+	.dw	_3370-_3369
+	.db	3,1,1,5,77,9
+	.dw	_3371-_3370
+	.db	1,5,46,9
+	.dw	_3372-_3371
+	.db	1,5,47,9
+	.dw	_3373-_3372
+	.db	3,114,1,5,45,9
+	.dw	_3374-_3373
+	.db	3,15,1,5,50,9
+	.dw	_3375-_3374
+	.db	3,102,1,5,48,9
+	.dw	_3376-_3375
+	.db	3,30,1,5,43,9
+	.dw	_3377-_3376
+	.db	3,1,1,5,41,9
+	.dw	_3378-_3377
+	.db	1,5,43,9
+	.dw	_3379-_3378
+	.db	3,98,1,5,41,9
+	.dw	_3380-_3379
+	.db	3,30,1,5,50,9
+	.dw	_3381-_3380
+	.db	3,97,1,5,46,9
+	.dw	_3382-_3381
+	.db	3,32,1,5,93,9
+	.dw	_3383-_3382
+	.db	3,1,1,5,86,9
+	.dw	_3384-_3383
+	.db	1,5,62,9
+	.dw	_3385-_3384
+	.db	1,5,105,9
+	.dw	_3386-_3385
+	.db	1,5,86,9
+	.dw	_3387-_3386
+	.db	1,5,42,9
+	.dw	_3388-_3387
+	.db	1,5,86,9
+	.dw	_2633-_3388
+	.db	1,5,118,9
+	.dw	_3389-_2633
 	.db	1,5,42,9
 	.dw	_3390-_3389
 	.db	1,5,118,9
@@ -9119,96 +9192,188 @@ _3330:
 	.dw	_3393-_3392
 	.db	1,5,145,1,9
 	.dw	_3394-_3393
-	.db	1,5,60,9
+	.db	1,5,163,1,9
 	.dw	_3395-_3394
-	.db	3,15,1,5,145,1,9
-	.dw	_3396-_3395
-	.db	3,113,1,5,163,1,9
-	.dw	_3397-_3396
 	.db	1,5,138,1,9
-	.dw	_3398-_3397
+	.dw	_3396-_3395
 	.db	1,5,46,9
-	.dw	_3399-_3398
+	.dw	_3397-_3396
 	.db	1,9
-	.dw	_3400-_3399
+	.dw	_3398-_3397
 	.db	3,1,1,5,52,9
+	.dw	_3399-_3398
+	.db	3,1,1,5,46,9
+	.dw	_3400-_3399
+	.db	1,5,52,9
 	.dw	_3401-_3400
 	.db	3,1,1,5,46,9
 	.dw	_3402-_3401
+	.db	1,5,73,9
+	.dw	_2636-_3402
+	.db	1,5,46,9
+	.dw	_3403-_2636
 	.db	1,5,52,9
-	.dw	_3403-_3402
-	.db	3,1,1,9
 	.dw	_3404-_3403
-	.db	3,1,1,5,73,9
-	.dw	_3405-_3404
-	.db	3,127,1,5,46,9
-	.dw	_3406-_3405
-	.db	1,5,52,9
-	.dw	_3407-_3406
 	.db	3,1,1,5,46,9
+	.dw	_3405-_3404
+	.db	1,5,52,9
+	.dw	_3406-_3405
+	.db	3,1,1,5,77,9
+	.dw	_3407-_3406
+	.db	1,5,46,9
 	.dw	_3408-_3407
 	.db	1,5,52,9
 	.dw	_3409-_3408
-	.db	3,1,1,9
-	.dw	_3410-_3409
-	.db	3,1,1,5,60,9
-	.dw	_3411-_3410
-	.db	3,10,1,5,77,9
-	.dw	_3412-_3411
-	.db	3,117,1,5,46,9
-	.dw	_3413-_3412
-	.db	1,5,52,9
-	.dw	_3414-_3413
 	.db	3,1,1,5,46,9
-	.dw	_3415-_3414
+	.dw	_3410-_3409
 	.db	1,5,52,9
-	.dw	_3416-_3415
+	.dw	_3411-_3410
 	.db	3,1,1,5,77,9
-	.dw	_3417-_3416
+	.dw	_3412-_3411
 	.db	1,5,46,9
+	.dw	_3413-_3412
+	.db	1,5,47,9
+	.dw	_3414-_3413
+	.db	3,99,1,5,45,9
+	.dw	_3415-_3414
+	.db	3,30,1,5,50,9
+	.dw	_3416-_3415
+	.db	3,87,1,5,48,9
+	.dw	_3417-_3416
+	.db	3,45,1,5,43,9
 	.dw	_3418-_3417
-	.db	1,5,45,9
-	.dw	_3419-_3418
-	.db	3,1,1,5,48,9
-	.dw	_3420-_3419
-	.db	3,5,1,5,43,9
-	.dw	_3421-_3420
 	.db	3,1,1,5,41,9
+	.dw	_3419-_3418
+	.db	1,5,43,9
+	.dw	_3420-_3419
+	.db	3,83,1,5,41,9
+	.dw	_3421-_3420
+	.db	3,45,1,5,50,9
 	.dw	_3422-_3421
-	.db	1,5,60,9
+	.db	3,82,1,5,46,9
 	.dw	_3423-_3422
-	.db	3,1,1,5,54,9
+	.db	3,47,1,5,93,9
 	.dw	_3424-_3423
-	.db	1,5,60,9
+	.db	3,1,1,5,86,9
 	.dw	_3425-_3424
-	.db	3,1,1,5,54,9
+	.db	1,5,62,9
 	.dw	_3426-_3425
-	.db	1,9
+	.db	1,5,105,9
 	.dw	_3427-_3426
-	.db	3,1,1,9
+	.db	1,5,86,9
 	.dw	_3428-_3427
-	.db	3,1,1,9
+	.db	1,5,118,9
 	.dw	_3429-_3428
-	.db	3,1,1,9
+	.db	1,5,42,9
 	.dw	_3430-_3429
-	.db	3,1,1,9
+	.db	1,5,118,9
 	.dw	_3431-_3430
-	.db	3,1,1,9
+	.db	1,5,132,1,9
 	.dw	_3432-_3431
-	.db	3,1,1,5,45,9
+	.db	1,5,111,9
 	.dw	_3433-_3432
-	.db	3,1,1,5,25,9
+	.db	1,5,145,1,9
 	.dw	_3434-_3433
-	.db	3,4,1,5,37,9
+	.db	1,5,163,1,9
 	.dw	_3435-_3434
+	.db	1,5,138,1,9
+	.dw	_3436-_3435
+	.db	1,5,46,9
+	.dw	_3437-_3436
+	.db	1,9
+	.dw	_3438-_3437
+	.db	3,1,1,9
+	.dw	_3439-_3438
+	.db	3,1,1,5,52,9
+	.dw	_2639-_3439
+	.db	1,5,46,9
+	.dw	_3440-_2639
+	.db	1,5,52,9
+	.dw	_3441-_3440
+	.db	3,1,1,5,46,9
+	.dw	_3442-_3441
+	.db	1,5,73,9
+	.dw	_2640-_3442
+	.db	1,5,46,9
+	.dw	_3443-_2640
+	.db	1,5,52,9
+	.dw	_3444-_3443
+	.db	3,1,1,5,46,9
+	.dw	_3445-_3444
+	.db	1,5,52,9
+	.dw	_3446-_3445
+	.db	3,1,1,5,77,9
+	.dw	_3447-_3446
+	.db	1,5,46,9
+	.dw	_3448-_3447
+	.db	1,5,52,9
+	.dw	_3449-_3448
+	.db	3,1,1,5,46,9
+	.dw	_3450-_3449
+	.db	1,5,52,9
+	.dw	_3451-_3450
+	.db	3,1,1,5,77,9
+	.dw	_3452-_3451
+	.db	1,5,46,9
+	.dw	_3453-_3452
+	.db	1,5,47,9
+	.dw	_3454-_3453
+	.db	3,84,1,5,45,9
+	.dw	_3455-_3454
+	.db	3,45,1,5,50,9
+	.dw	_3456-_3455
+	.db	3,72,1,5,48,9
+	.dw	_3457-_3456
+	.db	3,61,1,5,41,9
+	.dw	_3458-_3457
+	.db	3,1,1,5,43,9
+	.dw	_2641-_3458
+	.db	1,5,41,9
+	.dw	_3459-_2641
+	.db	1,5,43,9
+	.dw	_3460-_3459
+	.db	3,67,1,5,41,9
+	.dw	_3461-_3460
+	.db	3,61,1,5,60,9
+	.dw	_3462-_3461
+	.db	3,1,1,5,54,9
+	.dw	_3463-_3462
+	.db	1,5,60,9
+	.dw	_3464-_3463
+	.db	3,1,1,5,54,9
+	.dw	_3465-_3464
 	.db	1,5,50,9
-	.dw	_124-_3435
+	.dw	_2645-_3465
+	.db	3,64,1,5,54,9
+	.dw	_3466-_2645
+	.db	3,192,0,1,9
+	.dw	_3467-_3466
+	.db	3,1,1,9
+	.dw	_3468-_3467
+	.db	3,1,1,9
+	.dw	_3469-_3468
+	.db	3,1,1,9
+	.dw	_3470-_3469
+	.db	3,1,1,9
+	.dw	_3471-_3470
+	.db	3,1,1,9
+	.dw	_3472-_3471
+	.db	3,1,1,5,47,9
+	.dw	_3473-_3472
+	.db	3,69,1,5,45,9
+	.dw	_3474-_3473
+	.db	3,60,1,5,25,9
+	.dw	_3475-_3474
+	.db	3,4,1,5,37,9
+	.dw	_3476-_3475
+	.db	1,5,50,9
+	.dw	_124-_3476
 	.db	1,5,1,9
-	.dw	_2616-_124
+	.dw	_2648-_124
 	.db	3,3,1,9
-	.dw	_242-_2616
+	.dw	_242-_2648
 	.db	0,1,1
-_3328:
+_3284:
 	; End of section
 
 	.debug		.debug_ranges, cluster 'canOutput_sendDebugMessage1'
@@ -9261,30 +9426,30 @@ _244:
 
 	.debug		.debug_line, cluster 'CanManager_getReadStatus'
 _245:
-	.dl	_3437-_3436
-_3436:
+	.dl	_3478-_3477
+_3477:
 	.dw	3
-	.dl	_3439-_3438
-_3438:
+	.dl	_3480-_3479
+_3479:
 	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
 	.db	'canManager.c',0,0,0,0,0
-_3439:
+_3480:
 	.db	5,12,7,0,5,2
 	.dl	_162
 	.db	3,203,3,1,5,40,9
-	.dw	_3440-_162
+	.dw	_3481-_162
 	.db	1,5,58,9
-	.dw	_3441-_3440
+	.dw	_3482-_3481
 	.db	1,5,62,9
-	.dw	_102-_3441
+	.dw	_102-_3482
 	.db	1,5,36,9
 	.dw	_1481-_102
 	.db	1,5,1,9
-	.dw	_3442-_1481
+	.dw	_3483-_1481
 	.db	3,1,1,7,9
-	.dw	_247-_3442
+	.dw	_247-_3483
 	.db	0,1,1
-_3437:
+_3478:
 	; End of section
 
 	.debug		.debug_ranges, cluster 'CanManager_getReadStatus'
@@ -11156,7 +11321,7 @@ _350:
 	.dl	-1,_186,0,_2238-_186
 	.dw	2
 	.db	145,0
-	.dl	_2263-_186,_2264-_186
+	.dl	_2266-_186,_2267-_186
 	.dw	6
 	.db	82,147,2,83,147,2
 	.dl	0,0
@@ -11164,7 +11329,7 @@ _348:
 	.dl	-1,_186,0,_2239-_186
 	.dw	6
 	.db	91,147,2,92,147,2
-	.dl	_2261-_186,_2262-_186
+	.dl	_2264-_186,_2265-_186
 	.dw	6
 	.db	91,147,2,92,147,2
 	.dl	0,0
@@ -12236,17 +12401,23 @@ _352:
 	.dl	-1,_186,0,_2241-_186
 	.dw	2
 	.db	145,8
+	.dl	_2261-_186,_2242-_186
+	.dw	6
+	.db	91,147,2,93,147,2
 	.dl	0,0
 _353:
 	.dl	-1,_186,0,_2242-_186
 	.dw	2
 	.db	145,12
+	.dl	_2262-_186,_2263-_186
+	.dw	6
+	.db	91,147,2,93,147,2
 	.dl	0,0
 _344:
 	.dl	-1,_186,0,_2243-_186
 	.dw	6
 	.db	82,147,2,83,147,2
-	.dl	_2267-_186,_364-_186
+	.dl	_2270-_186,_364-_186
 	.dw	6
 	.db	82,147,2,83,147,2
 	.dl	0,0
@@ -12254,7 +12425,7 @@ _351:
 	.dl	-1,_186,0,_2244-_186
 	.dw	2
 	.db	145,4
-	.dl	_2265-_186,_2266-_186
+	.dl	_2268-_186,_2269-_186
 	.dw	6
 	.db	82,147,2,83,147,2
 	.dl	0,0
@@ -12316,20 +12487,86 @@ _377:
 	.db	145,0
 	.dl	0,0
 _375:
-	.dl	-1,_198,0,_2604-_198
+	.dl	-1,_198,0,_2607-_198
 	.dw	6
 	.db	91,147,2,92,147,2
 	.dl	0,0
 _382:
-	.dl	-1,_198,_2612-_198,_2613-_198
+	.dl	-1,_198,_2613-_198,_2614-_198
 	.dw	1
 	.db	95
-	.dl	_2613-_198,_2378-_198
+	.dl	_2614-_198,_2615-_198
 	.dw	1
-	.db	89
+	.db	91
+	.dl	_2616-_198,_242-_198
+	.dw	2
+	.db	145,110
+	.dl	_2615-_198,_2617-_198
+	.dw	1
+	.db	92
+	.dl	_2617-_198,_2618-_198
+	.dw	1
+	.db	91
+	.dl	_2619-_198,_2620-_198
+	.dw	1
+	.db	91
+	.dl	_2621-_198,_2622-_198
+	.dw	1
+	.db	91
+	.dl	_2623-_198,_2624-_198
+	.dw	1
+	.db	91
+	.dl	_2624-_198,_2625-_198
+	.dw	1
+	.db	92
+	.dl	_2625-_198,_2626-_198
+	.dw	1
+	.db	91
+	.dl	_2627-_198,_2628-_198
+	.dw	1
+	.db	92
+	.dl	_2629-_198,_2630-_198
+	.dw	1
+	.db	92
+	.dl	_2630-_198,_2631-_198
+	.dw	1
+	.db	94
+	.dl	_2631-_198,_2632-_198
+	.dw	1
+	.db	82
+	.dl	_2633-_198,_2634-_198
+	.dw	1
+	.db	83
+	.dl	_2634-_198,_2635-_198
+	.dw	1
+	.db	82
+	.dl	_2636-_198,_2637-_198
+	.dw	1
+	.db	82
+	.dl	_2638-_198,_2639-_198
+	.dw	1
+	.db	90
+	.dl	_2639-_198,_2640-_198
+	.dw	1
+	.db	82
+	.dl	_2640-_198,_2641-_198
+	.dw	1
+	.db	91
+	.dl	_2641-_198,_2642-_198
+	.dw	1
+	.db	92
+	.dl	_2643-_198,_2610-_198
+	.dw	1
+	.db	91
+	.dl	_2645-_198,_2646-_198
+	.dw	1
+	.db	91
+	.dl	_2649-_198,_242-_198
+	.dw	1
+	.db	91
 	.dl	0,0
 _197:
-	.dl	-1,_198,0,_2268-_198
+	.dl	-1,_198,0,_2271-_198
 	.dw	58
 	.db	127,0,18,10
 	.dw	16383
@@ -12357,453 +12594,453 @@ _201:
 	.db	146,180,2,0
 _202:
 	.db	22,19,62,36,33
-	.dl	_2268-_198,_2279-_198
+	.dl	_2271-_198,_2282-_198
 	.dw	60
 	.db	127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2269-_2273
-_2273:
-	.db	146,177,2,0,47
-	.dw	_2272-_2274
-_2274:
-_2269:
-	.db	18,49,46,40
-	.dw	_2270-_2275
-_2275:
-	.db	146,178,2,0,47
 	.dw	_2272-_2276
 _2276:
-_2270:
-	.db	18,50,46,40
-	.dw	_2271-_2277
+	.db	146,177,2,0,47
+	.dw	_2275-_2277
 _2277:
-	.db	146,179,2,0,47
-	.dw	_2272-_2278
-_2278:
-_2271:
-	.db	146,180,2,0
 _2272:
+	.db	18,49,46,40
+	.dw	_2273-_2278
+_2278:
+	.db	146,178,2,0,47
+	.dw	_2275-_2279
+_2279:
+_2273:
+	.db	18,50,46,40
+	.dw	_2274-_2280
+_2280:
+	.db	146,179,2,0,47
+	.dw	_2275-_2281
+_2281:
+_2274:
+	.db	146,180,2,0
+_2275:
 	.db	22,19,62,36,33,50,34
-	.dl	_2279-_198,_2290-_198
+	.dl	_2282-_198,_2293-_198
 	.dw	60
 	.db	127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2280-_2284
-_2284:
-	.db	146,177,2,0,47
-	.dw	_2283-_2285
-_2285:
-_2280:
-	.db	18,49,46,40
-	.dw	_2281-_2286
-_2286:
-	.db	146,178,2,0,47
 	.dw	_2283-_2287
 _2287:
-_2281:
-	.db	18,50,46,40
-	.dw	_2282-_2288
+	.db	146,177,2,0,47
+	.dw	_2286-_2288
 _2288:
-	.db	146,179,2,0,47
-	.dw	_2283-_2289
-_2289:
-_2282:
-	.db	146,180,2,0
 _2283:
+	.db	18,49,46,40
+	.dw	_2284-_2289
+_2289:
+	.db	146,178,2,0,47
+	.dw	_2286-_2290
+_2290:
+_2284:
+	.db	18,50,46,40
+	.dw	_2285-_2291
+_2291:
+	.db	146,179,2,0,47
+	.dw	_2286-_2292
+_2292:
+_2285:
+	.db	146,180,2,0
+_2286:
 	.db	22,19,62,36,33,52,34
-	.dl	_2290-_198,_2301-_198
+	.dl	_2293-_198,_2304-_198
 	.dw	60
 	.db	127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2291-_2295
-_2295:
-	.db	146,177,2,0,47
-	.dw	_2294-_2296
-_2296:
-_2291:
-	.db	18,49,46,40
-	.dw	_2292-_2297
-_2297:
-	.db	146,178,2,0,47
 	.dw	_2294-_2298
 _2298:
-_2292:
-	.db	18,50,46,40
-	.dw	_2293-_2299
+	.db	146,177,2,0,47
+	.dw	_2297-_2299
 _2299:
-	.db	146,179,2,0,47
-	.dw	_2294-_2300
-_2300:
-_2293:
-	.db	146,180,2,0
 _2294:
+	.db	18,49,46,40
+	.dw	_2295-_2300
+_2300:
+	.db	146,178,2,0,47
+	.dw	_2297-_2301
+_2301:
+_2295:
+	.db	18,50,46,40
+	.dw	_2296-_2302
+_2302:
+	.db	146,179,2,0,47
+	.dw	_2297-_2303
+_2303:
+_2296:
+	.db	146,180,2,0
+_2297:
 	.db	22,19,62,36,33,54,34
-	.dl	_2301-_198,_2312-_198
+	.dl	_2304-_198,_2315-_198
 	.dw	60
 	.db	127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2302-_2306
-_2306:
-	.db	146,177,2,0,47
-	.dw	_2305-_2307
-_2307:
-_2302:
-	.db	18,49,46,40
-	.dw	_2303-_2308
-_2308:
-	.db	146,178,2,0,47
 	.dw	_2305-_2309
 _2309:
-_2303:
-	.db	18,50,46,40
-	.dw	_2304-_2310
+	.db	146,177,2,0,47
+	.dw	_2308-_2310
 _2310:
-	.db	146,179,2,0,47
-	.dw	_2305-_2311
-_2311:
-_2304:
-	.db	146,180,2,0
 _2305:
+	.db	18,49,46,40
+	.dw	_2306-_2311
+_2311:
+	.db	146,178,2,0,47
+	.dw	_2308-_2312
+_2312:
+_2306:
+	.db	18,50,46,40
+	.dw	_2307-_2313
+_2313:
+	.db	146,179,2,0,47
+	.dw	_2308-_2314
+_2314:
+_2307:
+	.db	146,180,2,0
+_2308:
 	.db	22,19,62,36,33,56,34
-	.dl	_2312-_198,_2323-_198
+	.dl	_2315-_198,_2326-_198
 	.dw	60
 	.db	127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2313-_2317
-_2317:
-	.db	146,177,2,0,47
-	.dw	_2316-_2318
-_2318:
-_2313:
-	.db	18,49,46,40
-	.dw	_2314-_2319
-_2319:
-	.db	146,178,2,0,47
 	.dw	_2316-_2320
 _2320:
-_2314:
-	.db	18,50,46,40
-	.dw	_2315-_2321
+	.db	146,177,2,0,47
+	.dw	_2319-_2321
 _2321:
-	.db	146,179,2,0,47
-	.dw	_2316-_2322
-_2322:
-_2315:
-	.db	146,180,2,0
 _2316:
+	.db	18,49,46,40
+	.dw	_2317-_2322
+_2322:
+	.db	146,178,2,0,47
+	.dw	_2319-_2323
+_2323:
+_2317:
+	.db	18,50,46,40
+	.dw	_2318-_2324
+_2324:
+	.db	146,179,2,0,47
+	.dw	_2319-_2325
+_2325:
+_2318:
+	.db	146,180,2,0
+_2319:
 	.db	22,19,62,36,33,58,34
-	.dl	_2323-_198,_2334-_198
+	.dl	_2326-_198,_2337-_198
 	.dw	60
 	.db	127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2324-_2328
-_2328:
-	.db	146,177,2,0,47
-	.dw	_2327-_2329
-_2329:
-_2324:
-	.db	18,49,46,40
-	.dw	_2325-_2330
-_2330:
-	.db	146,178,2,0,47
 	.dw	_2327-_2331
 _2331:
-_2325:
-	.db	18,50,46,40
-	.dw	_2326-_2332
+	.db	146,177,2,0,47
+	.dw	_2330-_2332
 _2332:
-	.db	146,179,2,0,47
-	.dw	_2327-_2333
-_2333:
-_2326:
-	.db	146,180,2,0
 _2327:
+	.db	18,49,46,40
+	.dw	_2328-_2333
+_2333:
+	.db	146,178,2,0,47
+	.dw	_2330-_2334
+_2334:
+_2328:
+	.db	18,50,46,40
+	.dw	_2329-_2335
+_2335:
+	.db	146,179,2,0,47
+	.dw	_2330-_2336
+_2336:
+_2329:
+	.db	146,180,2,0
+_2330:
 	.db	22,19,62,36,33,60,34
-	.dl	_2334-_198,_2345-_198
+	.dl	_2337-_198,_2348-_198
 	.dw	60
 	.db	127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2335-_2339
-_2339:
-	.db	146,177,2,0,47
-	.dw	_2338-_2340
-_2340:
-_2335:
-	.db	18,49,46,40
-	.dw	_2336-_2341
-_2341:
-	.db	146,178,2,0,47
 	.dw	_2338-_2342
 _2342:
-_2336:
-	.db	18,50,46,40
-	.dw	_2337-_2343
+	.db	146,177,2,0,47
+	.dw	_2341-_2343
 _2343:
-	.db	146,179,2,0,47
-	.dw	_2338-_2344
-_2344:
-_2337:
-	.db	146,180,2,0
 _2338:
+	.db	18,49,46,40
+	.dw	_2339-_2344
+_2344:
+	.db	146,178,2,0,47
+	.dw	_2341-_2345
+_2345:
+_2339:
+	.db	18,50,46,40
+	.dw	_2340-_2346
+_2346:
+	.db	146,179,2,0,47
+	.dw	_2341-_2347
+_2347:
+_2340:
+	.db	146,180,2,0
+_2341:
 	.db	22,19,62,36,33,62,34
-	.dl	_2345-_198,_2356-_198
-	.dw	60
+	.dl	_2348-_198,_2359-_198
+	.dw	61
 	.db	127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2346-_2350
-_2350:
-	.db	146,177,2,0,47
-	.dw	_2349-_2351
-_2351:
-_2346:
-	.db	18,49,46,40
-	.dw	_2347-_2352
-_2352:
-	.db	146,178,2,0,47
 	.dw	_2349-_2353
 _2353:
-_2347:
-	.db	18,50,46,40
-	.dw	_2348-_2354
+	.db	146,177,2,0,47
+	.dw	_2352-_2354
 _2354:
-	.db	146,179,2,0,47
-	.dw	_2349-_2355
-_2355:
-_2348:
-	.db	146,180,2,0
 _2349:
-	.db	22,19,62,36,33,64,34
-	.dl	_2356-_198,_2367-_198
+	.db	18,49,46,40
+	.dw	_2350-_2355
+_2355:
+	.db	146,178,2,0,47
+	.dw	_2352-_2356
+_2356:
+_2350:
+	.db	18,50,46,40
+	.dw	_2351-_2357
+_2357:
+	.db	146,179,2,0,47
+	.dw	_2352-_2358
+_2358:
+_2351:
+	.db	146,180,2,0
+_2352:
+	.db	22,19,62,36,33,9,66,34
+	.dl	_2359-_198,_2370-_198
 	.dw	60
 	.db	127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2357-_2361
-_2361:
-	.db	146,177,2,0,47
-	.dw	_2360-_2362
-_2362:
-_2357:
-	.db	18,49,46,40
-	.dw	_2358-_2363
-_2363:
-	.db	146,178,2,0,47
 	.dw	_2360-_2364
 _2364:
-_2358:
-	.db	18,50,46,40
-	.dw	_2359-_2365
+	.db	146,177,2,0,47
+	.dw	_2363-_2365
 _2365:
-	.db	146,179,2,0,47
-	.dw	_2360-_2366
-_2366:
-_2359:
-	.db	146,180,2,0
 _2360:
+	.db	18,49,46,40
+	.dw	_2361-_2366
+_2366:
+	.db	146,178,2,0,47
+	.dw	_2363-_2367
+_2367:
+_2361:
+	.db	18,50,46,40
+	.dw	_2362-_2368
+_2368:
+	.db	146,179,2,0,47
+	.dw	_2363-_2369
+_2369:
+_2362:
+	.db	146,180,2,0
+_2363:
 	.db	22,19,62,36,33,62,34
-	.dl	_2367-_198,_2378-_198
+	.dl	_2370-_198,_2381-_198
 	.dw	60
 	.db	127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2368-_2372
-_2372:
-	.db	146,177,2,0,47
-	.dw	_2371-_2373
-_2373:
-_2368:
-	.db	18,49,46,40
-	.dw	_2369-_2374
-_2374:
-	.db	146,178,2,0,47
 	.dw	_2371-_2375
 _2375:
-_2369:
-	.db	18,50,46,40
-	.dw	_2370-_2376
+	.db	146,177,2,0,47
+	.dw	_2374-_2376
 _2376:
-	.db	146,179,2,0,47
-	.dw	_2371-_2377
-_2377:
-_2370:
-	.db	146,180,2,0
 _2371:
+	.db	18,49,46,40
+	.dw	_2372-_2377
+_2377:
+	.db	146,178,2,0,47
+	.dw	_2374-_2378
+_2378:
+_2372:
+	.db	18,50,46,40
+	.dw	_2373-_2379
+_2379:
+	.db	146,179,2,0,47
+	.dw	_2374-_2380
+_2380:
+_2373:
+	.db	146,180,2,0
+_2374:
 	.db	22,19,62,36,33,60,34
-	.dl	_2378-_198,_2389-_198
+	.dl	_2381-_198,_2392-_198
 	.dw	60
 	.db	127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2379-_2383
-_2383:
-	.db	146,177,2,0,47
-	.dw	_2382-_2384
-_2384:
-_2379:
-	.db	18,49,46,40
-	.dw	_2380-_2385
-_2385:
-	.db	146,178,2,0,47
 	.dw	_2382-_2386
 _2386:
-_2380:
-	.db	18,50,46,40
-	.dw	_2381-_2387
+	.db	146,177,2,0,47
+	.dw	_2385-_2387
 _2387:
-	.db	146,179,2,0,47
-	.dw	_2382-_2388
-_2388:
-_2381:
-	.db	146,180,2,0
 _2382:
+	.db	18,49,46,40
+	.dw	_2383-_2388
+_2388:
+	.db	146,178,2,0,47
+	.dw	_2385-_2389
+_2389:
+_2383:
+	.db	18,50,46,40
+	.dw	_2384-_2390
+_2390:
+	.db	146,179,2,0,47
+	.dw	_2385-_2391
+_2391:
+_2384:
+	.db	146,180,2,0
+_2385:
 	.db	22,19,62,36,33,58,34
-	.dl	_2389-_198,_2400-_198
+	.dl	_2392-_198,_2403-_198
 	.dw	60
 	.db	127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2390-_2394
-_2394:
-	.db	146,177,2,0,47
-	.dw	_2393-_2395
-_2395:
-_2390:
-	.db	18,49,46,40
-	.dw	_2391-_2396
-_2396:
-	.db	146,178,2,0,47
 	.dw	_2393-_2397
 _2397:
-_2391:
-	.db	18,50,46,40
-	.dw	_2392-_2398
+	.db	146,177,2,0,47
+	.dw	_2396-_2398
 _2398:
-	.db	146,179,2,0,47
-	.dw	_2393-_2399
-_2399:
-_2392:
-	.db	146,180,2,0
 _2393:
+	.db	18,49,46,40
+	.dw	_2394-_2399
+_2399:
+	.db	146,178,2,0,47
+	.dw	_2396-_2400
+_2400:
+_2394:
+	.db	18,50,46,40
+	.dw	_2395-_2401
+_2401:
+	.db	146,179,2,0,47
+	.dw	_2396-_2402
+_2402:
+_2395:
+	.db	146,180,2,0
+_2396:
 	.db	22,19,62,36,33,56,34
-	.dl	_2400-_198,_2411-_198
+	.dl	_2403-_198,_2414-_198
 	.dw	60
 	.db	127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2401-_2405
-_2405:
-	.db	146,177,2,0,47
-	.dw	_2404-_2406
-_2406:
-_2401:
-	.db	18,49,46,40
-	.dw	_2402-_2407
-_2407:
-	.db	146,178,2,0,47
 	.dw	_2404-_2408
 _2408:
-_2402:
-	.db	18,50,46,40
-	.dw	_2403-_2409
+	.db	146,177,2,0,47
+	.dw	_2407-_2409
 _2409:
-	.db	146,179,2,0,47
-	.dw	_2404-_2410
-_2410:
-_2403:
-	.db	146,180,2,0
 _2404:
+	.db	18,49,46,40
+	.dw	_2405-_2410
+_2410:
+	.db	146,178,2,0,47
+	.dw	_2407-_2411
+_2411:
+_2405:
+	.db	18,50,46,40
+	.dw	_2406-_2412
+_2412:
+	.db	146,179,2,0,47
+	.dw	_2407-_2413
+_2413:
+_2406:
+	.db	146,180,2,0
+_2407:
 	.db	22,19,62,36,33,54,34
-	.dl	_2411-_198,_2422-_198
+	.dl	_2414-_198,_2425-_198
 	.dw	60
 	.db	127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2412-_2416
-_2416:
-	.db	146,177,2,0,47
-	.dw	_2415-_2417
-_2417:
-_2412:
-	.db	18,49,46,40
-	.dw	_2413-_2418
-_2418:
-	.db	146,178,2,0,47
 	.dw	_2415-_2419
 _2419:
-_2413:
-	.db	18,50,46,40
-	.dw	_2414-_2420
+	.db	146,177,2,0,47
+	.dw	_2418-_2420
 _2420:
-	.db	146,179,2,0,47
-	.dw	_2415-_2421
-_2421:
-_2414:
-	.db	146,180,2,0
 _2415:
+	.db	18,49,46,40
+	.dw	_2416-_2421
+_2421:
+	.db	146,178,2,0,47
+	.dw	_2418-_2422
+_2422:
+_2416:
+	.db	18,50,46,40
+	.dw	_2417-_2423
+_2423:
+	.db	146,179,2,0,47
+	.dw	_2418-_2424
+_2424:
+_2417:
+	.db	146,180,2,0
+_2418:
 	.db	22,19,62,36,33,52,34
-	.dl	_2422-_198,_2433-_198
+	.dl	_2425-_198,_2436-_198
 	.dw	60
 	.db	127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2423-_2427
-_2427:
-	.db	146,177,2,0,47
-	.dw	_2426-_2428
-_2428:
-_2423:
-	.db	18,49,46,40
-	.dw	_2424-_2429
-_2429:
-	.db	146,178,2,0,47
 	.dw	_2426-_2430
 _2430:
-_2424:
-	.db	18,50,46,40
-	.dw	_2425-_2431
+	.db	146,177,2,0,47
+	.dw	_2429-_2431
 _2431:
-	.db	146,179,2,0,47
-	.dw	_2426-_2432
-_2432:
-_2425:
-	.db	146,180,2,0
 _2426:
+	.db	18,49,46,40
+	.dw	_2427-_2432
+_2432:
+	.db	146,178,2,0,47
+	.dw	_2429-_2433
+_2433:
+_2427:
+	.db	18,50,46,40
+	.dw	_2428-_2434
+_2434:
+	.db	146,179,2,0,47
+	.dw	_2429-_2435
+_2435:
+_2428:
+	.db	146,180,2,0
+_2429:
 	.db	22,19,62,36,33,50,34
-	.dl	_2433-_198,_242-_198
+	.dl	_2436-_198,_242-_198
 	.dw	58
 	.db	127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2434-_2438
-_2438:
-	.db	146,177,2,0,47
-	.dw	_2437-_2439
-_2439:
-_2434:
-	.db	18,49,46,40
-	.dw	_2435-_2440
-_2440:
-	.db	146,178,2,0,47
 	.dw	_2437-_2441
 _2441:
-_2435:
-	.db	18,50,46,40
-	.dw	_2436-_2442
+	.db	146,177,2,0,47
+	.dw	_2440-_2442
 _2442:
-	.db	146,179,2,0,47
-	.dw	_2437-_2443
-_2443:
-_2436:
-	.db	146,180,2,0
 _2437:
+	.db	18,49,46,40
+	.dw	_2438-_2443
+_2443:
+	.db	146,178,2,0,47
+	.dw	_2440-_2444
+_2444:
+_2438:
+	.db	18,50,46,40
+	.dw	_2439-_2445
+_2445:
+	.db	146,179,2,0,47
+	.dw	_2440-_2446
+_2446:
+_2439:
+	.db	146,180,2,0
+_2440:
 	.db	22,19,62,36,33
 	.dl	0,0
 _379:
@@ -12812,36 +13049,33 @@ _379:
 	.db	145,8
 	.dl	0,0
 _376:
-	.dl	-1,_198,0,_2605-_198
+	.dl	-1,_198,0,_2608-_198
 	.dw	6
 	.db	93,147,2,94,147,2
 	.dl	0,0
 _380:
-	.dl	-1,_198,0,_2606-_198
+	.dl	-1,_198,0,_2609-_198
 	.dw	2
 	.db	145,12
-	.dl	_2606-_198,_2611-_198
+	.dl	_2642-_198,_2643-_198
 	.dw	6
 	.db	91,147,2,92,147,2
 	.dl	0,0
 _381:
-	.dl	-1,_198,0,_2607-_198
+	.dl	-1,_198,0,_2610-_198
 	.dw	2
 	.db	145,16
-	.dl	_2607-_198,_2614-_198
+	.dl	_2644-_198,_2645-_198
 	.dw	6
-	.db	93,147,2,94,147,2
+	.db	91,147,2,92,147,2
 	.dl	0,0
 _373:
-	.dl	-1,_198,0,_2608-_198
+	.dl	-1,_198,0,_2611-_198
 	.dw	6
 	.db	82,147,2,83,147,2
-	.dl	_2610-_198,_2608-_198
+	.dl	_2647-_198,_2648-_198
 	.dw	6
-	.db	82,147,2,81,147,2
-	.dl	_2615-_198,_2616-_198
-	.dw	6
-	.db	82,147,2,81,147,2
+	.db	82,147,2,83,147,2
 	.dl	0,0
 _378:
 	.dl	-1,_198,0,_242-_198
@@ -12849,7 +13083,7 @@ _378:
 	.db	145,4
 	.dl	0,0
 _374:
-	.dl	-1,_198,0,_2609-_198
+	.dl	-1,_198,0,_2612-_198
 	.dw	6
 	.db	84,147,2,85,147,2
 	.dl	0,0
@@ -12894,34 +13128,34 @@ _343:
 	; End of section
 
 	.debug		.debug_frame
-_3443:
+_3484:
 	.dl	184
 	.dl	-1
 	.db	3,0,2,2,173,2,15,60,127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_3444-_3448
-_3448:
+	.dw	_3485-_3489
+_3489:
 	.db	146,177,2,0,47
-	.dw	_3447-_3449
-_3449:
-_3444:
+	.dw	_3488-_3490
+_3490:
+_3485:
 	.db	18,49,46,40
-	.dw	_3445-_3450
-_3450:
+	.dw	_3486-_3491
+_3491:
 	.db	146,178,2,0,47
-	.dw	_3447-_3451
-_3451:
-_3445:
+	.dw	_3488-_3492
+_3492:
+_3486:
 	.db	18,50,46,40
-	.dw	_3446-_3452
-_3452:
+	.dw	_3487-_3493
+_3493:
 	.db	146,179,2,0,47
-	.dw	_3447-_3453
-_3453:
-_3446:
+	.dw	_3488-_3494
+_3494:
+_3487:
 	.db	146,180,2,0
-_3447:
+_3488:
 	.db	22,19,62,36,33,48,34,16,173,2,12,19,146,176,2,0,64,36,146,161,2,0,33,8,15,22,161,2,5,19,146,161,2,4,8
 	.db	162,2,8,166,2,8,177,2,8,178,2,8,179,2,8,180,2,8,0,8,1,8,6,8,7,8,8,8,9,8,10,8,167,2,8,168,2,8,169,2,8,170
 	.db	2,8,171,2,8,172,2,16,174,2,12,19,146,176,2,0,64,36,146,161,2,0,33,16,175,2,12,19,146,176,2,0,64,36,146
@@ -12930,7 +13164,7 @@ _3447:
 
 	.debug		.debug_frame, cluster 'CanManager_new'
 	.dl	1204
-	.dl	_3443,_126,_217-_126
+	.dl	_3484,_126,_217-_126
 	.db	4
 	.dl	(_385-_126)/2
 	.db	15,60,127,0,18,10
@@ -13368,7 +13602,7 @@ _714:
 
 	.debug		.debug_frame, cluster 'CanManager_send'
 	.dl	1208
-	.dl	_3443,_138,_222-_138
+	.dl	_3484,_138,_222-_138
 	.db	4
 	.dl	(_745-_138)/2
 	.db	15,60,127,0,18,10
@@ -13806,7 +14040,7 @@ _1074:
 
 	.debug		.debug_frame, cluster 'CanManager_read'
 	.dl	1204
-	.dl	_3443,_150,_227-_150
+	.dl	_3484,_150,_227-_150
 	.db	4
 	.dl	(_1123-_150)/2
 	.db	15,60,127,0,18,10
@@ -14244,19 +14478,19 @@ _1452:
 
 	.debug		.debug_frame, cluster 'CanManager_getReadStatus'
 	.dl	28
-	.dl	_3443,_162,_247-_162
+	.dl	_3484,_162,_247-_162
 	.db	8,160,2,8,5,8,11,8,12,8,13,8,14,0,0,0
 	; End of section
 
 	.debug		.debug_frame, cluster 'canOutput_sendSensorMessages'
 	.dl	32
-	.dl	_3443,_174,_232-_174
+	.dl	_3484,_174,_232-_174
 	.db	8,160,2,8,2,8,3,8,4,8,5,8,11,8,12,8,13,8,14,0
 	; End of section
 
 	.debug		.debug_frame, cluster 'canOutput_sendDebugMessage0'
 	.dl	2688
-	.dl	_3443,_186,_237-_186
+	.dl	_3484,_186,_237-_186
 	.db	4
 	.dl	(_1482-_186)/2
 	.db	15,60,127,0,18,10
@@ -15233,441 +15467,441 @@ _2231:
 	; End of section
 
 	.debug		.debug_frame, cluster 'canOutput_sendDebugMessage1'
-	.dl	1204
-	.dl	_3443,_198,_242-_198
+	.dl	1208
+	.dl	_3484,_198,_242-_198
 	.db	4
-	.dl	(_2268-_198)/2
+	.dl	(_2271-_198)/2
 	.db	15,60,127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2444-_2448
-_2448:
-	.db	146,177,2,0,47
-	.dw	_2447-_2449
-_2449:
-_2444:
-	.db	18,49,46,40
-	.dw	_2445-_2450
-_2450:
-	.db	146,178,2,0,47
 	.dw	_2447-_2451
 _2451:
-_2445:
-	.db	18,50,46,40
-	.dw	_2446-_2452
+	.db	146,177,2,0,47
+	.dw	_2450-_2452
 _2452:
-	.db	146,179,2,0,47
-	.dw	_2447-_2453
-_2453:
-_2446:
-	.db	146,180,2,0
 _2447:
+	.db	18,49,46,40
+	.dw	_2448-_2453
+_2453:
+	.db	146,178,2,0,47
+	.dw	_2450-_2454
+_2454:
+_2448:
+	.db	18,50,46,40
+	.dw	_2449-_2455
+_2455:
+	.db	146,179,2,0,47
+	.dw	_2450-_2456
+_2456:
+_2449:
+	.db	146,180,2,0
+_2450:
 	.db	22,19,62,36,33,50,34,22,15,3,19,127,2,17,0,127,4
-	.dl	(_2279-_2268)/2
+	.dl	(_2282-_2271)/2
 	.db	15,60,127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2454-_2458
-_2458:
-	.db	146,177,2,0,47
-	.dw	_2457-_2459
-_2459:
-_2454:
-	.db	18,49,46,40
-	.dw	_2455-_2460
-_2460:
-	.db	146,178,2,0,47
 	.dw	_2457-_2461
 _2461:
-_2455:
-	.db	18,50,46,40
-	.dw	_2456-_2462
+	.db	146,177,2,0,47
+	.dw	_2460-_2462
 _2462:
-	.db	146,179,2,0,47
-	.dw	_2457-_2463
-_2463:
-_2456:
-	.db	146,180,2,0
 _2457:
+	.db	18,49,46,40
+	.dw	_2458-_2463
+_2463:
+	.db	146,178,2,0,47
+	.dw	_2460-_2464
+_2464:
+_2458:
+	.db	18,50,46,40
+	.dw	_2459-_2465
+_2465:
+	.db	146,179,2,0,47
+	.dw	_2460-_2466
+_2466:
+_2459:
+	.db	146,180,2,0
+_2460:
 	.db	22,19,62,36,33,52,34,22,15,3,19,127,4,17,1,126,4
-	.dl	(_2290-_2279)/2
+	.dl	(_2293-_2282)/2
 	.db	15,60,127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2464-_2468
-_2468:
-	.db	146,177,2,0,47
-	.dw	_2467-_2469
-_2469:
-_2464:
-	.db	18,49,46,40
-	.dw	_2465-_2470
-_2470:
-	.db	146,178,2,0,47
 	.dw	_2467-_2471
 _2471:
-_2465:
-	.db	18,50,46,40
-	.dw	_2466-_2472
+	.db	146,177,2,0,47
+	.dw	_2470-_2472
 _2472:
-	.db	146,179,2,0,47
-	.dw	_2467-_2473
-_2473:
-_2466:
-	.db	146,180,2,0
 _2467:
+	.db	18,49,46,40
+	.dw	_2468-_2473
+_2473:
+	.db	146,178,2,0,47
+	.dw	_2470-_2474
+_2474:
+_2468:
+	.db	18,50,46,40
+	.dw	_2469-_2475
+_2475:
+	.db	146,179,2,0,47
+	.dw	_2470-_2476
+_2476:
+_2469:
+	.db	146,180,2,0
+_2470:
 	.db	22,19,62,36,33,54,34,22,15,3,19,127,6,17,6,125,4
-	.dl	(_2301-_2290)/2
+	.dl	(_2304-_2293)/2
 	.db	15,60,127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2474-_2478
-_2478:
-	.db	146,177,2,0,47
-	.dw	_2477-_2479
-_2479:
-_2474:
-	.db	18,49,46,40
-	.dw	_2475-_2480
-_2480:
-	.db	146,178,2,0,47
 	.dw	_2477-_2481
 _2481:
-_2475:
-	.db	18,50,46,40
-	.dw	_2476-_2482
+	.db	146,177,2,0,47
+	.dw	_2480-_2482
 _2482:
-	.db	146,179,2,0,47
-	.dw	_2477-_2483
-_2483:
-_2476:
-	.db	146,180,2,0
 _2477:
+	.db	18,49,46,40
+	.dw	_2478-_2483
+_2483:
+	.db	146,178,2,0,47
+	.dw	_2480-_2484
+_2484:
+_2478:
+	.db	18,50,46,40
+	.dw	_2479-_2485
+_2485:
+	.db	146,179,2,0,47
+	.dw	_2480-_2486
+_2486:
+_2479:
+	.db	146,180,2,0
+_2480:
 	.db	22,19,62,36,33,56,34,22,15,3,19,127,8,17,7,124,4
-	.dl	(_2312-_2301)/2
+	.dl	(_2315-_2304)/2
 	.db	15,60,127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2484-_2488
-_2488:
-	.db	146,177,2,0,47
-	.dw	_2487-_2489
-_2489:
-_2484:
-	.db	18,49,46,40
-	.dw	_2485-_2490
-_2490:
-	.db	146,178,2,0,47
 	.dw	_2487-_2491
 _2491:
-_2485:
-	.db	18,50,46,40
-	.dw	_2486-_2492
+	.db	146,177,2,0,47
+	.dw	_2490-_2492
 _2492:
-	.db	146,179,2,0,47
-	.dw	_2487-_2493
-_2493:
-_2486:
-	.db	146,180,2,0
 _2487:
+	.db	18,49,46,40
+	.dw	_2488-_2493
+_2493:
+	.db	146,178,2,0,47
+	.dw	_2490-_2494
+_2494:
+_2488:
+	.db	18,50,46,40
+	.dw	_2489-_2495
+_2495:
+	.db	146,179,2,0,47
+	.dw	_2490-_2496
+_2496:
+_2489:
+	.db	146,180,2,0
+_2490:
 	.db	22,19,62,36,33,58,34,22,15,3,19,127,10,17,8,123,4
-	.dl	(_2323-_2312)/2
+	.dl	(_2326-_2315)/2
 	.db	15,60,127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2494-_2498
-_2498:
-	.db	146,177,2,0,47
-	.dw	_2497-_2499
-_2499:
-_2494:
-	.db	18,49,46,40
-	.dw	_2495-_2500
-_2500:
-	.db	146,178,2,0,47
 	.dw	_2497-_2501
 _2501:
-_2495:
-	.db	18,50,46,40
-	.dw	_2496-_2502
+	.db	146,177,2,0,47
+	.dw	_2500-_2502
 _2502:
-	.db	146,179,2,0,47
-	.dw	_2497-_2503
-_2503:
-_2496:
-	.db	146,180,2,0
 _2497:
+	.db	18,49,46,40
+	.dw	_2498-_2503
+_2503:
+	.db	146,178,2,0,47
+	.dw	_2500-_2504
+_2504:
+_2498:
+	.db	18,50,46,40
+	.dw	_2499-_2505
+_2505:
+	.db	146,179,2,0,47
+	.dw	_2500-_2506
+_2506:
+_2499:
+	.db	146,180,2,0
+_2500:
 	.db	22,19,62,36,33,60,34,22,15,3,19,127,12,17,9,122,4
-	.dl	(_2334-_2323)/2
+	.dl	(_2337-_2326)/2
 	.db	15,60,127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2504-_2508
-_2508:
-	.db	146,177,2,0,47
-	.dw	_2507-_2509
-_2509:
-_2504:
-	.db	18,49,46,40
-	.dw	_2505-_2510
-_2510:
-	.db	146,178,2,0,47
 	.dw	_2507-_2511
 _2511:
-_2505:
-	.db	18,50,46,40
-	.dw	_2506-_2512
+	.db	146,177,2,0,47
+	.dw	_2510-_2512
 _2512:
-	.db	146,179,2,0,47
-	.dw	_2507-_2513
-_2513:
-_2506:
-	.db	146,180,2,0
 _2507:
+	.db	18,49,46,40
+	.dw	_2508-_2513
+_2513:
+	.db	146,178,2,0,47
+	.dw	_2510-_2514
+_2514:
+_2508:
+	.db	18,50,46,40
+	.dw	_2509-_2515
+_2515:
+	.db	146,179,2,0,47
+	.dw	_2510-_2516
+_2516:
+_2509:
+	.db	146,180,2,0
+_2510:
 	.db	22,19,62,36,33,62,34,22,15,3,19,127,14,17,10,121,4
-	.dl	(_2345-_2334)/2
-	.db	15,60,127,0,18,10
+	.dl	(_2348-_2337)/2
+	.db	15,61,127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2514-_2518
-_2518:
-	.db	146,177,2,0,47
-	.dw	_2517-_2519
-_2519:
-_2514:
-	.db	18,49,46,40
-	.dw	_2515-_2520
-_2520:
-	.db	146,178,2,0,47
 	.dw	_2517-_2521
 _2521:
-_2515:
-	.db	18,50,46,40
-	.dw	_2516-_2522
+	.db	146,177,2,0,47
+	.dw	_2520-_2522
 _2522:
-	.db	146,179,2,0,47
-	.dw	_2517-_2523
-_2523:
-_2516:
-	.db	146,180,2,0
 _2517:
-	.db	22,19,62,36,33,64,34,22,15,3,19,127,16,4
-	.dl	(_2356-_2345)/2
+	.db	18,49,46,40
+	.dw	_2518-_2523
+_2523:
+	.db	146,178,2,0,47
+	.dw	_2520-_2524
+_2524:
+_2518:
+	.db	18,50,46,40
+	.dw	_2519-_2525
+_2525:
+	.db	146,179,2,0,47
+	.dw	_2520-_2526
+_2526:
+_2519:
+	.db	146,180,2,0
+_2520:
+	.db	22,19,62,36,33,9,66,34,22,15,4,19,127,194,0,4
+	.dl	(_2359-_2348)/2
 	.db	15,60,127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2524-_2528
-_2528:
-	.db	146,177,2,0,47
-	.dw	_2527-_2529
-_2529:
-_2524:
-	.db	18,49,46,40
-	.dw	_2525-_2530
-_2530:
-	.db	146,178,2,0,47
 	.dw	_2527-_2531
 _2531:
-_2525:
-	.db	18,50,46,40
-	.dw	_2526-_2532
+	.db	146,177,2,0,47
+	.dw	_2530-_2532
 _2532:
-	.db	146,179,2,0,47
-	.dw	_2527-_2533
-_2533:
-_2526:
-	.db	146,180,2,0
 _2527:
+	.db	18,49,46,40
+	.dw	_2528-_2533
+_2533:
+	.db	146,178,2,0,47
+	.dw	_2530-_2534
+_2534:
+_2528:
+	.db	18,50,46,40
+	.dw	_2529-_2535
+_2535:
+	.db	146,179,2,0,47
+	.dw	_2530-_2536
+_2536:
+_2529:
+	.db	146,180,2,0
+_2530:
 	.db	22,19,62,36,33,62,34,22,15,3,19,127,14,4
-	.dl	(_2367-_2356)/2
+	.dl	(_2370-_2359)/2
 	.db	15,60,127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2534-_2538
-_2538:
-	.db	146,177,2,0,47
-	.dw	_2537-_2539
-_2539:
-_2534:
-	.db	18,49,46,40
-	.dw	_2535-_2540
-_2540:
-	.db	146,178,2,0,47
 	.dw	_2537-_2541
 _2541:
-_2535:
-	.db	18,50,46,40
-	.dw	_2536-_2542
+	.db	146,177,2,0,47
+	.dw	_2540-_2542
 _2542:
-	.db	146,179,2,0,47
-	.dw	_2537-_2543
-_2543:
-_2536:
-	.db	146,180,2,0
 _2537:
+	.db	18,49,46,40
+	.dw	_2538-_2543
+_2543:
+	.db	146,178,2,0,47
+	.dw	_2540-_2544
+_2544:
+_2538:
+	.db	18,50,46,40
+	.dw	_2539-_2545
+_2545:
+	.db	146,179,2,0,47
+	.dw	_2540-_2546
+_2546:
+_2539:
+	.db	146,180,2,0
+_2540:
 	.db	22,19,62,36,33,60,34,22,15,3,19,127,12,202,4
-	.dl	(_2378-_2367)/2
+	.dl	(_2381-_2370)/2
 	.db	15,60,127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2544-_2548
-_2548:
-	.db	146,177,2,0,47
-	.dw	_2547-_2549
-_2549:
-_2544:
-	.db	18,49,46,40
-	.dw	_2545-_2550
-_2550:
-	.db	146,178,2,0,47
 	.dw	_2547-_2551
 _2551:
-_2545:
-	.db	18,50,46,40
-	.dw	_2546-_2552
+	.db	146,177,2,0,47
+	.dw	_2550-_2552
 _2552:
-	.db	146,179,2,0,47
-	.dw	_2547-_2553
-_2553:
-_2546:
-	.db	146,180,2,0
 _2547:
+	.db	18,49,46,40
+	.dw	_2548-_2553
+_2553:
+	.db	146,178,2,0,47
+	.dw	_2550-_2554
+_2554:
+_2548:
+	.db	18,50,46,40
+	.dw	_2549-_2555
+_2555:
+	.db	146,179,2,0,47
+	.dw	_2550-_2556
+_2556:
+_2549:
+	.db	146,180,2,0
+_2550:
 	.db	22,19,62,36,33,58,34,22,15,3,19,127,10,201,4
-	.dl	(_2389-_2378)/2
+	.dl	(_2392-_2381)/2
 	.db	15,60,127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2554-_2558
-_2558:
-	.db	146,177,2,0,47
-	.dw	_2557-_2559
-_2559:
-_2554:
-	.db	18,49,46,40
-	.dw	_2555-_2560
-_2560:
-	.db	146,178,2,0,47
 	.dw	_2557-_2561
 _2561:
-_2555:
-	.db	18,50,46,40
-	.dw	_2556-_2562
+	.db	146,177,2,0,47
+	.dw	_2560-_2562
 _2562:
-	.db	146,179,2,0,47
-	.dw	_2557-_2563
-_2563:
-_2556:
-	.db	146,180,2,0
 _2557:
+	.db	18,49,46,40
+	.dw	_2558-_2563
+_2563:
+	.db	146,178,2,0,47
+	.dw	_2560-_2564
+_2564:
+_2558:
+	.db	18,50,46,40
+	.dw	_2559-_2565
+_2565:
+	.db	146,179,2,0,47
+	.dw	_2560-_2566
+_2566:
+_2559:
+	.db	146,180,2,0
+_2560:
 	.db	22,19,62,36,33,56,34,22,15,3,19,127,8,200,4
-	.dl	(_2400-_2389)/2
+	.dl	(_2403-_2392)/2
 	.db	15,60,127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2564-_2568
-_2568:
-	.db	146,177,2,0,47
-	.dw	_2567-_2569
-_2569:
-_2564:
-	.db	18,49,46,40
-	.dw	_2565-_2570
-_2570:
-	.db	146,178,2,0,47
 	.dw	_2567-_2571
 _2571:
-_2565:
-	.db	18,50,46,40
-	.dw	_2566-_2572
+	.db	146,177,2,0,47
+	.dw	_2570-_2572
 _2572:
-	.db	146,179,2,0,47
-	.dw	_2567-_2573
-_2573:
-_2566:
-	.db	146,180,2,0
 _2567:
+	.db	18,49,46,40
+	.dw	_2568-_2573
+_2573:
+	.db	146,178,2,0,47
+	.dw	_2570-_2574
+_2574:
+_2568:
+	.db	18,50,46,40
+	.dw	_2569-_2575
+_2575:
+	.db	146,179,2,0,47
+	.dw	_2570-_2576
+_2576:
+_2569:
+	.db	146,180,2,0
+_2570:
 	.db	22,19,62,36,33,54,34,22,15,3,19,127,6,199,4
-	.dl	(_2411-_2400)/2
+	.dl	(_2414-_2403)/2
 	.db	15,60,127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2574-_2578
-_2578:
-	.db	146,177,2,0,47
-	.dw	_2577-_2579
-_2579:
-_2574:
-	.db	18,49,46,40
-	.dw	_2575-_2580
-_2580:
-	.db	146,178,2,0,47
 	.dw	_2577-_2581
 _2581:
-_2575:
-	.db	18,50,46,40
-	.dw	_2576-_2582
+	.db	146,177,2,0,47
+	.dw	_2580-_2582
 _2582:
-	.db	146,179,2,0,47
-	.dw	_2577-_2583
-_2583:
-_2576:
-	.db	146,180,2,0
 _2577:
+	.db	18,49,46,40
+	.dw	_2578-_2583
+_2583:
+	.db	146,178,2,0,47
+	.dw	_2580-_2584
+_2584:
+_2578:
+	.db	18,50,46,40
+	.dw	_2579-_2585
+_2585:
+	.db	146,179,2,0,47
+	.dw	_2580-_2586
+_2586:
+_2579:
+	.db	146,180,2,0
+_2580:
 	.db	22,19,62,36,33,52,34,22,15,3,19,127,4,198,4
-	.dl	(_2422-_2411)/2
+	.dl	(_2425-_2414)/2
 	.db	15,60,127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2584-_2588
-_2588:
-	.db	146,177,2,0,47
-	.dw	_2587-_2589
-_2589:
-_2584:
-	.db	18,49,46,40
-	.dw	_2585-_2590
-_2590:
-	.db	146,178,2,0,47
 	.dw	_2587-_2591
 _2591:
-_2585:
-	.db	18,50,46,40
-	.dw	_2586-_2592
+	.db	146,177,2,0,47
+	.dw	_2590-_2592
 _2592:
-	.db	146,179,2,0,47
-	.dw	_2587-_2593
-_2593:
-_2586:
-	.db	146,180,2,0
 _2587:
+	.db	18,49,46,40
+	.dw	_2588-_2593
+_2593:
+	.db	146,178,2,0,47
+	.dw	_2590-_2594
+_2594:
+_2588:
+	.db	18,50,46,40
+	.dw	_2589-_2595
+_2595:
+	.db	146,179,2,0,47
+	.dw	_2590-_2596
+_2596:
+_2589:
+	.db	146,180,2,0
+_2590:
 	.db	22,19,62,36,33,50,34,22,15,3,19,127,2,193,4
-	.dl	(_2433-_2422)/2
+	.dl	(_2436-_2425)/2
 	.db	15,60,127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_2594-_2598
-_2598:
-	.db	146,177,2,0,47
-	.dw	_2597-_2599
-_2599:
-_2594:
-	.db	18,49,46,40
-	.dw	_2595-_2600
-_2600:
-	.db	146,178,2,0,47
 	.dw	_2597-_2601
 _2601:
-_2595:
-	.db	18,50,46,40
-	.dw	_2596-_2602
+	.db	146,177,2,0,47
+	.dw	_2600-_2602
 _2602:
-	.db	146,179,2,0,47
-	.dw	_2597-_2603
-_2603:
-_2596:
-	.db	146,180,2,0
 _2597:
-	.db	22,19,62,36,33,48,34,8,15,192
+	.db	18,49,46,40
+	.dw	_2598-_2603
+_2603:
+	.db	146,178,2,0,47
+	.dw	_2600-_2604
+_2604:
+_2598:
+	.db	18,50,46,40
+	.dw	_2599-_2605
+_2605:
+	.db	146,179,2,0,47
+	.dw	_2600-_2606
+_2606:
+_2599:
+	.db	146,180,2,0
+_2600:
+	.db	22,19,62,36,33,48,34,8,15,192,0,0
 	; End of section
 
 
