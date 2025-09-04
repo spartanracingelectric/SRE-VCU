@@ -214,35 +214,6 @@ void TorqueEncoder_getIndividualSensorPercent(TorqueEncoder* me, ubyte1 sensorNu
     }
 }
 
-
-/*-------------------------------------------------------------------
-* GetThrottlePosition
-* Description: Reads TPS Pin voltages and returns % of throttle pedal travel.
-* Parameters:  None
-* Inputs:      Assumes TPS#.sensorValue has been set by main loop
-* Returns:     Throttle value in percent (from 0 to 1)
-* Notes:       Valid pedal travel is from 10% (0.10) to 90% (0.90), not including mechanical limits.
-* Throws:      000 - TPS0 voltage out of range
-*              001 - TPS1 voltage out of range, 002
--------------------------------------------------------------------*/
-void TorqueEncoder_getPedalTravel(TorqueEncoder* me, ubyte1* errorCount, float4* pedalPercent)
-{
-    *pedalPercent = me->travelPercent;
-
-    //What about other error states?
-    //Voltage outside of calibration range
-    //Voltages off center
-
-    //    if (errorCount > 0)
-    //    {
-    //        return 0;
-    //    }
-    //    else
-    //    {
-    //return (TPS0PedalPercent + TPS1PedalPercent) / 2;
-    //    }
-}
-
 void TorqueEncoder_getOutputPercent(TorqueEncoder* me, float4* outputPercent)
 {
     *outputPercent = powf(me->travelPercent, me->outputCurveExponent);

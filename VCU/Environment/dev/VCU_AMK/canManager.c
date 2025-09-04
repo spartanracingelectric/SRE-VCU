@@ -20,7 +20,6 @@
 #include "safety.h"
 #include "sensorCalculations.h"
 #include "daqSensors.h"
-#include "drs.h"
 
 
 struct _CanManager {
@@ -484,7 +483,7 @@ void canOutput_sendSensorMessages(CanManager* me)
 //----------------------------------------------------------------------------
 // 
 //----------------------------------------------------------------------------
-void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressureSensor* bps, InstrumentCluster* ic, BatteryManagementSystem* bms, SafetyChecker* sc, DRS *drs, _DriveInverter *inv1, _DriveInverter *inv2)
+void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressureSensor* bps, InstrumentCluster* ic, BatteryManagementSystem* bms, SafetyChecker* sc, _DriveInverter *inv1, _DriveInverter *inv2)
 {
     IO_CAN_DATA_FRAME canMessages[me->can0_write_messageLimit];
     ubyte1 errorCount;
@@ -501,8 +500,7 @@ void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressu
     tps1Percent = 0xFF * (tempPedalPercent);
     //tps1Percent = 0xFF * (1 - tempPedalPercent);  //OLD: flipped over pedal percent (this value for display in CAN only)
 
-    TorqueEncoder_getPedalTravel(tps, &errorCount, &tempPedalPercent); //getThrottlePercent(TRUE, &errorCount);
-    ubyte1 throttlePercent = 0xFF * tempPedalPercent;
+    ubyte1 throttlePercent = 0xFF * tps->travelPercent;
 
     BrakePressureSensor_getPedalTravel(bps, &errorCount, &tempPedalPercent); //getThrottlePercent(TRUE, &errorCount);
     ubyte1 brakePercent = 0xFF * tempPedalPercent;
@@ -749,8 +747,8 @@ void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressu
     canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
     canMessages[canMessageCount - 1].data[byteNum++] = steering_degrees();
     canMessages[canMessageCount - 1].data[byteNum++] = steering_degrees() >> 8;
-    canMessages[canMessageCount - 1].data[byteNum++] = drs->buttonPressed;
-    canMessages[canMessageCount - 1].data[byteNum++] = drs->currentDRSMode;
+    canMessages[canMessageCount - 1].data[byteNum++] = 0;
+    canMessages[canMessageCount - 1].data[byteNum++] = 0;
     canMessages[canMessageCount - 1].data[byteNum++] = 0;
     canMessages[canMessageCount - 1].data[byteNum++] = 0;
     canMessages[canMessageCount - 1].data[byteNum++] = 0;

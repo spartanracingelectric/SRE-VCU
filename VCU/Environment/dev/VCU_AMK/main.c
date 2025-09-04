@@ -41,12 +41,10 @@
 #include "readyToDriveSound.h"
 #include "torqueEncoder.h"
 #include "brakePressureSensor.h"
-#include "wheelSpeeds.h"
 #include "safety.h"
 #include "sensorCalculations.h"
 #include "cooling.h"
 #include "daqSensors.h"
-#include "drs.h"
 
 //Application Database, needed for TTC-Downloader
 APDB appl_db =
@@ -219,7 +217,6 @@ void main(void)
     SafetyChecker *sc = SafetyChecker_new(320, 32); //Must match amp limits
     BatteryManagementSystem *bms = BMS_new(BMS_BASE_ADDRESS);
     CoolingSystem *cs = CoolingSystem_new();
-    DRS *drs = DRS_new();
     _DAQSensors *d1 = DAQ_Sensor_new();
 
     // //----------------------------------------------------------------------------
@@ -227,10 +224,10 @@ void main(void)
     // ubyte2 tps0_calibMax = 0x9876;  //me->tps0->sensorValue;
     // ubyte2 tps1_calibMin = 0x5432;  //me->tps1->sensorValue;
     // ubyte2 tps1_calibMax = 0xCDEF;  //me->tps1->sensorValue;
-    ubyte2 tps0_calibMin = 200;  //me->tps0->sensorValue;
-    ubyte2 tps0_calibMax = 1900; //me->tps0->sensorValue;
-    ubyte2 tps1_calibMin = 3000; //me->tps1->sensorValue;
-    ubyte2 tps1_calibMax = 4800; //me->tps1->sensorValue;
+    ubyte2 tps0_calibMin = 3800;  //me->tps0->sensorValue;
+    ubyte2 tps0_calibMax = 1400; //me->tps0->sensorValue;
+    ubyte2 tps1_calibMin = 1800; //me->tps1->sensorValue;
+    ubyte2 tps1_calibMax = 4040; //me->tps1->sensorValue;
 
     /*******************************************/
     /*       PERIODIC APPLICATION CODE         */
@@ -337,9 +334,6 @@ void main(void)
 
         //SRE-7 Update: slip ratio calculation can go here with PID update
 
-        //DRS
-        DRS_update(drs, tps, bps, pot_DRS_LC);
-
         //DataAquisition_update(); //includes accelerometer
         //TireModel_update()
         //ControlLaw_update();
@@ -406,7 +400,7 @@ void main(void)
         //canOutput_sendMCUControl(mcm0, FALSE);
 
         //Send debug data
-        canOutput_sendDebugMessage0(canMan, tps, bps, ic0, bms, sc, drs, invFL, invFR);
+        canOutput_sendDebugMessage0(canMan, tps, bps, ic0, bms, sc, invFL, invFR);
         canOutput_sendDebugMessage1(canMan, tps, bps, ic0, bms, sc, d1, invRL, invRR);
         //canOutput_sendSensorMessages();
         //canOutput_sendStatusMessages(mcm0);
