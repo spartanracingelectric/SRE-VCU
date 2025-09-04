@@ -31,8 +31,8 @@ void vcu_initializeADC(bool benchMode)
     //Power supplies/outputs
     //----------------------------------------------------------------------------
     //Analog sensor supplies
-    Sensor_TPS0.ioErr_powerSet = Sensor_BPS0.ioErr_powerSet = IO_POWER_Set(IO_ADC_SENSOR_SUPPLY_0, IO_POWER_ON);  // Pin 148 and 136
-    Sensor_TPS1.ioErr_powerSet = Sensor_BPS1.ioErr_powerSet = IO_POWER_Set(IO_ADC_SENSOR_SUPPLY_1, IO_POWER_ON);  // Pin 147
+    Sensor_TPS0.ioErr_powerSet = Sensor_BPS0.ioErr_powerSet = IO_POWER_Set(IO_ADC_5V_07, IO_POWER_ON);  // Pin 148 and 136
+    Sensor_TPS1.ioErr_powerSet = Sensor_BPS1.ioErr_powerSet = IO_POWER_Set(IO_ADC_5V_06, IO_POWER_ON);  // Pin 147
 
     //Variable power supply
     IO_POWER_Set(IO_SENSOR_SUPPLY_VAR, IO_POWER_14_5_V);    //IO_POWER_Set(IO_PIN_269, IO_POWER_8_5_V);
@@ -101,8 +101,8 @@ void vcu_initializeADC(bool benchMode)
         //Sensor_TPS0.ioErr_signalInit = IO_PWD_PulseInit(IO_PWM_00, IO_PWD_HIGH_TIME);
         //Sensor_TPS1.ioErr_signalInit = IO_PWD_PulseInit(IO_PWM_01, IO_PWD_HIGH_TIME);
         //Redo BPS ratiometric
-        Sensor_TPS0.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_00, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_0, NULL);
-        Sensor_TPS1.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_01, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_1, NULL);
+        Sensor_TPS0.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_07, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_0, NULL);
+        Sensor_TPS1.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_06, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_1, NULL);
         Sensor_BPS0.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_02, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_0, NULL);
         Sensor_BPS1.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_03, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_1, NULL);
     }
