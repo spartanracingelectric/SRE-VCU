@@ -146,21 +146,21 @@ void main(void)
     // Check if we're on the bench or not
     //----------------------------------------------------------------------------
     bool bench;
-    IO_DI_Init(IO_DI_06, IO_DI_PD_10K);
+    // IO_DI_Init(IO_DI_06, IO_DI_PD_10K);
     IO_RTC_StartTime(&timestamp_startTime);
     while (IO_RTC_GetTimeUS(timestamp_startTime) < 55555)
     {
         IO_Driver_TaskBegin();
 
         //IO_DI (digital inputs) supposed to take 2 cycles before they return valid data
-        IO_DI_Get(IO_DI_06, &bench);
+        // IO_DI_Get(IO_DI_06, &bench);
 
         IO_Driver_TaskEnd();
         //TODO: Find out if EACH pin needs 2 cycles or just the entire DIO unit
         while (IO_RTC_GetTimeUS(timestamp_startTime) < 10000)
             ; // wait until 10ms have passed
     }
-    IO_DI_DeInit(IO_DI_06);
+    // IO_DI_DeInit(IO_DI_06);
     //SerialManager_send(serialMan, bench == TRUE ? "VCU is in bench mode.\n" : "VCU is NOT in bench mode.\n");
 
     //----------------------------------------------------------------------------
@@ -323,7 +323,7 @@ void main(void)
         }
         TorqueEncoder_update(tps);
         //Every cycle: if the calibration was started and hasn't finished, check the values again
-        // TorqueEncoder_calibrationCycle(tps, &calibrationErrors); //Todo: deal with calibration errors
+        TorqueEncoder_calibrationCycle(tps, &calibrationErrors); //Todo: deal with calibration errors
         BrakePressureSensor_update(bps, bench);
         BrakePressureSensor_calibrationCycle(bps, &calibrationErrors);
 

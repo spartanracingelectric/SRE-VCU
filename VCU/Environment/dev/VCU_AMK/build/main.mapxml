@@ -7,8 +7,8 @@
 		<table>
 			<row>tool;TASKING VX-toolset for C166: Linker Locator v4.0r1 Build 163 SN 09002374</row>
 			<row>path;c:\Program Files (x86)\TASKING\C166-VX v4.0r1\bin\lk166</row>
-			<row>arguments;-f cc34500a </row>
-			<row>file:cc34500a;-o build/main.elf -d../../../Environment/bsp/lsl/TTC60/application.lsl -DXC2287_96F -D__CPU__=xc2287 -D__CPU_XC2287__ -obuild/main.hex:IHEX -obuild/main.s19:SREC -OtZXycL --error-limit=42 --map-file=build/main.mapxml:XML --map-file -mcrfiklSmNuQ ../../../Environment/bsp/bin/bsp_cstart_ttc60.obj build/AMKDrive.obj build/avlTree.obj build/bms.obj build/brakePressureSensor.obj build/canManager.obj build/cooling.obj build/daqSensors.obj build/initializations.obj build/instrumentCluster.obj build/main.obj build/mathFunctions.obj build/readyToDriveSound.obj build/safety.obj build/sensorCalculations.obj build/sensors.obj build/torqueEncoder.obj ../../../Environment/lib/xc2000_ttc60.lib -lch -lfph -lrth -Lc:\Program" "Files" "(x86)\TASKING\C166-VX" "v4.0r1\lib\2 </row>
+			<row>arguments;-f cc29960a </row>
+			<row>file:cc29960a;-o build/main.elf -d../../../Environment/bsp/lsl/TTC60/application.lsl -DXC2287_96F -D__CPU__=xc2287 -D__CPU_XC2287__ -obuild/main.hex:IHEX -obuild/main.s19:SREC -OtZXycL --error-limit=42 --map-file=build/main.mapxml:XML --map-file -mcrfiklSmNuQ ../../../Environment/bsp/bin/bsp_cstart_ttc60.obj build/AMKDrive.obj build/avlTree.obj build/bms.obj build/brakePressureSensor.obj build/canManager.obj build/cooling.obj build/daqSensors.obj build/initializations.obj build/instrumentCluster.obj build/main.obj build/mathFunctions.obj build/readyToDriveSound.obj build/safety.obj build/sensorCalculations.obj build/sensors.obj build/torqueEncoder.obj ../../../Environment/lib/xc2000_ttc60.lib -lch -lfph -lrth -Lc:\Program" "Files" "(x86)\TASKING\C166-VX" "v4.0r1\lib\2 </row>
 			<row>task;task1</row>
 		</table>
 	</part>
@@ -42,10 +42,10 @@
 				</column>
 				<row>spe:DPRAM;0x0;0x0;0x000620;0x0001e0;0x000800</row>
 				<row>spe:DSRAM;0x0;0x000eed;0x001ffe;0x001115;0x004000</row>
-				<row>spe:Flash;0x0105a8;0x0021a6;0x010000;0x09d8b2;0x0c0000</row>
+				<row>spe:Flash;0x010736;0x0021a0;0x010000;0x09d72a;0x0c0000</row>
 				<row>spe:PSRAM;0x0;0x00017f;0x002800;0x00d681;0x010000</row>
 				<row>xram;0x0;0x0;0x080000;0x0;0x080000</row>
-				<row>Total;0x0105a8;0x003212;0x094e1e;0x0ac228;0x154800</row>
+				<row>Total;0x010736;0x00320c;0x094e1e;0x0ac0a0;0x154800</row>
 			</table>
 		</part>
 		<part>
@@ -84,14 +84,14 @@
 				</column>
 				<row>spe:xc16x:bit;0x0;0x0;0x0;0x000100;0x0;0x0;0x000100</row>
 				<row>spe:xc16x:bita;0x0;0x0;0x0;0x000100;0x0;0x0;0x000100</row>
-				<row>spe:xc16x:code;0x0105a8;0x0;0x002325;0x092800;0x09d8b2;0x00d681;0x150000</row>
-				<row>spe:xc16x:far;0x00003c;0x0;0x01377e;0x094e1e;0x09d8b2;0x00e976;0x154800</row>
-				<row>spe:xc16x:huge;0x000591;0x00106c;0x0121bd;0x094e1e;0x09d8b2;0x00e976;0x154800</row>
+				<row>spe:xc16x:code;0x010736;0x0;0x00231f;0x092800;0x09d72a;0x00d681;0x150000</row>
+				<row>spe:xc16x:far;0x00003c;0x0;0x013906;0x094e1e;0x09d72a;0x00e976;0x154800</row>
+				<row>spe:xc16x:huge;0x000591;0x00106c;0x012345;0x094e1e;0x09d72a;0x00e976;0x154800</row>
 				<row>spe:xc16x:iram;0x0;0x0;0x0;0x000620;0x0;0x0001e0;0x000800</row>
-				<row>spe:xc16x:near;0x0;0x0;0x0041c0;0x00261e;0x003e40;0x0041e2;0x00e800</row>
-				<row>spe:xc16x:shuge;0x001bd9;0x0;0x011be1;0x094e1e;0x09d8b2;0x00e976;0x154800</row>
-				<row>Total;0x01274e;0x00106c;-;-;-;-;-</row>
-				<row>Largest gap;-;-;-;-;0x099a71;0x009681;-</row>
+				<row>spe:xc16x:near;0x0;0x0;0x0041b4;0x00261e;0x003e4c;0x0041e2;0x00e800</row>
+				<row>spe:xc16x:shuge;0x001bd3;0x0;0x011d6f;0x094e1e;0x09d72a;0x00e976;0x154800</row>
+				<row>Total;0x0128d6;0x00106c;-;-;-;-;-</row>
+				<row>Largest gap;-;-;-;-;0x0998db;0x009681;-</row>
 			</table>
 			<footNote>Multiple address spaces may be mapped at the same (physical) memory address ranges. Physical memory allocated (i.e. used) for sections in the given space are called "Native used Rom" and "Native used Ram" whereas memory allocated by other spaces is called "Foreign used" memory.</footNote>
 		</part>
@@ -312,7 +312,6 @@
 			<row>IO_INT_ADC.obj;code_IO_ADC_INT_ChannelInit (1004);0x000000a4;0x0;code_IO_ADC_INT_ChannelInit (1004);0x000000a4</row>
 			<row>IO_INT_ADC.obj;code_IO_ADC_INT_Get (1006);0x0000005c;0x0;code_IO_ADC_INT_Get (1006);0x0000005c</row>
 			<row>IO_INT_ADC.obj;code_IO_ADC_INT_KernelInit (1001);0x000000c8;0x0;code_IO_ADC_INT_KernelInit (1001);0x000000c8</row>
-			<row>IO_INT_ADC.obj;code_IO_ADC_INT_MuxChannelDeInit (1009);0x00000188;0x0;code_IO_ADC_INT_MuxChannelDeInit (1009);0x00000188</row>
 			<row>IO_INT_ADC.obj;code_IO_ADC_INT_MuxChannelInit (1003);0x0000016e;0x0;code_IO_ADC_INT_MuxChannelInit (1003);0x0000016e</row>
 			<row>IO_INT_ADC.obj;code_IO_ADC_INT_MuxGet (1007);0x000000b6;0x0;code_IO_ADC_INT_MuxGet (1007);0x000000b6</row>
 			<row>IO_INT_ADC.obj;code_IO_ADC_INT_MuxKernelInit (1002);0x000000dc;0x0;code_IO_ADC_INT_MuxKernelInit (1002);0x000000dc</row>
@@ -322,7 +321,6 @@
 			<row>IO_CAN.obj;code_IO_CAN_Init (863);0x000002d6;0x0;code_IO_CAN_Init (863);0x000002d6</row>
 			<row>IO_CAN.obj;code_IO_CAN_ReadFIFO (870);0x00000456;0x0;code_IO_CAN_ReadFIFO (870);0x00000456</row>
 			<row>IO_CAN.obj;code_IO_CAN_WriteFIFO (871);0x000004e6;0x0;code_IO_CAN_WriteFIFO (871);0x000004e6</row>
-			<row>IO_DIO.obj;code_IO_DI_DeInit (920);0x00000148;0x0;code_IO_DI_DeInit (920);0x00000148</row>
 			<row>IO_DIO.obj;code_IO_DI_Get (923);0x000001ce;0x0;code_IO_DI_Get (923);0x000001ce</row>
 			<row>IO_DIO.obj;code_IO_DI_Init (916);0x00000294;0x0;code_IO_DI_Init (916);0x00000294</row>
 			<row>IO_DIO.obj;code_IO_DO_Init (919);0x00000150;0x0;code_IO_DO_Init (919);0x00000150</row>
@@ -412,6 +410,7 @@
 			<row>safety.obj;code_SafetyChecker_parseCanMessage (611);0x00000036;0x0;code_SafetyChecker_parseCanMessage (611);0x00000036</row>
 			<row>safety.obj;code_SafetyChecker_reduceTorque (617);0x00000178;0x0;code_SafetyChecker_reduceTorque (617);0x00000178</row>
 			<row>safety.obj;code_SafetyChecker_update (612);0x000009d4;0x0;code_SafetyChecker_update (612);0x000009d4</row>
+			<row>torqueEncoder.obj;code_TorqueEncoder_calibrationCycle (756);0x0000041e;0x0;code_TorqueEncoder_calibrationCycle (756);0x0000041e</row>
 			<row>torqueEncoder.obj;code_TorqueEncoder_getIndividualSensorPercent (757);0x00000038;0x0;code_TorqueEncoder_getIndividualSensorPercent (757);0x00000038</row>
 			<row>torqueEncoder.obj;code_TorqueEncoder_new (750);0x00000140;0x0;code_TorqueEncoder_new (750);0x00000140</row>
 			<row>torqueEncoder.obj;code_TorqueEncoder_startCalibration (755);0x0000015a;0x0;code_TorqueEncoder_startCalibration (755);0x0000015a</row>
@@ -512,6 +511,7 @@
 			<row>cspf2uc.obj;code_libfp (2302);0x00000008;0x0;code_libfp (2302);0x00000008</row>
 			<row>cspf2i.obj;code_libfp (2303);0x0000004a;0x0;code_libfp (2303);0x0000004a</row>
 			<row>cspf2ui.obj;code_libfp (2304);0x0000003e;0x0;code_libfp (2304);0x0000003e</row>
+			<row>cspf2ul.obj;code_libfp (2306);0x00000060;0x0;code_libfp (2306);0x00000060</row>
 			<row>cspf2dpf.obj;code_libfp (2307);0x00000042;0x0;code_libfp (2307);0x00000042</row>
 			<row>add_spf.obj;code_libfp (2308);0x00000122;0x0;code_libfp (2308);0x00000122</row>
 			<row>mul_spf.obj;code_libfp (2309);0x000000c0;0x0;code_libfp (2309);0x000000c0</row>
@@ -551,7 +551,7 @@
 			<row>load64hb.obj;code_librt (2380);0x0000001e;0x0;code_librt (2380);0x0000001e</row>
 			<row>store64na.obj;code_librt (2381);0x0000000a;0x0;code_librt (2381);0x0000000a</row>
 			<row>pnearp32.obj;code_librt (2382);0x00000018;0x0;code_librt (2382);0x00000018</row>
-			<row>main.obj;code_main (473);0x000006a0;0x0;code_main (473);0x000006a0</row>
+			<row>main.obj;code_main (473);0x00000680;0x0;code_main (473);0x00000680</row>
 			<row>sensors.obj;code_sensors_updateSensors (728);0x00000150;0x0;code_sensors_updateSensors (728);0x00000150</row>
 			<row>sensorCalculations.obj;code_steering_degrees (688);0x0000006a;0x0;code_steering_degrees (688);0x0000006a</row>
 			<row>initializations.obj;code_vcu_ADCWasteLoop (377);0x000000f8;0x0;code_vcu_ADCWasteLoop (377);0x000000f8</row>
@@ -673,7 +673,6 @@
 			<row>IO_POWER.obj;shuge__2_swt (1233);0x00000004;0x0;shuge__2_swt (1233);0x00000004</row>
 			<row>bms.obj;shuge__3_swt (79);0x000001fa;0x0;shuge__3_swt (79);0x000001fa</row>
 			<row>IO_ADC.obj;shuge__3_swt (831);0x0000001e;0x0;shuge__3_swt (831);0x0000001e</row>
-			<row>IO_DIO.obj;shuge__3_swt (921);0x00000006;0x0;shuge__3_swt (921);0x00000006</row>
 			<row>IO_POWER.obj;shuge__3_swt (1234);0x00000004;0x0;shuge__3_swt (1234);0x00000004</row>
 			<row>IO_ADC.obj;shuge__4_swt (832);0x0000001e;0x0;shuge__4_swt (832);0x0000001e</row>
 			<row>IO_DIO.obj;shuge__4_swt (924);0x00000006;0x0;shuge__4_swt (924);0x00000006</row>
@@ -718,9 +717,8 @@
 			<row>IO_CAN.obj;code_IO_CAN_Init (863);_IO_CAN_Init;canManager.obj</row>
 			<row>IO_CAN.obj;code_IO_CAN_ReadFIFO (870);_IO_CAN_ReadFIFO;canManager.obj</row>
 			<row>IO_CAN.obj;code_IO_CAN_WriteFIFO (871);_IO_CAN_WriteFIFO;canManager.obj</row>
-			<row>IO_DIO.obj;code_IO_DI_DeInit (920);_IO_DI_DeInit;main.obj</row>
-			<row>IO_DIO.obj;code_IO_DI_Get (923);_IO_DI_Get;initializations.obj, main.obj, sensors.obj</row>
-			<row>IO_DIO.obj;code_IO_DI_Init (916);_IO_DI_Init;initializations.obj, main.obj</row>
+			<row>IO_DIO.obj;code_IO_DI_Get (923);_IO_DI_Get;initializations.obj, sensors.obj</row>
+			<row>IO_DIO.obj;code_IO_DI_Init (916);_IO_DI_Init;initializations.obj</row>
 			<row>IO_DIO.obj;code_IO_DO_Init (919);_IO_DO_Init;initializations.obj</row>
 			<row>IO_DIO.obj;code_IO_DO_Set (925);_IO_DO_Set;AMKDrive.obj, bms.obj, initializations.obj, sensors.obj</row>
 			<row>IO_Driver.obj;code_IO_Driver_Init (946);_IO_Driver_Init;main.obj</row>
@@ -730,7 +728,6 @@
 			<row>IO_INT_ADC.obj;code_IO_ADC_INT_ChannelInit (1004);_IO_ADC_INT_ChannelInit;IO_ADC.obj</row>
 			<row>IO_INT_ADC.obj;code_IO_ADC_INT_Get (1006);_IO_ADC_INT_Get;IO_ADC.obj</row>
 			<row>IO_INT_ADC.obj;code_IO_ADC_INT_KernelInit (1001);_IO_ADC_INT_KernelInit;IO_ADC.obj</row>
-			<row>IO_INT_ADC.obj;code_IO_ADC_INT_MuxChannelDeInit (1009);_IO_ADC_INT_MuxChannelDeInit;IO_ADC.obj, IO_DIO.obj, IO_PWD.obj, IO_PWM.obj</row>
 			<row>IO_INT_ADC.obj;code_IO_ADC_INT_MuxChannelInit (1003);_IO_ADC_INT_MuxChannelInit;IO_ADC.obj, IO_DIO.obj, IO_PWD.obj, IO_PWM.obj</row>
 			<row>IO_INT_ADC.obj;code_IO_ADC_INT_MuxGet (1007);_IO_ADC_INT_MuxGet;IO_ADC.obj, IO_DIO.obj, IO_PWD.obj, IO_PWM.obj</row>
 			<row>IO_INT_ADC.obj;code_IO_ADC_INT_MuxKernelInit (1002);_IO_ADC_INT_MuxKernelInit;IO_ADC.obj, IO_DIO.obj, IO_PWD.obj, IO_PWM.obj</row>
@@ -848,6 +845,7 @@
 			<row>cspf2uc.obj;code_libfp (2302);__spf2uc;canManager.obj</row>
 			<row>cspf2ui.obj;code_libfp (2304);__spf2ui;cspf2uc.obj</row>
 			<row>cspf2ui.obj;code_libfp (2304);__spf2us;brakePressureSensor.obj, readyToDriveSound.obj, sensors.obj, IO_INT_SPI.obj, IO_UART.obj</row>
+			<row>cspf2ul.obj;code_libfp (2306);__spf2ul;torqueEncoder.obj</row>
 			<row>daqSensors.obj;code_DAQ_Sensor_new (355);_DAQ_Sensor_new;main.obj</row>
 			<row>daqSensors.obj;code_DAQ_parseCanMessage (356);_DAQ_parseCanMessage;canManager.obj</row>
 			<row>div_dpf.obj;code_libfp (2327);__div_dpf;sensorCalculations.obj, _doflt.obj</row>
@@ -911,6 +909,7 @@
 			<row>sprintf.obj;code_libc (1682);_sprintf;bms.obj, safety.obj</row>
 			<row>store64na.obj;code_librt (2381);__store64na;_doflt.obj, _signbit.obj</row>
 			<row>strlen.obj;code_libc (2189);_strlen;_doprint_int.obj</row>
+			<row>torqueEncoder.obj;code_TorqueEncoder_calibrationCycle (756);_TorqueEncoder_calibrationCycle;main.obj</row>
 			<row>torqueEncoder.obj;code_TorqueEncoder_getIndividualSensorPercent (757);_TorqueEncoder_getIndividualSensorPercent;AMKDrive.obj, canManager.obj, safety.obj</row>
 			<row>torqueEncoder.obj;code_TorqueEncoder_new (750);_TorqueEncoder_new;main.obj</row>
 			<row>torqueEncoder.obj;code_TorqueEncoder_startCalibration (755);_TorqueEncoder_startCalibration;main.obj</row>
@@ -1214,7 +1213,7 @@
 						<child>
 							<name>_DAQ_parseCanMessage [system_stack:4,12; user_stack:24,30]</name>
 							<child>
-								<name>__ul2dpf [system_stack:0,0; user_stack:0,0]</name>
+								<name>__ul2dpf *</name>
 							</child>
 							<child>
 								<name>__dpf2ul [system_stack:0,0; user_stack:0,0]</name>
@@ -1296,7 +1295,7 @@
 							<name>__mul_spf *</name>
 						</child>
 						<child>
-							<name>__dpf2spf [system_stack:0,0; user_stack:0,0]</name>
+							<name>__dpf2spf *</name>
 						</child>
 						<child>
 							<name>__add_dpf *</name>
@@ -1338,7 +1337,22 @@
 							<name>_IO_ADC_ChannelInit *</name>
 						</child>
 						<child>
-							<name>_IO_DI_Init *</name>
+							<name>_IO_DI_Init [system_stack:4,16; user_stack:20,36]</name>
+							<child>
+								<name>_IO_ADC_INT_MuxKernelInit *</name>
+							</child>
+							<child>
+								<name>_IO_ADC_INT_MuxChannelInit *</name>
+							</child>
+							<child>
+								<name>_IO_SHIFT_WriteMasked *</name>
+							</child>
+							<child>
+								<name>_IO_Tools_ConfigurePin *</name>
+							</child>
+							<child>
+								<name>_IO_Tools_CalcShiftPos *</name>
+							</child>
 						</child>
 						<child>
 							<name>_IO_DO_Init [system_stack:4,16; user_stack:16,32]</name>
@@ -1599,7 +1613,7 @@
 							<name>__ul2spf *</name>
 						</child>
 						<child>
-							<name>__add_spf [system_stack:0,0; user_stack:0,0]</name>
+							<name>__add_spf *</name>
 						</child>
 						<child>
 							<name>__mul_spf *</name>
@@ -1612,25 +1626,34 @@
 						</child>
 					</child>
 					<child>
-						<name>_IO_DI_Init *</name>
-					</child>
-					<child>
-						<name>_IO_DI_DeInit [system_stack:4,12; user_stack:14,20]</name>
+						<name>_TorqueEncoder_calibrationCycle [system_stack:4,24; user_stack:58,132]</name>
 						<child>
-							<name>_IO_ADC_INT_MuxChannelDeInit [system_stack:4,8; user_stack:6,6]</name>
-							<child>
-								<name>_IO_Tools_UnlockProtecReg *</name>
-							</child>
-							<child>
-								<name>_IO_Tools_LockProtecReg *</name>
-							</child>
+							<name>_Light_set *</name>
 						</child>
 						<child>
-							<name>_IO_SHIFT_WriteMasked *</name>
+							<name>_IO_RTC_GetTimeUS *</name>
 						</child>
-					</child>
-					<child>
-						<name>_IO_DI_Get *</name>
+						<child>
+							<name>__ul2spf *</name>
+						</child>
+						<child>
+							<name>__spf2ul [system_stack:0,0; user_stack:0,0]</name>
+						</child>
+						<child>
+							<name>__sub_spf *</name>
+						</child>
+						<child>
+							<name>__add_spf *</name>
+						</child>
+						<child>
+							<name>__ul2dpf *</name>
+						</child>
+						<child>
+							<name>__dpf2spf *</name>
+						</child>
+						<child>
+							<name>__mul_dpf *</name>
+						</child>
 					</child>
 					<child>
 						<name>_IO_Driver_Init [system_stack:4,20; user_stack:6,78]</name>
@@ -1843,6 +1866,9 @@
 			<name>* _IO_SPI_SetupDevice [system_stack:4,4; user_stack:4,4]</name>
 		</tree>
 		<tree>
+			<name>* __add_spf [system_stack:0,0; user_stack:0,0]</name>
+		</tree>
+		<tree>
 			<name>* __sub_spf [system_stack:0,0; user_stack:0,0]</name>
 		</tree>
 		<tree>
@@ -1999,10 +2025,13 @@
 			</child>
 		</tree>
 		<tree>
-			<name>* _IO_SHIFT_WriteMasked [system_stack:4,4; user_stack:0,0]</name>
+			<name>* _IO_GPIO_INT_PinSet [system_stack:4,4; user_stack:0,0]</name>
 		</tree>
 		<tree>
-			<name>* _IO_GPIO_INT_PinSet [system_stack:4,4; user_stack:0,0]</name>
+			<name>* _IO_Tools_CalcShiftPos [system_stack:4,4; user_stack:2,2]</name>
+		</tree>
+		<tree>
+			<name>* _IO_SHIFT_WriteMasked [system_stack:4,4; user_stack:0,0]</name>
 		</tree>
 		<tree>
 			<name>* _IO_ADC_INT_MuxChannelInit [system_stack:4,4; user_stack:16,16]</name>
@@ -2024,27 +2053,6 @@
 			<child>
 				<name>_IO_Tools_LockProtecReg *</name>
 			</child>
-		</tree>
-		<tree>
-			<name>* _IO_DI_Init [system_stack:4,16; user_stack:20,36]</name>
-			<child>
-				<name>_IO_ADC_INT_MuxKernelInit *</name>
-			</child>
-			<child>
-				<name>_IO_ADC_INT_MuxChannelInit *</name>
-			</child>
-			<child>
-				<name>_IO_SHIFT_WriteMasked *</name>
-			</child>
-			<child>
-				<name>_IO_Tools_ConfigurePin *</name>
-			</child>
-			<child>
-				<name>_IO_Tools_CalcShiftPos *</name>
-			</child>
-		</tree>
-		<tree>
-			<name>* _IO_Tools_CalcShiftPos [system_stack:4,4; user_stack:2,2]</name>
 		</tree>
 		<tree>
 			<name>* _IO_ADC_ChannelInit [system_stack:4,16; user_stack:38,72]</name>
@@ -2089,6 +2097,9 @@
 			<name>* __add_dpf [system_stack:0,0; user_stack:0,0]</name>
 		</tree>
 		<tree>
+			<name>* __dpf2spf [system_stack:0,0; user_stack:0,0]</name>
+		</tree>
+		<tree>
 			<name>* __ul2spf [system_stack:0,0; user_stack:0,0]</name>
 		</tree>
 		<tree>
@@ -2129,6 +2140,9 @@
 		</tree>
 		<tree>
 			<name>* __mul_dpf [system_stack:0,0; user_stack:0,0]</name>
+		</tree>
+		<tree>
+			<name>* __ul2dpf [system_stack:0,0; user_stack:0,0]</name>
 		</tree>
 		<tree>
 			<name>* __s2spf [system_stack:0,0; user_stack:0,0]</name>
@@ -3031,207 +3045,197 @@
 				<row>spe:Flash;;$reserved (2567);0x0000f000;0x00c00000;0x0;0x00000002</row>
 				<row>spe:Flash;;$reserved (2453);0x00001000;0x00c0f000;0x0000f000;0x00000001</row>
 				<row>spe:Flash;;huge_appl_db (474);0x00000080;0x00c10000;0x00010000;0x00000002</row>
-				<row>spe:Flash;;code_IO_Driver_TaskBegin (948);0x0000015a;0x00c10080;0x00010080;0x00000002</row>
-				<row>spe:Flash;;code_TorqueEncoder_startCalibration (755);0x0000015a;0x00c101da;0x000101da;0x00000002</row>
-				<row>spe:Flash;;code_IO_DO_Init (919);0x00000150;0x00c10334;0x00010334;0x00000002</row>
-				<row>spe:Flash;;code_sensors_updateSensors (728);0x00000150;0x00c10484;0x00010484;0x00000002</row>
-				<row>spe:Flash;;code_IO_SHIFT_Init (1145);0x0000014a;0x00c105d4;0x000105d4;0x00000002</row>
-				<row>spe:Flash;;code_IO_DI_DeInit (920);0x00000148;0x00c1071e;0x0001071e;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_INT_CCU6_PulseInit (1537);0x00000144;0x00c10866;0x00010866;0x00000002</row>
-				<row>spe:Flash;;code_TorqueEncoder_new (750);0x00000140;0x00c109aa;0x000109aa;0x00000002</row>
-				<row>spe:Flash;;code_BrakePressureSensor_new (187);0x0000012e;0x00c10aea;0x00010aea;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2308);0x00000122;0x00c10c18;0x00010c18;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWM_INT_CC6IntOff (1069);0x00000114;0x00c10d3a;0x00010d3a;0x00000002</row>
-				<row>spe:Flash;;code_CoolingSystem_new (326);0x00000102;0x00c10e4e;0x00010e4e;0x00000002</row>
-				<row>spe:Flash;;code_IO_POWER_Init (1227);0x00000100;0x00c10f50;0x00010f50;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_CC60_SR3_INT (1085);0x00000100;0x00c11050;0x00011050;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_CC61_SR3_INT (1086);0x00000100;0x00c11150;0x00011150;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_CC62_SR3_INT (1087);0x00000100;0x00c11250;0x00011250;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_CC63_SR3_INT (1088);0x00000100;0x00c11350;0x00011350;0x00000002</row>
-				<row>spe:Flash;;code_IO_Tools_FETProtection (1412);0x00000100;0x00c11450;0x00011450;0x00000002</row>
-				<row>spe:Flash;;code_BrakePressureSensor_startCalibration (192);0x000000fc;0x00c11550;0x00011550;0x00000002</row>
-				<row>spe:Flash;;code_vcu_ADCWasteLoop (377);0x000000f8;0x00c1164c;0x0001164c;0x00000002</row>
-				<row>spe:Flash;;code_IO_ADC_KernelRegInit (1000);0x000000f0;0x00c11744;0x00011744;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWM_INT_CC6SetDuty (1068);0x000000e2;0x00c11834;0x00011834;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2310);0x000000de;0x00c11916;0x00011916;0x00000002</row>
-				<row>spe:Flash;;code_IO_ADC_INT_MuxKernelInit (1002);0x000000dc;0x00c119f4;0x000119f4;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWM_INT_CC2SetDuty (1065);0x000000d8;0x00c11ad0;0x00011ad0;0x00000002</row>
-				<row>spe:Flash;;code_IO_ADC_INT_KernelInit (1001);0x000000c8;0x00c11ba8;0x00011ba8;0x00000002</row>
-				<row>spe:Flash;;code_SafetyChecker_new (610);0x000000c0;0x00c11c70;0x00011c70;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2309);0x000000c0;0x00c11d30;0x00011d30;0x00000002</row>
-				<row>spe:Flash;;code_IO_ADC_INT_MuxGet (1007);0x000000b6;0x00c11df0;0x00011df0;0x00000002</row>
-				<row>spe:Flash;;code__cstart (1);0x000000b6;0x00c11ea6;0x00011ea6;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWM_INT_CC2IntOff (1066);0x000000b4;0x00c11f5c;0x00011f5c;0x00000002</row>
-				<row>spe:Flash;;code_IO_ADC_INT_ChannelInit (1004);0x000000a4;0x00c12010;0x00012010;0x00000002</row>
-				<row>spe:Flash;;code_BMS_new (77);0x000000a0;0x00c120b4;0x000120b4;0x00000002</row>
-				<row>spe:Flash;;code_DAQ_Sensor_new (355);0x0000009e;0x00c12154;0x00012154;0x00000002</row>
-				<row>spe:Flash;;code_IO_SHIFT_Task (1146);0x00000094;0x00c121f2;0x000121f2;0x00000002</row>
-				<row>spe:Flash;;code_IO_SPI_SetupDevice (1175);0x00000094;0x00c12286;0x00012286;0x00000002</row>
-				<row>spe:Flash;;code_IO_UART_GetQueueSpace (1469);0x00000092;0x00c1231a;0x0001231a;0x00000002</row>
-				<row>spe:Flash;;code_IO_UART_GetQueueUnread (1471);0x0000008c;0x00c123ac;0x000123ac;0x00000002</row>
-				<row>spe:Flash;;code_IO_Driver_Init (946);0x00000086;0x00c12438;0x00012438;0x00000002</row>
-				<row>spe:Flash;;code_IO_EEPROM_Init (968);0x00000086;0x00c124be;0x000124be;0x00000002</row>
-				<row>spe:Flash;;code_libc (1811);0x00000086;0x00c12544;0x00012544;0x00000002</row>
-				<row>spe:Flash;;code_BMS_getPower_W (87);0x00000084;0x00c125ca;0x000125ca;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_INT_CCU6_StartPulseCap (1540);0x00000082;0x00c1264e;0x0001264e;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_INT_TimerOverflowCount (1520);0x00000080;0x00c126d0;0x000126d0;0x00000002</row>
-				<row>spe:Flash;;code_librt (2376);0x00000080;0x00c12750;0x00012750;0x00000002</row>
-				<row>spe:Flash;;code_getPercent (489);0x0000007a;0x00c127d0;0x000127d0;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_INT_CCU6_CaptureInit (1525);0x00000078;0x00c1284a;0x0001284a;0x00000002</row>
-				<row>spe:Flash;;code_IO_Timer_INT_CC2Setup (1201);0x00000074;0x00c128c2;0x000128c2;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_CC2_CC22_INT (1083);0x00000072;0x00c12936;0x00012936;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_CC2_CC23_INT (1084);0x00000072;0x00c129a8;0x000129a8;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_CC2_CC28_INT (1081);0x00000072;0x00c12a1a;0x00012a1a;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_CC2_CC29_INT (1082);0x00000072;0x00c12a8c;0x00012a8c;0x00000002</row>
-				<row>spe:Flash;;code_Light_set (729);0x00000072;0x00c12afe;0x00012afe;0x00000002</row>
-				<row>spe:Flash;;code_RTDS_shutdownHelper (577);0x0000006a;0x00c12b70;0x00012b70;0x00000002</row>
-				<row>spe:Flash;;code_steering_degrees (688);0x0000006a;0x00c12bda;0x00012bda;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2323);0x00000068;0x00c12c44;0x00012c44;0x00000002</row>
-				<row>spe:Flash;;code_DI_calculateCommands (6);0x00000064;0x00c12cac;0x00012cac;0x00000002</row>
-				<row>spe:Flash;;code_IO_Timer_INT_CC6Setup (1200);0x00000064;0x00c12d10;0x00012d10;0x00000002</row>
-				<row>spe:Flash;;code_libc (2158);0x00000062;0x00c12d74;0x00012d74;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2328);0x00000062;0x00c12dd6;0x00012dd6;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2330);0x00000062;0x00c12e38;0x00012e38;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2331);0x00000062;0x00c12e9a;0x00012e9a;0x00000002</row>
-				<row>spe:Flash;;code_CoolingSystem_calculations (327);0x0000005c;0x00c12efc;0x00012efc;0x00000002</row>
-				<row>spe:Flash;;code_IO_ADC_INT_Get (1006);0x0000005c;0x00c12f58;0x00012f58;0x00000002</row>
-				<row>spe:Flash;;code_BMS_getHighestCellTemp_degC (85);0x0000005a;0x00c12fb4;0x00012fb4;0x00000002</row>
-				<row>spe:Flash;;code_libc (1823);0x00000058;0x00c1300e;0x0001300e;0x00000002</row>
-				<row>spe:Flash;;code_RTDS_setVolume (576);0x00000056;0x00c13066;0x00013066;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2299);0x00000056;0x00c130bc;0x000130bc;0x00000002</row>
-				<row>spe:Flash;;code_IO_Tools_LockProtecReg (1405);0x00000054;0x00c13112;0x00013112;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2324);0x00000052;0x00c13166;0x00013166;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_GPT_T6_INT (1381);0x0000004e;0x00c131b8;0x000131b8;0x00000002</row>
-				<row>spe:Flash;;code_libc (1748);0x0000004e;0x00c13206;0x00013206;0x00000002</row>
-				<row>spe:Flash;;code_libc (1682);0x0000004e;0x00c13254;0x00013254;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2322);0x0000004e;0x00c132a2;0x000132a2;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2320);0x0000004e;0x00c132f0;0x000132f0;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2329);0x0000004c;0x00c1333e;0x0001333e;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2303);0x0000004a;0x00c1338a;0x0001338a;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2333);0x00000048;0x00c133d4;0x000133d4;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2315);0x00000048;0x00c1341c;0x0001341c;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2316);0x00000048;0x00c13464;0x00013464;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2312);0x00000048;0x00c134ac;0x000134ac;0x00000002</row>
-				<row>spe:Flash;;code_IO_RTC_Init (1376);0x00000046;0x00c134f4;0x000134f4;0x00000002</row>
-				<row>spe:Flash;;code_BMS_getHighestCellTemp_d_degC (84);0x00000042;0x00c1353a;0x0001353a;0x00000002</row>
-				<row>spe:Flash;;code_RTDS_new (574);0x00000042;0x00c1357c;0x0001357c;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2307);0x00000042;0x00c135be;0x000135be;0x00000002</row>
-				<row>spe:Flash;;code_IO_SHIFT_WriteMasked (1149);0x00000040;0x00c13600;0x00013600;0x00000002</row>
-				<row>spe:Flash;;code_IO_Tools_PWM_ResetPins (1413);0x0000003e;0x00c13640;0x00013640;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2304);0x0000003e;0x00c1367e;0x0001367e;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2332);0x0000003e;0x00c136bc;0x000136bc;0x00000002</row>
-				<row>spe:Flash;;code_IO_Tools_UnlockProtecReg (1404);0x0000003c;0x00c136fa;0x000136fa;0x00000002</row>
-				<row>spe:Flash;;code_IO_RTC_StartTime (1377);0x0000003a;0x00c13736;0x00013736;0x00000002</row>
-				<row>spe:Flash;;code_BMS_relayControl (80);0x00000038;0x00c13770;0x00013770;0x00000002</row>
-				<row>spe:Flash;;code_TorqueEncoder_getIndividualSensorPercent (757);0x00000038;0x00c137a8;0x000137a8;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_CC2_CC26_INT (1548);0x00000036;0x00c137e0;0x000137e0;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_CC2_CC27_INT (1549);0x00000036;0x00c13816;0x00013816;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_CC2_CC30_INT (1550);0x00000036;0x00c1384c;0x0001384c;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_CC2_CC31_INT (1551);0x00000036;0x00c13882;0x00013882;0x00000002</row>
-				<row>spe:Flash;;code_SafetyChecker_parseCanMessage (611);0x00000036;0x00c138b8;0x000138b8;0x00000002</row>
-				<row>spe:Flash;;code_IO_Driver_TaskEnd (949);0x00000034;0x00c138ee;0x000138ee;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_CC60_SR1_INT (1556);0x00000032;0x00c13922;0x00013922;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_CC60_SR2_INT (1557);0x00000032;0x00c13954;0x00013954;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_CC62_SR0_INT (1558);0x00000032;0x00c13986;0x00013986;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_CC62_SR1_INT (1559);0x00000032;0x00c139b8;0x000139b8;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_CC62_SR2_INT (1560);0x00000032;0x00c139ea;0x000139ea;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_CC63_SR0_INT (1561);0x00000032;0x00c13a1c;0x00013a1c;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_CC63_SR1_INT (1562);0x00000032;0x00c13a4e;0x00013a4e;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_CC63_SR2_INT (1563);0x00000032;0x00c13a80;0x00013a80;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_GPT_T2_INT (1552);0x00000032;0x00c13ab2;0x00013ab2;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_GPT_T3_INT (1553);0x00000032;0x00c13ae4;0x00013ae4;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_GPT_T4_INT (1554);0x00000032;0x00c13b16;0x00013b16;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_GPT_T5_INT (1555);0x00000032;0x00c13b48;0x00013b48;0x00000002</row>
-				<row>spe:Flash;;code_libc (2149);0x00000032;0x00c13b7a;0x00013b7a;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2334);0x00000032;0x00c13bac;0x00013bac;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2335);0x00000030;0x00c13bde;0x00013bde;0x00000002</row>
-				<row>spe:Flash;;code_librt (2377);0x00000030;0x00c13c0e;0x00013c0e;0x00000002</row>
-				<row>spe:Flash;;code_IO_GPIO_INT_PinSet (1051);0x0000002e;0x00c13c3e;0x00013c3e;0x00000002</row>
-				<row>spe:Flash;;code_IO_GPIO_INT_PinGet (1053);0x0000002c;0x00c13c6c;0x00013c6c;0x00000002</row>
-				<row>spe:Flash;;code_IO_Tools_CalcShiftPos (1411);0x0000002c;0x00c13c98;0x00013c98;0x00000002</row>
-				<row>spe:Flash;;code_IO_Tools_DistanceFloat (1407);0x0000002c;0x00c13cc4;0x00013cc4;0x00000002</row>
-				<row>spe:Flash;;code_InstrumentCluster_new (436);0x0000002c;0x00c13cf0;0x00013cf0;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2297);0x0000002a;0x00c13d1c;0x00013d1c;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2317);0x0000002a;0x00c13d46;0x00013d46;0x00000002</row>
-				<row>spe:Flash;;code_libc (1974);0x00000028;0x00c13d70;0x00013d70;0x00000002</row>
-				<row>spe:Flash;;code_librt (2375);0x00000026;0x00c13d98;0x00013d98;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2319);0x00000022;0x00c13dbe;0x00013dbe;0x00000002</row>
-				<row>spe:Flash;;code_BrakePressureSensor_getPedalTravel (196);0x00000020;0x00c13de0;0x00013de0;0x00000002</row>
-				<row>spe:Flash;;code_IO_RTC_GetTimeUS (1378);0x00000020;0x00c13e00;0x00013e00;0x00000002</row>
-				<row>spe:Flash;;code_libc (2213);0x00000020;0x00c13e20;0x00013e20;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2318);0x00000020;0x00c13e40;0x00013e40;0x00000002</row>
-				<row>spe:Flash;;code_IO_GPIO_INT_PortSet (1052);0x0000001e;0x00c13e60;0x00013e60;0x00000002</row>
-				<row>spe:Flash;;code_librt (2380);0x0000001e;0x00c13e7e;0x00013e7e;0x00000002</row>
-				<row>spe:Flash;;code_libc (1968);0x0000001a;0x00c13e9c;0x00013e9c;0x00000002</row>
-				<row>spe:Flash;;code_IO_RTC_getRTCval (1375);0x00000018;0x00c13eb6;0x00013eb6;0x00000002</row>
-				<row>spe:Flash;;code_libc (1977);0x00000018;0x00c13ece;0x00013ece;0x00000002</row>
-				<row>spe:Flash;;code_librt (2382);0x00000018;0x00c13ee6;0x00013ee6;0x00000002</row>
-				<row>spe:Flash;;code_BMS_getHighestCellVoltage_mV (81);0x00000016;0x00c13efe;0x00013efe;0x00000002</row>
-				<row>spe:Flash;;code_libc (1967);0x00000016;0x00c13f14;0x00013f14;0x00000002</row>
-				<row>spe:Flash;;code_libc (1822);0x00000016;0x00c13f2a;0x00013f2a;0x00000002</row>
-				<row>spe:Flash;;code_librt (2356);0x00000016;0x00c13f40;0x00013f40;0x00000002</row>
-				<row>spe:Flash;;code_librt (2337);0x00000016;0x00c13f56;0x00013f56;0x00000002</row>
-				<row>spe:Flash;;code_IO_Tools_ConfigurePin (1406);0x00000014;0x00c13f6c;0x00013f6c;0x00000002</row>
-				<row>spe:Flash;;code_libc (1802);0x00000014;0x00c13f80;0x00013f80;0x00000002</row>
-				<row>spe:Flash;;code_libc (2189);0x00000014;0x00c13f94;0x00013f94;0x00000002</row>
-				<row>spe:Flash;;code_libc (1804);0x00000012;0x00c13fa8;0x00013fa8;0x00000002</row>
-				<row>spe:Flash;;code_libc (1961);0x00000012;0x00c13fba;0x00013fba;0x00000002</row>
-				<row>spe:Flash;;code_libc (1945);0x00000012;0x00c13fcc;0x00013fcc;0x00000002</row>
-				<row>spe:Flash;;code_libc (1965);0x00000012;0x00c13fde;0x00013fde;0x00000002</row>
-				<row>spe:Flash;;code_SafetyChecker_getFaults (614);0x00000010;0x00c13ff0;0x00013ff0;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2325);0x00000174;0x00c10080;0x00010080;0x00000002</row>
+				<row>spe:Flash;;code_IO_ADC_INT_MuxChannelInit (1003);0x0000016e;0x00c101f4;0x000101f4;0x00000002</row>
+				<row>spe:Flash;;code_IO_Driver_TaskBegin (948);0x0000015a;0x00c10362;0x00010362;0x00000002</row>
+				<row>spe:Flash;;code_TorqueEncoder_startCalibration (755);0x0000015a;0x00c104bc;0x000104bc;0x00000002</row>
+				<row>spe:Flash;;code_IO_DO_Init (919);0x00000150;0x00c10616;0x00010616;0x00000002</row>
+				<row>spe:Flash;;code_sensors_updateSensors (728);0x00000150;0x00c10766;0x00010766;0x00000002</row>
+				<row>spe:Flash;;code_IO_SHIFT_Init (1145);0x0000014a;0x00c108b6;0x000108b6;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_INT_CCU6_PulseInit (1537);0x00000144;0x00c10a00;0x00010a00;0x00000002</row>
+				<row>spe:Flash;;code_TorqueEncoder_new (750);0x00000140;0x00c10b44;0x00010b44;0x00000002</row>
+				<row>spe:Flash;;code_BrakePressureSensor_new (187);0x0000012e;0x00c10c84;0x00010c84;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2308);0x00000122;0x00c10db2;0x00010db2;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWM_INT_CC6IntOff (1069);0x00000114;0x00c10ed4;0x00010ed4;0x00000002</row>
+				<row>spe:Flash;;code_CoolingSystem_new (326);0x00000102;0x00c10fe8;0x00010fe8;0x00000002</row>
+				<row>spe:Flash;;code_IO_POWER_Init (1227);0x00000100;0x00c110ea;0x000110ea;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_CC60_SR3_INT (1085);0x00000100;0x00c111ea;0x000111ea;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_CC61_SR3_INT (1086);0x00000100;0x00c112ea;0x000112ea;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_CC62_SR3_INT (1087);0x00000100;0x00c113ea;0x000113ea;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_CC63_SR3_INT (1088);0x00000100;0x00c114ea;0x000114ea;0x00000002</row>
+				<row>spe:Flash;;code_IO_Tools_FETProtection (1412);0x00000100;0x00c115ea;0x000115ea;0x00000002</row>
+				<row>spe:Flash;;code_BrakePressureSensor_startCalibration (192);0x000000fc;0x00c116ea;0x000116ea;0x00000002</row>
+				<row>spe:Flash;;code_vcu_ADCWasteLoop (377);0x000000f8;0x00c117e6;0x000117e6;0x00000002</row>
+				<row>spe:Flash;;code_IO_ADC_KernelRegInit (1000);0x000000f0;0x00c118de;0x000118de;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWM_INT_CC6SetDuty (1068);0x000000e2;0x00c119ce;0x000119ce;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2310);0x000000de;0x00c11ab0;0x00011ab0;0x00000002</row>
+				<row>spe:Flash;;code_IO_ADC_INT_MuxKernelInit (1002);0x000000dc;0x00c11b8e;0x00011b8e;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWM_INT_CC2SetDuty (1065);0x000000d8;0x00c11c6a;0x00011c6a;0x00000002</row>
+				<row>spe:Flash;;code_IO_ADC_INT_KernelInit (1001);0x000000c8;0x00c11d42;0x00011d42;0x00000002</row>
+				<row>spe:Flash;;code_SafetyChecker_new (610);0x000000c0;0x00c11e0a;0x00011e0a;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2309);0x000000c0;0x00c11eca;0x00011eca;0x00000002</row>
+				<row>spe:Flash;;code_IO_ADC_INT_MuxGet (1007);0x000000b6;0x00c11f8a;0x00011f8a;0x00000002</row>
+				<row>spe:Flash;;code__cstart (1);0x000000b6;0x00c12040;0x00012040;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWM_INT_CC2IntOff (1066);0x000000b4;0x00c120f6;0x000120f6;0x00000002</row>
+				<row>spe:Flash;;code_BMS_new (77);0x000000a0;0x00c121aa;0x000121aa;0x00000002</row>
+				<row>spe:Flash;;code_DAQ_Sensor_new (355);0x0000009e;0x00c1224a;0x0001224a;0x00000002</row>
+				<row>spe:Flash;;code_IO_SHIFT_Task (1146);0x00000094;0x00c122e8;0x000122e8;0x00000002</row>
+				<row>spe:Flash;;code_IO_SPI_SetupDevice (1175);0x00000094;0x00c1237c;0x0001237c;0x00000002</row>
+				<row>spe:Flash;;code_IO_UART_GetQueueSpace (1469);0x00000092;0x00c12410;0x00012410;0x00000002</row>
+				<row>spe:Flash;;code_IO_UART_GetQueueUnread (1471);0x0000008c;0x00c124a2;0x000124a2;0x00000002</row>
+				<row>spe:Flash;;code_IO_Driver_Init (946);0x00000086;0x00c1252e;0x0001252e;0x00000002</row>
+				<row>spe:Flash;;code_IO_EEPROM_Init (968);0x00000086;0x00c125b4;0x000125b4;0x00000002</row>
+				<row>spe:Flash;;code_libc (1811);0x00000086;0x00c1263a;0x0001263a;0x00000002</row>
+				<row>spe:Flash;;code_BMS_getPower_W (87);0x00000084;0x00c126c0;0x000126c0;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_INT_CCU6_StartPulseCap (1540);0x00000082;0x00c12744;0x00012744;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_INT_TimerOverflowCount (1520);0x00000080;0x00c127c6;0x000127c6;0x00000002</row>
+				<row>spe:Flash;;code_librt (2376);0x00000080;0x00c12846;0x00012846;0x00000002</row>
+				<row>spe:Flash;;code_getPercent (489);0x0000007a;0x00c128c6;0x000128c6;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_INT_CCU6_CaptureInit (1525);0x00000078;0x00c12940;0x00012940;0x00000002</row>
+				<row>spe:Flash;;code_IO_Timer_INT_CC2Setup (1201);0x00000074;0x00c129b8;0x000129b8;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_CC2_CC22_INT (1083);0x00000072;0x00c12a2c;0x00012a2c;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_CC2_CC23_INT (1084);0x00000072;0x00c12a9e;0x00012a9e;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_CC2_CC28_INT (1081);0x00000072;0x00c12b10;0x00012b10;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_CC2_CC29_INT (1082);0x00000072;0x00c12b82;0x00012b82;0x00000002</row>
+				<row>spe:Flash;;code_Light_set (729);0x00000072;0x00c12bf4;0x00012bf4;0x00000002</row>
+				<row>spe:Flash;;code_RTDS_shutdownHelper (577);0x0000006a;0x00c12c66;0x00012c66;0x00000002</row>
+				<row>spe:Flash;;code_steering_degrees (688);0x0000006a;0x00c12cd0;0x00012cd0;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2323);0x00000068;0x00c12d3a;0x00012d3a;0x00000002</row>
+				<row>spe:Flash;;code_DI_calculateCommands (6);0x00000064;0x00c12da2;0x00012da2;0x00000002</row>
+				<row>spe:Flash;;code_IO_Timer_INT_CC6Setup (1200);0x00000064;0x00c12e06;0x00012e06;0x00000002</row>
+				<row>spe:Flash;;code_libc (2158);0x00000062;0x00c12e6a;0x00012e6a;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2328);0x00000062;0x00c12ecc;0x00012ecc;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2330);0x00000062;0x00c12f2e;0x00012f2e;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2331);0x00000062;0x00c12f90;0x00012f90;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2306);0x00000060;0x00c12ff2;0x00012ff2;0x00000002</row>
+				<row>spe:Flash;;code_CoolingSystem_calculations (327);0x0000005c;0x00c13052;0x00013052;0x00000002</row>
+				<row>spe:Flash;;code_IO_ADC_INT_Get (1006);0x0000005c;0x00c130ae;0x000130ae;0x00000002</row>
+				<row>spe:Flash;;code_BMS_getHighestCellTemp_degC (85);0x0000005a;0x00c1310a;0x0001310a;0x00000002</row>
+				<row>spe:Flash;;code_libc (1823);0x00000058;0x00c13164;0x00013164;0x00000002</row>
+				<row>spe:Flash;;code_RTDS_setVolume (576);0x00000056;0x00c131bc;0x000131bc;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2299);0x00000056;0x00c13212;0x00013212;0x00000002</row>
+				<row>spe:Flash;;code_IO_Tools_LockProtecReg (1405);0x00000054;0x00c13268;0x00013268;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2324);0x00000052;0x00c132bc;0x000132bc;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_GPT_T6_INT (1381);0x0000004e;0x00c1330e;0x0001330e;0x00000002</row>
+				<row>spe:Flash;;code_libc (1748);0x0000004e;0x00c1335c;0x0001335c;0x00000002</row>
+				<row>spe:Flash;;code_libc (1682);0x0000004e;0x00c133aa;0x000133aa;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2322);0x0000004e;0x00c133f8;0x000133f8;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2320);0x0000004e;0x00c13446;0x00013446;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2329);0x0000004c;0x00c13494;0x00013494;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2303);0x0000004a;0x00c134e0;0x000134e0;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2333);0x00000048;0x00c1352a;0x0001352a;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2315);0x00000048;0x00c13572;0x00013572;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2316);0x00000048;0x00c135ba;0x000135ba;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2312);0x00000048;0x00c13602;0x00013602;0x00000002</row>
+				<row>spe:Flash;;code_IO_RTC_Init (1376);0x00000046;0x00c1364a;0x0001364a;0x00000002</row>
+				<row>spe:Flash;;code_BMS_getHighestCellTemp_d_degC (84);0x00000042;0x00c13690;0x00013690;0x00000002</row>
+				<row>spe:Flash;;code_RTDS_new (574);0x00000042;0x00c136d2;0x000136d2;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2307);0x00000042;0x00c13714;0x00013714;0x00000002</row>
+				<row>spe:Flash;;code_IO_SHIFT_WriteMasked (1149);0x00000040;0x00c13756;0x00013756;0x00000002</row>
+				<row>spe:Flash;;code_CoolingSystem_enactCooling (328);0x0000003e;0x00c13796;0x00013796;0x00000002</row>
+				<row>spe:Flash;;code_IO_Tools_PWM_ResetPins (1413);0x0000003e;0x00c137d4;0x000137d4;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2304);0x0000003e;0x00c13812;0x00013812;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2332);0x0000003e;0x00c13850;0x00013850;0x00000002</row>
+				<row>spe:Flash;;code_IO_Tools_UnlockProtecReg (1404);0x0000003c;0x00c1388e;0x0001388e;0x00000002</row>
+				<row>spe:Flash;;code_IO_RTC_StartTime (1377);0x0000003a;0x00c138ca;0x000138ca;0x00000002</row>
+				<row>spe:Flash;;code_BMS_relayControl (80);0x00000038;0x00c13904;0x00013904;0x00000002</row>
+				<row>spe:Flash;;code_TorqueEncoder_getIndividualSensorPercent (757);0x00000038;0x00c1393c;0x0001393c;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_CC2_CC26_INT (1548);0x00000036;0x00c13974;0x00013974;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_CC2_CC27_INT (1549);0x00000036;0x00c139aa;0x000139aa;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_CC2_CC30_INT (1550);0x00000036;0x00c139e0;0x000139e0;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_CC2_CC31_INT (1551);0x00000036;0x00c13a16;0x00013a16;0x00000002</row>
+				<row>spe:Flash;;code_SafetyChecker_parseCanMessage (611);0x00000036;0x00c13a4c;0x00013a4c;0x00000002</row>
+				<row>spe:Flash;;code_IO_Driver_TaskEnd (949);0x00000034;0x00c13a82;0x00013a82;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_CC60_SR1_INT (1556);0x00000032;0x00c13ab6;0x00013ab6;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_CC60_SR2_INT (1557);0x00000032;0x00c13ae8;0x00013ae8;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_CC62_SR0_INT (1558);0x00000032;0x00c13b1a;0x00013b1a;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_CC62_SR1_INT (1559);0x00000032;0x00c13b4c;0x00013b4c;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_CC62_SR2_INT (1560);0x00000032;0x00c13b7e;0x00013b7e;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_CC63_SR0_INT (1561);0x00000032;0x00c13bb0;0x00013bb0;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_CC63_SR1_INT (1562);0x00000032;0x00c13be2;0x00013be2;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_CC63_SR2_INT (1563);0x00000032;0x00c13c14;0x00013c14;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_GPT_T2_INT (1552);0x00000032;0x00c13c46;0x00013c46;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_GPT_T3_INT (1553);0x00000032;0x00c13c78;0x00013c78;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_GPT_T4_INT (1554);0x00000032;0x00c13caa;0x00013caa;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_GPT_T5_INT (1555);0x00000032;0x00c13cdc;0x00013cdc;0x00000002</row>
+				<row>spe:Flash;;code_libc (2149);0x00000032;0x00c13d0e;0x00013d0e;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2334);0x00000032;0x00c13d40;0x00013d40;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2335);0x00000030;0x00c13d72;0x00013d72;0x00000002</row>
+				<row>spe:Flash;;code_librt (2377);0x00000030;0x00c13da2;0x00013da2;0x00000002</row>
+				<row>spe:Flash;;code_IO_GPIO_INT_PinSet (1051);0x0000002e;0x00c13dd2;0x00013dd2;0x00000002</row>
+				<row>spe:Flash;;code_IO_GPIO_INT_PinGet (1053);0x0000002c;0x00c13e00;0x00013e00;0x00000002</row>
+				<row>spe:Flash;;code_IO_Tools_CalcShiftPos (1411);0x0000002c;0x00c13e2c;0x00013e2c;0x00000002</row>
+				<row>spe:Flash;;code_IO_Tools_DistanceFloat (1407);0x0000002c;0x00c13e58;0x00013e58;0x00000002</row>
+				<row>spe:Flash;;code_InstrumentCluster_new (436);0x0000002c;0x00c13e84;0x00013e84;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2297);0x0000002a;0x00c13eb0;0x00013eb0;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2317);0x0000002a;0x00c13eda;0x00013eda;0x00000002</row>
+				<row>spe:Flash;;code_libc (1974);0x00000028;0x00c13f04;0x00013f04;0x00000002</row>
+				<row>spe:Flash;;code_librt (2375);0x00000026;0x00c13f2c;0x00013f2c;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2319);0x00000022;0x00c13f52;0x00013f52;0x00000002</row>
+				<row>spe:Flash;;code_BrakePressureSensor_getPedalTravel (196);0x00000020;0x00c13f74;0x00013f74;0x00000002</row>
+				<row>spe:Flash;;code_IO_RTC_GetTimeUS (1378);0x00000020;0x00c13f94;0x00013f94;0x00000002</row>
+				<row>spe:Flash;;code_libc (2213);0x00000020;0x00c13fb4;0x00013fb4;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2318);0x00000020;0x00c13fd4;0x00013fd4;0x00000002</row>
 				<row>spe:Flash;;code_libc (1940);0x00000c72;0x00c14000;0x00014000;0x00000002</row>
 				<row>spe:Flash;;code_BMS_parseCanMessage (78);0x00000af6;0x00c14c72;0x00014c72;0x00000002</row>
 				<row>spe:Flash;;code_canOutput_sendDebugMessage0 (270);0x00000a34;0x00c15768;0x00015768;0x00000002</row>
 				<row>spe:Flash;;code_IO_ADC_ChannelInit (827);0x00000a08;0x00c1619c;0x0001619c;0x00000002</row>
 				<row>spe:Flash;;code_SafetyChecker_update (612);0x000009d4;0x00c16ba4;0x00016ba4;0x00000002</row>
 				<row>spe:Flash;;code_IO_ADC_Get (840);0x0000085c;0x00c17578;0x00017578;0x00000002</row>
-				<row>spe:Flash;;code_main (473);0x000006a0;0x00c17dd4;0x00017dd4;0x00000002</row>
-				<row>spe:Flash;;code_IO_CAN_ConfigFIFO (869);0x00000624;0x00c18474;0x00018474;0x00000002</row>
-				<row>spe:Flash;;code_canOutput_sendDebugMessage1 (271);0x0000053e;0x00c18a98;0x00018a98;0x00000002</row>
-				<row>spe:Flash;;code_IO_CAN_WriteFIFO (871);0x000004e6;0x00c18fd6;0x00018fd6;0x00000002</row>
-				<row>spe:Flash;;code_CanManager_new (264);0x000004e0;0x00c194bc;0x000194bc;0x00000002</row>
-				<row>spe:Flash;;code_DI_calculateInverterControl (7);0x0000049e;0x00c1999c;0x0001999c;0x00000002</row>
-				<row>spe:Flash;;code_IO_SPI_Task (1177);0x00000490;0x00c19e3a;0x00019e3a;0x00000002</row>
-				<row>spe:Flash;;code_IO_CAN_ReadFIFO (870);0x00000456;0x00c1a2ca;0x0001a2ca;0x00000002</row>
-				<row>spe:Flash;;code_IO_DO_Set (925);0x00000422;0x00c1a720;0x0001a720;0x00000002</row>
-				<row>spe:Flash;;code_IO_EEPROM_Task (969);0x000003f4;0x00c1ab42;0x0001ab42;0x00000002</row>
-				<row>spe:Flash;;code_libc (1796);0x000003b0;0x00c1af36;0x0001af36;0x00000002</row>
-				<row>spe:Flash;;code_DAQ_parseCanMessage (356);0x00000384;0x00c1b2e6;0x0001b2e6;0x00000002</row>
-				<row>spe:Flash;;code_IO_UART_Task (1481);0x00000372;0x00c1b66a;0x0001b66a;0x00000002</row>
-				<row>spe:Flash;;code_CanManager_send (265);0x00000336;0x00c1b9dc;0x0001b9dc;0x00000002</row>
-				<row>spe:Flash;;code_vcu_initializeADC (376);0x0000032a;0x00c1bd12;0x0001bd12;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWM_INT_CC6Init (1064);0x000002d8;0x00c1c03c;0x0001c03c;0x00000002</row>
-				<row>spe:Flash;;code_IO_CAN_Init (863);0x000002d6;0x00c1c314;0x0001c314;0x00000002</row>
-				<row>spe:Flash;;code_IO_DI_Init (916);0x00000294;0x00c1c5ea;0x0001c5ea;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_INT_CCU6_GetPwmPulse (1539);0x0000028a;0x00c1c87e;0x0001c87e;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWM_Config (1329);0x0000027a;0x00c1cb08;0x0001cb08;0x00000002</row>
-				<row>spe:Flash;;code_DI_parseCanMessage (9);0x00000268;0x00c1cd82;0x0001cd82;0x00000002</row>
-				<row>spe:Flash;;code_BrakePressureSensor_update (188);0x00000266;0x00c1cfea;0x0001cfea;0x00000002</row>
-				<row>spe:Flash;;code_TorqueEncoder_update (751);0x00000246;0x00c1d250;0x0001d250;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2327);0x00000246;0x00c1d496;0x0001d496;0x00000002</row>
-				<row>spe:Flash;;code_ADC0_viSRN0 (1010);0x0000023e;0x00c1d6dc;0x0001d6dc;0x00000002</row>
-				<row>spe:Flash;;code_ADC1_viSRN0 (1011);0x0000023e;0x00c1d91a;0x0001d91a;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWM_INT_CC2Init (1063);0x0000022e;0x00c1db58;0x0001db58;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWM_Init (1334);0x0000022e;0x00c1dd86;0x0001dd86;0x00000002</row>
-				<row>spe:Flash;;code_IO_SPI_Init (1173);0x0000022c;0x00c1dfb4;0x0001dfb4;0x00000002</row>
-				<row>spe:Flash;;code_libc (1691);0x0000022a;0x00c1e1e0;0x0001e1e0;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWM_SetDuty (1338);0x00000224;0x00c1e40a;0x0001e40a;0x00000002</row>
-				<row>spe:Flash;;code_IO_POWER_Set (1229);0x0000021a;0x00c1e62e;0x0001e62e;0x00000002</row>
-				<row>spe:Flash;;code_libc (1813);0x0000020c;0x00c1e848;0x0001e848;0x00000002</row>
-				<row>spe:Flash;;code_CanManager_read (266);0x00000208;0x00c1ea54;0x0001ea54;0x00000002</row>
-				<row>spe:Flash;;code_IO_UART_TransferQueue (1473);0x00000200;0x00c1ec5c;0x0001ec5c;0x00000002</row>
-				<row>spe:Flash;;code_IO_DI_Get (923);0x000001ce;0x00c1ee5c;0x0001ee5c;0x00000002</row>
-				<row>spe:Flash;;code_IO_PWD_INT_CCU6IntHandler (1521);0x000001b6;0x00c1f02a;0x0001f02a;0x00000002</row>
-				<row>spe:Flash;;code_IO_ADC_INT_StartConv (1005);0x000001a8;0x00c1f1e0;0x0001f1e0;0x00000002</row>
-				<row>spe:Flash;;code_AmkDriver_new (5);0x000001a4;0x00c1f388;0x0001f388;0x00000002</row>
-				<row>spe:Flash;;code_BrakePressureSensor_calibrationCycle (193);0x000001a2;0x00c1f52c;0x0001f52c;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2326);0x00000190;0x00c1f6ce;0x0001f6ce;0x00000002</row>
-				<row>spe:Flash;;code_IO_ADC_INT_MuxChannelDeInit (1009);0x00000188;0x00c1f85e;0x0001f85e;0x00000002</row>
-				<row>spe:Flash;;code_libc (2253);0x00000182;0x00c1f9e6;0x0001f9e6;0x00000002</row>
-				<row>spe:Flash;;code_SafetyChecker_reduceTorque (617);0x00000178;0x00c1fb68;0x0001fb68;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2325);0x00000174;0x00c1fce0;0x0001fce0;0x00000002</row>
-				<row>spe:Flash;;code_IO_ADC_INT_MuxChannelInit (1003);0x0000016e;0x00c1fe54;0x0001fe54;0x00000002</row>
-				<row>spe:Flash;;code_CoolingSystem_enactCooling (328);0x0000003e;0x00c1ffc2;0x0001ffc2;0x00000002</row>
+				<row>spe:Flash;;code_main (473);0x00000680;0x00c17dd4;0x00017dd4;0x00000002</row>
+				<row>spe:Flash;;code_IO_CAN_ConfigFIFO (869);0x00000624;0x00c18454;0x00018454;0x00000002</row>
+				<row>spe:Flash;;code_canOutput_sendDebugMessage1 (271);0x0000053e;0x00c18a78;0x00018a78;0x00000002</row>
+				<row>spe:Flash;;code_IO_CAN_WriteFIFO (871);0x000004e6;0x00c18fb6;0x00018fb6;0x00000002</row>
+				<row>spe:Flash;;code_CanManager_new (264);0x000004e0;0x00c1949c;0x0001949c;0x00000002</row>
+				<row>spe:Flash;;code_DI_calculateInverterControl (7);0x0000049e;0x00c1997c;0x0001997c;0x00000002</row>
+				<row>spe:Flash;;code_IO_SPI_Task (1177);0x00000490;0x00c19e1a;0x00019e1a;0x00000002</row>
+				<row>spe:Flash;;code_IO_CAN_ReadFIFO (870);0x00000456;0x00c1a2aa;0x0001a2aa;0x00000002</row>
+				<row>spe:Flash;;code_IO_DO_Set (925);0x00000422;0x00c1a700;0x0001a700;0x00000002</row>
+				<row>spe:Flash;;code_TorqueEncoder_calibrationCycle (756);0x0000041e;0x00c1ab22;0x0001ab22;0x00000002</row>
+				<row>spe:Flash;;code_IO_EEPROM_Task (969);0x000003f4;0x00c1af40;0x0001af40;0x00000002</row>
+				<row>spe:Flash;;code_libc (1796);0x000003b0;0x00c1b334;0x0001b334;0x00000002</row>
+				<row>spe:Flash;;code_DAQ_parseCanMessage (356);0x00000384;0x00c1b6e4;0x0001b6e4;0x00000002</row>
+				<row>spe:Flash;;code_IO_UART_Task (1481);0x00000372;0x00c1ba68;0x0001ba68;0x00000002</row>
+				<row>spe:Flash;;code_CanManager_send (265);0x00000336;0x00c1bdda;0x0001bdda;0x00000002</row>
+				<row>spe:Flash;;code_vcu_initializeADC (376);0x0000032a;0x00c1c110;0x0001c110;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWM_INT_CC6Init (1064);0x000002d8;0x00c1c43a;0x0001c43a;0x00000002</row>
+				<row>spe:Flash;;code_IO_CAN_Init (863);0x000002d6;0x00c1c712;0x0001c712;0x00000002</row>
+				<row>spe:Flash;;code_IO_DI_Init (916);0x00000294;0x00c1c9e8;0x0001c9e8;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_INT_CCU6_GetPwmPulse (1539);0x0000028a;0x00c1cc7c;0x0001cc7c;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWM_Config (1329);0x0000027a;0x00c1cf06;0x0001cf06;0x00000002</row>
+				<row>spe:Flash;;code_DI_parseCanMessage (9);0x00000268;0x00c1d180;0x0001d180;0x00000002</row>
+				<row>spe:Flash;;code_BrakePressureSensor_update (188);0x00000266;0x00c1d3e8;0x0001d3e8;0x00000002</row>
+				<row>spe:Flash;;code_TorqueEncoder_update (751);0x00000246;0x00c1d64e;0x0001d64e;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2327);0x00000246;0x00c1d894;0x0001d894;0x00000002</row>
+				<row>spe:Flash;;code_ADC0_viSRN0 (1010);0x0000023e;0x00c1dada;0x0001dada;0x00000002</row>
+				<row>spe:Flash;;code_ADC1_viSRN0 (1011);0x0000023e;0x00c1dd18;0x0001dd18;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWM_INT_CC2Init (1063);0x0000022e;0x00c1df56;0x0001df56;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWM_Init (1334);0x0000022e;0x00c1e184;0x0001e184;0x00000002</row>
+				<row>spe:Flash;;code_IO_SPI_Init (1173);0x0000022c;0x00c1e3b2;0x0001e3b2;0x00000002</row>
+				<row>spe:Flash;;code_libc (1691);0x0000022a;0x00c1e5de;0x0001e5de;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWM_SetDuty (1338);0x00000224;0x00c1e808;0x0001e808;0x00000002</row>
+				<row>spe:Flash;;code_IO_POWER_Set (1229);0x0000021a;0x00c1ea2c;0x0001ea2c;0x00000002</row>
+				<row>spe:Flash;;code_libc (1813);0x0000020c;0x00c1ec46;0x0001ec46;0x00000002</row>
+				<row>spe:Flash;;code_CanManager_read (266);0x00000208;0x00c1ee52;0x0001ee52;0x00000002</row>
+				<row>spe:Flash;;code_IO_UART_TransferQueue (1473);0x00000200;0x00c1f05a;0x0001f05a;0x00000002</row>
+				<row>spe:Flash;;code_IO_DI_Get (923);0x000001ce;0x00c1f25a;0x0001f25a;0x00000002</row>
+				<row>spe:Flash;;code_IO_PWD_INT_CCU6IntHandler (1521);0x000001b6;0x00c1f428;0x0001f428;0x00000002</row>
+				<row>spe:Flash;;code_IO_ADC_INT_StartConv (1005);0x000001a8;0x00c1f5de;0x0001f5de;0x00000002</row>
+				<row>spe:Flash;;code_AmkDriver_new (5);0x000001a4;0x00c1f786;0x0001f786;0x00000002</row>
+				<row>spe:Flash;;code_BrakePressureSensor_calibrationCycle (193);0x000001a2;0x00c1f92a;0x0001f92a;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2326);0x00000190;0x00c1facc;0x0001facc;0x00000002</row>
+				<row>spe:Flash;;code_libc (2253);0x00000182;0x00c1fc5c;0x0001fc5c;0x00000002</row>
+				<row>spe:Flash;;code_SafetyChecker_reduceTorque (617);0x00000178;0x00c1fdde;0x0001fdde;0x00000002</row>
+				<row>spe:Flash;;code_IO_ADC_INT_ChannelInit (1004);0x000000a4;0x00c1ff56;0x0001ff56;0x00000002</row>
+				<row>spe:Flash;;shuge__1_swt (758);0x00000004;0x00c1fffa;0x0001fffa;0x00000002</row>
+				<row>spe:Flash;;_dcti_libc (1680);0x0;0x00c1fffa;0x0001fffa;0x00000002</row>
+				<row>spe:Flash;;_cptable_clr_bit_libc (2245);0x0;0x00c1fffa;0x0001fffa;0x00000002</row>
+				<row>spe:Flash;;_cptable_clr_near_libc (2246);0x0;0x00c1fffa;0x0001fffa;0x00000002</row>
+				<row>spe:Flash;;_cptable_clr_shuge_libc (2247);0x0;0x00c1fffa;0x0001fffa;0x00000002</row>
+				<row>spe:Flash;;_cptable_cpy_bit_libc (2249);0x0;0x00c1fffa;0x0001fffa;0x00000002</row>
+				<row>spe:Flash;;_cptable_cpy_near_libc (2250);0x0;0x00c1fffa;0x0001fffa;0x00000002</row>
+				<row>spe:Flash;;_cptable_cpy_shuge_libc (2251);0x0;0x00c1fffa;0x0001fffa;0x00000002</row>
+				<row>spe:Flash;;[huge__999001_cc2_initialized] (2439);0x00000001;0x00c1fffe;0x0001fffe;0x00000001</row>
 				<row>spe:Flash;;.vector.0 (2566);0x00000004;0x00c20000;0x00020000;0x00000002</row>
 				<row>spe:Flash;;.vector.1 (2565);0x00000004;0x00c20004;0x00020004;0x00000002</row>
 				<row>spe:Flash;;.vector.2 (2564);0x00000004;0x00c20008;0x00020008;0x00000002</row>
@@ -3344,212 +3348,221 @@
 				<row>spe:Flash;;.vector.109 (2457);0x00000004;0x00c201b4;0x000201b4;0x00000002</row>
 				<row>spe:Flash;;.vector.110 (2456);0x00000004;0x00c201b8;0x000201b8;0x00000002</row>
 				<row>spe:Flash;;.vector.111 (2455);0x00000004;0x00c201bc;0x000201bc;0x00000002</row>
-				<row>spe:Flash;;code_libc (2159);0x00000012;0x00c24000;0x00024000;0x00000002</row>
-				<row>spe:Flash;;code_libc (1696);0x00000010;0x00c24012;0x00024012;0x00000002</row>
-				<row>spe:Flash;;code_libc (1824);0x00000010;0x00c24022;0x00024022;0x00000002</row>
-				<row>spe:Flash;;code_libc (1979);0x00000010;0x00c24032;0x00024032;0x00000002</row>
-				<row>spe:Flash;;code_libc (1697);0x00000010;0x00c24042;0x00024042;0x00000002</row>
-				<row>spe:Flash;;code_libc (1825);0x00000010;0x00c24052;0x00024052;0x00000002</row>
-				<row>spe:Flash;;code_libc (1980);0x00000010;0x00c24062;0x00024062;0x00000002</row>
-				<row>spe:Flash;;code_libc (1694);0x00000010;0x00c24072;0x00024072;0x00000002</row>
-				<row>spe:Flash;;code_libc (1801);0x00000010;0x00c24082;0x00024082;0x00000002</row>
-				<row>spe:Flash;;code_libc (1958);0x00000010;0x00c24092;0x00024092;0x00000002</row>
-				<row>spe:Flash;;code_libc (1799);0x00000010;0x00c240a2;0x000240a2;0x00000002</row>
-				<row>spe:Flash;;code_libc (1821);0x00000010;0x00c240b2;0x000240b2;0x00000002</row>
-				<row>spe:Flash;;code_libc (1972);0x0000000e;0x00c240c2;0x000240c2;0x00000002</row>
-				<row>spe:Flash;;code_libc (1971);0x0000000e;0x00c240d0;0x000240d0;0x00000002</row>
-				<row>spe:Flash;;code_libc (1943);0x0000000e;0x00c240de;0x000240de;0x00000002</row>
-				<row>spe:Flash;;code_libc (1941);0x0000000e;0x00c240ec;0x000240ec;0x00000002</row>
-				<row>spe:Flash;;code_BMS_getLowestCellVoltage_mV (82);0x0000000c;0x00c240fa;0x000240fa;0x00000002</row>
-				<row>spe:Flash;;code_BMS_getRelayState (90);0x0000000c;0x00c24106;0x00024106;0x00000002</row>
-				<row>spe:Flash;;code_DI_commandTorque (10);0x0000000c;0x00c24112;0x00024112;0x00000002</row>
-				<row>spe:Flash;;code_DI_getCommandedTorque (11);0x0000000c;0x00c2411e;0x0002411e;0x00000002</row>
-				<row>spe:Flash;;code_SafetyChecker_getNotices (616);0x0000000c;0x00c2412a;0x0002412a;0x00000002</row>
-				<row>spe:Flash;;code_SafetyChecker_getWarnings (615);0x0000000c;0x00c24136;0x00024136;0x00000002</row>
-				<row>spe:Flash;;code_libc (1819);0x0000000c;0x00c24142;0x00024142;0x00000002</row>
-				<row>spe:Flash;;code_libc (1950);0x0000000c;0x00c2414e;0x0002414e;0x00000002</row>
-				<row>spe:Flash;;code_libc (1949);0x0000000c;0x00c2415a;0x0002415a;0x00000002</row>
-				<row>spe:Flash;;code_libc (1812);0x0000000c;0x00c24166;0x00024166;0x00000002</row>
-				<row>spe:Flash;;code_libc (1952);0x0000000c;0x00c24172;0x00024172;0x00000002</row>
-				<row>spe:Flash;;code_libc (1953);0x0000000c;0x00c2417e;0x0002417e;0x00000002</row>
-				<row>spe:Flash;;code_libc (1946);0x0000000c;0x00c2418a;0x0002418a;0x00000002</row>
-				<row>spe:Flash;;code_libc (1954);0x0000000c;0x00c24196;0x00024196;0x00000002</row>
-				<row>spe:Flash;;code_libc (1978);0x0000000c;0x00c241a2;0x000241a2;0x00000002</row>
-				<row>spe:Flash;;code_libc (1963);0x0000000c;0x00c241ae;0x000241ae;0x00000002</row>
-				<row>spe:Flash;;code_libc (1966);0x0000000c;0x00c241ba;0x000241ba;0x00000002</row>
-				<row>spe:Flash;;code_libc (1818);0x0000000c;0x00c241c6;0x000241c6;0x00000002</row>
-				<row>spe:Flash;;code_libc (1806);0x0000000c;0x00c241d2;0x000241d2;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2300);0x0000000c;0x00c241de;0x000241de;0x00000002</row>
-				<row>spe:Flash;;code_BMS_getFaultFlags0 (88);0x0000000a;0x00c241ea;0x000241ea;0x00000002</row>
-				<row>spe:Flash;;code_BMS_getFaultFlags1 (89);0x0000000a;0x00c241f4;0x000241f4;0x00000002</row>
-				<row>spe:Flash;;code_libc (1808);0x0000000a;0x00c241fe;0x000241fe;0x00000002</row>
-				<row>spe:Flash;;code_libc (1960);0x0000000a;0x00c24208;0x00024208;0x00000002</row>
-				<row>spe:Flash;;code_libc (1955);0x0000000a;0x00c24212;0x00024212;0x00000002</row>
-				<row>spe:Flash;;code_libc (1964);0x0000000a;0x00c2421c;0x0002421c;0x00000002</row>
-				<row>spe:Flash;;code_libc (1975);0x0000000a;0x00c24226;0x00024226;0x00000002</row>
-				<row>spe:Flash;;code_libc (1805);0x0000000a;0x00c24230;0x00024230;0x00000002</row>
-				<row>spe:Flash;;code_libc (1797);0x0000000a;0x00c2423a;0x0002423a;0x00000002</row>
-				<row>spe:Flash;;code_libc (1816);0x0000000a;0x00c24244;0x00024244;0x00000002</row>
-				<row>spe:Flash;;code_libc (1692);0x0000000a;0x00c2424e;0x0002424e;0x00000002</row>
-				<row>spe:Flash;;code_libc (1970);0x0000000a;0x00c24258;0x00024258;0x00000002</row>
-				<row>spe:Flash;;code_libc (1959);0x0000000a;0x00c24262;0x00024262;0x00000002</row>
-				<row>spe:Flash;;code_libc (1956);0x0000000a;0x00c2426c;0x0002426c;0x00000002</row>
-				<row>spe:Flash;;code_libc (1957);0x0000000a;0x00c24276;0x00024276;0x00000002</row>
-				<row>spe:Flash;;code_libc (1820);0x0000000a;0x00c24280;0x00024280;0x00000002</row>
-				<row>spe:Flash;;code_libc (1815);0x0000000a;0x00c2428a;0x0002428a;0x00000002</row>
-				<row>spe:Flash;;code_librt (2381);0x0000000a;0x00c24294;0x00024294;0x00000002</row>
-				<row>spe:Flash;;code_librt (2378);0x0000000a;0x00c2429e;0x0002429e;0x00000002</row>
-				<row>spe:Flash;;code_librt (2379);0x0000000a;0x00c242a8;0x000242a8;0x00000002</row>
-				<row>spe:Flash;;code_libc (1942);0x00000008;0x00c242b2;0x000242b2;0x00000002</row>
-				<row>spe:Flash;;code_libc (1798);0x00000008;0x00c242ba;0x000242ba;0x00000002</row>
-				<row>spe:Flash;;code_libc (1800);0x00000008;0x00c242c2;0x000242c2;0x00000002</row>
-				<row>spe:Flash;;code_libc (1810);0x00000008;0x00c242ca;0x000242ca;0x00000002</row>
-				<row>spe:Flash;;code_libc (1809);0x00000008;0x00c242d2;0x000242d2;0x00000002</row>
-				<row>spe:Flash;;code_libc (1803);0x00000008;0x00c242da;0x000242da;0x00000002</row>
-				<row>spe:Flash;;code_libc (1947);0x00000008;0x00c242e2;0x000242e2;0x00000002</row>
-				<row>spe:Flash;;code_libc (1951);0x00000008;0x00c242ea;0x000242ea;0x00000002</row>
-				<row>spe:Flash;;code_libc (1973);0x00000008;0x00c242f2;0x000242f2;0x00000002</row>
-				<row>spe:Flash;;code_libc (1976);0x00000008;0x00c242fa;0x000242fa;0x00000002</row>
-				<row>spe:Flash;;code_libc (1969);0x00000008;0x00c24302;0x00024302;0x00000002</row>
-				<row>spe:Flash;;code_libc (1944);0x00000008;0x00c2430a;0x0002430a;0x00000002</row>
-				<row>spe:Flash;;code_libc (1807);0x00000008;0x00c24312;0x00024312;0x00000002</row>
-				<row>spe:Flash;;code_libc (1962);0x00000008;0x00c2431a;0x0002431a;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2301);0x00000008;0x00c24322;0x00024322;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2302);0x00000008;0x00c2432a;0x0002432a;0x00000002</row>
-				<row>spe:Flash;;code_libc (1817);0x00000006;0x00c24332;0x00024332;0x00000002</row>
-				<row>spe:Flash;;code_libc (1948);0x00000006;0x00c24338;0x00024338;0x00000002</row>
-				<row>spe:Flash;;code_libc (1693);0x00000006;0x00c2433e;0x0002433e;0x00000002</row>
-				<row>spe:Flash;;code_librt (2374);0x00000006;0x00c24344;0x00024344;0x00000002</row>
-				<row>spe:Flash;;code_libfp (2321);0x00000004;0x00c2434a;0x0002434a;0x00000002</row>
-				<row>spe:Flash;;code_librt (2336);0x00000004;0x00c2434e;0x0002434e;0x00000002</row>
-				<row>spe:Flash;;code_librt (2355);0x00000004;0x00c24352;0x00024352;0x00000002</row>
-				<row>spe:Flash;;code_libc (2204);0x00000002;0x00c24356;0x00024356;0x00000002</row>
-				<row>spe:Flash;;_init_cpy_table_libc (1678);0x00000020;0x00c24358;0x00024358;0x00000002</row>
-				<row>spe:Flash;;_init_clr_table_libc (1679);0x0000001c;0x00c24378;0x00024378;0x00000002</row>
-				<row>spe:Flash;;_init_libc (1676);0x000000c6;0x00c24394;0x00024394;0x00000002</row>
-				<row>spe:Flash;;_cptable_cpy_huge_libc (2252);0x00000026;0x00c2445a;0x0002445a;0x00000002</row>
-				<row>spe:Flash;;_cptable_clr_huge_libc (2248);0x00000024;0x00c24480;0x00024480;0x00000002</row>
-				<row>spe:Flash;;shuge__1_swt (267);0x0000077e;0x00c244a4;0x000244a4;0x00000002</row>
-				<row>spe:Flash;;_dcti_libc (1680);0x0;0x00c244a4;0x000244a4;0x00000002</row>
-				<row>spe:Flash;;_cptable_clr_bit_libc (2245);0x0;0x00c244a4;0x000244a4;0x00000002</row>
-				<row>spe:Flash;;_cptable_clr_near_libc (2246);0x0;0x00c244a4;0x000244a4;0x00000002</row>
-				<row>spe:Flash;;_cptable_clr_shuge_libc (2247);0x0;0x00c244a4;0x000244a4;0x00000002</row>
-				<row>spe:Flash;;_cptable_cpy_bit_libc (2249);0x0;0x00c244a4;0x000244a4;0x00000002</row>
-				<row>spe:Flash;;_cptable_cpy_near_libc (2250);0x0;0x00c244a4;0x000244a4;0x00000002</row>
-				<row>spe:Flash;;_cptable_cpy_shuge_libc (2251);0x0;0x00c244a4;0x000244a4;0x00000002</row>
-				<row>spe:Flash;;shuge__3_swt (79);0x000001fa;0x00c24c22;0x00024c22;0x00000002</row>
-				<row>spe:Flash;;shuge__11_swt (841);0x00000078;0x00c24e1c;0x00024e1c;0x00000002</row>
-				<row>spe:Flash;;shuge__1_swt (829);0x00000052;0x00c24e94;0x00024e94;0x00000002</row>
-				<row>spe:Flash;;shuge__1_swt (1067);0x00000020;0x00c24ee6;0x00024ee6;0x00000002</row>
-				<row>spe:Flash;;shuge__4_swt (1075);0x00000020;0x00c24f06;0x00024f06;0x00000002</row>
-				<row>spe:Flash;;shuge__2_swt (830);0x0000001e;0x00c24f26;0x00024f26;0x00000002</row>
-				<row>spe:Flash;;shuge__3_swt (831);0x0000001e;0x00c24f44;0x00024f44;0x00000002</row>
-				<row>spe:Flash;;shuge__4_swt (832);0x0000001e;0x00c24f62;0x00024f62;0x00000002</row>
-				<row>spe:Flash;;shuge__5_swt (833);0x0000001e;0x00c24f80;0x00024f80;0x00000002</row>
-				<row>spe:Flash;;shuge_libc (1814);0x0000001a;0x00c24f9e;0x00024f9e;0x00000002</row>
-				<row>spe:Flash;;shuge__1_swt (730);0x00000010;0x00c24fb8;0x00024fb8;0x00000002</row>
-				<row>spe:Flash;;shuge__1_swt (8);0x0000000e;0x00c24fc8;0x00024fc8;0x00000002</row>
-				<row>spe:Flash;;shuge__2_swt (1070);0x00000008;0x00c24fd6;0x00024fd6;0x00000002</row>
-				<row>spe:Flash;;shuge__5_swt (1076);0x00000008;0x00c24fde;0x00024fde;0x00000002</row>
-				<row>spe:Flash;;shuge__6_swt (1077);0x00000008;0x00c24fe6;0x00024fe6;0x00000002</row>
-				<row>spe:Flash;;shuge__7_swt (1078);0x00000008;0x00c24fee;0x00024fee;0x00000002</row>
-				<row>spe:Flash;;shuge__8_swt (1079);0x00000008;0x00c24ff6;0x00024ff6;0x00000002</row>
-				<row>spe:Flash;;shuge__9_swt (1080);0x00000008;0x00c24ffe;0x00024ffe;0x00000002</row>
-				<row>spe:Flash;;_init_switch_table_libc (1677);0x00000008;0x00c25006;0x00025006;0x00000002</row>
-				<row>spe:Flash;;shuge__12_swt (842);0x00000006;0x00c2500e;0x0002500e;0x00000002</row>
-				<row>spe:Flash;;shuge__1_swt (917);0x00000006;0x00c25014;0x00025014;0x00000002</row>
-				<row>spe:Flash;;shuge__3_swt (921);0x00000006;0x00c2501a;0x0002501a;0x00000002</row>
-				<row>spe:Flash;;shuge__4_swt (924);0x00000006;0x00c25020;0x00025020;0x00000002</row>
-				<row>spe:Flash;;shuge__5_swt (1236);0x00000006;0x00c25026;0x00025026;0x00000002</row>
-				<row>spe:Flash;;shuge__1_swt (758);0x00000004;0x00c2502c;0x0002502c;0x00000002</row>
-				<row>spe:Flash;;shuge__2_swt (918);0x00000004;0x00c25030;0x00025030;0x00000002</row>
-				<row>spe:Flash;;shuge__1_swt (1232);0x00000004;0x00c25034;0x00025034;0x00000002</row>
-				<row>spe:Flash;;shuge__2_swt (1233);0x00000004;0x00c25038;0x00025038;0x00000002</row>
-				<row>spe:Flash;;shuge__3_swt (1234);0x00000004;0x00c2503c;0x0002503c;0x00000002</row>
-				<row>spe:Flash;;shuge__4_swt (1235);0x00000004;0x00c25040;0x00025040;0x00000002</row>
-				<row>spe:Flash;;shuge__1_swt (1474);0x00000004;0x00c25044;0x00025044;0x00000002</row>
-				<row>spe:Flash;;shuge__6_swt (1482);0x00000004;0x00c25048;0x00025048;0x00000002</row>
-				<row>spe:Flash;;shuge__1_swt (1523);0x00000004;0x00c2504c;0x0002504c;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2449);0x0000061e;0x00c25050;0x00025050;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2408);0x00000200;0x00c2566e;0x0002566e;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2448);0x00000192;0x00c2586e;0x0002586e;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2451);0x0000011e;0x00c25a00;0x00025a00;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2426);0x00000078;0x00c25b1e;0x00025b1e;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2450);0x00000070;0x00c25b96;0x00025b96;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2406);0x00000068;0x00c25c06;0x00025c06;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2411);0x00000054;0x00c25c6e;0x00025c6e;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2446);0x00000048;0x00c25cc2;0x00025cc2;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2419);0x00000040;0x00c25d0a;0x00025d0a;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2420);0x00000040;0x00c25d4a;0x00025d4a;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2428);0x00000040;0x00c25d8a;0x00025d8a;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2436);0x00000040;0x00c25dca;0x00025dca;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2427);0x00000034;0x00c25e0a;0x00025e0a;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2445);0x00000028;0x00c25e3e;0x00025e3e;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2447);0x0000001e;0x00c25e66;0x00025e66;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2417);0x00000012;0x00c25e84;0x00025e84;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2418);0x0000000c;0x00c25e96;0x00025e96;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2429);0x0000000c;0x00c25ea2;0x00025ea2;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2435);0x0000000c;0x00c25eae;0x00025eae;0x00000001</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2442);0x0000000c;0x00c25eba;0x00025eba;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2430);0x0000000a;0x00c25ec6;0x00025ec6;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2412);0x00000008;0x00c25ed0;0x00025ed0;0x00000001</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2438);0x00000004;0x00c25ed8;0x00025ed8;0x00000001</row>
-				<row>spe:Flash;;[huge_libc] (2452);0x00000004;0x00c25edc;0x00025edc;0x00000002</row>
-				<row>spe:Flash;;[huge_timestamp_Precharge] (2404);0x00000004;0x00c25ee0;0x00025ee0;0x00000002</row>
-				<row>spe:Flash;;[huge_timestamp_SoftBSPD] (2405);0x00000004;0x00c25ee4;0x00025ee4;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2409);0x00000002;0x00c25ee8;0x00025ee8;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2410);0x00000002;0x00c25eea;0x00025eea;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2443);0x00000002;0x00c25eec;0x00025eec;0x00000002</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2444);0x00000002;0x00c25eee;0x00025eee;0x00000002</row>
-				<row>spe:Flash;;[huge__999001_cc2_initialized] (2439);0x00000001;0x00c25ef0;0x00025ef0;0x00000001</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2407);0x00000001;0x00c25ef1;0x00025ef1;0x00000001</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2413);0x00000001;0x00c25ef2;0x00025ef2;0x00000001</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2414);0x00000001;0x00c25ef3;0x00025ef3;0x00000001</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2415);0x00000001;0x00c25ef4;0x00025ef4;0x00000001</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2416);0x00000001;0x00c25ef5;0x00025ef5;0x00000001</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2421);0x00000001;0x00c25ef6;0x00025ef6;0x00000001</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2422);0x00000001;0x00c25ef7;0x00025ef7;0x00000001</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2423);0x00000001;0x00c25ef8;0x00025ef8;0x00000001</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2424);0x00000001;0x00c25ef9;0x00025ef9;0x00000001</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2425);0x00000001;0x00c25efa;0x00025efa;0x00000001</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2431);0x00000001;0x00c25efb;0x00025efb;0x00000001</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2432);0x00000001;0x00c25efc;0x00025efc;0x00000001</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2433);0x00000001;0x00c25efd;0x00025efd;0x00000001</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2434);0x00000001;0x00c25efe;0x00025efe;0x00000001</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2437);0x00000001;0x00c25eff;0x00025eff;0x00000001</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2440);0x00000001;0x00c25f00;0x00025f00;0x00000001</row>
-				<row>spe:Flash;;[huge_io_driver_data_section] (2441);0x00000001;0x00c25f01;0x00025f01;0x00000001</row>
-				<row>spe:Flash;;table (2402);0x0000017b;0x00c25f02;0x00025f02;0x00000002</row>
-				<row>spe:Flash;;huge_adc_temp_table (845);0x00000042;0x00c2607e;0x0002607e;0x00000002</row>
-				<row>spe:Flash;;huge_adc_var_duty (846);0x0000001c;0x00c260c0;0x000260c0;0x00000002</row>
-				<row>spe:Flash;;huge_io_adc_5V_tb (1421);0x00000030;0x00c260dc;0x000260dc;0x00000002</row>
-				<row>spe:Flash;;huge_io_adc_cur_tb (1420);0x00000008;0x00c2610c;0x0002610c;0x00000002</row>
-				<row>spe:Flash;;huge_io_adc_tb (1423);0x00000048;0x00c26114;0x00026114;0x00000002</row>
-				<row>spe:Flash;;huge_io_adc_var_tb (1422);0x00000050;0x00c2615c;0x0002615c;0x00000002</row>
-				<row>spe:Flash;;huge_io_comp_pwd_tb (1428);0x00000008;0x00c261ac;0x000261ac;0x00000002</row>
-				<row>spe:Flash;;huge_io_di_tb (1426);0x00000024;0x00c261b4;0x000261b4;0x00000002</row>
-				<row>spe:Flash;;huge_io_do_tb (1424);0x00000030;0x00c261d8;0x000261d8;0x00000002</row>
-				<row>spe:Flash;;huge_io_func_adc_do_tb (1425);0x00000060;0x00c26208;0x00026208;0x00000002</row>
-				<row>spe:Flash;;huge_io_func_pwd_tb (1431);0x00000048;0x00c26268;0x00026268;0x00000002</row>
-				<row>spe:Flash;;huge_io_func_pwm_pwd_tb (1419);0x00000040;0x00c262b0;0x000262b0;0x00000002</row>
-				<row>spe:Flash;;huge_io_inc_pwd_tb (1429);0x00000018;0x00c262f0;0x000262f0;0x00000002</row>
-				<row>spe:Flash;;huge_io_int_prio (1417);0x00000080;0x00c26308;0x00026308;0x00000002</row>
-				<row>spe:Flash;;huge_io_pwd_lb_tb (1418);0x00000020;0x00c26388;0x00026388;0x00000002</row>
-				<row>spe:Flash;;huge_io_pwm_tb (1414);0x00000040;0x00c263a8;0x000263a8;0x00000002</row>
-				<row>spe:Flash;;huge_io_uart_tb (1427);0x00000006;0x00c263e8;0x000263e8;0x00000002</row>
-				<row>spe:Flash;;huge_libc (1985);0x00000008;0x00c263ee;0x000263ee;0x00000002</row>
-				<row>spe:Flash;;huge_libc (1986);0x00000008;0x00c263f6;0x000263f6;0x00000002</row>
-				<row>spe:Flash;;huge_multiplex_pins (828);0x00000004;0x00c263fe;0x000263fe;0x00000002</row>
-				<row>spe:Flash;;huge__1_ini (1184);0x00000005;0x00c26402;0x00026402;0x00000001</row>
-				<row>spe:Flash;;huge__1_str (91);0x0000001f;0x00c26407;0x00026407;0x00000001</row>
-				<row>spe:Flash;;huge__1_str (619);0x00000023;0x00c26426;0x00026426;0x00000001</row>
-				<row>spe:Flash;;huge__2_str (620);0x00000019;0x00c26449;0x00026449;0x00000001</row>
-				<row>spe:Flash;;huge__2_str (92);0x0000001c;0x00c26462;0x00026462;0x00000001</row>
-				<row>spe:Flash;;huge_libc (1983);0x00000004;0x00c2647e;0x0002647e;0x00000001</row>
-				<row>spe:Flash;;huge_libc (1981);0x00000004;0x00c26482;0x00026482;0x00000001</row>
-				<row>spe:Flash;;huge_libc (1984);0x00000004;0x00c26486;0x00026486;0x00000001</row>
-				<row>spe:Flash;;huge_libc (1982);0x00000004;0x00c2648a;0x0002648a;0x00000001</row>
-				<row>spe:Flash;;huge_libc (2198);0x00000101;0x00c2648e;0x0002648e;0x00000001</row>
+				<row>spe:Flash;;code_IO_GPIO_INT_PortSet (1052);0x0000001e;0x00c24000;0x00024000;0x00000002</row>
+				<row>spe:Flash;;code_librt (2380);0x0000001e;0x00c2401e;0x0002401e;0x00000002</row>
+				<row>spe:Flash;;code_libc (1968);0x0000001a;0x00c2403c;0x0002403c;0x00000002</row>
+				<row>spe:Flash;;code_IO_RTC_getRTCval (1375);0x00000018;0x00c24056;0x00024056;0x00000002</row>
+				<row>spe:Flash;;code_libc (1977);0x00000018;0x00c2406e;0x0002406e;0x00000002</row>
+				<row>spe:Flash;;code_librt (2382);0x00000018;0x00c24086;0x00024086;0x00000002</row>
+				<row>spe:Flash;;code_BMS_getHighestCellVoltage_mV (81);0x00000016;0x00c2409e;0x0002409e;0x00000002</row>
+				<row>spe:Flash;;code_libc (1967);0x00000016;0x00c240b4;0x000240b4;0x00000002</row>
+				<row>spe:Flash;;code_libc (1822);0x00000016;0x00c240ca;0x000240ca;0x00000002</row>
+				<row>spe:Flash;;code_librt (2356);0x00000016;0x00c240e0;0x000240e0;0x00000002</row>
+				<row>spe:Flash;;code_librt (2337);0x00000016;0x00c240f6;0x000240f6;0x00000002</row>
+				<row>spe:Flash;;code_IO_Tools_ConfigurePin (1406);0x00000014;0x00c2410c;0x0002410c;0x00000002</row>
+				<row>spe:Flash;;code_libc (1802);0x00000014;0x00c24120;0x00024120;0x00000002</row>
+				<row>spe:Flash;;code_libc (2189);0x00000014;0x00c24134;0x00024134;0x00000002</row>
+				<row>spe:Flash;;code_libc (1804);0x00000012;0x00c24148;0x00024148;0x00000002</row>
+				<row>spe:Flash;;code_libc (1961);0x00000012;0x00c2415a;0x0002415a;0x00000002</row>
+				<row>spe:Flash;;code_libc (1945);0x00000012;0x00c2416c;0x0002416c;0x00000002</row>
+				<row>spe:Flash;;code_libc (1965);0x00000012;0x00c2417e;0x0002417e;0x00000002</row>
+				<row>spe:Flash;;code_libc (2159);0x00000012;0x00c24190;0x00024190;0x00000002</row>
+				<row>spe:Flash;;code_SafetyChecker_getFaults (614);0x00000010;0x00c241a2;0x000241a2;0x00000002</row>
+				<row>spe:Flash;;code_libc (1696);0x00000010;0x00c241b2;0x000241b2;0x00000002</row>
+				<row>spe:Flash;;code_libc (1824);0x00000010;0x00c241c2;0x000241c2;0x00000002</row>
+				<row>spe:Flash;;code_libc (1979);0x00000010;0x00c241d2;0x000241d2;0x00000002</row>
+				<row>spe:Flash;;code_libc (1697);0x00000010;0x00c241e2;0x000241e2;0x00000002</row>
+				<row>spe:Flash;;code_libc (1825);0x00000010;0x00c241f2;0x000241f2;0x00000002</row>
+				<row>spe:Flash;;code_libc (1980);0x00000010;0x00c24202;0x00024202;0x00000002</row>
+				<row>spe:Flash;;code_libc (1694);0x00000010;0x00c24212;0x00024212;0x00000002</row>
+				<row>spe:Flash;;code_libc (1801);0x00000010;0x00c24222;0x00024222;0x00000002</row>
+				<row>spe:Flash;;code_libc (1958);0x00000010;0x00c24232;0x00024232;0x00000002</row>
+				<row>spe:Flash;;code_libc (1799);0x00000010;0x00c24242;0x00024242;0x00000002</row>
+				<row>spe:Flash;;code_libc (1821);0x00000010;0x00c24252;0x00024252;0x00000002</row>
+				<row>spe:Flash;;code_libc (1972);0x0000000e;0x00c24262;0x00024262;0x00000002</row>
+				<row>spe:Flash;;code_libc (1971);0x0000000e;0x00c24270;0x00024270;0x00000002</row>
+				<row>spe:Flash;;code_libc (1943);0x0000000e;0x00c2427e;0x0002427e;0x00000002</row>
+				<row>spe:Flash;;code_libc (1941);0x0000000e;0x00c2428c;0x0002428c;0x00000002</row>
+				<row>spe:Flash;;code_BMS_getLowestCellVoltage_mV (82);0x0000000c;0x00c2429a;0x0002429a;0x00000002</row>
+				<row>spe:Flash;;code_BMS_getRelayState (90);0x0000000c;0x00c242a6;0x000242a6;0x00000002</row>
+				<row>spe:Flash;;code_DI_commandTorque (10);0x0000000c;0x00c242b2;0x000242b2;0x00000002</row>
+				<row>spe:Flash;;code_DI_getCommandedTorque (11);0x0000000c;0x00c242be;0x000242be;0x00000002</row>
+				<row>spe:Flash;;code_SafetyChecker_getNotices (616);0x0000000c;0x00c242ca;0x000242ca;0x00000002</row>
+				<row>spe:Flash;;code_SafetyChecker_getWarnings (615);0x0000000c;0x00c242d6;0x000242d6;0x00000002</row>
+				<row>spe:Flash;;code_libc (1819);0x0000000c;0x00c242e2;0x000242e2;0x00000002</row>
+				<row>spe:Flash;;code_libc (1950);0x0000000c;0x00c242ee;0x000242ee;0x00000002</row>
+				<row>spe:Flash;;code_libc (1949);0x0000000c;0x00c242fa;0x000242fa;0x00000002</row>
+				<row>spe:Flash;;code_libc (1812);0x0000000c;0x00c24306;0x00024306;0x00000002</row>
+				<row>spe:Flash;;code_libc (1952);0x0000000c;0x00c24312;0x00024312;0x00000002</row>
+				<row>spe:Flash;;code_libc (1953);0x0000000c;0x00c2431e;0x0002431e;0x00000002</row>
+				<row>spe:Flash;;code_libc (1946);0x0000000c;0x00c2432a;0x0002432a;0x00000002</row>
+				<row>spe:Flash;;code_libc (1954);0x0000000c;0x00c24336;0x00024336;0x00000002</row>
+				<row>spe:Flash;;code_libc (1978);0x0000000c;0x00c24342;0x00024342;0x00000002</row>
+				<row>spe:Flash;;code_libc (1963);0x0000000c;0x00c2434e;0x0002434e;0x00000002</row>
+				<row>spe:Flash;;code_libc (1966);0x0000000c;0x00c2435a;0x0002435a;0x00000002</row>
+				<row>spe:Flash;;code_libc (1818);0x0000000c;0x00c24366;0x00024366;0x00000002</row>
+				<row>spe:Flash;;code_libc (1806);0x0000000c;0x00c24372;0x00024372;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2300);0x0000000c;0x00c2437e;0x0002437e;0x00000002</row>
+				<row>spe:Flash;;code_BMS_getFaultFlags0 (88);0x0000000a;0x00c2438a;0x0002438a;0x00000002</row>
+				<row>spe:Flash;;code_BMS_getFaultFlags1 (89);0x0000000a;0x00c24394;0x00024394;0x00000002</row>
+				<row>spe:Flash;;code_libc (1808);0x0000000a;0x00c2439e;0x0002439e;0x00000002</row>
+				<row>spe:Flash;;code_libc (1960);0x0000000a;0x00c243a8;0x000243a8;0x00000002</row>
+				<row>spe:Flash;;code_libc (1955);0x0000000a;0x00c243b2;0x000243b2;0x00000002</row>
+				<row>spe:Flash;;code_libc (1964);0x0000000a;0x00c243bc;0x000243bc;0x00000002</row>
+				<row>spe:Flash;;code_libc (1975);0x0000000a;0x00c243c6;0x000243c6;0x00000002</row>
+				<row>spe:Flash;;code_libc (1805);0x0000000a;0x00c243d0;0x000243d0;0x00000002</row>
+				<row>spe:Flash;;code_libc (1797);0x0000000a;0x00c243da;0x000243da;0x00000002</row>
+				<row>spe:Flash;;code_libc (1816);0x0000000a;0x00c243e4;0x000243e4;0x00000002</row>
+				<row>spe:Flash;;code_libc (1692);0x0000000a;0x00c243ee;0x000243ee;0x00000002</row>
+				<row>spe:Flash;;code_libc (1970);0x0000000a;0x00c243f8;0x000243f8;0x00000002</row>
+				<row>spe:Flash;;code_libc (1959);0x0000000a;0x00c24402;0x00024402;0x00000002</row>
+				<row>spe:Flash;;code_libc (1956);0x0000000a;0x00c2440c;0x0002440c;0x00000002</row>
+				<row>spe:Flash;;code_libc (1957);0x0000000a;0x00c24416;0x00024416;0x00000002</row>
+				<row>spe:Flash;;code_libc (1820);0x0000000a;0x00c24420;0x00024420;0x00000002</row>
+				<row>spe:Flash;;code_libc (1815);0x0000000a;0x00c2442a;0x0002442a;0x00000002</row>
+				<row>spe:Flash;;code_librt (2381);0x0000000a;0x00c24434;0x00024434;0x00000002</row>
+				<row>spe:Flash;;code_librt (2378);0x0000000a;0x00c2443e;0x0002443e;0x00000002</row>
+				<row>spe:Flash;;code_librt (2379);0x0000000a;0x00c24448;0x00024448;0x00000002</row>
+				<row>spe:Flash;;code_libc (1942);0x00000008;0x00c24452;0x00024452;0x00000002</row>
+				<row>spe:Flash;;code_libc (1798);0x00000008;0x00c2445a;0x0002445a;0x00000002</row>
+				<row>spe:Flash;;code_libc (1800);0x00000008;0x00c24462;0x00024462;0x00000002</row>
+				<row>spe:Flash;;code_libc (1810);0x00000008;0x00c2446a;0x0002446a;0x00000002</row>
+				<row>spe:Flash;;code_libc (1809);0x00000008;0x00c24472;0x00024472;0x00000002</row>
+				<row>spe:Flash;;code_libc (1803);0x00000008;0x00c2447a;0x0002447a;0x00000002</row>
+				<row>spe:Flash;;code_libc (1947);0x00000008;0x00c24482;0x00024482;0x00000002</row>
+				<row>spe:Flash;;code_libc (1951);0x00000008;0x00c2448a;0x0002448a;0x00000002</row>
+				<row>spe:Flash;;code_libc (1973);0x00000008;0x00c24492;0x00024492;0x00000002</row>
+				<row>spe:Flash;;code_libc (1976);0x00000008;0x00c2449a;0x0002449a;0x00000002</row>
+				<row>spe:Flash;;code_libc (1969);0x00000008;0x00c244a2;0x000244a2;0x00000002</row>
+				<row>spe:Flash;;code_libc (1944);0x00000008;0x00c244aa;0x000244aa;0x00000002</row>
+				<row>spe:Flash;;code_libc (1807);0x00000008;0x00c244b2;0x000244b2;0x00000002</row>
+				<row>spe:Flash;;code_libc (1962);0x00000008;0x00c244ba;0x000244ba;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2301);0x00000008;0x00c244c2;0x000244c2;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2302);0x00000008;0x00c244ca;0x000244ca;0x00000002</row>
+				<row>spe:Flash;;code_libc (1817);0x00000006;0x00c244d2;0x000244d2;0x00000002</row>
+				<row>spe:Flash;;code_libc (1948);0x00000006;0x00c244d8;0x000244d8;0x00000002</row>
+				<row>spe:Flash;;code_libc (1693);0x00000006;0x00c244de;0x000244de;0x00000002</row>
+				<row>spe:Flash;;code_librt (2374);0x00000006;0x00c244e4;0x000244e4;0x00000002</row>
+				<row>spe:Flash;;code_libfp (2321);0x00000004;0x00c244ea;0x000244ea;0x00000002</row>
+				<row>spe:Flash;;code_librt (2336);0x00000004;0x00c244ee;0x000244ee;0x00000002</row>
+				<row>spe:Flash;;code_librt (2355);0x00000004;0x00c244f2;0x000244f2;0x00000002</row>
+				<row>spe:Flash;;code_libc (2204);0x00000002;0x00c244f6;0x000244f6;0x00000002</row>
+				<row>spe:Flash;;_init_cpy_table_libc (1678);0x00000020;0x00c244f8;0x000244f8;0x00000002</row>
+				<row>spe:Flash;;_init_clr_table_libc (1679);0x0000001c;0x00c24518;0x00024518;0x00000002</row>
+				<row>spe:Flash;;_init_libc (1676);0x000000c6;0x00c24534;0x00024534;0x00000002</row>
+				<row>spe:Flash;;_cptable_cpy_huge_libc (2252);0x00000026;0x00c245fa;0x000245fa;0x00000002</row>
+				<row>spe:Flash;;_cptable_clr_huge_libc (2248);0x00000024;0x00c24620;0x00024620;0x00000002</row>
+				<row>spe:Flash;;shuge__1_swt (267);0x0000077e;0x00c24644;0x00024644;0x00000002</row>
+				<row>spe:Flash;;shuge__3_swt (79);0x000001fa;0x00c24dc2;0x00024dc2;0x00000002</row>
+				<row>spe:Flash;;shuge__11_swt (841);0x00000078;0x00c24fbc;0x00024fbc;0x00000002</row>
+				<row>spe:Flash;;shuge__1_swt (829);0x00000052;0x00c25034;0x00025034;0x00000002</row>
+				<row>spe:Flash;;shuge__1_swt (1067);0x00000020;0x00c25086;0x00025086;0x00000002</row>
+				<row>spe:Flash;;shuge__4_swt (1075);0x00000020;0x00c250a6;0x000250a6;0x00000002</row>
+				<row>spe:Flash;;shuge__2_swt (830);0x0000001e;0x00c250c6;0x000250c6;0x00000002</row>
+				<row>spe:Flash;;shuge__3_swt (831);0x0000001e;0x00c250e4;0x000250e4;0x00000002</row>
+				<row>spe:Flash;;shuge__4_swt (832);0x0000001e;0x00c25102;0x00025102;0x00000002</row>
+				<row>spe:Flash;;shuge__5_swt (833);0x0000001e;0x00c25120;0x00025120;0x00000002</row>
+				<row>spe:Flash;;shuge_libc (1814);0x0000001a;0x00c2513e;0x0002513e;0x00000002</row>
+				<row>spe:Flash;;shuge__1_swt (730);0x00000010;0x00c25158;0x00025158;0x00000002</row>
+				<row>spe:Flash;;shuge__1_swt (8);0x0000000e;0x00c25168;0x00025168;0x00000002</row>
+				<row>spe:Flash;;shuge__2_swt (1070);0x00000008;0x00c25176;0x00025176;0x00000002</row>
+				<row>spe:Flash;;shuge__5_swt (1076);0x00000008;0x00c2517e;0x0002517e;0x00000002</row>
+				<row>spe:Flash;;shuge__6_swt (1077);0x00000008;0x00c25186;0x00025186;0x00000002</row>
+				<row>spe:Flash;;shuge__7_swt (1078);0x00000008;0x00c2518e;0x0002518e;0x00000002</row>
+				<row>spe:Flash;;shuge__8_swt (1079);0x00000008;0x00c25196;0x00025196;0x00000002</row>
+				<row>spe:Flash;;shuge__9_swt (1080);0x00000008;0x00c2519e;0x0002519e;0x00000002</row>
+				<row>spe:Flash;;_init_switch_table_libc (1677);0x00000008;0x00c251a6;0x000251a6;0x00000002</row>
+				<row>spe:Flash;;shuge__12_swt (842);0x00000006;0x00c251ae;0x000251ae;0x00000002</row>
+				<row>spe:Flash;;shuge__1_swt (917);0x00000006;0x00c251b4;0x000251b4;0x00000002</row>
+				<row>spe:Flash;;shuge__4_swt (924);0x00000006;0x00c251ba;0x000251ba;0x00000002</row>
+				<row>spe:Flash;;shuge__5_swt (1236);0x00000006;0x00c251c0;0x000251c0;0x00000002</row>
+				<row>spe:Flash;;shuge__2_swt (918);0x00000004;0x00c251c6;0x000251c6;0x00000002</row>
+				<row>spe:Flash;;shuge__1_swt (1232);0x00000004;0x00c251ca;0x000251ca;0x00000002</row>
+				<row>spe:Flash;;shuge__2_swt (1233);0x00000004;0x00c251ce;0x000251ce;0x00000002</row>
+				<row>spe:Flash;;shuge__3_swt (1234);0x00000004;0x00c251d2;0x000251d2;0x00000002</row>
+				<row>spe:Flash;;shuge__4_swt (1235);0x00000004;0x00c251d6;0x000251d6;0x00000002</row>
+				<row>spe:Flash;;shuge__1_swt (1474);0x00000004;0x00c251da;0x000251da;0x00000002</row>
+				<row>spe:Flash;;shuge__6_swt (1482);0x00000004;0x00c251de;0x000251de;0x00000002</row>
+				<row>spe:Flash;;shuge__1_swt (1523);0x00000004;0x00c251e2;0x000251e2;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2449);0x0000061e;0x00c251e6;0x000251e6;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2408);0x00000200;0x00c25804;0x00025804;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2448);0x00000192;0x00c25a04;0x00025a04;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2451);0x0000011e;0x00c25b96;0x00025b96;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2426);0x00000078;0x00c25cb4;0x00025cb4;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2450);0x00000070;0x00c25d2c;0x00025d2c;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2406);0x00000068;0x00c25d9c;0x00025d9c;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2411);0x00000054;0x00c25e04;0x00025e04;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2446);0x00000048;0x00c25e58;0x00025e58;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2419);0x00000040;0x00c25ea0;0x00025ea0;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2420);0x00000040;0x00c25ee0;0x00025ee0;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2428);0x00000040;0x00c25f20;0x00025f20;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2436);0x00000040;0x00c25f60;0x00025f60;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2427);0x00000034;0x00c25fa0;0x00025fa0;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2445);0x00000028;0x00c25fd4;0x00025fd4;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2447);0x0000001e;0x00c25ffc;0x00025ffc;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2417);0x00000012;0x00c2601a;0x0002601a;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2418);0x0000000c;0x00c2602c;0x0002602c;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2429);0x0000000c;0x00c26038;0x00026038;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2435);0x0000000c;0x00c26044;0x00026044;0x00000001</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2442);0x0000000c;0x00c26050;0x00026050;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2430);0x0000000a;0x00c2605c;0x0002605c;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2412);0x00000008;0x00c26066;0x00026066;0x00000001</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2438);0x00000004;0x00c2606e;0x0002606e;0x00000001</row>
+				<row>spe:Flash;;[huge_libc] (2452);0x00000004;0x00c26072;0x00026072;0x00000002</row>
+				<row>spe:Flash;;[huge_timestamp_Precharge] (2404);0x00000004;0x00c26076;0x00026076;0x00000002</row>
+				<row>spe:Flash;;[huge_timestamp_SoftBSPD] (2405);0x00000004;0x00c2607a;0x0002607a;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2409);0x00000002;0x00c2607e;0x0002607e;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2410);0x00000002;0x00c26080;0x00026080;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2443);0x00000002;0x00c26082;0x00026082;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2444);0x00000002;0x00c26084;0x00026084;0x00000002</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2407);0x00000001;0x00c26086;0x00026086;0x00000001</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2413);0x00000001;0x00c26087;0x00026087;0x00000001</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2414);0x00000001;0x00c26088;0x00026088;0x00000001</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2415);0x00000001;0x00c26089;0x00026089;0x00000001</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2416);0x00000001;0x00c2608a;0x0002608a;0x00000001</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2421);0x00000001;0x00c2608b;0x0002608b;0x00000001</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2422);0x00000001;0x00c2608c;0x0002608c;0x00000001</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2423);0x00000001;0x00c2608d;0x0002608d;0x00000001</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2424);0x00000001;0x00c2608e;0x0002608e;0x00000001</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2425);0x00000001;0x00c2608f;0x0002608f;0x00000001</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2431);0x00000001;0x00c26090;0x00026090;0x00000001</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2432);0x00000001;0x00c26091;0x00026091;0x00000001</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2433);0x00000001;0x00c26092;0x00026092;0x00000001</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2434);0x00000001;0x00c26093;0x00026093;0x00000001</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2437);0x00000001;0x00c26094;0x00026094;0x00000001</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2440);0x00000001;0x00c26095;0x00026095;0x00000001</row>
+				<row>spe:Flash;;[huge_io_driver_data_section] (2441);0x00000001;0x00c26096;0x00026096;0x00000001</row>
+				<row>spe:Flash;;table (2402);0x0000017b;0x00c26098;0x00026098;0x00000002</row>
+				<row>spe:Flash;;huge_adc_temp_table (845);0x00000042;0x00c26214;0x00026214;0x00000002</row>
+				<row>spe:Flash;;huge_adc_var_duty (846);0x0000001c;0x00c26256;0x00026256;0x00000002</row>
+				<row>spe:Flash;;huge_io_adc_5V_tb (1421);0x00000030;0x00c26272;0x00026272;0x00000002</row>
+				<row>spe:Flash;;huge_io_adc_cur_tb (1420);0x00000008;0x00c262a2;0x000262a2;0x00000002</row>
+				<row>spe:Flash;;huge_io_adc_tb (1423);0x00000048;0x00c262aa;0x000262aa;0x00000002</row>
+				<row>spe:Flash;;huge_io_adc_var_tb (1422);0x00000050;0x00c262f2;0x000262f2;0x00000002</row>
+				<row>spe:Flash;;huge_io_comp_pwd_tb (1428);0x00000008;0x00c26342;0x00026342;0x00000002</row>
+				<row>spe:Flash;;huge_io_di_tb (1426);0x00000024;0x00c2634a;0x0002634a;0x00000002</row>
+				<row>spe:Flash;;huge_io_do_tb (1424);0x00000030;0x00c2636e;0x0002636e;0x00000002</row>
+				<row>spe:Flash;;huge_io_func_adc_do_tb (1425);0x00000060;0x00c2639e;0x0002639e;0x00000002</row>
+				<row>spe:Flash;;huge_io_func_pwd_tb (1431);0x00000048;0x00c263fe;0x000263fe;0x00000002</row>
+				<row>spe:Flash;;huge_io_func_pwm_pwd_tb (1419);0x00000040;0x00c26446;0x00026446;0x00000002</row>
+				<row>spe:Flash;;huge_io_inc_pwd_tb (1429);0x00000018;0x00c26486;0x00026486;0x00000002</row>
+				<row>spe:Flash;;huge_io_int_prio (1417);0x00000080;0x00c2649e;0x0002649e;0x00000002</row>
+				<row>spe:Flash;;huge_io_pwd_lb_tb (1418);0x00000020;0x00c2651e;0x0002651e;0x00000002</row>
+				<row>spe:Flash;;huge_io_pwm_tb (1414);0x00000040;0x00c2653e;0x0002653e;0x00000002</row>
+				<row>spe:Flash;;huge_io_uart_tb (1427);0x00000006;0x00c2657e;0x0002657e;0x00000002</row>
+				<row>spe:Flash;;huge_libc (1985);0x00000008;0x00c26584;0x00026584;0x00000002</row>
+				<row>spe:Flash;;huge_libc (1986);0x00000008;0x00c2658c;0x0002658c;0x00000002</row>
+				<row>spe:Flash;;huge_multiplex_pins (828);0x00000004;0x00c26594;0x00026594;0x00000002</row>
+				<row>spe:Flash;;huge__1_ini (1184);0x00000005;0x00c26598;0x00026598;0x00000001</row>
+				<row>spe:Flash;;huge__1_str (91);0x0000001f;0x00c2659d;0x0002659d;0x00000001</row>
+				<row>spe:Flash;;huge__1_str (619);0x00000023;0x00c265bc;0x000265bc;0x00000001</row>
+				<row>spe:Flash;;huge__2_str (620);0x00000019;0x00c265df;0x000265df;0x00000001</row>
+				<row>spe:Flash;;huge__2_str (92);0x0000001c;0x00c265f8;0x000265f8;0x00000001</row>
+				<row>spe:Flash;;huge_libc (1983);0x00000004;0x00c26614;0x00026614;0x00000001</row>
+				<row>spe:Flash;;huge_libc (1981);0x00000004;0x00c26618;0x00026618;0x00000001</row>
+				<row>spe:Flash;;huge_libc (1984);0x00000004;0x00c2661c;0x0002661c;0x00000001</row>
+				<row>spe:Flash;;huge_libc (1982);0x00000004;0x00c26620;0x00026620;0x00000001</row>
+				<row>spe:Flash;;huge_libc (2198);0x00000101;0x00c26624;0x00026624;0x00000001</row>
 				<row>spe:PSRAM;my_huge_ram;hheap (2403);0x00002800;0x00e04000;0x00004000;0x00000002</row>
 				<row>spe:PSRAM;my_huge_ram;huge_Sensor_BPS0 (380);0x0000001e;0x00e06800;0x00006800;0x00000002</row>
 				<row>spe:PSRAM;my_huge_ram;huge_Sensor_BPS1 (381);0x0000001e;0x00e0681e;0x0000681e;0x00000002</row>
@@ -3632,197 +3645,194 @@
 				<row>0x00c10000;_appl_db</row>
 				<row>0x00c10000;__lc_gb_bl_near</row>
 				<row>0x00c10000;__lc_ge_bl_near</row>
-				<row>0x00c10080;_IO_Driver_TaskBegin</row>
-				<row>0x00c101da;_TorqueEncoder_startCalibration</row>
-				<row>0x00c10334;_IO_DO_Init</row>
-				<row>0x00c10484;_sensors_updateSensors</row>
-				<row>0x00c105d4;_IO_SHIFT_Init</row>
-				<row>0x00c1071e;_IO_DI_DeInit</row>
-				<row>0x00c10866;_IO_PWD_INT_CCU6_PulseInit</row>
-				<row>0x00c109aa;_TorqueEncoder_new</row>
-				<row>0x00c10aea;_BrakePressureSensor_new</row>
-				<row>0x00c10c18;__sub_spf</row>
-				<row>0x00c10c1c;__add_spf</row>
-				<row>0x00c10d3a;_IO_PWM_INT_CC6IntOff</row>
-				<row>0x00c10e4e;_CoolingSystem_new</row>
-				<row>0x00c10f50;_IO_POWER_Init</row>
-				<row>0x00c11050;_IO_PWD_CC60_SR3_INT</row>
-				<row>0x00c11050;.vector.51</row>
-				<row>0x00c11150;_IO_PWD_CC61_SR3_INT</row>
-				<row>0x00c11150;.vector.55</row>
-				<row>0x00c11250;_IO_PWD_CC62_SR3_INT</row>
-				<row>0x00c11250;.vector.59</row>
-				<row>0x00c11350;_IO_PWD_CC63_SR3_INT</row>
-				<row>0x00c11350;.vector.63</row>
-				<row>0x00c11450;_IO_Tools_FETProtection</row>
-				<row>0x00c11550;_BrakePressureSensor_startCalibration</row>
-				<row>0x00c1164c;_vcu_ADCWasteLoop</row>
-				<row>0x00c11834;_IO_PWM_INT_CC6SetDuty</row>
-				<row>0x00c11916;__div_spf</row>
-				<row>0x00c119f4;_IO_ADC_INT_MuxKernelInit</row>
-				<row>0x00c11ad0;_IO_PWM_INT_CC2SetDuty</row>
-				<row>0x00c11ba8;_IO_ADC_INT_KernelInit</row>
-				<row>0x00c11c70;_SafetyChecker_new</row>
-				<row>0x00c11d30;__mul_spf</row>
-				<row>0x00c11df0;_IO_ADC_INT_MuxGet</row>
-				<row>0x00c11ea6;__cstart</row>
-				<row>0x00c11ea6;.vector.0</row>
-				<row>0x00c11ecc;debugloop</row>
-				<row>0x00c11f5c;_IO_PWM_INT_CC2IntOff</row>
-				<row>0x00c12010;_IO_ADC_INT_ChannelInit</row>
-				<row>0x00c120b4;_BMS_new</row>
-				<row>0x00c12154;_DAQ_Sensor_new</row>
-				<row>0x00c121f2;_IO_SHIFT_Task</row>
-				<row>0x00c12286;_IO_SPI_SetupDevice</row>
-				<row>0x00c12438;_IO_Driver_Init</row>
-				<row>0x00c124be;_IO_EEPROM_Init</row>
-				<row>0x00c125ca;_BMS_getPower_W</row>
-				<row>0x00c1264e;_IO_PWD_INT_CCU6_StartPulseCap</row>
-				<row>0x00c12750;__udil</row>
-				<row>0x00c127d0;_getPercent</row>
-				<row>0x00c128c2;_IO_Timer_INT_CC2Setup</row>
-				<row>0x00c12936;_IO_PWD_CC2_CC22_INT</row>
-				<row>0x00c12936;.vector.22</row>
-				<row>0x00c129a8;_IO_PWD_CC2_CC23_INT</row>
-				<row>0x00c129a8;.vector.23</row>
-				<row>0x00c12a1a;_IO_PWD_CC2_CC28_INT</row>
-				<row>0x00c12a1a;.vector.28</row>
-				<row>0x00c12a8c;_IO_PWD_CC2_CC29_INT</row>
-				<row>0x00c12a8c;.vector.29</row>
-				<row>0x00c12afe;_Light_set</row>
-				<row>0x00c12b70;_RTDS_shutdownHelper</row>
-				<row>0x00c12bda;_steering_degrees</row>
-				<row>0x00c12c44;__dpf2ul</row>
-				<row>0x00c12cac;_DI_calculateCommands</row>
-				<row>0x00c12d10;_IO_Timer_INT_CC6Setup</row>
-				<row>0x00c12d74;__io_putc</row>
-				<row>0x00c12dd6;__less_than_dpf</row>
-				<row>0x00c12e38;__larger_than_dpf</row>
-				<row>0x00c12e9a;__larger_than_or_equal_dpf</row>
-				<row>0x00c12efc;_CoolingSystem_calculations</row>
-				<row>0x00c12f58;_IO_ADC_INT_Get</row>
-				<row>0x00c12fb4;_BMS_getHighestCellTemp_degC</row>
-				<row>0x00c13066;_RTDS_setVolume</row>
-				<row>0x00c130bc;__l2spf</row>
-				<row>0x00c130ca;__ul2spf</row>
-				<row>0x00c13112;_IO_Tools_LockProtecReg</row>
-				<row>0x00c13166;__dpf2spf</row>
-				<row>0x00c131b8;_IO_PWD_GPT_T6_INT</row>
-				<row>0x00c131b8;.vector.36</row>
-				<row>0x00c13206;___hsbrk</row>
-				<row>0x00c13254;_sprintf</row>
-				<row>0x00c132a2;__dpf2s</row>
-				<row>0x00c132a2;__dpf2i</row>
-				<row>0x00c132f0;__l2dpf</row>
-				<row>0x00c1330a;__ul2dpf</row>
-				<row>0x00c13310;__signedlong</row>
-				<row>0x00c1333e;__not_equal_dpf</row>
-				<row>0x00c1338a;__spf2s</row>
-				<row>0x00c1338a;__spf2i</row>
-				<row>0x00c133d4;__unpack_2dpf</row>
-				<row>0x00c133ee;__unpack_dpf</row>
-				<row>0x00c1341c;__larger_than_spf</row>
-				<row>0x00c13464;__larger_than_or_equal_spf</row>
-				<row>0x00c134ac;__less_than_spf</row>
-				<row>0x00c134f4;_IO_RTC_Init</row>
-				<row>0x00c1353a;_BMS_getHighestCellTemp_d_degC</row>
-				<row>0x00c1357c;_RTDS_new</row>
-				<row>0x00c135be;__spf2dpf</row>
-				<row>0x00c13600;_IO_SHIFT_WriteMasked</row>
-				<row>0x00c13640;_IO_Tools_PWM_ResetPins</row>
-				<row>0x00c1367e;__spf2us</row>
-				<row>0x00c1367e;__spf2ui</row>
-				<row>0x00c136bc;__pack_r_dpf</row>
-				<row>0x00c136d0;__pack_t_dpf</row>
-				<row>0x00c136da;__pack_dpf</row>
-				<row>0x00c136e8;__pack_zero</row>
-				<row>0x00c136fa;_IO_Tools_UnlockProtecReg</row>
-				<row>0x00c13736;_IO_RTC_StartTime</row>
-				<row>0x00c13770;_BMS_relayControl</row>
-				<row>0x00c137a8;_TorqueEncoder_getIndividualSensorPercent</row>
-				<row>0x00c137e0;_IO_PWD_CC2_CC26_INT</row>
-				<row>0x00c137e0;.vector.26</row>
-				<row>0x00c13816;_IO_PWD_CC2_CC27_INT</row>
-				<row>0x00c13816;.vector.27</row>
-				<row>0x00c1384c;_IO_PWD_CC2_CC30_INT</row>
-				<row>0x00c1384c;.vector.30</row>
-				<row>0x00c13882;_IO_PWD_CC2_CC31_INT</row>
-				<row>0x00c13882;.vector.31</row>
-				<row>0x00c138b8;_SafetyChecker_parseCanMessage</row>
-				<row>0x00c138ee;_IO_Driver_TaskEnd</row>
-				<row>0x00c13922;_IO_PWD_CC60_SR1_INT</row>
-				<row>0x00c13922;.vector.49</row>
-				<row>0x00c13954;_IO_PWD_CC60_SR2_INT</row>
-				<row>0x00c13954;.vector.50</row>
-				<row>0x00c13986;_IO_PWD_CC62_SR0_INT</row>
-				<row>0x00c13986;.vector.56</row>
-				<row>0x00c139b8;_IO_PWD_CC62_SR1_INT</row>
-				<row>0x00c139b8;.vector.57</row>
-				<row>0x00c139ea;_IO_PWD_CC62_SR2_INT</row>
-				<row>0x00c139ea;.vector.58</row>
-				<row>0x00c13a1c;_IO_PWD_CC63_SR0_INT</row>
-				<row>0x00c13a1c;.vector.60</row>
-				<row>0x00c13a4e;_IO_PWD_CC63_SR1_INT</row>
-				<row>0x00c13a4e;.vector.61</row>
-				<row>0x00c13a80;_IO_PWD_CC63_SR2_INT</row>
-				<row>0x00c13a80;.vector.62</row>
-				<row>0x00c13ab2;_IO_PWD_GPT_T2_INT</row>
-				<row>0x00c13ab2;.vector.32</row>
-				<row>0x00c13ae4;_IO_PWD_GPT_T3_INT</row>
-				<row>0x00c13ae4;.vector.33</row>
-				<row>0x00c13b16;_IO_PWD_GPT_T4_INT</row>
-				<row>0x00c13b16;.vector.34</row>
-				<row>0x00c13b48;_IO_PWD_GPT_T5_INT</row>
-				<row>0x00c13b48;.vector.35</row>
-				<row>0x00c13b7a;__io_puts</row>
-				<row>0x00c13bac;__ddvisr</row>
-				<row>0x00c13bae;__dinfsr</row>
-				<row>0x00c13bbe;__ddvnsr</row>
-				<row>0x00c13bbe;__dnansr</row>
-				<row>0x00c13bce;__dunfsr</row>
-				<row>0x00c13bd8;__dcnvnan</row>
-				<row>0x00c13bde;__c2dpf</row>
-				<row>0x00c13be0;__s2dpf</row>
-				<row>0x00c13be0;__i2dpf</row>
-				<row>0x00c13bea;__uc2dpf</row>
-				<row>0x00c13bec;__ui2dpf</row>
-				<row>0x00c13bec;__us2dpf</row>
-				<row>0x00c13bee;__signedint</row>
-				<row>0x00c13c0e;__bswitchs16shuge</row>
-				<row>0x00c13c3e;_IO_GPIO_INT_PinSet</row>
-				<row>0x00c13c6c;_IO_GPIO_INT_PinGet</row>
-				<row>0x00c13c98;_IO_Tools_CalcShiftPos</row>
-				<row>0x00c13cc4;_IO_Tools_DistanceFloat</row>
-				<row>0x00c13cf0;_InstrumentCluster_new</row>
-				<row>0x00c13d1c;__c2spf</row>
-				<row>0x00c13d1e;__s2spf</row>
-				<row>0x00c13d1e;__i2spf</row>
-				<row>0x00c13d28;__uc2spf</row>
-				<row>0x00c13d2a;__ui2spf</row>
-				<row>0x00c13d2a;__us2spf</row>
-				<row>0x00c13d46;__pack_r_spf</row>
-				<row>0x00c13d52;__pack_t_spf</row>
-				<row>0x00c13d5c;__pack_spf</row>
-				<row>0x00c13d98;__sdil</row>
-				<row>0x00c13dbe;__fdvisr</row>
-				<row>0x00c13dc0;__finfsr</row>
-				<row>0x00c13dcc;__fdvnsr</row>
-				<row>0x00c13dcc;__fnansr</row>
-				<row>0x00c13dd4;__funfsr</row>
-				<row>0x00c13dda;__fcnvnan</row>
-				<row>0x00c13de0;_BrakePressureSensor_getPedalTravel</row>
-				<row>0x00c13e00;_IO_RTC_GetTimeUS</row>
-				<row>0x00c13e20;__signbit</row>
-				<row>0x00c13e20;__signbitl</row>
-				<row>0x00c13e40;__unpack_2spf</row>
-				<row>0x00c13e4e;__unpack_spf</row>
-				<row>0x00c13e60;_IO_GPIO_INT_PortSet</row>
-				<row>0x00c13e7e;__load64hb</row>
-				<row>0x00c13ee6;__pnearp32</row>
-				<row>0x00c13efe;_BMS_getHighestCellVoltage_mV</row>
-				<row>0x00c13f6c;_IO_Tools_ConfigurePin</row>
-				<row>0x00c13f94;_strlen</row>
-				<row>0x00c13ff0;_SafetyChecker_getFaults</row>
+				<row>0x00c10080;__subr_dpf</row>
+				<row>0x00c10086;__sub_dpf</row>
+				<row>0x00c1008a;__add_dpf</row>
+				<row>0x00c101f4;_IO_ADC_INT_MuxChannelInit</row>
+				<row>0x00c10362;_IO_Driver_TaskBegin</row>
+				<row>0x00c104bc;_TorqueEncoder_startCalibration</row>
+				<row>0x00c10616;_IO_DO_Init</row>
+				<row>0x00c10766;_sensors_updateSensors</row>
+				<row>0x00c108b6;_IO_SHIFT_Init</row>
+				<row>0x00c10a00;_IO_PWD_INT_CCU6_PulseInit</row>
+				<row>0x00c10b44;_TorqueEncoder_new</row>
+				<row>0x00c10c84;_BrakePressureSensor_new</row>
+				<row>0x00c10db2;__sub_spf</row>
+				<row>0x00c10db6;__add_spf</row>
+				<row>0x00c10ed4;_IO_PWM_INT_CC6IntOff</row>
+				<row>0x00c10fe8;_CoolingSystem_new</row>
+				<row>0x00c110ea;_IO_POWER_Init</row>
+				<row>0x00c111ea;_IO_PWD_CC60_SR3_INT</row>
+				<row>0x00c111ea;.vector.51</row>
+				<row>0x00c112ea;_IO_PWD_CC61_SR3_INT</row>
+				<row>0x00c112ea;.vector.55</row>
+				<row>0x00c113ea;_IO_PWD_CC62_SR3_INT</row>
+				<row>0x00c113ea;.vector.59</row>
+				<row>0x00c114ea;_IO_PWD_CC63_SR3_INT</row>
+				<row>0x00c114ea;.vector.63</row>
+				<row>0x00c115ea;_IO_Tools_FETProtection</row>
+				<row>0x00c116ea;_BrakePressureSensor_startCalibration</row>
+				<row>0x00c117e6;_vcu_ADCWasteLoop</row>
+				<row>0x00c119ce;_IO_PWM_INT_CC6SetDuty</row>
+				<row>0x00c11ab0;__div_spf</row>
+				<row>0x00c11b8e;_IO_ADC_INT_MuxKernelInit</row>
+				<row>0x00c11c6a;_IO_PWM_INT_CC2SetDuty</row>
+				<row>0x00c11d42;_IO_ADC_INT_KernelInit</row>
+				<row>0x00c11e0a;_SafetyChecker_new</row>
+				<row>0x00c11eca;__mul_spf</row>
+				<row>0x00c11f8a;_IO_ADC_INT_MuxGet</row>
+				<row>0x00c12040;__cstart</row>
+				<row>0x00c12040;.vector.0</row>
+				<row>0x00c12066;debugloop</row>
+				<row>0x00c120f6;_IO_PWM_INT_CC2IntOff</row>
+				<row>0x00c121aa;_BMS_new</row>
+				<row>0x00c1224a;_DAQ_Sensor_new</row>
+				<row>0x00c122e8;_IO_SHIFT_Task</row>
+				<row>0x00c1237c;_IO_SPI_SetupDevice</row>
+				<row>0x00c1252e;_IO_Driver_Init</row>
+				<row>0x00c125b4;_IO_EEPROM_Init</row>
+				<row>0x00c126c0;_BMS_getPower_W</row>
+				<row>0x00c12744;_IO_PWD_INT_CCU6_StartPulseCap</row>
+				<row>0x00c12846;__udil</row>
+				<row>0x00c128c6;_getPercent</row>
+				<row>0x00c129b8;_IO_Timer_INT_CC2Setup</row>
+				<row>0x00c12a2c;_IO_PWD_CC2_CC22_INT</row>
+				<row>0x00c12a2c;.vector.22</row>
+				<row>0x00c12a9e;_IO_PWD_CC2_CC23_INT</row>
+				<row>0x00c12a9e;.vector.23</row>
+				<row>0x00c12b10;_IO_PWD_CC2_CC28_INT</row>
+				<row>0x00c12b10;.vector.28</row>
+				<row>0x00c12b82;_IO_PWD_CC2_CC29_INT</row>
+				<row>0x00c12b82;.vector.29</row>
+				<row>0x00c12bf4;_Light_set</row>
+				<row>0x00c12c66;_RTDS_shutdownHelper</row>
+				<row>0x00c12cd0;_steering_degrees</row>
+				<row>0x00c12d3a;__dpf2ul</row>
+				<row>0x00c12da2;_DI_calculateCommands</row>
+				<row>0x00c12e06;_IO_Timer_INT_CC6Setup</row>
+				<row>0x00c12e6a;__io_putc</row>
+				<row>0x00c12ecc;__less_than_dpf</row>
+				<row>0x00c12f2e;__larger_than_dpf</row>
+				<row>0x00c12f90;__larger_than_or_equal_dpf</row>
+				<row>0x00c12ff2;__spf2ul</row>
+				<row>0x00c13052;_CoolingSystem_calculations</row>
+				<row>0x00c130ae;_IO_ADC_INT_Get</row>
+				<row>0x00c1310a;_BMS_getHighestCellTemp_degC</row>
+				<row>0x00c131bc;_RTDS_setVolume</row>
+				<row>0x00c13212;__l2spf</row>
+				<row>0x00c13220;__ul2spf</row>
+				<row>0x00c13268;_IO_Tools_LockProtecReg</row>
+				<row>0x00c132bc;__dpf2spf</row>
+				<row>0x00c1330e;_IO_PWD_GPT_T6_INT</row>
+				<row>0x00c1330e;.vector.36</row>
+				<row>0x00c1335c;___hsbrk</row>
+				<row>0x00c133aa;_sprintf</row>
+				<row>0x00c133f8;__dpf2s</row>
+				<row>0x00c133f8;__dpf2i</row>
+				<row>0x00c13446;__l2dpf</row>
+				<row>0x00c13460;__ul2dpf</row>
+				<row>0x00c13466;__signedlong</row>
+				<row>0x00c13494;__not_equal_dpf</row>
+				<row>0x00c134e0;__spf2s</row>
+				<row>0x00c134e0;__spf2i</row>
+				<row>0x00c1352a;__unpack_2dpf</row>
+				<row>0x00c13544;__unpack_dpf</row>
+				<row>0x00c13572;__larger_than_spf</row>
+				<row>0x00c135ba;__larger_than_or_equal_spf</row>
+				<row>0x00c13602;__less_than_spf</row>
+				<row>0x00c1364a;_IO_RTC_Init</row>
+				<row>0x00c13690;_BMS_getHighestCellTemp_d_degC</row>
+				<row>0x00c136d2;_RTDS_new</row>
+				<row>0x00c13714;__spf2dpf</row>
+				<row>0x00c13756;_IO_SHIFT_WriteMasked</row>
+				<row>0x00c13796;_CoolingSystem_enactCooling</row>
+				<row>0x00c137d4;_IO_Tools_PWM_ResetPins</row>
+				<row>0x00c13812;__spf2us</row>
+				<row>0x00c13812;__spf2ui</row>
+				<row>0x00c13850;__pack_r_dpf</row>
+				<row>0x00c13864;__pack_t_dpf</row>
+				<row>0x00c1386e;__pack_dpf</row>
+				<row>0x00c1387c;__pack_zero</row>
+				<row>0x00c1388e;_IO_Tools_UnlockProtecReg</row>
+				<row>0x00c138ca;_IO_RTC_StartTime</row>
+				<row>0x00c13904;_BMS_relayControl</row>
+				<row>0x00c1393c;_TorqueEncoder_getIndividualSensorPercent</row>
+				<row>0x00c13974;_IO_PWD_CC2_CC26_INT</row>
+				<row>0x00c13974;.vector.26</row>
+				<row>0x00c139aa;_IO_PWD_CC2_CC27_INT</row>
+				<row>0x00c139aa;.vector.27</row>
+				<row>0x00c139e0;_IO_PWD_CC2_CC30_INT</row>
+				<row>0x00c139e0;.vector.30</row>
+				<row>0x00c13a16;_IO_PWD_CC2_CC31_INT</row>
+				<row>0x00c13a16;.vector.31</row>
+				<row>0x00c13a4c;_SafetyChecker_parseCanMessage</row>
+				<row>0x00c13a82;_IO_Driver_TaskEnd</row>
+				<row>0x00c13ab6;_IO_PWD_CC60_SR1_INT</row>
+				<row>0x00c13ab6;.vector.49</row>
+				<row>0x00c13ae8;_IO_PWD_CC60_SR2_INT</row>
+				<row>0x00c13ae8;.vector.50</row>
+				<row>0x00c13b1a;_IO_PWD_CC62_SR0_INT</row>
+				<row>0x00c13b1a;.vector.56</row>
+				<row>0x00c13b4c;_IO_PWD_CC62_SR1_INT</row>
+				<row>0x00c13b4c;.vector.57</row>
+				<row>0x00c13b7e;_IO_PWD_CC62_SR2_INT</row>
+				<row>0x00c13b7e;.vector.58</row>
+				<row>0x00c13bb0;_IO_PWD_CC63_SR0_INT</row>
+				<row>0x00c13bb0;.vector.60</row>
+				<row>0x00c13be2;_IO_PWD_CC63_SR1_INT</row>
+				<row>0x00c13be2;.vector.61</row>
+				<row>0x00c13c14;_IO_PWD_CC63_SR2_INT</row>
+				<row>0x00c13c14;.vector.62</row>
+				<row>0x00c13c46;_IO_PWD_GPT_T2_INT</row>
+				<row>0x00c13c46;.vector.32</row>
+				<row>0x00c13c78;_IO_PWD_GPT_T3_INT</row>
+				<row>0x00c13c78;.vector.33</row>
+				<row>0x00c13caa;_IO_PWD_GPT_T4_INT</row>
+				<row>0x00c13caa;.vector.34</row>
+				<row>0x00c13cdc;_IO_PWD_GPT_T5_INT</row>
+				<row>0x00c13cdc;.vector.35</row>
+				<row>0x00c13d0e;__io_puts</row>
+				<row>0x00c13d40;__ddvisr</row>
+				<row>0x00c13d42;__dinfsr</row>
+				<row>0x00c13d52;__ddvnsr</row>
+				<row>0x00c13d52;__dnansr</row>
+				<row>0x00c13d62;__dunfsr</row>
+				<row>0x00c13d6c;__dcnvnan</row>
+				<row>0x00c13d72;__c2dpf</row>
+				<row>0x00c13d74;__s2dpf</row>
+				<row>0x00c13d74;__i2dpf</row>
+				<row>0x00c13d7e;__uc2dpf</row>
+				<row>0x00c13d80;__ui2dpf</row>
+				<row>0x00c13d80;__us2dpf</row>
+				<row>0x00c13d82;__signedint</row>
+				<row>0x00c13da2;__bswitchs16shuge</row>
+				<row>0x00c13dd2;_IO_GPIO_INT_PinSet</row>
+				<row>0x00c13e00;_IO_GPIO_INT_PinGet</row>
+				<row>0x00c13e2c;_IO_Tools_CalcShiftPos</row>
+				<row>0x00c13e58;_IO_Tools_DistanceFloat</row>
+				<row>0x00c13e84;_InstrumentCluster_new</row>
+				<row>0x00c13eb0;__c2spf</row>
+				<row>0x00c13eb2;__s2spf</row>
+				<row>0x00c13eb2;__i2spf</row>
+				<row>0x00c13ebc;__uc2spf</row>
+				<row>0x00c13ebe;__ui2spf</row>
+				<row>0x00c13ebe;__us2spf</row>
+				<row>0x00c13eda;__pack_r_spf</row>
+				<row>0x00c13ee6;__pack_t_spf</row>
+				<row>0x00c13ef0;__pack_spf</row>
+				<row>0x00c13f2c;__sdil</row>
+				<row>0x00c13f52;__fdvisr</row>
+				<row>0x00c13f54;__finfsr</row>
+				<row>0x00c13f60;__fdvnsr</row>
+				<row>0x00c13f60;__fnansr</row>
+				<row>0x00c13f68;__funfsr</row>
+				<row>0x00c13f6e;__fcnvnan</row>
+				<row>0x00c13f74;_BrakePressureSensor_getPedalTravel</row>
+				<row>0x00c13f94;_IO_RTC_GetTimeUS</row>
+				<row>0x00c13fb4;__signbit</row>
+				<row>0x00c13fb4;__signbitl</row>
+				<row>0x00c13fd4;__unpack_2spf</row>
+				<row>0x00c13fe2;__unpack_spf</row>
 				<row>0x00c14000;__doflt</row>
 				<row>0x00c14000;___printf_float</row>
 				<row>0x00c14c72;_BMS_parseCanMessage</row>
@@ -3831,58 +3841,61 @@
 				<row>0x00c16ba4;_SafetyChecker_update</row>
 				<row>0x00c17578;_IO_ADC_Get</row>
 				<row>0x00c17dd4;_main</row>
-				<row>0x00c18474;_IO_CAN_ConfigFIFO</row>
-				<row>0x00c18a98;_canOutput_sendDebugMessage1</row>
-				<row>0x00c18fd6;_IO_CAN_WriteFIFO</row>
-				<row>0x00c194bc;_CanManager_new</row>
-				<row>0x00c1999c;_DI_calculateInverterControl</row>
-				<row>0x00c19e3a;_IO_SPI_Task</row>
-				<row>0x00c1a2ca;_IO_CAN_ReadFIFO</row>
-				<row>0x00c1a720;_IO_DO_Set</row>
-				<row>0x00c1ab42;_IO_EEPROM_Task</row>
-				<row>0x00c1af36;__doprint</row>
-				<row>0x00c1af36;___printf_int2</row>
-				<row>0x00c1b2e6;_DAQ_parseCanMessage</row>
-				<row>0x00c1b66a;_IO_UART_Task</row>
-				<row>0x00c1b9dc;_CanManager_send</row>
-				<row>0x00c1bd12;_vcu_initializeADC</row>
-				<row>0x00c1c03c;_IO_PWM_INT_CC6Init</row>
-				<row>0x00c1c314;_IO_CAN_Init</row>
-				<row>0x00c1c5ea;_IO_DI_Init</row>
-				<row>0x00c1c87e;_IO_PWD_INT_CCU6_GetPwmPulse</row>
-				<row>0x00c1cd82;_DI_parseCanMessage</row>
-				<row>0x00c1cfea;_BrakePressureSensor_update</row>
-				<row>0x00c1d250;_TorqueEncoder_update</row>
-				<row>0x00c1d496;__divr_dpf</row>
-				<row>0x00c1d4ae;__div_dpf</row>
-				<row>0x00c1d6dc;_ADC0_viSRN0</row>
-				<row>0x00c1d6dc;.vector.40</row>
-				<row>0x00c1d91a;_ADC1_viSRN0</row>
-				<row>0x00c1d91a;.vector.44</row>
-				<row>0x00c1db58;_IO_PWM_INT_CC2Init</row>
-				<row>0x00c1dd86;_IO_PWM_Init</row>
-				<row>0x00c1dfb4;_IO_SPI_Init</row>
-				<row>0x00c1e1e0;___hmalloc</row>
-				<row>0x00c1e1e0;_malloc</row>
-				<row>0x00c1e1e0;__malloc</row>
-				<row>0x00c1e40a;_IO_PWM_SetDuty</row>
-				<row>0x00c1e62e;_IO_POWER_Set</row>
-				<row>0x00c1ea54;_CanManager_read</row>
-				<row>0x00c1ee5c;_IO_DI_Get</row>
-				<row>0x00c1f1e0;_IO_ADC_INT_StartConv</row>
-				<row>0x00c1f388;_AmkDriver_new</row>
-				<row>0x00c1f52c;_BrakePressureSensor_calibrationCycle</row>
-				<row>0x00c1f6ce;__mul_dpf</row>
-				<row>0x00c1f720;__muldiv_dpf</row>
-				<row>0x00c1f85e;_IO_ADC_INT_MuxChannelDeInit</row>
-				<row>0x00c1f9e6;_modf</row>
-				<row>0x00c1f9e6;_modfl</row>
-				<row>0x00c1fb68;_SafetyChecker_reduceTorque</row>
-				<row>0x00c1fce0;__subr_dpf</row>
-				<row>0x00c1fce6;__sub_dpf</row>
-				<row>0x00c1fcea;__add_dpf</row>
-				<row>0x00c1fe54;_IO_ADC_INT_MuxChannelInit</row>
-				<row>0x00c1ffc2;_CoolingSystem_enactCooling</row>
+				<row>0x00c18454;_IO_CAN_ConfigFIFO</row>
+				<row>0x00c18a78;_canOutput_sendDebugMessage1</row>
+				<row>0x00c18fb6;_IO_CAN_WriteFIFO</row>
+				<row>0x00c1949c;_CanManager_new</row>
+				<row>0x00c1997c;_DI_calculateInverterControl</row>
+				<row>0x00c19e1a;_IO_SPI_Task</row>
+				<row>0x00c1a2aa;_IO_CAN_ReadFIFO</row>
+				<row>0x00c1a700;_IO_DO_Set</row>
+				<row>0x00c1ab22;_TorqueEncoder_calibrationCycle</row>
+				<row>0x00c1af40;_IO_EEPROM_Task</row>
+				<row>0x00c1b334;__doprint</row>
+				<row>0x00c1b334;___printf_int2</row>
+				<row>0x00c1b6e4;_DAQ_parseCanMessage</row>
+				<row>0x00c1ba68;_IO_UART_Task</row>
+				<row>0x00c1bdda;_CanManager_send</row>
+				<row>0x00c1c110;_vcu_initializeADC</row>
+				<row>0x00c1c43a;_IO_PWM_INT_CC6Init</row>
+				<row>0x00c1c712;_IO_CAN_Init</row>
+				<row>0x00c1c9e8;_IO_DI_Init</row>
+				<row>0x00c1cc7c;_IO_PWD_INT_CCU6_GetPwmPulse</row>
+				<row>0x00c1d180;_DI_parseCanMessage</row>
+				<row>0x00c1d3e8;_BrakePressureSensor_update</row>
+				<row>0x00c1d64e;_TorqueEncoder_update</row>
+				<row>0x00c1d894;__divr_dpf</row>
+				<row>0x00c1d8ac;__div_dpf</row>
+				<row>0x00c1dada;_ADC0_viSRN0</row>
+				<row>0x00c1dada;.vector.40</row>
+				<row>0x00c1dd18;_ADC1_viSRN0</row>
+				<row>0x00c1dd18;.vector.44</row>
+				<row>0x00c1df56;_IO_PWM_INT_CC2Init</row>
+				<row>0x00c1e184;_IO_PWM_Init</row>
+				<row>0x00c1e3b2;_IO_SPI_Init</row>
+				<row>0x00c1e5de;___hmalloc</row>
+				<row>0x00c1e5de;_malloc</row>
+				<row>0x00c1e5de;__malloc</row>
+				<row>0x00c1e808;_IO_PWM_SetDuty</row>
+				<row>0x00c1ea2c;_IO_POWER_Set</row>
+				<row>0x00c1ee52;_CanManager_read</row>
+				<row>0x00c1f25a;_IO_DI_Get</row>
+				<row>0x00c1f5de;_IO_ADC_INT_StartConv</row>
+				<row>0x00c1f786;_AmkDriver_new</row>
+				<row>0x00c1f92a;_BrakePressureSensor_calibrationCycle</row>
+				<row>0x00c1facc;__mul_dpf</row>
+				<row>0x00c1fb1e;__muldiv_dpf</row>
+				<row>0x00c1fc5c;_modf</row>
+				<row>0x00c1fc5c;_modfl</row>
+				<row>0x00c1fdde;_SafetyChecker_reduceTorque</row>
+				<row>0x00c1ff56;_IO_ADC_INT_ChannelInit</row>
+				<row>0x00c1fffa;__dcti</row>
+				<row>0x00c1fffa;__cptable_clr_bit</row>
+				<row>0x00c1fffa;__cptable_clr_near</row>
+				<row>0x00c1fffa;__cptable_clr_shuge</row>
+				<row>0x00c1fffa;__cptable_cpy_bit</row>
+				<row>0x00c1fffa;__cptable_cpy_near</row>
+				<row>0x00c1fffa;__cptable_cpy_shuge</row>
 				<row>0x00c20000;__lc_vector_table</row>
 				<row>0x00c20000;__lc_base_dpp1</row>
 				<row>0x00c20000;__lc_vb_vector_table_0</row>
@@ -3970,54 +3983,54 @@
 				<row>0x00c201b4;.vector.109_loop</row>
 				<row>0x00c201b8;.vector.110_loop</row>
 				<row>0x00c201bc;.vector.111_loop</row>
-				<row>0x00c240fa;_BMS_getLowestCellVoltage_mV</row>
-				<row>0x00c24106;_BMS_getRelayState</row>
-				<row>0x00c24112;_DI_commandTorque</row>
-				<row>0x00c2411e;_DI_getCommandedTorque</row>
-				<row>0x00c2412a;_SafetyChecker_getNotices</row>
-				<row>0x00c24136;_SafetyChecker_getWarnings</row>
-				<row>0x00c241ea;_BMS_getFaultFlags0</row>
-				<row>0x00c241f4;_BMS_getFaultFlags1</row>
-				<row>0x00c24294;__store64na</row>
-				<row>0x00c2429e;__load64na</row>
-				<row>0x00c242a8;__load64nb</row>
-				<row>0x00c24322;__spf2c</row>
-				<row>0x00c2432a;__spf2uc</row>
-				<row>0x00c24344;__icall</row>
-				<row>0x00c2434a;__dpf2c</row>
-				<row>0x00c2434e;__cphnw</row>
-				<row>0x00c24352;__cphnb</row>
-				<row>0x00c24356;__Exit</row>
-				<row>0x00c24356;_exit</row>
-				<row>0x00c24394;__init</row>
-				<row>0x00c2445a;__cptable_cpy_huge</row>
-				<row>0x00c24480;__cptable_clr_huge</row>
-				<row>0x00c244a4;__dcti</row>
-				<row>0x00c244a4;__cptable_clr_bit</row>
-				<row>0x00c244a4;__cptable_clr_near</row>
-				<row>0x00c244a4;__cptable_clr_shuge</row>
-				<row>0x00c244a4;__cptable_cpy_bit</row>
-				<row>0x00c244a4;__cptable_cpy_near</row>
-				<row>0x00c244a4;__cptable_cpy_shuge</row>
-				<row>0x00c25f02;__lc_copy_table</row>
-				<row>0x00c25f02;__lc_ub_table</row>
-				<row>0x00c260dc;_io_adc_5V_tb</row>
-				<row>0x00c2610c;_io_adc_cur_tb</row>
-				<row>0x00c26114;_io_adc_tb</row>
-				<row>0x00c2615c;_io_adc_var_tb</row>
-				<row>0x00c261ac;_io_comp_pwd_tb</row>
-				<row>0x00c261b4;_io_di_tb</row>
-				<row>0x00c261d8;_io_do_tb</row>
-				<row>0x00c26208;_io_func_adc_do_tb</row>
-				<row>0x00c26268;_io_func_pwd_tb</row>
-				<row>0x00c262b0;_io_func_pwm_pwd_tb</row>
-				<row>0x00c262f0;_io_inc_pwd_tb</row>
-				<row>0x00c26308;_io_int_prio</row>
-				<row>0x00c26388;_io_pwd_lb_tb</row>
-				<row>0x00c263a8;_io_pwm_tb</row>
-				<row>0x00c263e8;_io_uart_tb</row>
-				<row>0x00c263fe;_multiplex_pins</row>
-				<row>0x00c2648e;___ctype</row>
+				<row>0x00c24000;_IO_GPIO_INT_PortSet</row>
+				<row>0x00c2401e;__load64hb</row>
+				<row>0x00c24086;__pnearp32</row>
+				<row>0x00c2409e;_BMS_getHighestCellVoltage_mV</row>
+				<row>0x00c2410c;_IO_Tools_ConfigurePin</row>
+				<row>0x00c24134;_strlen</row>
+				<row>0x00c241a2;_SafetyChecker_getFaults</row>
+				<row>0x00c2429a;_BMS_getLowestCellVoltage_mV</row>
+				<row>0x00c242a6;_BMS_getRelayState</row>
+				<row>0x00c242b2;_DI_commandTorque</row>
+				<row>0x00c242be;_DI_getCommandedTorque</row>
+				<row>0x00c242ca;_SafetyChecker_getNotices</row>
+				<row>0x00c242d6;_SafetyChecker_getWarnings</row>
+				<row>0x00c2438a;_BMS_getFaultFlags0</row>
+				<row>0x00c24394;_BMS_getFaultFlags1</row>
+				<row>0x00c24434;__store64na</row>
+				<row>0x00c2443e;__load64na</row>
+				<row>0x00c24448;__load64nb</row>
+				<row>0x00c244c2;__spf2c</row>
+				<row>0x00c244ca;__spf2uc</row>
+				<row>0x00c244e4;__icall</row>
+				<row>0x00c244ea;__dpf2c</row>
+				<row>0x00c244ee;__cphnw</row>
+				<row>0x00c244f2;__cphnb</row>
+				<row>0x00c244f6;__Exit</row>
+				<row>0x00c244f6;_exit</row>
+				<row>0x00c24534;__init</row>
+				<row>0x00c245fa;__cptable_cpy_huge</row>
+				<row>0x00c24620;__cptable_clr_huge</row>
+				<row>0x00c26098;__lc_copy_table</row>
+				<row>0x00c26098;__lc_ub_table</row>
+				<row>0x00c26272;_io_adc_5V_tb</row>
+				<row>0x00c262a2;_io_adc_cur_tb</row>
+				<row>0x00c262aa;_io_adc_tb</row>
+				<row>0x00c262f2;_io_adc_var_tb</row>
+				<row>0x00c26342;_io_comp_pwd_tb</row>
+				<row>0x00c2634a;_io_di_tb</row>
+				<row>0x00c2636e;_io_do_tb</row>
+				<row>0x00c2639e;_io_func_adc_do_tb</row>
+				<row>0x00c263fe;_io_func_pwd_tb</row>
+				<row>0x00c26446;_io_func_pwm_pwd_tb</row>
+				<row>0x00c26486;_io_inc_pwd_tb</row>
+				<row>0x00c2649e;_io_int_prio</row>
+				<row>0x00c2651e;_io_pwd_lb_tb</row>
+				<row>0x00c2653e;_io_pwm_tb</row>
+				<row>0x00c2657e;_io_uart_tb</row>
+				<row>0x00c26594;_multiplex_pins</row>
+				<row>0x00c26624;___ctype</row>
 				<row>0x00e00000;__lc_base_dpp2</row>
 				<row>0x00e04000;__lc_ub_hheap</row>
 				<row>0x00e04000;__lc_gb_my_huge_ram</row>
@@ -4193,6 +4206,7 @@
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_IO_SPI_Task (1177)</row>
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_IO_CAN_ReadFIFO (870)</row>
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_IO_DO_Set (925)</row>
+			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_TorqueEncoder_calibrationCycle (756)</row>
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_IO_EEPROM_Task (969)</row>
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_libc (1796)</row>
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_DAQ_parseCanMessage (356)</row>
@@ -4225,7 +4239,6 @@
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_AmkDriver_new (5)</row>
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_BrakePressureSensor_calibrationCycle (193)</row>
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_libfp (2326)</row>
-			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_IO_ADC_INT_MuxChannelDeInit (1009)</row>
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_libc (2253)</row>
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_SafetyChecker_reduceTorque (617)</row>
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_libfp (2325)</row>
@@ -4235,7 +4248,6 @@
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_IO_DO_Init (919)</row>
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_sensors_updateSensors (728)</row>
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_IO_SHIFT_Init (1145)</row>
-			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_IO_DI_DeInit (920)</row>
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_IO_PWD_INT_CCU6_PulseInit (1537)</row>
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_TorqueEncoder_new (750)</row>
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_BrakePressureSensor_new (187)</row>
@@ -4292,6 +4304,7 @@
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_libfp (2328)</row>
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_libfp (2330)</row>
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_libfp (2331)</row>
+			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_libfp (2306)</row>
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_CoolingSystem_calculations (327)</row>
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_IO_ADC_INT_Get (1006)</row>
 			<row>spe:xc16x:code;ranged page;0x00c10080..0x00cc0000(0x10000, [0x0..0x10000]);1;code_BMS_getHighestCellTemp_degC (85)</row>
@@ -4609,7 +4622,6 @@
 			<row>spe:xc16x:shuge;page;(0x10000, [0x1..0xffff]);1;_init_switch_table_libc (1677)</row>
 			<row>spe:xc16x:shuge;page;(0x10000, [0x1..0xffff]);1;shuge__12_swt (842)</row>
 			<row>spe:xc16x:shuge;page;(0x10000, [0x1..0xffff]);1;shuge__1_swt (917)</row>
-			<row>spe:xc16x:shuge;page;(0x10000, [0x1..0xffff]);1;shuge__3_swt (921)</row>
 			<row>spe:xc16x:shuge;page;(0x10000, [0x1..0xffff]);1;shuge__4_swt (924)</row>
 			<row>spe:xc16x:shuge;page;(0x10000, [0x1..0xffff]);1;shuge__5_swt (1236)</row>
 			<row>spe:xc16x:shuge;page;(0x10000, [0x1..0xffff]);1;shuge__1_swt (758)</row>
@@ -4694,180 +4706,181 @@
 				<name>Reason</name>
 			</column>
 			<row>shuge__1_swt (195);brakePressureSensor.obj;;;unreferenced</row>
-			<row>code_IO_PWD_FreqDeInit (1269);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_FreqDeInit;unreferenced</row>
-			<row>code_IO_PWD_PulseGet (1267);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_PulseGet;unreferenced</row>
-			<row>code_IO_PWM_SetFreq (1341);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_SetFreq;unreferenced</row>
-			<row>code_IO_PWM_DeInit (1336);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_DeInit;unreferenced</row>
-			<row>code_IO_PWM_DualInit (1335);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_DualInit;unreferenced</row>
-			<row>code_IO_PWD_PulseDeInit (1270);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_PulseDeInit;unreferenced</row>
-			<row>code_IO_PWD_ComplexDeInit (1262);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_ComplexDeInit;unreferenced</row>
-			<row>code_IO_PWD_CountGet (1272);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_CountGet;unreferenced</row>
-			<row>code_IO_PWM_DeConfig (1331);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_DeConfig;unreferenced</row>
-			<row>code_IO_PWM_DualSetDuty (1339);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_DualSetDuty;unreferenced</row>
-			<row>code_IO_PWD_PulseInit (1264);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_PulseInit;unreferenced</row>
-			<row>code_IO_PWD_CountInit (1271);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_CountInit;unreferenced</row>
-			<row>code_IO_PWD_ComplexInit (1260);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_ComplexInit;unreferenced</row>
-			<row>code_IO_PWD_CountDeInit (1274);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_CountDeInit;unreferenced</row>
-			<row>code_IO_PWM_DualDeInit (1337);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_DualDeInit;unreferenced</row>
-			<row>code_IO_PWM_GetCur (1340);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_GetCur;unreferenced</row>
-			<row>code_IO_PWD_FreqGet (1265);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_FreqGet;unreferenced</row>
-			<row>code_IO_PWD_FreqInit (1263);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_FreqInit;unreferenced</row>
-			<row>code_IO_RTC_PeriodicInit (1379);IO_RTC.obj;xc2000_ttc60.lib;_IO_RTC_PeriodicInit;unreferenced</row>
-			<row>code_IO_PWM_Curr_DeConfig (1332);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_Curr_DeConfig;unreferenced</row>
-			<row>code_IO_RTC_PeriodicDeInit (1380);IO_RTC.obj;xc2000_ttc60.lib;_IO_RTC_PeriodicDeInit;unreferenced</row>
-			<row>code_IO_PWD_ComplexGet (1261);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_ComplexGet;unreferenced</row>
-			<row>code_IO_PWD_CountSet (1273);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_CountSet;unreferenced</row>
-			<row>code_IO_Tools_DistanceUbyte2 (1409);IO_Tools.obj;xc2000_ttc60.lib;_IO_Tools_DistanceUbyte2;unreferenced</row>
-			<row>code_IO_Tools_DistanceUbyte4 (1408);IO_Tools.obj;xc2000_ttc60.lib;_IO_Tools_DistanceUbyte4;unreferenced</row>
-			<row>code_IO_Tools_DistanceUbyte1 (1410);IO_Tools.obj;xc2000_ttc60.lib;_IO_Tools_DistanceUbyte1;unreferenced</row>
-			<row>code_IO_UART_DeInit (1478);IO_UART.obj;xc2000_ttc60.lib;_IO_UART_DeInit;unreferenced</row>
-			<row>code_IO_Tools_CalcCRC16 (1415);IO_Tools.obj;xc2000_ttc60.lib;_IO_Tools_CalcCRC16;unreferenced</row>
-			<row>code_IO_PWD_INT_IncInit (1529);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_IncInit;unreferenced</row>
-			<row>code_IO_Tools_GetIdentificationRegisters (1416);IO_Tools.obj;xc2000_ttc60.lib;_IO_Tools_GetIdentificationRegisters;unreferenced</row>
-			<row>code_IO_UART_GetRxStatus (1485);IO_UART.obj;xc2000_ttc60.lib;_IO_UART_GetRxStatus;unreferenced</row>
-			<row>code_IO_PWD_INT_SetInc (1531);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_SetInc;unreferenced</row>
-			<row>code_IO_PWD_INT_AccumulateEdges (1524);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_AccumulateEdges;unreferenced</row>
-			<row>code_IO_PWD_INT_CCU2_DeInit (1527);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU2_DeInit;unreferenced</row>
-			<row>code_IO_PWD_INT_CCU2_GetPulseFreq (1528);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU2_GetPulseFreq;unreferenced</row>
-			<row>code_IO_UART_Write (1484);IO_UART.obj;xc2000_ttc60.lib;_IO_UART_Write;unreferenced</row>
-			<row>code_IO_UART_WriteQueue (1472);IO_UART.obj;xc2000_ttc60.lib;_IO_UART_WriteQueue;unreferenced</row>
-			<row>code_IO_UART_Init (1475);IO_UART.obj;xc2000_ttc60.lib;_IO_UART_Init;unreferenced</row>
-			<row>code_IO_UART_Read (1483);IO_UART.obj;xc2000_ttc60.lib;_IO_UART_Read;unreferenced</row>
-			<row>code_IO_UART_GetTxStatus (1486);IO_UART.obj;xc2000_ttc60.lib;_IO_UART_GetTxStatus;unreferenced</row>
-			<row>code_IO_PWD_INT_CCU2_Init (1526);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU2_Init;unreferenced</row>
-			<row>code_IO_PWD_INT_GetInc (1530);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_GetInc;unreferenced</row>
-			<row>code_IO_PWD_INT_GetCount (1533);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_GetCount;unreferenced</row>
-			<row>code_IO_PWD_INT_CountInit (1532);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CountInit;unreferenced</row>
-			<row>code_IO_PWD_INT_CCU6_GetFreq (1536);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU6_GetFreq;unreferenced</row>
-			<row>code_IO_PWD_INT_CCU6_GetPulse (1538);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU6_GetPulse;unreferenced</row>
-			<row>code_IO_PWD_INT_SetCount (1534);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_SetCount;unreferenced</row>
-			<row>code_IO_PWD_INT_CCU6_FreqInit (1535);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU6_FreqInit;unreferenced</row>
-			<row>code_IO_PWD_INT_CC6IntOn (1542);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CC6IntOn;unreferenced</row>
-			<row>code_IO_PWD_INT_CCU6_FreqPulseDeInit (1541);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU6_FreqPulseDeInit;unreferenced</row>
+			<row>code_libc (1763);__dohfree.obj;c166ch.lib;__save_1;unreferenced</row>
+			<row>code_libc (1762);__dohfree.obj;c166ch.lib;__restore_2;unreferenced</row>
+			<row>code_libc (1760);__dohfree.obj;c166ch.lib;___dohfree;unreferenced</row>
+			<row>code_libc (1787);printf_int.obj;c166ch.lib;_dummy;unreferenced</row>
+			<row>code_libc (1761);__dohfree.obj;c166ch.lib;_$cocofun_1;unreferenced</row>
+			<row>code_libc (2180);memcpy.obj;c166ch.lib;_memcpy;unreferenced</row>
+			<row>code_libc (2225);powf.obj;c166ch.lib;__restore_2;unreferenced</row>
+			<row>code_libc (2254);expf.obj;c166ch.lib;_expf;unreferenced</row>
+			<row>code_libc (2222);powf.obj;c166ch.lib;_powf;unreferenced</row>
+			<row>code_libc (2255);expf.obj;c166ch.lib;__restore_2;unreferenced</row>
+			<row>code_libc (2224);powf.obj;c166ch.lib;_$cocofun_1;unreferenced</row>
+			<row>code_libc (2223);powf.obj;c166ch.lib;_$cocofun_2;unreferenced</row>
+			<row>code_libc (2226);powf.obj;c166ch.lib;__save_1;unreferenced</row>
 			<row>code_libc (2280);floorf.obj;c166ch.lib;_floorf;unreferenced</row>
 			<row>code_libc (2281);floorf.obj;c166ch.lib;_$cocofun_1;unreferenced</row>
+			<row>code_libc (2269);logf.obj;c166ch.lib;__save_1;unreferenced</row>
+			<row>code_librt (2338);cphnw.obj;c166rth.lib;___memcphnw;unreferenced</row>
+			<row>code_librt (2357);cphnb.obj;c166rth.lib;___memcphnb;unreferenced</row>
 			<row>code_libc (2267);logf.obj;c166ch.lib;_logf;unreferenced</row>
 			<row>code_libc (2268);logf.obj;c166ch.lib;__restore_2;unreferenced</row>
-			<row>code_libc (2269);logf.obj;c166ch.lib;__save_1;unreferenced</row>
-			<row>code_librt (2357);cphnb.obj;c166rth.lib;___memcphnb;unreferenced</row>
-			<row>code_librt (2338);cphnw.obj;c166rth.lib;___memcphnw;unreferenced</row>
-			<row>code_libc (2255);expf.obj;c166ch.lib;__restore_2;unreferenced</row>
 			<row>code_libc (2256);expf.obj;c166ch.lib;__save_1;unreferenced</row>
-			<row>code_libc (2254);expf.obj;c166ch.lib;_expf;unreferenced</row>
-			<row>code_IO_PWD_IntPulseDeInit (1254);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_IntPulseDeInit;unreferenced</row>
-			<row>code_IO_PWD_IncInit (1255);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_IncInit;unreferenced</row>
-			<row>code_IO_PWD_IncDeInit (1259);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_IncDeInit;unreferenced</row>
-			<row>code_IO_Timer_INT_GPTTimerStart (1204);IO_INT_Timer.obj;xc2000_ttc60.lib;_IO_Timer_INT_GPTTimerStart;unreferenced</row>
-			<row>code_IO_Timer_INT_GPTTimerStop (1205);IO_INT_Timer.obj;xc2000_ttc60.lib;_IO_Timer_INT_GPTTimerStop;unreferenced</row>
-			<row>code_IO_POWER_DeInit (1228);IO_POWER.obj;xc2000_ttc60.lib;_IO_POWER_DeInit;unreferenced</row>
-			<row>code_IO_POWER_GetStatus (1237);IO_POWER.obj;xc2000_ttc60.lib;_IO_POWER_GetStatus;unreferenced</row>
-			<row>code_IO_PWD_IncGet (1257);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_IncGet;unreferenced</row>
-			<row>code_IO_PWD_IncSet (1258);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_IncSet;unreferenced</row>
-			<row>code_CalibrateBPS (684);sensorCalculations.obj;;_CalibrateBPS;unreferenced</row>
+			<row>code_TorqueEncoder_saveCalibrationToEEPROM (753);torqueEncoder.obj;;_TorqueEncoder_saveCalibrationToEEPROM;unreferenced</row>
+			<row>code_TorqueEncoder_resetCalibration (752);torqueEncoder.obj;;_TorqueEncoder_resetCalibration;unreferenced</row>
 			<row>code_GetBrakePosition (685);sensorCalculations.obj;;_GetBrakePosition;unreferenced</row>
 			<row>code_freq_to_rpm (686);sensorCalculations.obj;;_freq_to_rpm;unreferenced</row>
 			<row>code_rpm_to_mph (687);sensorCalculations.obj;;_rpm_to_mph;unreferenced</row>
-			<row>code_TorqueEncoder_resetCalibration (752);torqueEncoder.obj;;_TorqueEncoder_resetCalibration;unreferenced</row>
-			<row>code_TorqueEncoder_saveCalibrationToEEPROM (753);torqueEncoder.obj;;_TorqueEncoder_saveCalibrationToEEPROM;unreferenced</row>
+			<row>code_CalibrateBPS (684);sensorCalculations.obj;;_CalibrateBPS;unreferenced</row>
 			<row>code_TorqueEncoder_loadCalibrationFromEEPROM (754);torqueEncoder.obj;;_TorqueEncoder_loadCalibrationFromEEPROM;unreferenced</row>
-			<row>code_IO_ADC_BoardTempFloat (843);IO_ADC.obj;xc2000_ttc60.lib;_IO_ADC_BoardTempFloat;unreferenced</row>
-			<row>code_IO_ADC_BoardTempSbyte (844);IO_ADC.obj;xc2000_ttc60.lib;_IO_ADC_BoardTempSbyte;unreferenced</row>
-			<row>code_IO_CAN_DeInitHandle (864);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_DeInitHandle;unreferenced</row>
-			<row>code_IO_CAN_DeInit (865);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_DeInit;unreferenced</row>
-			<row>code_IO_CAN_ConfigMsg (866);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_ConfigMsg;unreferenced</row>
-			<row>code_TorqueEncoder_calibrationCycle (756);torqueEncoder.obj;;_TorqueEncoder_calibrationCycle;unreferenced</row>
 			<row>code_TorqueEncoder_getOutputPercent (759);torqueEncoder.obj;;_TorqueEncoder_getOutputPercent;unreferenced</row>
 			<row>code_IO_ADC_ChannelDeInit (834);IO_ADC.obj;xc2000_ttc60.lib;_IO_ADC_ChannelDeInit;unreferenced</row>
-			<row>code_IO_CAN_MsgStatus (873);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_MsgStatus;unreferenced</row>
-			<row>code_IO_CAN_ReadMsg (867);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_ReadMsg;unreferenced</row>
-			<row>code_IO_CAN_FIFOStatus (874);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_FIFOStatus;unreferenced</row>
+			<row>code_IO_ADC_BoardTempSbyte (844);IO_ADC.obj;xc2000_ttc60.lib;_IO_ADC_BoardTempSbyte;unreferenced</row>
+			<row>code_IO_CAN_DeInit (865);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_DeInit;unreferenced</row>
+			<row>code_IO_CAN_DeInitHandle (864);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_DeInitHandle;unreferenced</row>
+			<row>code_IO_ADC_BoardTempFloat (843);IO_ADC.obj;xc2000_ttc60.lib;_IO_ADC_BoardTempFloat;unreferenced</row>
+			<row>code_IO_CAN_ConfigMsg (866);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_ConfigMsg;unreferenced</row>
 			<row>code_IO_DO_DeInit (922);IO_DIO.obj;xc2000_ttc60.lib;_IO_DO_DeInit;unreferenced</row>
-			<row>code_IO_CAN_Status (872);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_Status;unreferenced</row>
+			<row>code_IO_CAN_ReadMsg (867);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_ReadMsg;unreferenced</row>
 			<row>code_IO_CAN_WriteMsg (868);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_WriteMsg;unreferenced</row>
-			<row>code_IO_Driver_GetVersionOfDriver (947);IO_Driver.obj;xc2000_ttc60.lib;_IO_Driver_GetVersionOfDriver;unreferenced</row>
-			<row>code_IO_EEPROM_DeInit (970);IO_EEPROM.obj;xc2000_ttc60.lib;_IO_EEPROM_DeInit;unreferenced</row>
-			<row>code_IO_EEPROM_GetStatus (973);IO_EEPROM.obj;xc2000_ttc60.lib;_IO_EEPROM_GetStatus;unreferenced</row>
-			<row>code_IO_EEPROM_Write (972);IO_EEPROM.obj;xc2000_ttc60.lib;_IO_EEPROM_Write;unreferenced</row>
+			<row>code_IO_CAN_Status (872);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_Status;unreferenced</row>
+			<row>code_IO_CAN_MsgStatus (873);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_MsgStatus;unreferenced</row>
+			<row>code_IO_CAN_FIFOStatus (874);IO_CAN.obj;xc2000_ttc60.lib;_IO_CAN_FIFOStatus;unreferenced</row>
+			<row>code_IO_DI_DeInit (920);IO_DIO.obj;xc2000_ttc60.lib;_IO_DI_DeInit;unreferenced</row>
 			<row>code_IO_EEPROM_Read (971);IO_EEPROM.obj;xc2000_ttc60.lib;_IO_EEPROM_Read;unreferenced</row>
+			<row>code_IO_EEPROM_Write (972);IO_EEPROM.obj;xc2000_ttc60.lib;_IO_EEPROM_Write;unreferenced</row>
+			<row>code_IO_EEPROM_DeInit (970);IO_EEPROM.obj;xc2000_ttc60.lib;_IO_EEPROM_DeInit;unreferenced</row>
+			<row>code_IO_Driver_GetVersionOfDriver (947);IO_Driver.obj;xc2000_ttc60.lib;_IO_Driver_GetVersionOfDriver;unreferenced</row>
+			<row>code_IO_EEPROM_GetStatus (973);IO_EEPROM.obj;xc2000_ttc60.lib;_IO_EEPROM_GetStatus;unreferenced</row>
+			<row>code_IO_ADC_INT_MuxChannelDeInit (1009);IO_INT_ADC.obj;xc2000_ttc60.lib;_IO_ADC_INT_MuxChannelDeInit;unreferenced</row>
 			<row>code_IO_ADC_INT_ChannelDeInit (1008);IO_INT_ADC.obj;xc2000_ttc60.lib;_IO_ADC_INT_ChannelDeInit;unreferenced</row>
 			<row>code_IO_PWM_INT_CC6SetFreq (1071);IO_INT_PWM.obj;xc2000_ttc60.lib;_IO_PWM_INT_CC6SetFreq;unreferenced</row>
-			<row>code_IO_PWM_INT_CC2Deinit (1073);IO_INT_PWM.obj;xc2000_ttc60.lib;_IO_PWM_INT_CC2Deinit;unreferenced</row>
-			<row>code_IO_PWM_INT_CC6Deinit (1074);IO_INT_PWM.obj;xc2000_ttc60.lib;_IO_PWM_INT_CC6Deinit;unreferenced</row>
 			<row>code_IO_PWM_INT_CalcPwmData (1089);IO_INT_PWM.obj;xc2000_ttc60.lib;_IO_PWM_INT_CalcPwmData;unreferenced</row>
 			<row>code_IO_SHIFT_DeInit (1147);IO_INT_SHIFT.obj;xc2000_ttc60.lib;_IO_SHIFT_DeInit;unreferenced</row>
+			<row>code_IO_PWM_INT_CC2Deinit (1073);IO_INT_PWM.obj;xc2000_ttc60.lib;_IO_PWM_INT_CC2Deinit;unreferenced</row>
+			<row>code_IO_PWM_INT_CC6Deinit (1074);IO_INT_PWM.obj;xc2000_ttc60.lib;_IO_PWM_INT_CC6Deinit;unreferenced</row>
 			<row>code_IO_SHIFT_Write (1148);IO_INT_SHIFT.obj;xc2000_ttc60.lib;_IO_SHIFT_Write;unreferenced</row>
 			<row>code_IO_SHIFT_Read (1150);IO_INT_SHIFT.obj;xc2000_ttc60.lib;_IO_SHIFT_Read;unreferenced</row>
 			<row>code_IO_SPI_DeInit (1174);IO_INT_SPI.obj;xc2000_ttc60.lib;_IO_SPI_DeInit;unreferenced</row>
 			<row>code_IO_SPI_RemoveDevice (1176);IO_INT_SPI.obj;xc2000_ttc60.lib;_IO_SPI_RemoveDevice;unreferenced</row>
+			<row>code_IO_Timer_INT_GPTTimerStart (1204);IO_INT_Timer.obj;xc2000_ttc60.lib;_IO_Timer_INT_GPTTimerStart;unreferenced</row>
+			<row>code_IO_POWER_GetStatus (1237);IO_POWER.obj;xc2000_ttc60.lib;_IO_POWER_GetStatus;unreferenced</row>
+			<row>code_IO_PWD_IncInit (1255);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_IncInit;unreferenced</row>
+			<row>code_IO_Timer_INT_GPTTimerStop (1205);IO_INT_Timer.obj;xc2000_ttc60.lib;_IO_Timer_INT_GPTTimerStop;unreferenced</row>
+			<row>code_IO_POWER_DeInit (1228);IO_POWER.obj;xc2000_ttc60.lib;_IO_POWER_DeInit;unreferenced</row>
+			<row>code_IO_PWD_IntPulseDeInit (1254);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_IntPulseDeInit;unreferenced</row>
 			<row>code_IO_Timer_INT_GPTTimerEnable (1202);IO_INT_Timer.obj;xc2000_ttc60.lib;_IO_Timer_INT_GPTTimerEnable;unreferenced</row>
 			<row>code_IO_Timer_INT_GPTTimerInit (1203);IO_INT_Timer.obj;xc2000_ttc60.lib;_IO_Timer_INT_GPTTimerInit;unreferenced</row>
-			<row>code_libc (2180);memcpy.obj;c166ch.lib;_memcpy;unreferenced</row>
-			<row>code_libc (2222);powf.obj;c166ch.lib;_powf;unreferenced</row>
-			<row>code_libc (2223);powf.obj;c166ch.lib;_$cocofun_2;unreferenced</row>
-			<row>code_libc (2225);powf.obj;c166ch.lib;__restore_2;unreferenced</row>
-			<row>code_libc (2226);powf.obj;c166ch.lib;__save_1;unreferenced</row>
-			<row>code_libc (2224);powf.obj;c166ch.lib;_$cocofun_1;unreferenced</row>
-			<row>code_libc (1760);__dohfree.obj;c166ch.lib;___dohfree;unreferenced</row>
+			<row>code_IO_PWD_IncSet (1258);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_IncSet;unreferenced</row>
+			<row>code_IO_PWD_IncDeInit (1259);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_IncDeInit;unreferenced</row>
+			<row>code_IO_PWD_ComplexDeInit (1262);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_ComplexDeInit;unreferenced</row>
+			<row>code_IO_PWD_IncGet (1257);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_IncGet;unreferenced</row>
+			<row>code_IO_PWD_ComplexInit (1260);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_ComplexInit;unreferenced</row>
+			<row>code_IO_PWD_ComplexGet (1261);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_ComplexGet;unreferenced</row>
+			<row>code_IO_PWD_INT_AccumulateEdges (1524);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_AccumulateEdges;unreferenced</row>
+			<row>code_IO_PWD_INT_CCU2_DeInit (1527);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU2_DeInit;unreferenced</row>
+			<row>code_IO_PWD_INT_CCU2_GetPulseFreq (1528);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU2_GetPulseFreq;unreferenced</row>
+			<row>code_IO_PWD_INT_CCU2_Init (1526);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU2_Init;unreferenced</row>
+			<row>code_IO_PWD_INT_GetInc (1530);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_GetInc;unreferenced</row>
+			<row>code_IO_PWD_INT_IncInit (1529);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_IncInit;unreferenced</row>
+			<row>code_IO_PWD_INT_SetInc (1531);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_SetInc;unreferenced</row>
+			<row>code_IO_PWD_INT_CountInit (1532);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CountInit;unreferenced</row>
+			<row>code_IO_PWD_INT_GetCount (1533);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_GetCount;unreferenced</row>
+			<row>code_IO_PWD_INT_SetCount (1534);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_SetCount;unreferenced</row>
+			<row>code_IO_PWD_INT_CCU6_FreqInit (1535);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU6_FreqInit;unreferenced</row>
+			<row>code_IO_PWD_INT_CCU6_FreqPulseDeInit (1541);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU6_FreqPulseDeInit;unreferenced</row>
+			<row>code_IO_PWD_INT_CCU6_GetPulse (1538);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU6_GetPulse;unreferenced</row>
+			<row>code_IO_PWD_INT_CC6IntOn (1542);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CC6IntOn;unreferenced</row>
+			<row>code_IO_PWD_INT_CCU6_GetFreq (1536);IO_INT_PWD.obj;xc2000_ttc60.lib;_IO_PWD_INT_CCU6_GetFreq;unreferenced</row>
 			<row>code_libc (1695);__hmalloc.obj;c166ch.lib;___hfree;unreferenced</row>
-			<row>code_libc (1761);__dohfree.obj;c166ch.lib;_$cocofun_1;unreferenced</row>
-			<row>code_libc (1762);__dohfree.obj;c166ch.lib;__restore_2;unreferenced</row>
-			<row>code_libc (1763);__dohfree.obj;c166ch.lib;__save_1;unreferenced</row>
-			<row>code_libc (1787);printf_int.obj;c166ch.lib;_dummy;unreferenced</row>
-			<row>code_swap_int32 (498);mathFunctions.obj;;_swap_int32;unreferenced</row>
-			<row>code_swap_uint32 (497);mathFunctions.obj;;_swap_uint32;unreferenced</row>
+			<row>code_IO_PWD_PulseInit (1264);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_PulseInit;unreferenced</row>
+			<row>code_IO_PWD_CountGet (1272);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_CountGet;unreferenced</row>
+			<row>code_IO_PWD_FreqInit (1263);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_FreqInit;unreferenced</row>
+			<row>code_IO_PWD_FreqDeInit (1269);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_FreqDeInit;unreferenced</row>
+			<row>code_IO_PWD_FreqGet (1265);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_FreqGet;unreferenced</row>
+			<row>code_IO_PWD_PulseGet (1267);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_PulseGet;unreferenced</row>
+			<row>code_IO_PWD_PulseDeInit (1270);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_PulseDeInit;unreferenced</row>
+			<row>code_IO_PWD_CountInit (1271);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_CountInit;unreferenced</row>
+			<row>code_IO_PWD_CountSet (1273);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_CountSet;unreferenced</row>
+			<row>code_IO_PWD_CountDeInit (1274);IO_PWD.obj;xc2000_ttc60.lib;_IO_PWD_CountDeInit;unreferenced</row>
+			<row>code_IO_PWM_DeConfig (1331);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_DeConfig;unreferenced</row>
+			<row>code_IO_PWM_Curr_DeConfig (1332);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_Curr_DeConfig;unreferenced</row>
+			<row>code_IO_PWM_DualInit (1335);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_DualInit;unreferenced</row>
+			<row>code_IO_PWM_DeInit (1336);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_DeInit;unreferenced</row>
+			<row>code_IO_PWM_DualDeInit (1337);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_DualDeInit;unreferenced</row>
+			<row>code_IO_PWM_GetCur (1340);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_GetCur;unreferenced</row>
+			<row>code_IO_PWM_DualSetDuty (1339);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_DualSetDuty;unreferenced</row>
+			<row>code_IO_RTC_PeriodicInit (1379);IO_RTC.obj;xc2000_ttc60.lib;_IO_RTC_PeriodicInit;unreferenced</row>
+			<row>code_IO_RTC_PeriodicDeInit (1380);IO_RTC.obj;xc2000_ttc60.lib;_IO_RTC_PeriodicDeInit;unreferenced</row>
+			<row>code_IO_PWM_SetFreq (1341);IO_PWM.obj;xc2000_ttc60.lib;_IO_PWM_SetFreq;unreferenced</row>
+			<row>code_IO_Tools_DistanceUbyte4 (1408);IO_Tools.obj;xc2000_ttc60.lib;_IO_Tools_DistanceUbyte4;unreferenced</row>
+			<row>code_IO_Tools_DistanceUbyte1 (1410);IO_Tools.obj;xc2000_ttc60.lib;_IO_Tools_DistanceUbyte1;unreferenced</row>
+			<row>code_IO_Tools_DistanceUbyte2 (1409);IO_Tools.obj;xc2000_ttc60.lib;_IO_Tools_DistanceUbyte2;unreferenced</row>
+			<row>code_IO_Tools_CalcCRC16 (1415);IO_Tools.obj;xc2000_ttc60.lib;_IO_Tools_CalcCRC16;unreferenced</row>
+			<row>code_IO_UART_DeInit (1478);IO_UART.obj;xc2000_ttc60.lib;_IO_UART_DeInit;unreferenced</row>
+			<row>code_IO_UART_Read (1483);IO_UART.obj;xc2000_ttc60.lib;_IO_UART_Read;unreferenced</row>
+			<row>code_IO_UART_WriteQueue (1472);IO_UART.obj;xc2000_ttc60.lib;_IO_UART_WriteQueue;unreferenced</row>
+			<row>code_IO_Tools_GetIdentificationRegisters (1416);IO_Tools.obj;xc2000_ttc60.lib;_IO_Tools_GetIdentificationRegisters;unreferenced</row>
+			<row>code_IO_UART_Write (1484);IO_UART.obj;xc2000_ttc60.lib;_IO_UART_Write;unreferenced</row>
+			<row>code_IO_UART_Init (1475);IO_UART.obj;xc2000_ttc60.lib;_IO_UART_Init;unreferenced</row>
+			<row>code_IO_UART_GetRxStatus (1485);IO_UART.obj;xc2000_ttc60.lib;_IO_UART_GetRxStatus;unreferenced</row>
+			<row>code_IO_UART_GetTxStatus (1486);IO_UART.obj;xc2000_ttc60.lib;_IO_UART_GetTxStatus;unreferenced</row>
 			<row>code_RTDS_delete (575);readyToDriveSound.obj;;_RTDS_delete;unreferenced</row>
 			<row>code_SafetyChecker_allSafe (613);safety.obj;;_SafetyChecker_allSafe;unreferenced</row>
-			<row>huge_prevHVILState (13);AMKDrive.obj;;_prevHVILState;unreferenced</row>
 			<row>code_BMS_getPower_uW (86);bms.obj;;_BMS_getPower_uW;unreferenced</row>
 			<row>code_BrakePressureSensor_saveCalibrationToEEPROM (190);brakePressureSensor.obj;;_BrakePressureSensor_saveCalibrationToEEPROM;unreferenced</row>
-			<row>code_BrakePressureSensor_resetCalibration (189);brakePressureSensor.obj;;_BrakePressureSensor_resetCalibration;unreferenced</row>
 			<row>code_BrakePressureSensor_loadCalibrationFromEEPROM (191);brakePressureSensor.obj;;_BrakePressureSensor_loadCalibrationFromEEPROM;unreferenced</row>
-			<row>code_BMS_getPackVoltage (83);bms.obj;;_BMS_getPackVoltage;unreferenced</row>
+			<row>huge_prevHVILState (13);AMKDrive.obj;;_prevHVILState;unreferenced</row>
+			<row>code_BrakePressureSensor_resetCalibration (189);brakePressureSensor.obj;;_BrakePressureSensor_resetCalibration;unreferenced</row>
 			<row>code_BrakePressureSensor_getIndividualSensorPercent (194);brakePressureSensor.obj;;_BrakePressureSensor_getIndividualSensorPercent;unreferenced</row>
+			<row>code_CanManager_getReadStatus (268);canManager.obj;;_CanManager_getReadStatus;unreferenced</row>
+			<row>code_BMS_getPackVoltage (83);bms.obj;;_BMS_getPackVoltage;unreferenced</row>
 			<row>code_AVL_insert (64);avlTree.obj;;_AVL_insert;unreferenced</row>
-			<row>huge_Sensor_TCSKnob (384);initializations.obj;;_Sensor_TCSKnob;unreferenced</row>
 			<row>code_canOutput_sendSensorMessages (269);canManager.obj;;_canOutput_sendSensorMessages;unreferenced</row>
 			<row>code_IC_parseCanMessage (437);instrumentCluster.obj;;_IC_parseCanMessage;unreferenced</row>
 			<row>code_IC_getTorqueMapMode (438);instrumentCluster.obj;;_IC_getTorqueMapMode;unreferenced</row>
+			<row>huge_Sensor_TCSKnob (384);initializations.obj;;_Sensor_TCSKnob;unreferenced</row>
 			<row>code_IC_getLaunchControlSensitivity (439);instrumentCluster.obj;;_IC_getLaunchControlSensitivity;unreferenced</row>
-			<row>code_CanManager_getReadStatus (268);canManager.obj;;_CanManager_getReadStatus;unreferenced</row>
-			<row>code_min (491);mathFunctions.obj;;_min;unreferenced</row>
-			<row>code_swap_int16 (496);mathFunctions.obj;;_swap_int16;unreferenced</row>
 			<row>code_max (490);mathFunctions.obj;;_max;unreferenced</row>
-			<row>code_swap_int8 (494);mathFunctions.obj;;_swap_int8;unreferenced</row>
-			<row>code_blink (492);mathFunctions.obj;;_blink;unreferenced</row>
+			<row>code_min (491);mathFunctions.obj;;_min;unreferenced</row>
 			<row>code_swap_uint16 (495);mathFunctions.obj;;_swap_uint16;unreferenced</row>
+			<row>code_swap_int16 (496);mathFunctions.obj;;_swap_int16;unreferenced</row>
+			<row>code_swap_uint32 (497);mathFunctions.obj;;_swap_uint32;unreferenced</row>
+			<row>code_swap_int32 (498);mathFunctions.obj;;_swap_int32;unreferenced</row>
+			<row>code_blink (492);mathFunctions.obj;;_blink;unreferenced</row>
+			<row>code_swap_int8 (494);mathFunctions.obj;;_swap_int8;unreferenced</row>
 			<row>code_swap_uint8 (493);mathFunctions.obj;;_swap_uint8;unreferenced</row>
 			<row>shuge__6_swt (835);IO_ADC.obj;xc2000_ttc60.lib;;unreferenced</row>
-			<row>shuge__10_swt (839);IO_ADC.obj;xc2000_ttc60.lib;;unreferenced</row>
-			<row>shuge__9_swt (838);IO_ADC.obj;xc2000_ttc60.lib;;unreferenced</row>
-			<row>shuge__7_swt (836);IO_ADC.obj;xc2000_ttc60.lib;;unreferenced</row>
 			<row>shuge__8_swt (837);IO_ADC.obj;xc2000_ttc60.lib;;unreferenced</row>
+			<row>shuge__10_swt (839);IO_ADC.obj;xc2000_ttc60.lib;;unreferenced</row>
+			<row>shuge__7_swt (836);IO_ADC.obj;xc2000_ttc60.lib;;unreferenced</row>
 			<row>huge__1_ini (879);IO_CAN.obj;xc2000_ttc60.lib;;unreferenced</row>
+			<row>shuge__9_swt (838);IO_ADC.obj;xc2000_ttc60.lib;;unreferenced</row>
 			<row>shuge__3_swt (1072);IO_INT_PWM.obj;xc2000_ttc60.lib;;unreferenced</row>
-			<row>huge__999002_gpt_initialized (1208);IO_INT_Timer.obj;xc2000_ttc60.lib;;unreferenced</row>
-			<row>huge__999001_sens_state (1241);IO_POWER.obj;xc2000_ttc60.lib;;unreferenced</row>
+			<row>shuge__3_swt (921);IO_DIO.obj;xc2000_ttc60.lib;;unreferenced</row>
 			<row>shuge__1_swt (1266);IO_PWD.obj;xc2000_ttc60.lib;;unreferenced</row>
+			<row>huge__999001_sens_state (1241);IO_POWER.obj;xc2000_ttc60.lib;;unreferenced</row>
+			<row>huge__999002_gpt_initialized (1208);IO_INT_Timer.obj;xc2000_ttc60.lib;;unreferenced</row>
 			<row>shuge__2_swt (1268);IO_PWD.obj;xc2000_ttc60.lib;;unreferenced</row>
-			<row>shuge__5_swt (1546);IO_INT_PWD.obj;xc2000_ttc60.lib;;unreferenced</row>
-			<row>shuge__4_swt (1545);IO_INT_PWD.obj;xc2000_ttc60.lib;;unreferenced</row>
-			<row>shuge__2_swt (1476);IO_UART.obj;xc2000_ttc60.lib;;unreferenced</row>
-			<row>shuge__5_swt (1480);IO_UART.obj;xc2000_ttc60.lib;;unreferenced</row>
-			<row>shuge__3_swt (1544);IO_INT_PWD.obj;xc2000_ttc60.lib;;unreferenced</row>
-			<row>huge__1_ini (1432);IO_Tools.obj;xc2000_ttc60.lib;;unreferenced</row>
 			<row>shuge__2_swt (1543);IO_INT_PWD.obj;xc2000_ttc60.lib;;unreferenced</row>
-			<row>shuge__3_swt (1477);IO_UART.obj;xc2000_ttc60.lib;;unreferenced</row>
+			<row>shuge__3_swt (1544);IO_INT_PWD.obj;xc2000_ttc60.lib;;unreferenced</row>
+			<row>shuge__4_swt (1545);IO_INT_PWD.obj;xc2000_ttc60.lib;;unreferenced</row>
 			<row>shuge__4_swt (1479);IO_UART.obj;xc2000_ttc60.lib;;unreferenced</row>
+			<row>shuge__5_swt (1546);IO_INT_PWD.obj;xc2000_ttc60.lib;;unreferenced</row>
+			<row>huge__1_ini (1432);IO_Tools.obj;xc2000_ttc60.lib;;unreferenced</row>
+			<row>shuge__5_swt (1480);IO_UART.obj;xc2000_ttc60.lib;;unreferenced</row>
 			<row>shuge__6_swt (1547);IO_INT_PWD.obj;xc2000_ttc60.lib;;unreferenced</row>
-			<row>code_libfp (2305);cspf2l.obj;c166fph.lib;__spf2l;unreferenced</row>
-			<row>code_libfp (2306);cspf2ul.obj;c166fph.lib;__spf2ul;unreferenced</row>
-			<row>code_libc (2295);ldexpf.obj;c166ch.lib;__ldexp_spf;unreferenced</row>
-			<row>code_libfp (2313);lt_e_spf.obj;c166fph.lib;__less_than_or_equal_spf;unreferenced</row>
+			<row>shuge__3_swt (1477);IO_UART.obj;xc2000_ttc60.lib;;unreferenced</row>
+			<row>shuge__2_swt (1476);IO_UART.obj;xc2000_ttc60.lib;;unreferenced</row>
 			<row>code_libc (2294);modff.obj;c166ch.lib;__modf_spf;unreferenced</row>
+			<row>code_libc (2295);ldexpf.obj;c166ch.lib;__ldexp_spf;unreferenced</row>
+			<row>code_libfp (2298);cl2spf.obj;c166fph.lib;__ll2spf;unreferenced</row>
+			<row>code_libfp (2313);lt_e_spf.obj;c166fph.lib;__less_than_or_equal_spf;unreferenced</row>
+			<row>code_libc (2296);frexpf.obj;c166ch.lib;__frexp_spf;unreferenced</row>
+			<row>code_libfp (2305);cspf2l.obj;c166fph.lib;__spf2l;unreferenced</row>
 			<row>code_libfp (2311);is_0_spf.obj;c166fph.lib;__is_zero_spf;unreferenced</row>
 			<row>code_libfp (2314);neq_spf.obj;c166fph.lib;__not_equal_spf;unreferenced</row>
-			<row>code_libc (2296);frexpf.obj;c166ch.lib;__frexp_spf;unreferenced</row>
-			<row>code_libfp (2298);cl2spf.obj;c166fph.lib;__ll2spf;unreferenced</row>
 		</table>
 	</part>
 </mapfile>

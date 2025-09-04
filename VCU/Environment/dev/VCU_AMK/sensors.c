@@ -131,7 +131,7 @@ void sensors_updateSensors(void)
     Sensor_EcoButton.ioErr_signalGet = IO_DI_Get(IO_DI_01, &Sensor_EcoButton.sensorValue);
     Sensor_TVButton.ioErr_signalGet = IO_DI_Get(IO_DI_03, &Sensor_TVButton.sensorValue); //USed to be Launch Control Button
     //Sensor_TCSSwitchDown.ioErr_signalGet = IO_DI_Get(IO_DI_03, &Sensor_TCSSwitchDown.sensorValue);
-    Sensor_HVILTerminationSense.ioErr_signalGet = IO_DI_Get(IO_DI_07, &Sensor_HVILTerminationSense.sensorValue);
+    Sensor_HVILTerminationSense.ioErr_signalGet = IO_DI_Get(IO_DI_06, &Sensor_HVILTerminationSense.sensorValue);
 
     Sensor_DRSButton.ioErr_signalGet = IO_DI_Get(IO_DI_04, &Sensor_DRSButton.sensorValue);
 
