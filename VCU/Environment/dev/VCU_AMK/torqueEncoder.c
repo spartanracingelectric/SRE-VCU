@@ -18,17 +18,8 @@ extern Sensor Sensor_BenchTPS1;
 TorqueEncoder* TorqueEncoder_new(bool benchMode)
 {
     TorqueEncoder* me = (TorqueEncoder*)malloc(sizeof(struct _TorqueEncoder));
-    //me->bench = benchMode;
-    
-    //TODO: Make sure the main loop is running before doing this
-    //me->tps0 = (benchMode == TRUE) ? &Sensor_BenchTPS0 : &Sensor_TPS0;
-    //me->tps1 = (benchMode == TRUE) ? &Sensor_BenchTPS1 : &Sensor_TPS1;
     me->tps0 = &Sensor_TPS0;
     me->tps1 = &Sensor_TPS1;
-
-    //Where/should these be hardcoded?
-    me->tps0_reverse = FALSE;
-    me->tps1_reverse = TRUE;
 
     // TODO: Fetch from / store in EEPROM
     // exponent applied to pedal curve.  1 = linear, < 1 means more torque is given early on, > 1 means torque ramps up more slowly
@@ -36,16 +27,6 @@ TorqueEncoder* TorqueEncoder_new(bool benchMode)
 
     me->travelPercent = 0;
     me->runCalibration = FALSE;  //Do not run the calibration at the next main loop cycle
-
-    //me->calibrated = FALSE;
-    //TorqueEncoder_resetCalibration(me);
-
-    //Old Rotary Sensor Datasheet limits (used by safety checker / rules requirement)
-    //Datasheet had an operating range
-    //me->tps0->specMin = 5000 * .05 - 5000 * .006; // = 220 , Target 0% = ~500
-    //me->tps0->specMax = 5000 * .45 + 5000 * .006; // = 2280, Target 100% = ~2000
-    //me->tps1->specMin = 5000 * .55 - 5000 * .006; // = 2720, Target 0% = ~3000
-    //me->tps1->specMax = 5000 * .95 + 5000 * .006; // = 4780, Target 100% = ~4600
 
     //New Rotary Sensor Datasheet limits (used by safety checker / rules requirement)
     //It is literally a potentiometer, no sensor operating range in theory?
