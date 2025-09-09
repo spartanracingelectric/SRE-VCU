@@ -238,7 +238,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     //-------------------------------------------------------------------
     if (tps->tps0->sensorValue < tps->tps0->specMin || tps->tps0->sensorValue > tps->tps0->specMax || tps->tps1->sensorValue < tps->tps1->specMin || tps->tps1->sensorValue > tps->tps1->specMax)
     {
-        //me->faults |= F_tpsOutOfRange;
+        me->faults |= F_tpsOutOfRange;
     }
     else
     {
@@ -250,7 +250,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     //-------------------------------------------------------------------
     if (bps->bps0->sensorValue < bps->bps0->specMin || bps->bps0->sensorValue > bps->bps0->specMax)
     {
-        //me->faults |= F_bpsOutOfRange;
+        me->faults |= F_bpsOutOfRange;
     }
     else
     {
