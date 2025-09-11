@@ -49,13 +49,6 @@ CanManager* CanManager_new(ubyte2 busSpeed[CAN_CHANNELS], ubyte1 read_messageLim
 {
     CanManager* me = (CanManager*)malloc(sizeof(struct _CanManager));
 
-    //me->sm = serialMan;
-    //SerialManager_send(me->sm, "CanManager's reference to SerialManager was created.\n");
-    
-    //create can history data structure (AVL tree?)
-    //me->incomingTree = NULL;
-    //me->outgoingTree = NULL;
-    //Need to change to extended CAN limit
     for (ubyte4 id = 0; id <= 0x7FF; id++)
     {
         me->canMessageHistory[id] = 0;
@@ -166,15 +159,7 @@ IO_ErrorType CanManager_send(CanManager* me, CanChannel channel, IO_CAN_DATA_FRA
             ubyte1 oldData = lastMessage->data[dataPosition];
             ubyte1 newData = canMessages[messagePosition].data[dataPosition];
             //if any data byte is changed, then probably want to send the message
-            if (oldData == newData)
-            {
-                //data has not changed.  No action required (DO NOT SET)
-                //dataChanged = FALSE;
-            }
-            else
-            {
-                dataChanged = TRUE; //ONLY MODIFY IF CHANGED
-            }
+            dataChanged = (oldData == newData) ? FALSE : TRUE; //Only want to send if dataChanged is true
         }//end checking each byte in message
 
         //----------------------------------------------------------------------------
@@ -227,15 +212,9 @@ IO_ErrorType CanManager_send(CanManager* me, CanChannel channel, IO_CAN_DATA_FRA
         if ((channel == CAN0_HIPRI ? me->ioErr_write[0] : me->ioErr_write[1]) == IO_E_OK)
         {
             //Loop through the messages that we sent...
-            ///////////AVLNode* messageToUpdate;
             for (messagePosition = 0; messagePosition < messagesToSendCount; messagePosition++)
             {
-                //...find the message ID in the outgoing message tree again (big inefficiency here)...
-                //////////messageToUpdate = AVL_find(me->outgoingTree, messagesToSend[messagePosition].id);
-
-                //and update the message sent timestamp
-                /////////////IO_RTC_GetTimeUS(messageToUpdate->lastMessage_timeStamp); //Update the timestamp for when the message was last sent
-                //IO_RTC_GetTimeUS(me->canMessageHistory[messagesToSend[messagePosition].id]->lastMessage_timeStamp);
+                // update the message sent timestamp
                 IO_RTC_StartTime(&me->canMessageHistory[messagesToSend[messagePosition].id]->lastMessage_timeStamp);
             }
         }
