@@ -394,24 +394,15 @@ void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressu
 {
     IO_CAN_DATA_FRAME canMessages[me->write_messageLimit[0]];
     ubyte1 errorCount;
-    float4 tempPedalPercent;   //Pedal percent float (a decimal between 0 and 1
-    ubyte1 tps0Percent;  //Pedal percent int   (a number from 0 to 100)
-    ubyte1 tps1Percent;
     ubyte2 canMessageCount = 0;
     ubyte2 canMessageID = 0x500;
     ubyte1 byteNum;
 
-    TorqueEncoder_getIndividualSensorPercent(tps, 0, &tempPedalPercent); //borrow the pedal percent variable
-    tps0Percent = 0xFF * tempPedalPercent;
-    TorqueEncoder_getIndividualSensorPercent(tps, 1, &tempPedalPercent);
-    tps1Percent = 0xFF * (tempPedalPercent);
-    //tps1Percent = 0xFF * (1 - tempPedalPercent);  //OLD: flipped over pedal percent (this value for display in CAN only)
-
+    ubyte1 tps0Percent = 0xFF * tps->tps0_percent;  //Pedal percent int   (a number from 0 to 100)
+    ubyte1 tps1Percent = 0xFF * tps->tps1_percent;
     ubyte1 throttlePercent = 0xFF * tps->travelPercent;
-
-    BrakePressureSensor_getPedalTravel(bps, &errorCount, &tempPedalPercent); //getThrottlePercent(TRUE, &errorCount);
-    ubyte1 brakePercent = 0xFF * tempPedalPercent;
-
+    ubyte1 brakePercent = 0xFF * bps->percent;
+    
     //500: TPS 0
     canMessageCount++;
     byteNum = 0;
@@ -825,3 +816,35 @@ void canOutput_sendDebugMessage1(CanManager *me, TorqueEncoder *tps, BrakePressu
     //IO_CAN_WriteFIFO(canFifoHandle_LoPri_Write, canMessages, canMessageCount);  
 
 }
+
+/*
+// pseudocode for standard can message creation (pointer held in struct of member who's data is being reported)
+    // want to ignore lines where data = 0 (incase of combined CAN message from multiple struct. Individual bit flags should not be combined over mutiple structs, therefore, no workaround is made for this scenario.)
+// canManager simply has a list of id's to update, direct references struct member's can message fo addition to FIFO queue
+
+IO_CAN_DATA_FRAME CanManager_createMessage(CanManager* me, ubyte4 canID, ubyte1 canFrameType, ubyte1 data[8], IO_CAN_DATA_FRAME* canMessage){
+    canMessage.id_format = canFrameType;
+    canMessage.id = canID;
+
+    for(ubyte1 i = 0; i < 7; ++i){
+        if(data[i] != 0){    
+        canMessage.data[i] = data[i];
+        }
+    }
+    canMessage.length = 8;
+}
+
+
+
+organized linked list of can messages, if no ID dupe then new, if same id then update 
+
+void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressureSensor* bps, InstrumentCluster* ic, BatteryManagementSystem* bms, SafetyChecker* sc, _DriveInverter *inv1, _DriveInverter *inv2)
+{
+    IO_CAN_DATA_FRAME canMessages[me->write_messageLimit[0]];
+    ubyte1 errorCount;
+    ubyte2 canMessageCount = 0;
+    ubyte2 canMessageID = 0x500;
+    ubyte1 byteNum;
+
+
+*/
