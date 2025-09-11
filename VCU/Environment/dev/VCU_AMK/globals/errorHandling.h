@@ -1,6 +1,5 @@
 /*****************************************************************************
  * error_handling.h - Centralized Error Handling System
- * Optimized Version
  ******************************************************************************
  * This file provides a centralized error handling system that replaces
  * the inconsistent error handling patterns found throughout the original codebase.

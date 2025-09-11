@@ -1,6 +1,5 @@
 /*****************************************************************************
  * error_handling.c - Centralized Error Handling System Implementation
- * Optimized Version
  ******************************************************************************
  * This file implements the centralized error handling system that provides
  * consistent error management throughout the VCU system.
