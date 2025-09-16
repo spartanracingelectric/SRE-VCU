@@ -24,6 +24,11 @@
 BrakePressureSensor *BrakePressureSensor_new(void)
 {
     BrakePressureSensor *me = (BrakePressureSensor *)malloc(sizeof(struct _BrakePressureSensor));
+    
+    // Validate memory allocation
+    if (me == NULL) {
+        return NULL; // Memory allocation failed
+    }
 
     me->bps0 = &Sensor_BPS0;
 
@@ -54,6 +59,11 @@ BrakePressureSensor *BrakePressureSensor_new(void)
 //Updates all values based on sensor readings, safety checks, etc
  void BrakePressureSensor_update(BrakePressureSensor *me, bool bench)
 {
+    // Validate input parameters
+    if (me == NULL || me->bps0 == NULL) {
+        return; // Invalid parameters - fail silently for safety
+    }
+    
     me->bps0_value = me->bps0->sensorValue;
     //me->bps1_value = me->bps1->sensorValue;
 
@@ -104,6 +114,11 @@ BrakePressureSensor *BrakePressureSensor_new(void)
 // Sets initial/calibrated values
 void BrakePressureSensor_resetCalibration(BrakePressureSensor *me)
 {
+    // Validate input parameters
+    if (me == NULL || me->bps0 == NULL) {
+        return; // Invalid parameters - fail silently for safety
+    }
+    
     me->calibrated = FALSE;
     me->bps0_calibMin = me->bps0->sensorValue;
     me->bps0_calibMax = me->bps0->sensorValue;
@@ -121,6 +136,16 @@ void BrakePressureSensor_loadCalibrationFromEEPROM(BrakePressureSensor *me)
 
 void BrakePressureSensor_startCalibration(BrakePressureSensor *me, ubyte1 secondsToRun)
 {
+    // Validate input parameters
+    if (me == NULL) {
+        return; // Invalid parameters - fail silently for safety
+    }
+    
+    // Validate calibration time (reasonable range: 1-60 seconds)
+    if (secondsToRun < 1 || secondsToRun > 60) {
+        return; // Invalid calibration time
+    }
+    
     if (me->runCalibration == FALSE) //Ignore the button if calibration is already running
     {
         me->runCalibration = TRUE;
@@ -139,11 +164,16 @@ void BrakePressureSensor_startCalibration(BrakePressureSensor *me, ubyte1 second
 // The rules (especially EV2.3.6) are written about % of PEDAL travel, not percent of sensor range, so we must calculate pedal travel by recording the min/max voltages at min/max throttle positions
 void BrakePressureSensor_calibrationCycle(BrakePressureSensor *me, ubyte1 *errorCount)
 {
+    // Validate input parameters
+    if (me == NULL || me->bps0 == NULL) {
+        return; // Invalid parameters - fail silently for safety
+    }
+    
     if (me->runCalibration == TRUE)
     {
         if (IO_RTC_GetTimeUS(me->timestamp_calibrationStart) < (ubyte4)(me->calibrationRunTime) * 1000 * 1000)
         {
-            //The calibration itself
+            //The calibration itself - update min/max values
             if (me->bps0->sensorValue < me->bps0_calibMin)
             {
                 me->bps0_calibMin = me->bps0->sensorValue;
@@ -165,6 +195,15 @@ void BrakePressureSensor_calibrationCycle(BrakePressureSensor *me, ubyte1 *error
         }
         else //Calibration shutdown
         {
+            // Validate calibration range before finalizing
+            ubyte2 calibRange = me->bps0_calibMax - me->bps0_calibMin;
+            if (calibRange < 100) { // Minimum reasonable range
+                // Calibration range too small - reset and try again
+                me->runCalibration = FALSE;
+                me->calibrated = FALSE;
+                return;
+            }
+            
             float4 pedalTopPlay = 1.05;
             float4 pedalBottomPlay = .95;
 
@@ -215,6 +254,35 @@ void BrakePressureSensor_getIndividualSensorPercent(BrakePressureSensor *me, uby
 -------------------------------------------------------------------*/
 void BrakePressureSensor_getPedalTravel(BrakePressureSensor *me, ubyte1 *errorCount, float4 *pedalPercent)
 {
+    // Validate input parameters
+    if (me == NULL || pedalPercent == NULL) {
+        return; // Invalid parameters - fail silently for safety
+    }
+    
     *pedalPercent = me->percent;
+}
 
+// Additional safety and validation functions
+bool BrakePressureSensor_isCalibrationValid(BrakePressureSensor *me)
+{
+    if (me == NULL || me->bps0 == NULL) {
+        return FALSE; // Invalid parameters
+    }
+    
+    if (!me->calibrated) {
+        return FALSE; // Not calibrated
+    }
+    
+    // Check for reasonable calibration range
+    ubyte2 bps0_range = me->bps0_calibMax - me->bps0_calibMin;
+    
+    return (bps0_range >= 100); // Minimum reasonable range
+}
+
+bool BrakePressureSensor_areBrakesOn(BrakePressureSensor *me)
+{
+    if (me == NULL) {
+        return FALSE; // Consider NULL as brakes off for safety
+    }
+    return me->brakesAreOn;
 }

@@ -48,4 +48,8 @@ void TorqueEncoder_calibrationCycle(TorqueEncoder *me, ubyte1 *errorCount);
 //void TorqueEncoder_plausibilityCheck(TorqueEncoder* me, ubyte1* errorCount, bool* isPlausible);
 void TorqueEncoder_getOutputPercent(TorqueEncoder *me, float4 *outputPercent);
 
+// Additional safety and validation functions
+bool TorqueEncoder_isImplausibilityDetected(TorqueEncoder *me);
+bool TorqueEncoder_isCalibrationValid(TorqueEncoder *me);
+
 #endif //  _TORQUEENCODER_H

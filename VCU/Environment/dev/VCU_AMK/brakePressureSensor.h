@@ -54,4 +54,8 @@ void BrakePressureSensor_startCalibration(BrakePressureSensor *me, ubyte1 second
 void BrakePressureSensor_calibrationCycle(BrakePressureSensor *me, ubyte1 *errorCount);
 void BrakePressureSensor_getPedalTravel(BrakePressureSensor *me, ubyte1 *errorCount, float4 *pedalPercent);
 
+// Additional safety and validation functions
+bool BrakePressureSensor_isCalibrationValid(BrakePressureSensor *me);
+bool BrakePressureSensor_areBrakesOn(BrakePressureSensor *me);
+
 #endif //  _BRAKEPRESSURESENSOR_H

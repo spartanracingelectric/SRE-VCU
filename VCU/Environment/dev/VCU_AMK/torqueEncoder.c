@@ -18,6 +18,12 @@ extern Sensor Sensor_BenchTPS1;
 TorqueEncoder* TorqueEncoder_new(bool benchMode)
 {
     TorqueEncoder* me = (TorqueEncoder*)malloc(sizeof(struct _TorqueEncoder));
+    
+    // Validate memory allocation
+    if (me == NULL) {
+        return NULL; // Memory allocation failed
+    }
+    
     me->tps0 = &Sensor_TPS0;
     me->tps1 = &Sensor_TPS1;
 
@@ -44,6 +50,11 @@ TorqueEncoder* TorqueEncoder_new(bool benchMode)
 //Updates all values based on sensor readings, safety checks, etc
 void TorqueEncoder_update(TorqueEncoder* me)
 {
+    // Validate input parameters
+    if (me == NULL || me->tps0 == NULL || me->tps1 == NULL) {
+        return; // Invalid parameters - fail silently for safety
+    }
+    
     me->tps0_value = me->tps0->sensorValue;
     me->tps1_value = me->tps1->sensorValue;
 
@@ -77,13 +88,30 @@ void TorqueEncoder_update(TorqueEncoder* me)
             me->tps0_percent = getPercent(me->tps0_value, me->tps0_calibMin, me->tps0_calibMax, TRUE);
             me->tps1_percent = getPercent(me->tps1_value, me->tps1_calibMin, me->tps1_calibMax, TRUE);
 
-            me->travelPercent = (me->tps0_percent + me->tps1_percent) / 2;
+            // Check for sensor plausibility (EV2.3.5 rule)
+            float4 percentDiff = (me->tps0_percent > me->tps1_percent) ? 
+                                (me->tps0_percent - me->tps1_percent) : 
+                                (me->tps1_percent - me->tps0_percent);
+            
+            if (percentDiff > 0.1f) { // 10% tolerance for implausibility
+                // Sensor implausibility detected - use conservative approach
+                me->travelPercent = (me->tps0_percent < me->tps1_percent) ? me->tps0_percent : me->tps1_percent;
+                me->implausibility = TRUE;
+            } else {
+                me->travelPercent = (me->tps0_percent + me->tps1_percent) / 2;
+                me->implausibility = FALSE;
+            }
         }
     }
 }
 
 void TorqueEncoder_resetCalibration(TorqueEncoder* me)
 {
+    // Validate input parameters
+    if (me == NULL || me->tps0 == NULL || me->tps1 == NULL) {
+        return; // Invalid parameters - fail silently for safety
+    }
+    
     me->calibrated = FALSE;
     
     me->tps0_calibMin = me->tps0->sensorValue;
@@ -104,6 +132,16 @@ void TorqueEncoder_loadCalibrationFromEEPROM(TorqueEncoder* me)
 
 void TorqueEncoder_startCalibration(TorqueEncoder* me, ubyte1 secondsToRun)
 {
+    // Validate input parameters
+    if (me == NULL) {
+        return; // Invalid parameters - fail silently for safety
+    }
+    
+    // Validate calibration time (reasonable range: 1-60 seconds)
+    if (secondsToRun < 1 || secondsToRun > 60) {
+        return; // Invalid calibration time
+    }
+    
     if (me->runCalibration == FALSE) //Ignore the button if calibration is already running
     {
         me->runCalibration = TRUE;
@@ -146,6 +184,17 @@ void TorqueEncoder_calibrationCycle(TorqueEncoder* me, ubyte1* errorCount)
         }
         else  //Calibration shutdown
         {
+            // Validate calibration ranges before finalizing
+            ubyte4 tps0_range = me->tps0_calibMax - me->tps0_calibMin;
+            ubyte4 tps1_range = me->tps1_calibMax - me->tps1_calibMin;
+            
+            if (tps0_range < 200 || tps1_range < 200) { // Minimum reasonable range
+                // Calibration range too small - reset and try again
+                me->runCalibration = FALSE;
+                me->calibrated = FALSE;
+                return;
+            }
+            
             //90 degree sensor active range.. so just say % = degrees
             //float4 pedalTopPlay = 1.05;
             //float4 pedalBottomPlay = .95;
@@ -197,5 +246,36 @@ void TorqueEncoder_getIndividualSensorPercent(TorqueEncoder* me, ubyte1 sensorNu
 
 void TorqueEncoder_getOutputPercent(TorqueEncoder* me, float4* outputPercent)
 {
+    // Validate input parameters
+    if (me == NULL || outputPercent == NULL) {
+        return; // Invalid parameters - fail silently for safety
+    }
+    
     *outputPercent = powf(me->travelPercent, me->outputCurveExponent);
+}
+
+// Additional safety and validation functions
+bool TorqueEncoder_isImplausibilityDetected(TorqueEncoder* me)
+{
+    if (me == NULL) {
+        return TRUE; // Consider NULL as implausible
+    }
+    return me->implausibility;
+}
+
+bool TorqueEncoder_isCalibrationValid(TorqueEncoder* me)
+{
+    if (me == NULL || me->tps0 == NULL || me->tps1 == NULL) {
+        return FALSE; // Invalid parameters
+    }
+    
+    if (!me->calibrated) {
+        return FALSE; // Not calibrated
+    }
+    
+    // Check for reasonable calibration ranges
+    ubyte4 tps0_range = me->tps0_calibMax - me->tps0_calibMin;
+    ubyte4 tps1_range = me->tps1_calibMax - me->tps1_calibMin;
+    
+    return (tps0_range >= 200 && tps1_range >= 200);
 }
