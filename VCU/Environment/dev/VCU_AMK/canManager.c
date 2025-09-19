@@ -822,29 +822,65 @@ void canOutput_sendDebugMessage1(CanManager *me, TorqueEncoder *tps, BrakePressu
     // want to ignore lines where data = 0 (incase of combined CAN message from multiple struct. Individual bit flags should not be combined over mutiple structs, therefore, no workaround is made for this scenario.)
 // canManager simply has a list of id's to update, direct references struct member's can message fo addition to FIFO queue
 
-IO_CAN_DATA_FRAME CanManager_createMessage(CanManager* me, ubyte4 canID, ubyte1 canFrameType, ubyte1 data[8], IO_CAN_DATA_FRAME* canMessage){
-    canMessage.id_format = canFrameType;
-    canMessage.id = canID;
+//me->lastvalid keeps track of last obtainMessageAddress() pointer
+IO_CAN_DATA_FRAME * canManager_obtainMessageAddress(CanManager* me, ubyte4 canID){
+
+    for(ubyte1 i = 0; i < me->lastvalid; ++i){
+        if(me->canMessages0[i].id = canID)
+        {   return &me->canMessages0[i]; }
+    }
+    if(me->lastvalid < me->write_messageLimit[0]){
+        ++me->lastvalid;
+        me->canMessages0[me->lastvalid].id = canID;
+        return &me->canMessages0[me->lastvalid];
+    }
+    return NULL;
+}
+
+IO_CAN_DATA_FRAME canManager_fillMessage(IO_CAN_DATA_FRAME* canMessage, ubyte1 data, ubyte1 byte){
 
     for(ubyte1 i = 0; i < 7; ++i){
-        if(data[i] != 0){    
+        if(canMessage.data[i] != 0){    
         canMessage.data[i] = data[i];
         }
     }
-    canMessage.length = 8;
 }
 
+Could also remove the copy of the data[i], but would have to have individual copied implementations for the same process of checking if a byte is being used by someone else. Maybe come up with a way to avoid both things?
+//
+//
+//
+void canManager_buildMessageLine0(CanManager* me){
+    
+    // me->lastvalid <= me->write_messageLimit[0];
 
+    for( ubyte1 i = 0; i < me->lastvalid; ++i){
+        // filling out all default values before messages are sent
+        me->canMessages0[i].id_format = IO_CAN_STD_FRAME;
+        me->canMessages0[i].length = 8;
+    }
 
-organized linked list of can messages, if no ID dupe then new, if same id then update 
+}
 
-void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressureSensor* bps, InstrumentCluster* ic, BatteryManagementSystem* bms, SafetyChecker* sc, _DriveInverter *inv1, _DriveInverter *inv2)
-{
-    IO_CAN_DATA_FRAME canMessages[me->write_messageLimit[0]];
-    ubyte1 errorCount;
-    ubyte2 canMessageCount = 0;
-    ubyte2 canMessageID = 0x500;
-    ubyte1 byteNum;
+//implementation for using
+TPS tps_init(){
+    ...
+    tps->canMessage = canManager_obtainMessageAddress(can0, 0x500);
+    ...
+}
 
+tps_update(TPS* tps){
+    ...
+    Sensor_TPS0.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_07, &Sensor_TPS0.sensorValue, &Sensor_TPS0.fresh);
+    canManager_fillMessage(tps->canMessage, tps->sensorValue0, 2);
+    canManager_fillMessage(tps->canMessage, (tps->sensorValue0 >> 8), 3);
+    ...
+}
 
+void main(){
+    ...
+    canOutput_buildMessageLine0(CanManager* me);
+    canManager_send(canManager, CAN0_HIPRI, canManager->canMessages0H, canManager->lastvalid);  //Send messages to CAN0 (no more canOutput_sendDebugMessage0/1)
+    ...
+}
 */
