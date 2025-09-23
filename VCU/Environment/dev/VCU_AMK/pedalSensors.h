@@ -125,7 +125,7 @@ typedef PedalSensor BrakePressureSensor;
 #define BrakePressureSensor_getBrakesOn(me) PedalSensor_getBrakesOn(me)
 
 // Additional legacy compatibility functions
-#define TorqueEncoder_getIndividualSensorPercent(me, sensorNum) PedalSensor_getIndividualSensorPercent(me, sensorNum)
+#define TorqueEncoder_getIndividualSensorPercent(me, sensorNum, percent) (*percent = PedalSensor_getIndividualSensorPercent(me, sensorNum))
 #define TorqueEncoder_getPedalTravel(me, errorCount, percent) (*percent = PedalSensor_getTravelPercent(me))
 #define BrakePressureSensor_getPedalTravel(me, errorCount, percent) (*percent = PedalSensor_getTravelPercent(me))
 
