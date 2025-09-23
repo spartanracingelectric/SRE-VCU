@@ -185,7 +185,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     //===================================================================
     // Check if VCU was able to get a TPS/BPS reading
     //===================================================================
-    if (tps->tps0->ioErr_powerInit != IO_E_OK || tps->tps1->ioErr_powerInit != IO_E_OK || tps->tps0->ioErr_powerSet != IO_E_OK || tps->tps1->ioErr_powerSet != IO_E_OK)
+    if (tps0(tps)->ioErr_powerInit != IO_E_OK || tps1(tps)->ioErr_powerInit != IO_E_OK || tps0(tps)->ioErr_powerSet != IO_E_OK || tps1(tps)->ioErr_powerSet != IO_E_OK)
     {
         me->faults |= F_tpsPowerFailure;
     }
@@ -194,7 +194,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
         me->faults &= ~F_tpsPowerFailure;
     }
 
-    if (tps->tps0->ioErr_signalInit != IO_E_OK || tps->tps1->ioErr_signalInit != IO_E_OK || tps->tps0->ioErr_signalGet != IO_E_OK || tps->tps1->ioErr_signalGet != IO_E_OK)
+    if (tps0(tps)->ioErr_signalInit != IO_E_OK || tps1(tps)->ioErr_signalInit != IO_E_OK || tps0(tps)->ioErr_signalGet != IO_E_OK || tps1(tps)->ioErr_signalGet != IO_E_OK)
     {
         me->faults |= F_tpsSignalFailure;
         //SerialManager_send(me->serialMan, "TPS signal error\n");
@@ -204,7 +204,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
         me->faults &= ~F_tpsSignalFailure;
     }
 
-    if (bps->bps0->ioErr_powerInit != IO_E_OK || bps->bps0->ioErr_powerSet != IO_E_OK)
+    if (bps0(bps)->ioErr_powerInit != IO_E_OK || bps0(bps)->ioErr_powerSet != IO_E_OK)
     {
         me->faults |= F_bpsPowerFailure;
     }
@@ -213,7 +213,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
         me->faults &= ~F_bpsPowerFailure;
     }
 
-    if (bps->bps0->ioErr_signalInit != IO_E_OK || bps->bps0->ioErr_signalGet != IO_E_OK)
+    if (bps0(bps)->ioErr_signalInit != IO_E_OK || bps0(bps)->ioErr_signalGet != IO_E_OK)
     {
         me->faults |= F_bpsSignalFailure;
     }
@@ -233,7 +233,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     //-------------------------------------------------------------------
     //Torque Encoder
     //-------------------------------------------------------------------
-    if (tps->tps0->sensorValue < tps->tps0->specMin || tps->tps0->sensorValue > tps->tps0->specMax || tps->tps1->sensorValue < tps->tps1->specMin || tps->tps1->sensorValue > tps->tps1->specMax)
+    if (tps0(tps)->sensorValue < tps0(tps)->specMin || tps0(tps)->sensorValue > tps0(tps)->specMax || tps1(tps)->sensorValue < tps1(tps)->specMin || tps1(tps)->sensorValue > tps1(tps)->specMax)
     {
         //me->faults |= F_tpsOutOfRange;
     }
@@ -245,7 +245,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     //-------------------------------------------------------------------
     //Brake Pressure Sensor
     //-------------------------------------------------------------------
-    if (bps->bps0->sensorValue < bps->bps0->specMin || bps->bps0->sensorValue > bps->bps0->specMax)
+    if (bps0(bps)->sensorValue < bps0(bps)->specMin || bps0(bps)->sensorValue > bps0(bps)->specMax)
     {
         //me->faults |= F_bpsOutOfRange;
     }
@@ -432,7 +432,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     // 40922 = 60227 <-- This discrepancy is because we don't get all of the requested torque 
 
 
-    me->softBSPD_bpsHigh = bps->bps0->sensorValue > 1900;
+    me->softBSPD_bpsHigh = bps0(bps)->sensorValue > 1900;
     me->softBSPD_kwHigh = FALSE; //SRE-7 Update: MCM_getPower(mcm) > 4000;
 
     // Note: this is using the FUTURE torque request with the PREVIOUS RPM

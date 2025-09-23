@@ -133,9 +133,9 @@ typedef PedalSensor BrakePressureSensor;
 #define TorqueEncoder_getPedalTravel(me, errorCount, percent) (*percent = PedalSensor_getTravelPercent(me))
 #define BrakePressureSensor_getPedalTravel(me, errorCount, percent) (*percent = PedalSensor_getTravelPercent(me))
 
-// Legacy sensor object access macros
-#define tps0 PedalSensor_getPrimarySensor(tps)
-#define tps1 PedalSensor_getSecondarySensor(tps)
-#define bps0 PedalSensor_getPrimarySensor(bps)
+// Legacy sensor object access macros - these need to be used with parentheses
+#define tps0(me) PedalSensor_getPrimarySensor(me)
+#define tps1(me) PedalSensor_getSecondarySensor(me)
+#define bps0(me) PedalSensor_getPrimarySensor(me)
 
 #endif // _PEDALSENSORS_H
