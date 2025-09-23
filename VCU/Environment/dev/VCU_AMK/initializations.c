@@ -17,13 +17,12 @@
 #include "IO_PWM.h"
 #include "IO_CAN.h"
 #include "IO_DIO.h"
+#include "sensors.h"
+#include "initializations.h"
 
 // Global sensor definitions
 Sensor Sensor_BenchTPS0;
 Sensor Sensor_BenchTPS1;
-
-#include "sensors.h"
-#include "initializations.h"
 
 /*****************************************************************************
 * ADC
