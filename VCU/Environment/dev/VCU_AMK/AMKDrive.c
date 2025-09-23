@@ -99,7 +99,7 @@ void DI_calculateCommands(_DriveInverter* me, TorqueEncoder *tps, BrakePressureS
     */ 
 
     //Vehicle Testing works on Test-Bench
-    TorqueEncoder_getIndividualSensorPercent(tps, 0, &appsOutputPercent);
+    appsOutputPercent = PedalSensor_getIndividualSensorPercent(tps, 0);
     appsOutputPercent = appsOutputPercent * 10000;
 
     float4 torqueMax = ((21 / 9.8) / 100.0);

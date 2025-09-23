@@ -81,6 +81,16 @@ float4 PedalSensor_getPercent(PedalSensor* me);
 bool PedalSensor_getBrakesOn(PedalSensor* me);
 bool PedalSensor_getCalibrated(PedalSensor* me);
 
+// Additional getter functions for CAN messages and compatibility
+float4 PedalSensor_getIndividualSensorPercent(PedalSensor* me, ubyte1 sensorNumber);
+float4 PedalSensor_getTravelPercent(PedalSensor* me);
+ubyte4 PedalSensor_getCalibMinPrimary(PedalSensor* me);
+ubyte4 PedalSensor_getCalibMaxPrimary(PedalSensor* me);
+ubyte4 PedalSensor_getCalibMinSecondary(PedalSensor* me);
+ubyte4 PedalSensor_getCalibMaxSecondary(PedalSensor* me);
+ubyte4 PedalSensor_getSensorValuePrimary(PedalSensor* me);
+ubyte4 PedalSensor_getSensorValueSecondary(PedalSensor* me);
+
 /*****************************************************************************
 * Safety and Validation Functions
 *****************************************************************************/
@@ -113,5 +123,10 @@ typedef PedalSensor BrakePressureSensor;
 #define BrakePressureSensor_getCalibrated(me) PedalSensor_getCalibrated(me)
 
 #define BrakePressureSensor_getBrakesOn(me) PedalSensor_getBrakesOn(me)
+
+// Additional legacy compatibility functions
+#define TorqueEncoder_getIndividualSensorPercent(me, sensorNum) PedalSensor_getIndividualSensorPercent(me, sensorNum)
+#define TorqueEncoder_getPedalTravel(me, errorCount, percent) (*percent = PedalSensor_getTravelPercent(me))
+#define BrakePressureSensor_getPedalTravel(me, errorCount, percent) (*percent = PedalSensor_getTravelPercent(me))
 
 #endif // _PEDALSENSORS_H

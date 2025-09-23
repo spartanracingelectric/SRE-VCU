@@ -246,6 +246,64 @@ bool PedalSensor_getCalibrated(PedalSensor* me)
     return me->calibrated;
 }
 
+// Additional getter functions for CAN messages and compatibility
+float4 PedalSensor_getIndividualSensorPercent(PedalSensor* me, ubyte1 sensorNumber)
+{
+    if (me->type == PEDAL_TYPE_TPS && me->calibrated) {
+        if (sensorNumber == 0) {
+            // Primary sensor (TPS0)
+            ubyte4 rawValue = me->primary_value;
+            if (me->primary_reverse) {
+                rawValue = me->calibMax_primary - rawValue;
+            }
+            return getPercent(rawValue, me->calibMin_primary, me->calibMax_primary, TRUE);
+        } else if (sensorNumber == 1) {
+            // Secondary sensor (TPS1)
+            ubyte4 rawValue = me->secondary_value;
+            if (me->secondary_reverse) {
+                rawValue = me->calibMax_secondary - rawValue;
+            }
+            return getPercent(rawValue, me->calibMin_secondary, me->calibMax_secondary, TRUE);
+        }
+    }
+    return 0.0;
+}
+
+float4 PedalSensor_getTravelPercent(PedalSensor* me)
+{
+    return me->percent;
+}
+
+ubyte4 PedalSensor_getCalibMinPrimary(PedalSensor* me)
+{
+    return me->calibMin_primary;
+}
+
+ubyte4 PedalSensor_getCalibMaxPrimary(PedalSensor* me)
+{
+    return me->calibMax_primary;
+}
+
+ubyte4 PedalSensor_getCalibMinSecondary(PedalSensor* me)
+{
+    return me->calibMin_secondary;
+}
+
+ubyte4 PedalSensor_getCalibMaxSecondary(PedalSensor* me)
+{
+    return me->calibMax_secondary;
+}
+
+ubyte4 PedalSensor_getSensorValuePrimary(PedalSensor* me)
+{
+    return me->primary_value;
+}
+
+ubyte4 PedalSensor_getSensorValueSecondary(PedalSensor* me)
+{
+    return me->secondary_value;
+}
+
 /*****************************************************************************
 * Safety and Validation Functions
 *****************************************************************************/

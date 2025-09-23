@@ -515,10 +515,12 @@ void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressu
     canMessages[canMessageCount - 1].data[byteNum++] = tps0Percent;
     canMessages[canMessageCount - 1].data[byteNum++] = Sensor_TPS0.sensorValue; // tps->tps0_value;
     canMessages[canMessageCount - 1].data[byteNum++] = Sensor_TPS0.sensorValue >> 8; //tps->tps0_value >> 8;
-    canMessages[canMessageCount - 1].data[byteNum++] = tps->tps0_calibMin;
-    canMessages[canMessageCount - 1].data[byteNum++] = tps->tps0_calibMin >> 8;
-    canMessages[canMessageCount - 1].data[byteNum++] = tps->tps0_calibMax;
-    canMessages[canMessageCount - 1].data[byteNum++] = tps->tps0_calibMax >> 8;
+    ubyte4 calibMin = PedalSensor_getCalibMinPrimary(tps);
+    ubyte4 calibMax = PedalSensor_getCalibMaxPrimary(tps);
+    canMessages[canMessageCount - 1].data[byteNum++] = calibMin;
+    canMessages[canMessageCount - 1].data[byteNum++] = calibMin >> 8;
+    canMessages[canMessageCount - 1].data[byteNum++] = calibMax;
+    canMessages[canMessageCount - 1].data[byteNum++] = calibMax >> 8;
     canMessages[canMessageCount - 1].length = byteNum;
 
     //TPS 1
@@ -528,12 +530,15 @@ void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressu
     canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
     canMessages[canMessageCount - 1].data[byteNum++] = throttlePercent;
     canMessages[canMessageCount - 1].data[byteNum++] = tps1Percent;
-    canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_value;
-    canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_value >> 8;
-    canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_calibMin;
-    canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_calibMin >> 8;
-    canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_calibMax;
-    canMessages[canMessageCount - 1].data[byteNum++] = tps->tps1_calibMax >> 8;
+    ubyte4 tps1Value = PedalSensor_getSensorValueSecondary(tps);
+    ubyte4 tps1CalibMin = PedalSensor_getCalibMinSecondary(tps);
+    ubyte4 tps1CalibMax = PedalSensor_getCalibMaxSecondary(tps);
+    canMessages[canMessageCount - 1].data[byteNum++] = tps1Value;
+    canMessages[canMessageCount - 1].data[byteNum++] = tps1Value >> 8;
+    canMessages[canMessageCount - 1].data[byteNum++] = tps1CalibMin;
+    canMessages[canMessageCount - 1].data[byteNum++] = tps1CalibMin >> 8;
+    canMessages[canMessageCount - 1].data[byteNum++] = tps1CalibMax;
+    canMessages[canMessageCount - 1].data[byteNum++] = tps1CalibMax >> 8;
     canMessages[canMessageCount - 1].length = byteNum;
 
     //BPS0
@@ -543,12 +548,15 @@ void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressu
     canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
     canMessages[canMessageCount - 1].data[byteNum++] = brakePercent; //This should be bps0Percent, but for now bps0Percent = brakePercent
     canMessages[canMessageCount - 1].data[byteNum++] = 0;
-    canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_value;
-    canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_value >> 8;
-    canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_calibMin;
-    canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_calibMin >> 8;
-    canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_calibMax;
-    canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_calibMax >> 8;
+    ubyte4 bps0Value = PedalSensor_getSensorValuePrimary(bps);
+    ubyte4 bps0CalibMin = PedalSensor_getCalibMinPrimary(bps);
+    ubyte4 bps0CalibMax = PedalSensor_getCalibMaxPrimary(bps);
+    canMessages[canMessageCount - 1].data[byteNum++] = bps0Value;
+    canMessages[canMessageCount - 1].data[byteNum++] = bps0Value >> 8;
+    canMessages[canMessageCount - 1].data[byteNum++] = bps0CalibMin;
+    canMessages[canMessageCount - 1].data[byteNum++] = bps0CalibMin >> 8;
+    canMessages[canMessageCount - 1].data[byteNum++] = bps0CalibMax;
+    canMessages[canMessageCount - 1].data[byteNum++] = bps0CalibMax >> 8;
     canMessages[canMessageCount - 1].length = byteNum;
 
     //WSS mm/s output //UNUSED
@@ -763,12 +771,15 @@ void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressu
     canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
     canMessages[canMessageCount - 1].data[byteNum++] = brakePercent; //This should be bps0Percent, but for now bps0Percent = brakePercent
     canMessages[canMessageCount - 1].data[byteNum++] = 0;
-    canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_value;
-    canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_value >> 8;
-    canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_calibMin;
-    canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_calibMin >> 8;
-    canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_calibMax;
-    canMessages[canMessageCount - 1].data[byteNum++] = bps->bps1_calibMax >> 8;
+    ubyte4 bps1Value = PedalSensor_getSensorValueSecondary(bps);
+    ubyte4 bps1CalibMin = PedalSensor_getCalibMinSecondary(bps);
+    ubyte4 bps1CalibMax = PedalSensor_getCalibMaxSecondary(bps);
+    canMessages[canMessageCount - 1].data[byteNum++] = bps1Value;
+    canMessages[canMessageCount - 1].data[byteNum++] = bps1Value >> 8;
+    canMessages[canMessageCount - 1].data[byteNum++] = bps1CalibMin;
+    canMessages[canMessageCount - 1].data[byteNum++] = bps1CalibMin >> 8;
+    canMessages[canMessageCount - 1].data[byteNum++] = bps1CalibMax;
+    canMessages[canMessageCount - 1].data[byteNum++] = bps1CalibMax >> 8;
     canMessages[canMessageCount - 1].length = byteNum;
 
     
