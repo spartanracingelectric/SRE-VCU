@@ -1,5 +1,5 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc4744a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=5 -DRTS_TTC_FLASH_DATE_DAY=4 -DRTS_TTC_FLASH_DATE_HOUR=13 -DRTS_TTC_FLASH_DATE_MINUTE=10 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\instrumentCluster.src
+	; Options: -f cc2732a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2025 -DRTS_TTC_FLASH_DATE_MONTH=9 -DRTS_TTC_FLASH_DATE_DAY=23 -DRTS_TTC_FLASH_DATE_HOUR=12 -DRTS_TTC_FLASH_DATE_MINUTE=49 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\instrumentCluster.src
 	; Module start
 	.source	'instrumentCluster.c'
 code_InstrumentCluster_new	.section	code, cluster 'InstrumentCluster_new', new
@@ -25,25 +25,25 @@ code_InstrumentCluster_new	.section	code, cluster 'InstrumentCluster_new', new
 ; instrumentCluster.c	    18  
 ; instrumentCluster.c	    19  InstrumentCluster* InstrumentCluster_new(ubyte2 canMessageBaseID)
 ; Function _InstrumentCluster_new
-_6:
+_5:
 _InstrumentCluster_new	.proc	far
 	movw	[-r15],r8
-_87:
+_68:
 	movw	r8,r2
-_130:
+_111:
 
 ; instrumentCluster.c	    20  {
 ; instrumentCluster.c	    21      InstrumentCluster* me = (InstrumentCluster*)malloc(sizeof(struct _InstrumentCluster));
 	movw	r2,#0x4
-_129:
+_110:
 	call	_malloc
-_141:
+_121:
 
 ; instrumentCluster.c	    22  
 ; instrumentCluster.c	    23      me->canMessageBaseId = canMessageBaseID;
 	exts	r3,#0x1
 	movw	[r2],r8
-_142:
+_122:
 
 ; instrumentCluster.c	    24  
 ; instrumentCluster.c	    25      me->torqueMapMode=0;
@@ -51,12 +51,12 @@ _142:
 	movw	r12,r3
 	addw	r11,#0x2
 	addcw	r12,#0x0
-_143:
+_123:
 	movb	rh4,#0x0
-_144:
+_124:
 	exts	r12,#0x1
 	movb	[r11],rh4
-_145:
+_125:
 
 ; instrumentCluster.c	    26  
 ; instrumentCluster.c	    27      me->launchControlSensitivity=0;
@@ -64,18 +64,18 @@ _145:
 	movw	r12,r3
 	addw	r11,#0x3
 	addcw	r12,#0x0
-_146:
+_126:
 	exts	r12,#0x1
 	movb	[r11],rh4
-_147:
+_127:
 
 ; instrumentCluster.c	    28      
 ; instrumentCluster.c	    29      return me;
 ; instrumentCluster.c	    30  }
 	movw	r8,[r15+]
-_98:
+_79:
 	ret
-_61:
+_48:
 	; End of function
 	; End of section
 
@@ -85,7 +85,7 @@ code_IC_parseCanMessage	.section	code, cluster 'IC_parseCanMessage', new
 ; instrumentCluster.c	    31  
 ; instrumentCluster.c	    32  void IC_parseCanMessage(InstrumentCluster* me, IO_CAN_DATA_FRAME* icCanMessage)
 ; Function _IC_parseCanMessage
-_18:
+_17:
 _IC_parseCanMessage	.proc	far
 
 ; instrumentCluster.c	    33  {
@@ -142,7 +142,7 @@ _IC_parseCanMessage	.proc	far
 ; instrumentCluster.c	    84      }
 ; instrumentCluster.c	    85  }
 	ret
-_66:
+_53:
 	; End of function
 	; End of section
 
@@ -152,45 +152,21 @@ code_IC_getTorqueMapMode	.section	code, cluster 'IC_getTorqueMapMode', new
 ; instrumentCluster.c	    86  
 ; instrumentCluster.c	    87  ubyte1 IC_getTorqueMapMode(InstrumentCluster *me)
 ; Function _IC_getTorqueMapMode
-_30:
+_29:
 _IC_getTorqueMapMode	.proc	far
 
 ; instrumentCluster.c	    88  {
 ; instrumentCluster.c	    89      return me->torqueMapMode;
 	addw	r2,#0x2
-_131:
+_112:
 	addcw	r3,#0x0
 	exts	r3,#0x1
 	movb	rl2,[r2]
-_156:
+_136:
 
 ; instrumentCluster.c	    90  }
 	ret
-_71:
-	; End of function
-	; End of section
-
-code_IC_getLaunchControlSensitivity	.section	code, cluster 'IC_getLaunchControlSensitivity', new
-	.global	_IC_getLaunchControlSensitivity
-
-; instrumentCluster.c	    91  
-; instrumentCluster.c	    92  ubyte1 IC_getLaunchControlSensitivity(InstrumentCluster *me)
-; Function _IC_getLaunchControlSensitivity
-_42:
-_IC_getLaunchControlSensitivity	.proc	far
-
-; instrumentCluster.c	    93  {
-; instrumentCluster.c	    94      return me->launchControlSensitivity;
-	addw	r2,#0x3
-_132:
-	addcw	r3,#0x0
-	exts	r3,#0x1
-	movb	rl2,[r2]
-_161:
-
-; instrumentCluster.c	    95  }
-	ret
-_76:
+_58:
 	; End of function
 	; End of section
 
@@ -198,196 +174,263 @@ _76:
 	.calls	'_InstrumentCluster_new','',4,2
 	.calls	'_IC_parseCanMessage','',4,0
 	.calls	'_IC_getTorqueMapMode','',4,0
-	.calls	'_IC_getLaunchControlSensitivity','',4,0
 	.extern	_malloc : far
 	.debug		.debug_info
-_54:
-	.dl	1280
+_41:
+	.dl	1823
 	.dw	3
-	.dl	_55
+	.dl	_42
 	.db	4
-_53:
+_40:
 	.db	1
 	.db	'instrumentCluster.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
-	.dl	_56
+	.dl	_43
 	.db	2
 	.db	'void',0,3,5
-	.dl	188
-_78:
+	.dl	174
+_60:
 	.db	4
 	.db	'unsigned int',0,2,7,5
 	.db	'malloc',0,1,78,33,6
-	.dl	194
+	.dl	180
 	.db	1,1,1,1,6,1,78,44,2
-	.dl	200
+	.dl	186
 	.db	0
-_84:
+_66:
 	.db	4
 	.db	'unsigned char',0,1,8,7
 	.db	'_InstrumentCluster',0,2,7,8,4,8
 	.db	'canMessageBaseId',0
-	.dl	200
+	.dl	186
 	.db	2,2,35,0,8
 	.db	'torqueMapMode',0
-	.dl	246
+	.dl	232
 	.db	1,2,35,2,8
 	.db	'launchControlSensitivity',0
-	.dl	246
+	.dl	232
 	.db	1,2,35,3,0
-_77:
+_59:
 	.db	3,5
-	.dl	263
+	.dl	249
 	.db	9,8
-	.dl	246
+	.dl	232
 	.db	10,7,0,4
 	.db	'unsigned long int',0,4,7,7
 	.db	'_io_can_data_frame',0,3,209,2,16,14,8
 	.db	'data',0
-	.dl	377
+	.dl	363
 	.db	8,2,35,0,8
 	.db	'length',0
-	.dl	246
+	.dl	232
 	.db	1,2,35,8,8
 	.db	'id_format',0
-	.dl	246
+	.dl	232
 	.db	1,2,35,9,8
 	.db	'id',0
-	.dl	386
+	.dl	372
 	.db	4,2,35,10,0
-_82:
+_64:
 	.db	3,5
-	.dl	407
+	.dl	393
 	.db	4
 	.db	'unsigned short int',0,2,7,11
 	.db	'__wchar_t',0,2,1,1
-	.dl	500
+	.dl	486
 	.db	11
 	.db	'__size_t',0,2,1,1
-	.dl	200
+	.dl	186
 	.db	3,5
-	.dl	188
+	.dl	174
 	.db	11
 	.db	'__prof_adm',0,2,1,1
-	.dl	557
+	.dl	543
 	.db	11
 	.db	'__codeptr',0,2,1,1
-	.dl	386
+	.dl	372
 	.db	11
 	.db	'ubyte1',0,4,21,29
-	.dl	246
+	.dl	232
 	.db	11
 	.db	'ubyte2',0,4,22,29
-	.dl	200
+	.dl	186
 	.db	11
 	.db	'ubyte4',0,4,23,29
-	.dl	386
+	.dl	372
 	.db	4
 	.db	'int',0,2,5,11
 	.db	'sbyte2',0,4,26,29
-	.dl	645
+	.dl	631
 	.db	4
 	.db	'float',0,4,4,11
 	.db	'float4',0,4,29,29
-	.dl	667
+	.dl	653
 	.db	11
 	.db	'bool',0,4,31,29
-	.dl	246
+	.dl	232
 	.db	11
 	.db	'IO_ErrorType',0,5,150,1,17
-	.dl	200
+	.dl	186
 	.db	11
 	.db	'size_t',0,1,29,25
-	.dl	200
+	.dl	186
 	.db	11
 	.db	'IO_CAN_DATA_FRAME',0,3,215,2,3
-	.dl	407
+	.dl	393
 	.db	11
 	.db	'InstrumentCluster',0,6,12,35
-	.dl	263
+	.dl	249
 	.db	11
 	.db	'_iob_flag_t',0,7,82,25
-	.dl	500
+	.dl	486
 	.db	7
 	.db	'_Sensor',0,8,126,16,30,8
 	.db	'specMin',0
-	.dl	386
+	.dl	372
 	.db	4,2,35,0,8
 	.db	'specMax',0
-	.dl	386
+	.dl	372
 	.db	4,2,35,4,8
 	.db	'sensorValue',0
-	.dl	386
+	.dl	372
 	.db	4,2,35,8,8
 	.db	'heldSensorValue',0
-	.dl	386
+	.dl	372
 	.db	4,2,35,12,8
 	.db	'timestamp',0
-	.dl	386
+	.dl	372
 	.db	4,2,35,16,8
 	.db	'fresh',0
-	.dl	246
+	.dl	232
 	.db	1,2,35,20,8
 	.db	'ioErr_powerInit',0
-	.dl	200
+	.dl	186
 	.db	2,2,35,22,8
 	.db	'ioErr_powerSet',0
-	.dl	200
+	.dl	186
 	.db	2,2,35,24,8
 	.db	'ioErr_signalInit',0
-	.dl	200
+	.dl	186
 	.db	2,2,35,26,8
 	.db	'ioErr_signalGet',0
-	.dl	200
+	.dl	186
 	.db	2,2,35,28,0,11
 	.db	'Sensor',0,8,145,1,3
-	.dl	814
+	.dl	800
+	.db	12,9,16,9,1,13
+	.db	'PEDAL_TYPE_TPS',0,0,13
+	.db	'PEDAL_TYPE_BPS',0,1,0,11
+	.db	'PedalType',0,9,19,3
+	.dl	1044
+	.db	3,5
+	.dl	800
 	.db	7
-	.db	'_bl_t_date',0,9,90,16,4,8
+	.db	'_PedalSensor',0,9,22,16,58,8
+	.db	'type',0
+	.dl	1044
+	.db	1,2,35,0,8
+	.db	'primary',0
+	.dl	1102
+	.db	4,2,35,2,8
+	.db	'secondary',0
+	.dl	1102
+	.db	4,2,35,6,8
+	.db	'primary_reverse',0
+	.dl	232
+	.db	1,2,35,10,8
+	.db	'secondary_reverse',0
+	.dl	232
+	.db	1,2,35,11,8
+	.db	'runCalibration',0
+	.dl	232
+	.db	1,2,35,12,8
+	.db	'calibrated',0
+	.dl	232
+	.db	1,2,35,13,8
+	.db	'percent',0
+	.dl	653
+	.db	4,2,35,14,8
+	.db	'brakesAreOn',0
+	.dl	232
+	.db	1,2,35,18,8
+	.db	'outputCurveExponent',0
+	.dl	653
+	.db	4,2,35,20,8
+	.db	'calibMin_primary',0
+	.dl	372
+	.db	4,2,35,24,8
+	.db	'calibMax_primary',0
+	.dl	372
+	.db	4,2,35,28,8
+	.db	'calibMin_secondary',0
+	.dl	372
+	.db	4,2,35,32,8
+	.db	'calibMax_secondary',0
+	.dl	372
+	.db	4,2,35,36,8
+	.db	'primary_value',0
+	.dl	372
+	.db	4,2,35,40,8
+	.db	'secondary_value',0
+	.dl	372
+	.db	4,2,35,44,8
+	.db	'timestamp_calibrationStart',0
+	.dl	372
+	.db	4,2,35,48,8
+	.db	'timestamp_calibrationEnd',0
+	.dl	372
+	.db	4,2,35,52,8
+	.db	'bench',0
+	.dl	232
+	.db	1,2,35,56,0,11
+	.db	'PedalSensor',0,9,61,3
+	.dl	1108
+	.db	7
+	.db	'_bl_t_date',0,10,90,16,4,8
 	.db	'date',0
-	.dl	386
+	.dl	372
 	.db	4,2,35,0,0,11
-	.db	'BL_T_DATE',0,9,93,2
-	.dl	1058
+	.db	'BL_T_DATE',0,10,93,2
+	.dl	1601
 	.db	7
-	.db	'_bl_t_can_id',0,9,102,16,8,8
+	.db	'_bl_t_can_id',0,10,102,16,8,8
 	.db	'extended',0
-	.dl	386
+	.dl	372
 	.db	4,2,35,0,8
 	.db	'ID',0
-	.dl	386
+	.dl	372
 	.db	4,2,35,4,0,11
-	.db	'BL_T_CAN_ID',0,9,106,2
-	.dl	1107
-	.db	12
-	.db	'_DI_Location_Address',0,10,46,14,1,13
+	.db	'BL_T_CAN_ID',0,10,106,2
+	.dl	1650
+	.db	14
+	.db	'_DI_Location_Address',0,11,45,14,1,13
 	.db	'FRONT_LEFT',0,1,13
 	.db	'FRONT_RIGHT',0,2,13
 	.db	'REAR_LEFT',0,5,13
 	.db	'REAR_RIGHT',0,6,0,11
-	.db	'DI_Location_Address',0,10,51,3
-	.dl	1176
+	.db	'DI_Location_Address',0,11,50,3
+	.dl	1719
 	.db	0
 	; End of section
 
 	.debug		.debug_abbrev
-_55:
+_42:
 	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,59,0,3,8,0,0,3,15,0,51,15,73,19,0,0,4,36,0,3,8,11,15,62
 	.db	15,0,0,5,46,1,3,8,58,15,59,15,57,15,51,15,73,19,54,15,39,12,63,12,60,12,0,0,6,5,0,58,15,59,15,57,15,51
 	.db	15,73,19,0,0,7,19,1,3,8,58,15,59,15,57,15,11,15,0,0,8,13,0,3,8,73,19,11,15,56,9,0,0,9,1,1,11,15,73,19
-	.db	0,0,10,33,0,47,15,0,0,11,22,0,3,8,58,15,59,15,57,15,73,19,0,0,12,4,1,3,8,58,15,59,15,57,15,11,15,0,0,13
-	.db	40,0,3,8,28,13,0,0,0
+	.db	0,0,10,33,0,47,15,0,0,11,22,0,3,8,58,15,59,15,57,15,73,19,0,0,12,4,1,58,15,59,15,57,15,11,15,0,0,13,40
+	.db	0,3,8,28,13,0,0,14,4,1,3,8,58,15,59,15,57,15,11,15,0,0,0
 	; End of section
 
 	.debug		.debug_line
-_56:
-	.dl	_134-_133
-_133:
+_43:
+	.dl	_114-_113
+_113:
 	.dw	3
-	.dl	_136-_135
-_135:
+	.dl	_116-_115
+_115:
 	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1
 	.db	'c:\\Program Files (x86)\\TASKING\\C166-VX v4.0r1\\include\\',0
 	.db	'..\\..\\..\\Environment\\inc',0,0
@@ -399,547 +442,444 @@ _135:
 	.db	'instrumentCluster.h',0,0,0,0
 	.db	'stdio.h',0,1,0,0
 	.db	'sensors.h',0,0,0,0
+	.db	'pedalSensors.h',0,0,0,0
 	.db	'APDB.h',0,2,0,0
 	.db	'AMKdrive.h',0,0,0,0,0
-_136:
-_134:
+_116:
+_114:
 	; End of section
 
 	.debug		.debug_pubnames
 	.dl	25
 	.dw	2
-	.dl	_54,1284,216
+	.dl	_41,1827,202
 	.db	'malloc',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'InstrumentCluster_new'
-_57:
-	.dl	310
+_44:
+	.dl	296
 	.dw	3
-	.dl	_58
+	.dl	_45
 	.db	4,1
 	.db	'instrumentCluster.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
-	.dl	_60,_59
+	.dl	_47,_46
 	.db	2
-	.dl	_53
+	.dl	_40
 	.db	3
 	.db	'InstrumentCluster_new',0,1,19,20,6
-	.dl	_77
+	.dl	_59
 	.db	1,1,1
-	.dl	_6,_61,_5
+	.dl	_5,_48,_4
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
 	.db	'canMessageBaseID',0,1,19,49,2
-	.dl	_78,_79
+	.dl	_60,_61
 	.db	5
-	.dl	_6,_61
+	.dl	_5,_48
 	.db	6
 	.db	'me',0,1,21,24,2
-	.dl	_77,_80
+	.dl	_59,_62
 	.db	0,0,0
 	; End of section
 
 	.debug		.debug_abbrev, cluster 'InstrumentCluster_new'
-_58:
+_45:
 	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
 	.db	73,16,54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,5,11,1
 	.db	17,1,18,1,0,0,6,52,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,0
 	; End of section
 
 	.debug		.debug_line, cluster 'InstrumentCluster_new'
-_59:
-	.dl	_138-_137
-_137:
+_46:
+	.dl	_118-_117
+_117:
 	.dw	3
-	.dl	_140-_139
-_139:
+	.dl	_120-_119
+_119:
 	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
 	.db	'instrumentCluster.c',0,0,0,0,0
-_140:
+_120:
 	.db	5,20,7,0,5,2
-	.dl	_6
+	.dl	_5
 	.db	3,18,1,5,56,9
-	.dw	_130-_6
+	.dw	_111-_5
 	.db	3,2,1,5,26,9
-	.dw	_141-_130
+	.dw	_121-_111
 	.db	3,2,1,5,7,9
-	.dw	_142-_141
+	.dw	_122-_121
 	.db	3,2,1,5,23,9
-	.dw	_143-_142
+	.dw	_123-_122
 	.db	1,5,22,9
-	.dw	_144-_143
+	.dw	_124-_123
 	.db	1,5,7,9
-	.dw	_145-_144
+	.dw	_125-_124
 	.db	3,2,1,5,33,9
-	.dw	_146-_145
+	.dw	_126-_125
 	.db	1,5,1,9
-	.dw	_147-_146
+	.dw	_127-_126
 	.db	3,3,1,9
-	.dw	_61-_147
+	.dw	_48-_127
 	.db	0,1,1
-_138:
+_118:
 	; End of section
 
 	.debug		.debug_ranges, cluster 'InstrumentCluster_new'
-_60:
-	.dl	-1,_6,0,_61-_6,0,0
+_47:
+	.dl	-1,_5,0,_48-_5,0,0
 	; End of section
 
 	.debug		.debug_pubnames
 	.dl	40
 	.dw	2
-	.dl	_57,314,197
+	.dl	_44,300,183
 	.db	'InstrumentCluster_new',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'IC_parseCanMessage'
-_62:
-	.dl	298
+_49:
+	.dl	284
 	.dw	3
-	.dl	_63
+	.dl	_50
 	.db	4,1
 	.db	'instrumentCluster.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
-	.dl	_65,_64
+	.dl	_52,_51
 	.db	2
-	.dl	_53
+	.dl	_40
 	.db	3
 	.db	'IC_parseCanMessage',0,1,32,6,6,1,1,1
-	.dl	_18,_66,_17
+	.dl	_17,_53,_16
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
 	.db	'me',0,1,32,44,2
-	.dl	_77,_81
+	.dl	_59,_63
 	.db	4
 	.db	'icCanMessage',0,1,32,67,2
-	.dl	_82,_83
+	.dl	_64,_65
 	.db	5
-	.dl	_18,_66
+	.dl	_17,_53
 	.db	0,0
 	; End of section
 
 	.debug		.debug_abbrev, cluster 'IC_parseCanMessage'
-_63:
+_50:
 	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
 	.db	54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,5,11,0,17,1
 	.db	18,1,0,0,0
 	; End of section
 
 	.debug		.debug_line, cluster 'IC_parseCanMessage'
-_64:
-	.dl	_149-_148
-_148:
+_51:
+	.dl	_129-_128
+_128:
 	.dw	3
-	.dl	_151-_150
-_150:
+	.dl	_131-_130
+_130:
 	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
 	.db	'instrumentCluster.c',0,0,0,0,0
-_151:
+_131:
 	.db	5,1,7,0,5,2
-	.dl	_18
+	.dl	_17
 	.db	3,212,0,1,7,9
-	.dw	_66-_18
+	.dw	_53-_17
 	.db	0,1,1
-_149:
+_129:
 	; End of section
 
 	.debug		.debug_ranges, cluster 'IC_parseCanMessage'
-_65:
-	.dl	-1,_18,0,_66-_18,0,0
+_52:
+	.dl	-1,_17,0,_53-_17,0,0
 	; End of section
 
 	.debug		.debug_pubnames
 	.dl	37
 	.dw	2
-	.dl	_62,302,197
+	.dl	_49,288,183
 	.db	'IC_parseCanMessage',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'IC_getTorqueMapMode'
-_67:
-	.dl	277
+_54:
+	.dl	263
 	.dw	3
-	.dl	_68
+	.dl	_55
 	.db	4,1
 	.db	'instrumentCluster.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
-	.dl	_70,_69
+	.dl	_57,_56
 	.db	2
-	.dl	_53
+	.dl	_40
 	.db	3
 	.db	'IC_getTorqueMapMode',0,1,87,8,6
-	.dl	_84
+	.dl	_66
 	.db	1,1,1
-	.dl	_30,_71,_29
+	.dl	_29,_58,_28
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
 	.db	'me',0,1,87,47,2
-	.dl	_77,_85
+	.dl	_59,_67
 	.db	5
-	.dl	_30,_71
+	.dl	_29,_58
 	.db	0,0
 	; End of section
 
 	.debug		.debug_abbrev, cluster 'IC_getTorqueMapMode'
-_68:
+_55:
 	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
 	.db	73,16,54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,5,11,0
 	.db	17,1,18,1,0,0,0
 	; End of section
 
 	.debug		.debug_line, cluster 'IC_getTorqueMapMode'
-_69:
-	.dl	_153-_152
-_152:
+_56:
+	.dl	_133-_132
+_132:
 	.dw	3
-	.dl	_155-_154
-_154:
+	.dl	_135-_134
+_134:
 	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
 	.db	'instrumentCluster.c',0,0,0,0,0
-_155:
+_135:
 	.db	5,14,7,0,5,2
-	.dl	_30
+	.dl	_29
 	.db	3,216,0,1,5,1,9
-	.dw	_156-_30
+	.dw	_136-_29
 	.db	3,1,1,7,9
-	.dw	_71-_156
+	.dw	_58-_136
 	.db	0,1,1
-_153:
+_133:
 	; End of section
 
 	.debug		.debug_ranges, cluster 'IC_getTorqueMapMode'
-_70:
-	.dl	-1,_30,0,_71-_30,0,0
+_57:
+	.dl	-1,_29,0,_58-_29,0,0
 	; End of section
 
 	.debug		.debug_pubnames
 	.dl	38
 	.dw	2
-	.dl	_67,281,197
+	.dl	_54,267,183
 	.db	'IC_getTorqueMapMode',0
 	.dl	0
 	; End of section
 
-	.debug		.debug_info, cluster 'IC_getLaunchControlSensitivity'
-_72:
-	.dl	288
-	.dw	3
-	.dl	_73
-	.db	4,1
-	.db	'instrumentCluster.c',0
-	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
-	.db	12,1
-	.dl	_75,_74
-	.db	2
-	.dl	_53
-	.db	3
-	.db	'IC_getLaunchControlSensitivity',0,1,92,8,6
-	.dl	_84
-	.db	1,1,1
-	.dl	_42,_76,_41
-	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,92,58,2
-	.dl	_77,_86
-	.db	5
-	.dl	_42,_76
-	.db	0,0
-	; End of section
-
-	.debug		.debug_abbrev, cluster 'IC_getLaunchControlSensitivity'
-_73:
-	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
-	.db	73,16,54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,5,11,0
-	.db	17,1,18,1,0,0,0
-	; End of section
-
-	.debug		.debug_line, cluster 'IC_getLaunchControlSensitivity'
-_74:
-	.dl	_158-_157
-_157:
-	.dw	3
-	.dl	_160-_159
-_159:
-	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
-	.db	'instrumentCluster.c',0,0,0,0,0
-_160:
-	.db	5,14,7,0,5,2
-	.dl	_42
-	.db	3,221,0,1,5,1,9
-	.dw	_161-_42
-	.db	3,1,1,7,9
-	.dw	_76-_161
-	.db	0,1,1
-_158:
-	; End of section
-
-	.debug		.debug_ranges, cluster 'IC_getLaunchControlSensitivity'
-_75:
-	.dl	-1,_42,0,_76-_42,0,0
-	; End of section
-
-	.debug		.debug_pubnames
-	.dl	49
-	.dw	2
-	.dl	_72,292,197
-	.db	'IC_getLaunchControlSensitivity',0
-	.dl	0
-	; End of section
-
-	.debug		.debug_loc, cluster 'IC_getLaunchControlSensitivity'
-_41:
-	.dl	-1,_42,0,_76-_42
-	.dw	58
-	.db	127,0,18,10
-	.dw	16383
-	.db	26,22,62,37,18,48,46,40
-	.dw	_43-_47
-_47:
-	.db	146,177,2,0,47
-	.dw	_46-_48
-_48:
-_43:
-	.db	18,49,46,40
-	.dw	_44-_49
-_49:
-	.db	146,178,2,0,47
-	.dw	_46-_50
-_50:
-_44:
-	.db	18,50,46,40
-	.dw	_45-_51
-_51:
-	.db	146,179,2,0,47
-	.dw	_46-_52
-_52:
-_45:
-	.db	146,180,2,0
-_46:
-	.db	22,19,62,36,33
-	.dl	0,0
-_86:
-	.dl	-1,_42,0,_132-_42
-	.dw	6
-	.db	82,147,2,83,147,2
-	.dl	0,0
-	; End of section
-
 	.debug		.debug_loc, cluster 'IC_getTorqueMapMode'
-_29:
-	.dl	-1,_30,0,_71-_30
+_28:
+	.dl	-1,_29,0,_58-_29
 	.dw	58
 	.db	127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_31-_35
-_35:
+	.dw	_30-_34
+_34:
 	.db	146,177,2,0,47
-	.dw	_34-_36
-_36:
-_31:
+	.dw	_33-_35
+_35:
+_30:
 	.db	18,49,46,40
-	.dw	_32-_37
-_37:
+	.dw	_31-_36
+_36:
 	.db	146,178,2,0,47
-	.dw	_34-_38
-_38:
-_32:
+	.dw	_33-_37
+_37:
+_31:
 	.db	18,50,46,40
+	.dw	_32-_38
+_38:
+	.db	146,179,2,0,47
 	.dw	_33-_39
 _39:
-	.db	146,179,2,0,47
-	.dw	_34-_40
-_40:
-_33:
+_32:
 	.db	146,180,2,0
-_34:
+_33:
 	.db	22,19,62,36,33
 	.dl	0,0
-_85:
-	.dl	-1,_30,0,_131-_30
+_67:
+	.dl	-1,_29,0,_112-_29
 	.dw	6
 	.db	82,147,2,83,147,2
 	.dl	0,0
 	; End of section
 
 	.debug		.debug_loc, cluster 'IC_parseCanMessage'
-_17:
-	.dl	-1,_18,0,_66-_18
+_16:
+	.dl	-1,_17,0,_53-_17
 	.dw	58
 	.db	127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_19-_23
-_23:
+	.dw	_18-_22
+_22:
 	.db	146,177,2,0,47
-	.dw	_22-_24
-_24:
-_19:
+	.dw	_21-_23
+_23:
+_18:
 	.db	18,49,46,40
-	.dw	_20-_25
-_25:
+	.dw	_19-_24
+_24:
 	.db	146,178,2,0,47
-	.dw	_22-_26
-_26:
-_20:
+	.dw	_21-_25
+_25:
+_19:
 	.db	18,50,46,40
+	.dw	_20-_26
+_26:
+	.db	146,179,2,0,47
 	.dw	_21-_27
 _27:
-	.db	146,179,2,0,47
-	.dw	_22-_28
-_28:
-_21:
+_20:
 	.db	146,180,2,0
-_22:
+_21:
 	.db	22,19,62,36,33
 	.dl	0,0
-_83:
-	.dl	-1,_18,0,_66-_18
+_65:
+	.dl	-1,_17,0,_53-_17
 	.dw	6
 	.db	84,147,2,85,147,2
 	.dl	0,0
-_81:
-	.dl	-1,_18,0,_66-_18
+_63:
+	.dl	-1,_17,0,_53-_17
 	.dw	6
 	.db	82,147,2,83,147,2
 	.dl	0,0
 	; End of section
 
 	.debug		.debug_loc, cluster 'InstrumentCluster_new'
-_5:
-	.dl	-1,_6,0,_87-_6
+_4:
+	.dl	-1,_5,0,_68-_5
 	.dw	58
 	.db	127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_7-_11
-_11:
+	.dw	_6-_10
+_10:
 	.db	146,177,2,0,47
-	.dw	_10-_12
-_12:
-_7:
+	.dw	_9-_11
+_11:
+_6:
 	.db	18,49,46,40
-	.dw	_8-_13
-_13:
+	.dw	_7-_12
+_12:
 	.db	146,178,2,0,47
-	.dw	_10-_14
-_14:
-_8:
+	.dw	_9-_13
+_13:
+_7:
 	.db	18,50,46,40
+	.dw	_8-_14
+_14:
+	.db	146,179,2,0,47
 	.dw	_9-_15
 _15:
-	.db	146,179,2,0,47
-	.dw	_10-_16
-_16:
-_9:
+_8:
 	.db	146,180,2,0
-_10:
+_9:
 	.db	22,19,62,36,33
-	.dl	_87-_6,_98-_6
+	.dl	_68-_5,_79-_5
 	.dw	60
 	.db	127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_88-_92
-_92:
+	.dw	_69-_73
+_73:
 	.db	146,177,2,0,47
-	.dw	_91-_93
-_93:
-_88:
+	.dw	_72-_74
+_74:
+_69:
 	.db	18,49,46,40
-	.dw	_89-_94
-_94:
+	.dw	_70-_75
+_75:
 	.db	146,178,2,0,47
-	.dw	_91-_95
-_95:
-_89:
+	.dw	_72-_76
+_76:
+_70:
 	.db	18,50,46,40
-	.dw	_90-_96
-_96:
+	.dw	_71-_77
+_77:
 	.db	146,179,2,0,47
-	.dw	_91-_97
-_97:
-_90:
+	.dw	_72-_78
+_78:
+_71:
 	.db	146,180,2,0
-_91:
+_72:
 	.db	22,19,62,36,33,50,34
-	.dl	_98-_6,_61-_6
+	.dl	_79-_5,_48-_5
 	.dw	58
 	.db	127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_99-_103
-_103:
+	.dw	_80-_84
+_84:
 	.db	146,177,2,0,47
-	.dw	_102-_104
-_104:
-_99:
+	.dw	_83-_85
+_85:
+_80:
 	.db	18,49,46,40
-	.dw	_100-_105
-_105:
+	.dw	_81-_86
+_86:
 	.db	146,178,2,0,47
-	.dw	_102-_106
-_106:
-_100:
+	.dw	_83-_87
+_87:
+_81:
 	.db	18,50,46,40
-	.dw	_101-_107
-_107:
+	.dw	_82-_88
+_88:
 	.db	146,179,2,0,47
-	.dw	_102-_108
-_108:
-_101:
+	.dw	_83-_89
+_89:
+_82:
 	.db	146,180,2,0
-_102:
+_83:
 	.db	22,19,62,36,33
 	.dl	0,0
-_79:
-	.dl	-1,_6,0,_129-_6
+_61:
+	.dl	-1,_5,0,_110-_5
 	.dw	1
 	.db	82
-	.dl	_130-_6,_98-_6
+	.dl	_111-_5,_79-_5
 	.dw	1
 	.db	88
 	.dl	0,0
-_80:
+_62:
 	.dl	0,0
 	; End of section
 
 	.debug		.debug_frame
-_162:
+_137:
 	.dl	184
 	.dl	-1
 	.db	3,0,2,2,173,2,15,60,127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_163-_167
-_167:
+	.dw	_138-_142
+_142:
 	.db	146,177,2,0,47
-	.dw	_166-_168
-_168:
-_163:
+	.dw	_141-_143
+_143:
+_138:
 	.db	18,49,46,40
-	.dw	_164-_169
-_169:
+	.dw	_139-_144
+_144:
 	.db	146,178,2,0,47
-	.dw	_166-_170
-_170:
-_164:
+	.dw	_141-_145
+_145:
+_139:
 	.db	18,50,46,40
-	.dw	_165-_171
-_171:
+	.dw	_140-_146
+_146:
 	.db	146,179,2,0,47
-	.dw	_166-_172
-_172:
-_165:
+	.dw	_141-_147
+_147:
+_140:
 	.db	146,180,2,0
-_166:
+_141:
 	.db	22,19,62,36,33,48,34,16,173,2,12,19,146,176,2,0,64,36,146,161,2,0,33,8,15,22,161,2,5,19,146,161,2,4,8
 	.db	162,2,8,166,2,8,177,2,8,178,2,8,179,2,8,180,2,8,0,8,1,8,6,8,7,8,8,8,9,8,10,8,167,2,8,168,2,8,169,2,8,170
 	.db	2,8,171,2,8,172,2,16,174,2,12,19,146,176,2,0,64,36,146,161,2,0,33,16,175,2,12,19,146,176,2,0,64,36,146
@@ -948,130 +888,125 @@ _166:
 
 	.debug		.debug_frame, cluster 'InstrumentCluster_new'
 	.dl	160
-	.dl	_162,_6,_61-_6
+	.dl	_137,_5,_48-_5
 	.db	4
-	.dl	(_87-_6)/2
+	.dl	(_68-_5)/2
 	.db	15,60,127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_109-_113
-_113:
+	.dw	_90-_94
+_94:
 	.db	146,177,2,0,47
-	.dw	_112-_114
-_114:
-_109:
+	.dw	_93-_95
+_95:
+_90:
 	.db	18,49,46,40
-	.dw	_110-_115
-_115:
+	.dw	_91-_96
+_96:
 	.db	146,178,2,0,47
-	.dw	_112-_116
-_116:
-_110:
+	.dw	_93-_97
+_97:
+_91:
 	.db	18,50,46,40
-	.dw	_111-_117
-_117:
+	.dw	_92-_98
+_98:
 	.db	146,179,2,0,47
-	.dw	_112-_118
-_118:
-_111:
+	.dw	_93-_99
+_99:
+_92:
 	.db	146,180,2,0
-_112:
+_93:
 	.db	22,19,62,36,33,50,34,22,15,3,19,127,2,17,8,127,4
-	.dl	(_98-_87)/2
+	.dl	(_79-_68)/2
 	.db	15,60,127,0,18,10
 	.dw	16383
 	.db	26,22,62,37,18,48,46,40
-	.dw	_119-_123
-_123:
+	.dw	_100-_104
+_104:
 	.db	146,177,2,0,47
-	.dw	_122-_124
-_124:
-_119:
+	.dw	_103-_105
+_105:
+_100:
 	.db	18,49,46,40
-	.dw	_120-_125
-_125:
+	.dw	_101-_106
+_106:
 	.db	146,178,2,0,47
-	.dw	_122-_126
-_126:
-_120:
+	.dw	_103-_107
+_107:
+_101:
 	.db	18,50,46,40
-	.dw	_121-_127
-_127:
+	.dw	_102-_108
+_108:
 	.db	146,179,2,0,47
-	.dw	_122-_128
-_128:
-_121:
+	.dw	_103-_109
+_109:
+_102:
 	.db	146,180,2,0
-_122:
+_103:
 	.db	22,19,62,36,33,48,34,8,15,200,0,0
 	; End of section
 
 	.debug		.debug_frame, cluster 'IC_parseCanMessage'
 	.dl	32
-	.dl	_162,_18,_66-_18
+	.dl	_137,_17,_53-_17
 	.db	8,160,2,8,2,8,3,8,4,8,5,8,11,8,12,8,13,8,14,0
 	; End of section
 
 	.debug		.debug_frame, cluster 'IC_getTorqueMapMode'
 	.dl	28
-	.dl	_162,_30,_71-_30
-	.db	8,160,2,8,4,8,5,8,11,8,12,8,13,8,14,0
-	; End of section
-
-	.debug		.debug_frame, cluster 'IC_getLaunchControlSensitivity'
-	.dl	28
-	.dl	_162,_42,_76-_42
+	.dl	_137,_29,_58-_29
 	.db	8,160,2,8,4,8,5,8,11,8,12,8,13,8,14,0
 	; End of section
 
 
-; instrumentCluster.c	    96  
-; instrumentCluster.c	    97  /*****************************************************************************
-; instrumentCluster.c	    98  * Motor Controller module Accessors / Mutators (Set/Get)
-; instrumentCluster.c	    99  ****************************************************************************/
-; instrumentCluster.c	   100  /*
-; instrumentCluster.c	   101  void IC_to_MCM_setMaxTorqueDNm(MotorController* mcm, ubyte2 newTorque)
+; instrumentCluster.c	    91  
+; instrumentCluster.c	    92  
+; instrumentCluster.c	    93  /*****************************************************************************
+; instrumentCluster.c	    94  * Motor Controller module Accessors / Mutators (Set/Get)
+; instrumentCluster.c	    95  ****************************************************************************/
+; instrumentCluster.c	    96  /*
+; instrumentCluster.c	    97  void IC_to_MCM_setMaxTorqueDNm(MotorController* mcm, ubyte2 newTorque)
+; instrumentCluster.c	    98  {
+; instrumentCluster.c	    99      MCM_setMaxTorqueDNm(mcm, newTorque);
+; instrumentCluster.c	   100  }
+; instrumentCluster.c	   101  void IC_to_MCM_setRegen_TorqueLimitDNm(MotorController* mcm, ubyte2 newTorqueLimit)
 ; instrumentCluster.c	   102  {
-; instrumentCluster.c	   103      MCM_setMaxTorqueDNm(mcm, newTorque);
+; instrumentCluster.c	   103      MCM_setRegen_TorqueLimitDNm(mcm, newTorqueLimit);
 ; instrumentCluster.c	   104  }
-; instrumentCluster.c	   105  void IC_to_MCM_setRegen_TorqueLimitDNm(MotorController* mcm, ubyte2 newTorqueLimit)
+; instrumentCluster.c	   105  void IC_to_MCM_setRegen_TorqueAtZeroPedalDNm(MotorController* mcm, ubyte2 newTorqueZero)
 ; instrumentCluster.c	   106  {
-; instrumentCluster.c	   107      MCM_setRegen_TorqueLimitDNm(mcm, newTorqueLimit);
+; instrumentCluster.c	   107      MCM_setRegen_TorqueAtZeroPedalDNm(mcm, newTorqueZero);
 ; instrumentCluster.c	   108  }
-; instrumentCluster.c	   109  void IC_to_MCM_setRegen_TorqueAtZeroPedalDNm(MotorController* mcm, ubyte2 newTorqueZero)
+; instrumentCluster.c	   109  void IC_to_MCM_setRegen_PercentBPSForMaxRegen(MotorController* mcm, float4 percentBPS)
 ; instrumentCluster.c	   110  {
-; instrumentCluster.c	   111      MCM_setRegen_TorqueAtZeroPedalDNm(mcm, newTorqueZero);
+; instrumentCluster.c	   111      MCM_setRegen_PercentBPSForMaxRegen(mcm, percentBPS);
 ; instrumentCluster.c	   112  }
-; instrumentCluster.c	   113  void IC_to_MCM_setRegen_PercentBPSForMaxRegen(MotorController* mcm, float4 percentBPS)
+; instrumentCluster.c	   113  void IC_to_MCM_setRegen_PercentAPPSForCoasting(MotorController* mcm, float4 percentAPPS)
 ; instrumentCluster.c	   114  {
-; instrumentCluster.c	   115      MCM_setRegen_PercentBPSForMaxRegen(mcm, percentBPS);
+; instrumentCluster.c	   115      MCM_setRegen_PercentAPPSForCoasting(mcm, percentAPPS);
 ; instrumentCluster.c	   116  }
-; instrumentCluster.c	   117  void IC_to_MCM_setRegen_PercentAPPSForCoasting(MotorController* mcm, float4 percentAPPS)
-; instrumentCluster.c	   118  {
-; instrumentCluster.c	   119      MCM_setRegen_PercentAPPSForCoasting(mcm, percentAPPS);
-; instrumentCluster.c	   120  }
-; instrumentCluster.c	   121  
-; instrumentCluster.c	   122  ubyte2 IC_to_MCM_getMaxTorqueDNm(MotorController* mcm)
+; instrumentCluster.c	   117  
+; instrumentCluster.c	   118  ubyte2 IC_to_MCM_getMaxTorqueDNm(MotorController* mcm)
+; instrumentCluster.c	   119  {
+; instrumentCluster.c	   120      return MCM_getMaxTorqueDNm(mcm);
+; instrumentCluster.c	   121  }
+; instrumentCluster.c	   122  ubyte2 IC_to_MCM_getRegen_TorqueLimitDNm(MotorController* mcm)
 ; instrumentCluster.c	   123  {
-; instrumentCluster.c	   124      return MCM_getMaxTorqueDNm(mcm);
+; instrumentCluster.c	   124      return MCM_getRegen_TorqueLimitDNm(mcm);
 ; instrumentCluster.c	   125  }
-; instrumentCluster.c	   126  ubyte2 IC_to_MCM_getRegen_TorqueLimitDNm(MotorController* mcm)
+; instrumentCluster.c	   126  ubyte2 IC_to_MCM_getRegen_TorqueAtZeroPedalDNm(MotorController* mcm)
 ; instrumentCluster.c	   127  {
-; instrumentCluster.c	   128      return MCM_getRegen_TorqueLimitDNm(mcm);
+; instrumentCluster.c	   128      return MCM_getRegen_TorqueAtZeroPedalDNm(mcm);
 ; instrumentCluster.c	   129  }
-; instrumentCluster.c	   130  ubyte2 IC_to_MCM_getRegen_TorqueAtZeroPedalDNm(MotorController* mcm)
+; instrumentCluster.c	   130  float4 IC_to_MCM_getRegen_PercentBPSForMaxRegen(MotorController* mcm)
 ; instrumentCluster.c	   131  {
-; instrumentCluster.c	   132      return MCM_getRegen_TorqueAtZeroPedalDNm(mcm);
+; instrumentCluster.c	   132      return MCM_getRegen_PercentBPSForMaxRegen(mcm);
 ; instrumentCluster.c	   133  }
-; instrumentCluster.c	   134  float4 IC_to_MCM_getRegen_PercentBPSForMaxRegen(MotorController* mcm)
+; instrumentCluster.c	   134  float4 IC_to_MCM_getRegen_PercentAPPSForCoasting(MotorController* mcm)
 ; instrumentCluster.c	   135  {
-; instrumentCluster.c	   136      return MCM_getRegen_PercentBPSForMaxRegen(mcm);
+; instrumentCluster.c	   136      return MCM_getRegen_PercentAPPSForCoasting(mcm);
 ; instrumentCluster.c	   137  }
-; instrumentCluster.c	   138  float4 IC_to_MCM_getRegen_PercentAPPSForCoasting(MotorController* mcm)
-; instrumentCluster.c	   139  {
-; instrumentCluster.c	   140      return MCM_getRegen_PercentAPPSForCoasting(mcm);
-; instrumentCluster.c	   141  }
-; instrumentCluster.c	   141  */
+; instrumentCluster.c	   137  */
 
 	; Module end
 	.end

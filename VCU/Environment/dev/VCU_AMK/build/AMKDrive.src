@@ -1,5 +1,5 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc7812a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2025 -DRTS_TTC_FLASH_DATE_MONTH=9 -DRTS_TTC_FLASH_DATE_DAY=23 -DRTS_TTC_FLASH_DATE_HOUR=12 -DRTS_TTC_FLASH_DATE_MINUTE=46 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\AMKDrive.src
+	; Options: -f cc11048a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2025 -DRTS_TTC_FLASH_DATE_MONTH=9 -DRTS_TTC_FLASH_DATE_DAY=23 -DRTS_TTC_FLASH_DATE_HOUR=12 -DRTS_TTC_FLASH_DATE_MINUTE=49 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\AMKDrive.src
 	; Module start
 	.source	'AMKDrive.c'
 code_AmkDriver_new	.section	code, cluster 'AmkDriver_new', new
@@ -398,7 +398,7 @@ _410:
 ; AMKDrive.c	    95      torqueMax = torqueMax / 9.8; //Needs to be divided by the nominal torque and give 2.14 as max since 2.14 is 214% of 9.8. Should scale to any max value
 ; AMKDrive.c	    96  
 ; AMKDrive.c	    97      appsTorque = torqueMax * getPercent(appsOutputPercent, 0, 1, TRUE) - 0 * getPercent(appsOutputPercent, 0, 0, TRUE);
-; AMKDrive.c	    98      bpsTorque = 0 - (0 - 0) * getPercent(bps->percent, 0, 0, TRUE);
+; AMKDrive.c	    98      bpsTorque = 0 - (0 - 0) * getPercent(PedalSensor_getTravelPercent(bps), 0, 0, TRUE);
 ; AMKDrive.c	    99      */ 
 ; AMKDrive.c	   100  
 ; AMKDrive.c	   101      //Vehicle Testing works on Test-Bench
@@ -486,7 +486,7 @@ _173:
 ; AMKDrive.c	   169              }
 ; AMKDrive.c	   170          break;
 ; AMKDrive.c	   171          case DRIVER_ENABLE: 
-; AMKDrive.c	   172              if(Sensor_RTDButton.sensorValue == TRUE && tps->calibrated == TRUE /*Uncomment in the future: && tps->travelPercent < .05*/){
+; AMKDrive.c	   172              if(Sensor_RTDButton.sensorValue == TRUE && PedalSensor_getCalibrated(tps) == TRUE /*Uncomment in the future: && PedalSensor_getTravelPercent(tps) < .05*/){
 ; AMKDrive.c	   173                  me->AMK_bInverterOn = FALSE;
 ; AMKDrive.c	   174                  me->AMK_bDcOn = TRUE;
 ; AMKDrive.c	   175                  me->AMK_bEnable = TRUE;
@@ -973,15 +973,14 @@ _770:
 	cmpw	r11,@sof(_Sensor_RTDButton+0x8)
 	exts	#@seg(_Sensor_RTDButton+0xa),#0x1
 	subcw	r13,@sof(_Sensor_RTDButton+0xa)
-	jmp	cc_ne,_27
+	jmp+	cc_ne,_27
 _1091:
-	addw	r7,#0xd
-_771:
-	addcw	r12,#0x0
-	exts	r12,#0x1
-	movb	rh4,[r7]
+	movw	r2,r7
+_769:
+	movw	r3,r12
+	call	_PedalSensor_getCalibrated
 _767:
-	cmpb	rh4,#0x1
+	cmpb	rl2,#0x1
 	jmp+	cc_ne,_28
 _1092:
 	movw	r11,r8
@@ -1068,13 +1067,13 @@ _1113:
 	addcw	r12,#0x0
 	exts	r12,#0x1
 	movb	rh4,[r11]
-_772:
+_771:
 	cmpb	rh4,#0x1
 	jmp-	cc_ne,_31
 _1114:
 	movw	r5,r8
 	movw	r2,r9
-_769:
+_773:
 	addw	r5,#0x8
 	addcw	r2,#0x0
 _1115:
@@ -1132,7 +1131,7 @@ _1127:
 	jmp-	cc_ne,_32
 _1128:
 	addw	r8,#0x17
-_773:
+_772:
 	addcw	r9,#0x0
 	exts	r9,#0x1
 	movb	rh4,[r8]
@@ -1837,6 +1836,7 @@ _prevHVILState	.label	byte
 	.calls	'_DI_calculateInverterControl','_IO_DO_Set'
 	.calls	'_DI_calculateInverterControl','_IO_RTC_StartTime'
 	.calls	'_DI_calculateInverterControl','_IO_RTC_GetTimeUS'
+	.calls	'_DI_calculateInverterControl','_PedalSensor_getCalibrated'
 	.calls	'_DI_calculateInverterControl','_RTDS_setVolume'
 	.calls	'_AmkDriver_new','',4,2
 	.calls	'_DI_calculateCommands','',4,8
@@ -1849,6 +1849,7 @@ _prevHVILState	.label	byte
 	.extern	_IO_RTC_GetTimeUS : far
 	.extern	_IO_DO_Set : far
 	.extern	_Sensor_RTDButton : word
+	.extern	_PedalSensor_getCalibrated : far
 	.extern	_PedalSensor_getIndividualSensorPercent : far
 	.extern	_RTDS_setVolume : far
 	.extern	__mul_spf : far
@@ -1856,7 +1857,7 @@ _prevHVILState	.label	byte
 	.extern	__s2spf : far
 	.debug		.debug_info
 _115:
-	.dl	3097
+	.dl	3149
 	.dw	3
 	.dl	_116
 	.db	4
@@ -2112,6 +2113,12 @@ _158:
 	.db	1,2,35,56,0,7,5
 	.dl	1552
 	.db	12
+	.db	'PedalSensor_getCalibrated',0,6,82,6,6
+	.dl	267
+	.db	1,1,1,1,9
+	.db	'me',0,6,82,45,2
+	.dl	2025
+	.db	0,12
 	.db	'PedalSensor_getIndividualSensorPercent',0,6,85,8,6
 	.dl	284
 	.db	1,1,1,1,9
@@ -2124,11 +2131,11 @@ _158:
 	.db	'_ReadyToDriveSound',0,8,12,16,1
 _164:
 	.db	7,5
-	.dl	2118
+	.dl	2170
 	.db	17
 	.db	'RTDS_setVolume',0,8,18,6,6,1,1,1,1,9
 	.db	'rtds',0,8,18,40,2
-	.dl	2142
+	.dl	2194
 	.db	9
 	.db	'volumePercent',0,8,18,53,2
 	.dl	284
@@ -2170,13 +2177,13 @@ _162:
 	.db	4,2,35,28,0
 _166:
 	.db	7,5
-	.dl	2242
+	.dl	2294
 	.db	18,8
 	.dl	267
 	.db	19,7,0,5
 	.db	'_io_can_data_frame',0,10,209,2,16,14,6
 	.db	'data',0
-	.dl	2398
+	.dl	2450
 	.db	8,2,35,0,6
 	.db	'length',0
 	.dl	267
@@ -2189,11 +2196,11 @@ _166:
 	.db	4,2,35,10,0
 _182:
 	.db	7,5
-	.dl	2407
+	.dl	2459
 	.db	4
 	.db	'unsigned short int',0,2,7,20
 	.db	'__wchar_t',0,1,1,1
-	.dl	2500
+	.dl	2552
 	.db	20
 	.db	'__size_t',0,1,1,1
 	.dl	244
@@ -2201,7 +2208,7 @@ _182:
 	.dl	1037
 	.db	20
 	.db	'__prof_adm',0,1,1,1
-	.dl	2557
+	.dl	2609
 	.db	20
 	.db	'__codeptr',0,1,1,1
 	.dl	1079
@@ -2231,7 +2238,7 @@ _182:
 	.dl	244
 	.db	20
 	.db	'IO_CAN_DATA_FRAME',0,10,215,2,3
-	.dl	2407
+	.dl	2459
 	.db	20
 	.db	'Sensor',0,7,145,1,3
 	.dl	1318
@@ -2244,7 +2251,7 @@ _182:
 	.dl	1079
 	.db	4,2,35,0,0,20
 	.db	'BL_T_DATE',0,13,93,2
-	.dl	2797
+	.dl	2849
 	.db	5
 	.db	'_bl_t_can_id',0,13,102,16,8,6
 	.db	'extended',0
@@ -2254,7 +2261,7 @@ _182:
 	.dl	1079
 	.db	4,2,35,4,0,20
 	.db	'BL_T_CAN_ID',0,13,106,2
-	.dl	2846
+	.dl	2898
 	.db	20
 	.db	'PedalType',0,6,19,3
 	.dl	1278
@@ -2269,10 +2276,10 @@ _182:
 	.dl	1552
 	.db	20
 	.db	'ReadyToDriveSound',0,8,12,35
-	.dl	2118
+	.dl	2170
 	.db	20
 	.db	'_DAQSensors',0,9,31,3
-	.dl	2242
+	.dl	2294
 	.db	20
 	.db	'DI_Location_Address',0,2,50,3
 	.dl	165
@@ -2322,9 +2329,9 @@ _967:
 	; End of section
 
 	.debug		.debug_pubnames
-	.dl	143
+	.dl	173
 	.dw	2
-	.dl	_115,3101,1049
+	.dl	_115,3153,1049
 	.db	'malloc',0
 	.dl	1111
 	.db	'IO_RTC_StartTime',0
@@ -2333,8 +2340,10 @@ _967:
 	.dl	1213
 	.db	'IO_DO_Set',0
 	.dl	2031
+	.db	'PedalSensor_getCalibrated',0
+	.dl	2083
 	.db	'PedalSensor_getIndividualSensorPercent',0
-	.dl	2148
+	.dl	2200
 	.db	'RTDS_setVolume',0
 	.dl	0
 	; End of section
@@ -2732,9 +2741,9 @@ _1029:
 	.dw	_7-_1089
 	.db	3,2,1,5,16,9
 	.dw	_1090-_7
-	.db	1,5,59,9
+	.db	1,5,82,9
 	.dw	_1091-_1090
-	.db	1,5,72,9
+	.db	1,5,87,9
 	.dw	_767-_1091
 	.db	1,5,19,9
 	.dw	_1092-_767
@@ -2785,9 +2794,9 @@ _1029:
 	.db	1,5,59,9
 	.dw	_1113-_775
 	.db	1,5,73,9
-	.dw	_772-_1113
+	.dw	_771-_1113
 	.db	1,5,19,9
-	.dw	_1114-_772
+	.dw	_1114-_771
 	.db	3,1,1,5,39,9
 	.dw	_1115-_1114
 	.db	1,5,37,9
@@ -4410,7 +4419,7 @@ _159:
 	.dl	_7-_67,_767-_67
 	.dw	6
 	.db	84,147,2,85,147,2
-	.dl	_8-_67,_772-_67
+	.dl	_8-_67,_771-_67
 	.dw	6
 	.db	84,147,2,85,147,2
 	.dl	_9-_67,_776-_67
@@ -4470,9 +4479,12 @@ _157:
 	.dl	_7-_67,_769-_67
 	.dw	6
 	.db	82,147,2,83,147,2
-	.dl	_8-_67,_773-_67
+	.dl	_8-_67,_772-_67
 	.dw	6
 	.db	88,147,2,89,147,2
+	.dl	_8-_67,_773-_67
+	.dw	6
+	.db	82,147,2,83,147,2
 	.dl	_9-_67,_777-_67
 	.dw	6
 	.db	88,147,2,89,147,2
@@ -4534,7 +4546,7 @@ _161:
 	.dl	_6-_67,_766-_67
 	.dw	6
 	.db	87,147,2,92,147,2
-	.dl	_7-_67,_771-_67
+	.dl	_7-_67,_767-_67
 	.dw	6
 	.db	87,147,2,92,147,2
 	.dl	_8-_67,_775-_67

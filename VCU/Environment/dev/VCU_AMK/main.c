@@ -323,7 +323,7 @@ void main(void)
             }
             timestamp_EcoButton = 0;
         }
-        TorqueEncoder_update(tps);
+        TorqueEncoder_update(tps, bench);
         //Every cycle: if the calibration was started and hasn't finished, check the values again
         TorqueEncoder_calibrationCycle(tps, &calibrationErrors); //Todo: deal with calibration errors
         BrakePressureSensor_update(bps, bench);
