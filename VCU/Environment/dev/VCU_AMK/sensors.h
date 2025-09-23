@@ -154,6 +154,10 @@ typedef struct _Sensor {
 extern Sensor Sensor_TPS0;  // = { 0, 0.5, 4.5 };
 extern Sensor Sensor_TPS1;  // = { 0, 4.5, 0.5 };
 
+//Bench TPS sensors for testing
+extern Sensor Sensor_BenchTPS0;
+extern Sensor Sensor_BenchTPS1;
+
 //Brake Position Sensors
 extern Sensor Sensor_BPS0;  // = { 1, 0.5, 4.5 };  //Brake system pressure (or front only in the future)
 extern Sensor Sensor_BPS1;  // = { 2, 0.5, 4.5 }; //Rear brake system pressure (separate address in case used for something else)
