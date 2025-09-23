@@ -95,7 +95,7 @@ void DI_calculateCommands(_DriveInverter* me, TorqueEncoder *tps, BrakePressureS
     torqueMax = torqueMax / 9.8; //Needs to be divided by the nominal torque and give 2.14 as max since 2.14 is 214% of 9.8. Should scale to any max value
 
     appsTorque = torqueMax * getPercent(appsOutputPercent, 0, 1, TRUE) - 0 * getPercent(appsOutputPercent, 0, 0, TRUE);
-    bpsTorque = 0 - (0 - 0) * getPercent(bps->percent, 0, 0, TRUE);
+    bpsTorque = 0 - (0 - 0) * getPercent(PedalSensor_getTravelPercent(bps), 0, 0, TRUE);
     */ 
 
     //Vehicle Testing works on Test-Bench
@@ -169,7 +169,7 @@ void DI_calculateInverterControl(_DriveInverter* me, Sensor *HVILTermSense, Torq
             }
         break;
         case DRIVER_ENABLE: 
-            if(Sensor_RTDButton.sensorValue == TRUE && tps->calibrated == TRUE /*Uncomment in the future: && tps->travelPercent < .05*/){
+            if(Sensor_RTDButton.sensorValue == TRUE && PedalSensor_getCalibrated(tps) == TRUE /*Uncomment in the future: && PedalSensor_getTravelPercent(tps) < .05*/){
                 me->AMK_bInverterOn = FALSE;
                 me->AMK_bDcOn = TRUE;
                 me->AMK_bEnable = TRUE;

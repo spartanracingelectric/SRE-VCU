@@ -1,5 +1,5 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc2804a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=5 -DRTS_TTC_FLASH_DATE_DAY=4 -DRTS_TTC_FLASH_DATE_HOUR=13 -DRTS_TTC_FLASH_DATE_MINUTE=36 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\daqSensors.src
+	; Options: -f cc556a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2025 -DRTS_TTC_FLASH_DATE_MONTH=9 -DRTS_TTC_FLASH_DATE_DAY=23 -DRTS_TTC_FLASH_DATE_HOUR=12 -DRTS_TTC_FLASH_DATE_MINUTE=47 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\daqSensors.src
 	; Module start
 	.source	'daqSensors.c'
 code_DAQ_Sensor_new	.section	code, cluster 'DAQ_Sensor_new', new
@@ -15,24 +15,23 @@ code_DAQ_Sensor_new	.section	code, cluster 'DAQ_Sensor_new', new
 ; daqSensors.c	     8  #include <stdlib.h> 
 ; daqSensors.c	     9  #include "IO_CAN.h"
 ; daqSensors.c	    10  #include "IO_Driver.h"
-; daqSensors.c	    11  #include "mathFunctions.h"
+; daqSensors.c	    11  #include "sensors.h"
 ; daqSensors.c	    12  #include "initializations.h"
-; daqSensors.c	    13  #include "sensors.h"
-; daqSensors.c	    14  #include "daqSensors.h"
-; daqSensors.c	    15  
-; daqSensors.c	    16  _DAQSensors* DAQ_Sensor_new(){
+; daqSensors.c	    13  #include "daqSensors.h"
+; daqSensors.c	    14  
+; daqSensors.c	    15  _DAQSensors* DAQ_Sensor_new(){
 ; Function _DAQ_Sensor_new
 _11:
 _DAQ_Sensor_new	.proc	far
 
-; daqSensors.c	    17  
-; daqSensors.c	    18      _DAQSensors* me = (_DAQSensors*)malloc(sizeof(_DAQSensors));
+; daqSensors.c	    16  
+; daqSensors.c	    17      _DAQSensors* me = (_DAQSensors*)malloc(sizeof(_DAQSensors));
 	movw	r2,#0x20
 	call	_malloc
 _537:
 
-; daqSensors.c	    19  
-; daqSensors.c	    20      me->AccelX = 0;
+; daqSensors.c	    18  
+; daqSensors.c	    19      me->AccelX = 0;
 	movw	r13,#0x0
 _538:
 	movw	r11,r2
@@ -45,7 +44,7 @@ _538:
 	movw	[r11],r13
 _539:
 
-; daqSensors.c	    21      me->AccelY = 0;
+; daqSensors.c	    20      me->AccelY = 0;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x4
@@ -59,7 +58,7 @@ _540:
 	movw	[r11],r13
 _541:
 
-; daqSensors.c	    22      me->AccelZ = 0;
+; daqSensors.c	    21      me->AccelZ = 0;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x8
@@ -73,8 +72,8 @@ _542:
 	movw	[r11],r13
 _543:
 
-; daqSensors.c	    23  
-; daqSensors.c	    24      me->GyroX = 0;
+; daqSensors.c	    22  
+; daqSensors.c	    23      me->GyroX = 0;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0xc
@@ -88,7 +87,7 @@ _544:
 	movw	[r11],r13
 _545:
 
-; daqSensors.c	    25      me->GyroY = 0;
+; daqSensors.c	    24      me->GyroY = 0;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x10
@@ -102,7 +101,7 @@ _546:
 	movw	[r11],r13
 _547:
 
-; daqSensors.c	    26      me->GyroZ = 0;
+; daqSensors.c	    25      me->GyroZ = 0;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x14
@@ -116,8 +115,8 @@ _548:
 	movw	[r11],r13
 _549:
 
-; daqSensors.c	    27  
-; daqSensors.c	    28      me->GpsSpeed = 0;
+; daqSensors.c	    26  
+; daqSensors.c	    27      me->GpsSpeed = 0;
 	movw	r11,r2
 	movw	r12,r3
 	addw	r11,#0x18
@@ -131,10 +130,10 @@ _550:
 	movw	[r11],r13
 _551:
 
-; daqSensors.c	    29  
-; daqSensors.c	    30      return me;
-; daqSensors.c	    31  
-; daqSensors.c	    32  }
+; daqSensors.c	    28  
+; daqSensors.c	    29      return me;
+; daqSensors.c	    30  
+; daqSensors.c	    31  }
 	ret
 _42:
 	; End of function
@@ -143,8 +142,8 @@ _42:
 code_DAQ_parseCanMessage	.section	code, cluster 'DAQ_parseCanMessage', new
 	.global	_DAQ_parseCanMessage
 
-; daqSensors.c	    33  
-; daqSensors.c	    34  void DAQ_parseCanMessage(_DAQSensors* me, IO_CAN_DATA_FRAME* daqCANMessage){
+; daqSensors.c	    32  
+; daqSensors.c	    33  void DAQ_parseCanMessage(_DAQSensors* me, IO_CAN_DATA_FRAME* daqCANMessage){
 ; Function _DAQ_parseCanMessage
 _23:
 _DAQ_parseCanMessage	.proc	far
@@ -175,13 +174,13 @@ _163:
 	movw	r7,r5
 _520:
 
-; daqSensors.c	    35  
-; daqSensors.c	    36      //Issue with it not subtracting the value correctly due to the DBC (offset required) -> -320 and -250 dont work
-; daqSensors.c	    37      //Compare it with 320 and 250
-; daqSensors.c	    38  
-; daqSensors.c	    39      //See if the scale is needed
-; daqSensors.c	    40  
-; daqSensors.c	    41      if(daqCANMessage->id == 0x400) {
+; daqSensors.c	    34  
+; daqSensors.c	    35      //Issue with it not subtracting the value correctly due to the DBC (offset required) -> -320 and -250 dont work
+; daqSensors.c	    36      //Compare it with 320 and 250
+; daqSensors.c	    37  
+; daqSensors.c	    38      //See if the scale is needed
+; daqSensors.c	    39  
+; daqSensors.c	    40      if(daqCANMessage->id == 0x400) {
 	addw	r4,#0xa
 _518:
 	addcw	r5,#0x0
@@ -202,8 +201,8 @@ _558:
 	jmp+	cc_ne,_3
 _559:
 
-; daqSensors.c	    42  
-; daqSensors.c	    43          me->AccelX = (((ubyte4)daqCANMessage->data[1] << 8 | daqCANMessage->data[0]) - 320.0) * 0.01; //m/s2
+; daqSensors.c	    41  
+; daqSensors.c	    42          me->AccelX = (((ubyte4)daqCANMessage->data[1] << 8 | daqCANMessage->data[0]) - 320.0) * 0.01; //m/s2
 	movw	r11,r6
 	movw	r12,r7
 _560:
@@ -255,7 +254,7 @@ _574:
 	addcw	r12,#0x0
 _575:
 
-; daqSensors.c	    44          me->AccelY = (((ubyte4)daqCANMessage->data[3] << 8 | daqCANMessage->data[2]) - 320.0) * 0.01; //m/s2
+; daqSensors.c	    43          me->AccelY = (((ubyte4)daqCANMessage->data[3] << 8 | daqCANMessage->data[2]) - 320.0) * 0.01; //m/s2
 	movw	r14,#0x4074
 _576:
 	exts	r12,#0x1
@@ -319,7 +318,7 @@ _594:
 	addcw	r8,#0x0
 _595:
 
-; daqSensors.c	    45          me->AccelZ = (((ubyte4)daqCANMessage->data[5] << 8 | daqCANMessage->data[4]) - 320.0) * 0.01; //m/s2
+; daqSensors.c	    44          me->AccelZ = (((ubyte4)daqCANMessage->data[5] << 8 | daqCANMessage->data[4]) - 320.0) * 0.01; //m/s2
 	movw	r11,r6
 	movw	r12,r7
 _596:
@@ -383,16 +382,16 @@ _613:
 	jmp	_4
 _3:
 
-; daqSensors.c	    46          
-; daqSensors.c	    47      } else if(daqCANMessage->id == 0x402) {
+; daqSensors.c	    45          
+; daqSensors.c	    46      } else if(daqCANMessage->id == 0x402) {
 	movw	r13,r12
 	cmpw	r11,#0x402
 	subcw	r13,#0x0
 	jmp+	cc_ne,_5
 _614:
 
-; daqSensors.c	    48          
-; daqSensors.c	    49          me->GyroX = (((ubyte4)daqCANMessage->data[1] << 8 | daqCANMessage->data[0]) - 250.0) * 0.0078125; //deg/s
+; daqSensors.c	    47          
+; daqSensors.c	    48          me->GyroX = (((ubyte4)daqCANMessage->data[1] << 8 | daqCANMessage->data[0]) - 250.0) * 0.0078125; //deg/s
 	movw	r11,r6
 	movw	r12,r7
 _615:
@@ -445,7 +444,7 @@ _628:
 	addcw	r8,#0x0
 _629:
 
-; daqSensors.c	    50          me->GyroY = (((ubyte4)daqCANMessage->data[3] << 8 | daqCANMessage->data[2]) - 250.0) * 0.0078125; //deg/s
+; daqSensors.c	    49          me->GyroY = (((ubyte4)daqCANMessage->data[3] << 8 | daqCANMessage->data[2]) - 250.0) * 0.0078125; //deg/s
 	movw	r11,r6
 	movw	r12,r7
 _630:
@@ -508,7 +507,7 @@ _647:
 	addcw	r8,#0x0
 _648:
 
-; daqSensors.c	    51          me->GyroZ = (((ubyte4)daqCANMessage->data[5] << 8 | daqCANMessage->data[4]) - 250.0) * 0.0078125; //deg/s
+; daqSensors.c	    50          me->GyroZ = (((ubyte4)daqCANMessage->data[5] << 8 | daqCANMessage->data[4]) - 250.0) * 0.0078125; //deg/s
 	movw	r11,r6
 	movw	r12,r7
 _649:
@@ -572,15 +571,15 @@ _666:
 	jmp	_6
 _5:
 
-; daqSensors.c	    52  
-; daqSensors.c	    53      } else if (daqCANMessage->id == 0x401) {
+; daqSensors.c	    51  
+; daqSensors.c	    52      } else if (daqCANMessage->id == 0x401) {
 	movw	r13,r12
 	cmpw	r11,#0x401
 	subcw	r13,#0x0
 	jmp+	cc_ne,_7
 _667:
 
-; daqSensors.c	    54          me->GpsSpeed = (((ubyte4)daqCANMessage->data[0] << 8 | daqCANMessage->data[1])) * 0.001; //kph 
+; daqSensors.c	    53          me->GpsSpeed = (((ubyte4)daqCANMessage->data[0] << 8 | daqCANMessage->data[1])) * 0.001; //kph 
 	exts	r7,#0x1
 	movb	rh4,[r6]
 _668:
@@ -629,14 +628,14 @@ _679:
 	jmp	_8
 _7:
 
-; daqSensors.c	    55  
-; daqSensors.c	    56      } else if (daqCANMessage->id == 0x403) {
+; daqSensors.c	    54  
+; daqSensors.c	    55      } else if (daqCANMessage->id == 0x403) {
 	cmpw	r11,#0x403
 	subcw	r12,#0x0
 	jmp+	cc_ne,_9
 _680:
 
-; daqSensors.c	    57          me->DetectionPCB = daqCANMessage->data[0]; // On/Off
+; daqSensors.c	    56          me->DetectionPCB = daqCANMessage->data[0]; // On/Off
 	movw	r11,[r15]
 _526:
 	movw	r12,[r15+#0x2]
@@ -663,8 +662,8 @@ _8:
 _6:
 _4:
 
-; daqSensors.c	    58      }
-; daqSensors.c	    58  }
+; daqSensors.c	    57      }
+; daqSensors.c	    57  }
 
 	addw	r15,#0x4
 _174:
@@ -741,7 +740,7 @@ _47:
 	.extern	__dpf2ul : far
 	.debug		.debug_info
 _35:
-	.dl	892
+	.dl	878
 	.dw	3
 	.dl	_36
 	.db	4
@@ -749,124 +748,124 @@ _34:
 	.db	1
 	.db	'daqSensors.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_37
 	.db	2
 	.db	'void',0,3,5
-	.dl	181
+	.dl	167
 	.db	4
 	.db	'unsigned int',0,2,7,5
 	.db	'malloc',0,1,78,33,6
-	.dl	187
+	.dl	173
 	.db	1,1,1,1,6,1,78,44,2
-	.dl	193
+	.dl	179
 	.db	0,4
 	.db	'unsigned long int',0,4,7,7
-	.db	'DAQSensors',0,2,18,16,32,8
+	.db	'DAQSensors',0,2,17,16,32,8
 	.db	'AccelX',0
-	.dl	239
+	.dl	225
 	.db	4,2,35,0,8
 	.db	'AccelY',0
-	.dl	239
+	.dl	225
 	.db	4,2,35,4,8
 	.db	'AccelZ',0
-	.dl	239
+	.dl	225
 	.db	4,2,35,8,8
 	.db	'GyroX',0
-	.dl	239
+	.dl	225
 	.db	4,2,35,12,8
 	.db	'GyroY',0
-	.dl	239
+	.dl	225
 	.db	4,2,35,16,8
 	.db	'GyroZ',0
-	.dl	239
+	.dl	225
 	.db	4,2,35,20,8
 	.db	'GpsSpeed',0
-	.dl	239
+	.dl	225
 	.db	4,2,35,24,8
 	.db	'DetectionPCB',0
-	.dl	239
+	.dl	225
 	.db	4,2,35,28,0
 _48:
 	.db	3,5
-	.dl	260
+	.dl	246
 	.db	4
 	.db	'unsigned char',0,1,8,9,8
-	.dl	416
+	.dl	402
 	.db	10,7,0,7
 	.db	'_io_can_data_frame',0,3,209,2,16,14,8
 	.db	'data',0
-	.dl	433
+	.dl	419
 	.db	8,2,35,0,8
 	.db	'length',0
-	.dl	416
+	.dl	402
 	.db	1,2,35,8,8
 	.db	'id_format',0
-	.dl	416
+	.dl	402
 	.db	1,2,35,9,8
 	.db	'id',0
-	.dl	239
+	.dl	225
 	.db	4,2,35,10,0
 _51:
 	.db	3,5
-	.dl	442
+	.dl	428
 	.db	4
 	.db	'unsigned short int',0,2,7,11
 	.db	'__wchar_t',0,4,1,1
-	.dl	535
+	.dl	521
 	.db	11
 	.db	'__size_t',0,4,1,1
-	.dl	193
+	.dl	179
 	.db	3,5
-	.dl	181
+	.dl	167
 	.db	11
 	.db	'__prof_adm',0,4,1,1
-	.dl	592
+	.dl	578
 	.db	11
 	.db	'__codeptr',0,4,1,1
-	.dl	239
+	.dl	225
 	.db	11
 	.db	'size_t',0,1,29,25
-	.dl	193
+	.dl	179
 	.db	11
 	.db	'ubyte1',0,5,21,29
-	.dl	416
+	.dl	402
 	.db	11
 	.db	'ubyte2',0,5,22,29
-	.dl	193
+	.dl	179
 	.db	11
 	.db	'ubyte4',0,5,23,29
-	.dl	239
+	.dl	225
 	.db	11
 	.db	'bool',0,5,31,29
-	.dl	416
+	.dl	402
 	.db	11
 	.db	'IO_ErrorType',0,6,150,1,17
-	.dl	193
+	.dl	179
 	.db	11
 	.db	'IO_CAN_DATA_FRAME',0,3,215,2,3
-	.dl	442
+	.dl	428
 	.db	7
 	.db	'_bl_t_date',0,7,90,16,4,8
 	.db	'date',0
-	.dl	239
+	.dl	225
 	.db	4,2,35,0,0,11
 	.db	'BL_T_DATE',0,7,93,2
-	.dl	757
+	.dl	743
 	.db	7
 	.db	'_bl_t_can_id',0,7,102,16,8,8
 	.db	'extended',0
-	.dl	239
+	.dl	225
 	.db	4,2,35,0,8
 	.db	'ID',0
-	.dl	239
+	.dl	225
 	.db	4,2,35,4,0,11
 	.db	'BL_T_CAN_ID',0,7,106,2
-	.dl	806
+	.dl	792
 	.db	11
-	.db	'_DAQSensors',0,2,32,3
-	.dl	260
+	.db	'_DAQSensors',0,2,31,3
+	.dl	246
 	.db	0
 	; End of section
 
@@ -902,33 +901,33 @@ _530:
 	.debug		.debug_pubnames
 	.dl	25
 	.dw	2
-	.dl	_35,896,209
+	.dl	_35,882,195
 	.db	'malloc',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'DAQ_Sensor_new'
 _38:
-	.dl	265
+	.dl	251
 	.dw	3
 	.dl	_39
 	.db	4,1
 	.db	'daqSensors.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_41,_40
 	.db	2
 	.dl	_34
 	.db	3
-	.db	'DAQ_Sensor_new',0,1,16,14,6
+	.db	'DAQ_Sensor_new',0,1,15,14,6
 	.dl	_48
 	.db	1,1
 	.dl	_11,_42,_10
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
 	.dl	_11,_42
 	.db	5
-	.db	'me',0,1,18,18,2
+	.db	'me',0,1,17,18,2
 	.dl	_48,_49
 	.db	0,0,0
 	; End of section
@@ -952,7 +951,7 @@ _535:
 _536:
 	.db	5,44,7,0,5,2
 	.dl	_11
-	.db	3,17,1,5,18,9
+	.db	3,16,1,5,18,9
 	.dw	_537-_11
 	.db	3,2,1,5,16,9
 	.dw	_538-_537
@@ -996,32 +995,32 @@ _41:
 	.debug		.debug_pubnames
 	.dl	33
 	.dw	2
-	.dl	_38,269,190
+	.dl	_38,255,176
 	.db	'DAQ_Sensor_new',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'DAQ_parseCanMessage'
 _43:
-	.dl	293
+	.dl	279
 	.dw	3
 	.dl	_44
 	.db	4,1
 	.db	'daqSensors.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_46,_45
 	.db	2
 	.dl	_34
 	.db	3
-	.db	'DAQ_parseCanMessage',0,1,34,6,6,1,1,1
+	.db	'DAQ_parseCanMessage',0,1,33,6,6,1,1,1
 	.dl	_23,_47,_22
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'me',0,1,34,39,2
+	.db	'me',0,1,33,39,2
 	.dl	_48,_50
 	.db	4
-	.db	'daqCANMessage',0,1,34,62,2
+	.db	'daqCANMessage',0,1,33,62,2
 	.dl	_51,_52
 	.db	5
 	.dl	_23,_47
@@ -1047,7 +1046,7 @@ _554:
 _555:
 	.db	5,6,7,0,5,2
 	.dl	_23
-	.db	3,33,1,5,21,9
+	.db	3,32,1,5,21,9
 	.dw	_520-_23
 	.db	3,7,1,5,6,9
 	.dw	_556-_520
@@ -1335,7 +1334,7 @@ _46:
 	.debug		.debug_pubnames
 	.dl	38
 	.dw	2
-	.dl	_43,297,190
+	.dl	_43,283,176
 	.db	'DAQ_parseCanMessage',0
 	.dl	0
 	; End of section

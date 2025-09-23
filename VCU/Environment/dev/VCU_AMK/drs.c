@@ -90,8 +90,8 @@ void DRS_update(DRS *me, TorqueEncoder *tps, BrakePressureSensor *bps, ubyte1 po
 void runAuto(DRS *me, TorqueEncoder *tps, BrakePressureSensor *bps) {
     sbyte2 vehicle_speed_mph = 0.62 * 0;// SRE-7 Replace: MCM_getGroundSpeedKPH(mcm); // >30mph
     sbyte2 curr_steer_angle = steering_degrees(); // < +-15 deg
-    float4 brake_travel = bps->percent; // > 50%
-    float4 throttle_travel = tps->travelPercent; // > 90%
+    float4 brake_travel = PedalSensor_getTravelPercent(bps); // > 50%
+    float4 throttle_travel = PedalSensor_getTravelPercent(tps); // > 90%
 
     if (vehicle_speed_mph > 5 && throttle_travel > .75 && curr_steer_angle > -15 && curr_steer_angle < 15 && brake_travel < .10) {
         DRS_open(me);

@@ -293,16 +293,16 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     //     This must be demonstrated at Technical Inspection
     // EV.5.7.2 The Motor shut down must remain active until the APPS signals less than 5% pedal travel, with or without brake operation.
     //-------------------------------------------------------------------
-    bool tpsAbove25Percent = (tps->travelPercent > .25); //Rules is 25% this is a hack that is made to check
+    bool tpsAbove25Percent = (PedalSensor_getTravelPercent(tps) > .25); //Rules is 25% this is a hack that is made to check
 
     //If mechanical brakes actuated && tps > 25%
-    if (bps->brakesAreOn && tpsAbove25Percent)
+    if (PedalSensor_getBrakesOn(bps) && tpsAbove25Percent)
     {
         // Set the TPS/BPS implaisibility VCU fault
         me->faults |= F_tpsbpsImplausible;
         //SerialManager_send(me->serialMan, "TPS BPS implausiblity detected.\n");
     }
-    else if (tps->travelPercent < .05) //TPS is reduced to < 5%
+    else if (PedalSensor_getTravelPercent(tps) < .05) //TPS is reduced to < 5%
     {
         // There is no implausibility if TPS is below 5%
         me->faults &= ~(F_tpsbpsImplausible); //turn off the implausibility flag
