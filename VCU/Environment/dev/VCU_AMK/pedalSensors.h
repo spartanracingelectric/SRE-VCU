@@ -91,6 +91,10 @@ ubyte4 PedalSensor_getCalibMaxSecondary(PedalSensor* me);
 ubyte4 PedalSensor_getSensorValuePrimary(PedalSensor* me);
 ubyte4 PedalSensor_getSensorValueSecondary(PedalSensor* me);
 
+// Sensor object getters (for direct sensor access)
+Sensor* PedalSensor_getPrimarySensor(PedalSensor* me);
+Sensor* PedalSensor_getSecondarySensor(PedalSensor* me);
+
 /*****************************************************************************
 * Safety and Validation Functions
 *****************************************************************************/
@@ -128,5 +132,10 @@ typedef PedalSensor BrakePressureSensor;
 #define TorqueEncoder_getIndividualSensorPercent(me, sensorNum, percent) (*percent = PedalSensor_getIndividualSensorPercent(me, sensorNum))
 #define TorqueEncoder_getPedalTravel(me, errorCount, percent) (*percent = PedalSensor_getTravelPercent(me))
 #define BrakePressureSensor_getPedalTravel(me, errorCount, percent) (*percent = PedalSensor_getTravelPercent(me))
+
+// Legacy sensor object access macros
+#define tps0 PedalSensor_getPrimarySensor(tps)
+#define tps1 PedalSensor_getSecondarySensor(tps)
+#define bps0 PedalSensor_getPrimarySensor(bps)
 
 #endif // _PEDALSENSORS_H

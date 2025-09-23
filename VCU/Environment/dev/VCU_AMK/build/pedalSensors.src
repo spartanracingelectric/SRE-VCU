@@ -1,0 +1,10446 @@
+	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
+	; Options: -f cc10904a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2025 -DRTS_TTC_FLASH_DATE_MONTH=9 -DRTS_TTC_FLASH_DATE_DAY=23 -DRTS_TTC_FLASH_DATE_HOUR=12 -DRTS_TTC_FLASH_DATE_MINUTE=50 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\pedalSensors.src
+	; Module start
+	.source	'pedalSensors.c'
+code_PedalSensor_new_TPS	.section	code, cluster 'PedalSensor_new_TPS', new
+	.global	_PedalSensor_new_TPS
+
+; pedalSensors.c	     1  /*****************************************************************************
+; pedalSensors.c	     2   * pedalSensors.c - Unified Pedal Sensor System
+; pedalSensors.c	     3   * Initial Author: Refactored from torqueEncoder.c and brakePressureSensor.c
+; pedalSensors.c	     4   ******************************************************************************
+; pedalSensors.c	     5   * Unified implementation for TPS (Torque Position Sensor) and BPS (Brake Pressure Sensor)
+; pedalSensors.c	     6   * Consolidates similar functionality while maintaining explicit control paths
+; pedalSensors.c	     7   ****************************************************************************/
+; pedalSensors.c	     8  
+; pedalSensors.c	     9  #include <stdlib.h>
+; pedalSensors.c	    10  #include <math.h>
+; pedalSensors.c	    11  #include "IO_RTC.h"
+; pedalSensors.c	    12  #include "pedalSensors.h"
+; pedalSensors.c	    13  #include "sensors.h"
+; pedalSensors.c	    14  
+; pedalSensors.c	    15  extern Sensor Sensor_TPS0;
+; pedalSensors.c	    16  extern Sensor Sensor_TPS1;
+; pedalSensors.c	    17  extern Sensor Sensor_BPS0;
+; pedalSensors.c	    18  extern Sensor Sensor_BPS1;
+; pedalSensors.c	    19  extern Sensor Sensor_BenchTPS0;
+; pedalSensors.c	    20  extern Sensor Sensor_BenchTPS1;
+; pedalSensors.c	    21  
+; pedalSensors.c	    22  /*****************************************************************************
+; pedalSensors.c	    23  * Constructor Functions
+; pedalSensors.c	    24  *****************************************************************************/
+; pedalSensors.c	    25  
+; pedalSensors.c	    26  PedalSensor* PedalSensor_new_TPS(bool benchMode)
+; Function _PedalSensor_new_TPS
+_67:
+_PedalSensor_new_TPS	.proc	far
+	movw	[-r15],r6
+_455:
+	movb	rh6,rl2
+_498:
+
+; pedalSensors.c	    27  {
+; pedalSensors.c	    28      PedalSensor* me = (PedalSensor*)malloc(sizeof(PedalSensor));
+	movw	r2,#0x3a
+_497:
+	call	_malloc
+_2087:
+
+; pedalSensors.c	    29      me->type = PEDAL_TYPE_TPS;
+; pedalSensors.c	    30      me->bench = benchMode;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x38
+	addcw	r12,#0x0
+_2088:
+	movb	rh4,#0x0
+_2089:
+	exts	r3,#0x1
+	movb	[r2],rh4
+_2090:
+	exts	r12,#0x1
+	movb	[r11],rh6
+	movw	r11,#@sof(_Sensor_TPS0)
+	movw	r12,#@seg(_Sensor_TPS0)
+_2091:
+
+; pedalSensors.c	    31      
+; pedalSensors.c	    32      // Set up primary and secondary sensors
+; pedalSensors.c	    33      me->primary = (benchMode == TRUE) ? &Sensor_BenchTPS0 : &Sensor_TPS0;
+	cmpb	rh6,#0x1
+	jmp	cc_ne,_2
+_2092:
+	movw	r11,#@sof(_Sensor_BenchTPS0)
+	movw	r12,#@seg(_Sensor_BenchTPS0)
+_2:
+	movw	r13,r2
+	movw	r14,r3
+	addw	r13,#0x2
+	addcw	r14,#0x0
+_2093:
+	exts	r14,#0x1
+	movw	[r13],r11
+	addw	r13,#0x2
+	addcw	r14,#0x0
+	movw	r11,#@sof(_Sensor_TPS1)
+	exts	r14,#0x1
+	movw	[r13],r12
+	movw	r12,#@seg(_Sensor_TPS1)
+_2094:
+
+; pedalSensors.c	    34      me->secondary = (benchMode == TRUE) ? &Sensor_BenchTPS1 : &Sensor_TPS1;
+	cmpb	rh6,#0x1
+	jmp	cc_ne,_4
+_2095:
+	movw	r11,#@sof(_Sensor_BenchTPS1)
+	movw	r12,#@seg(_Sensor_BenchTPS1)
+_4:
+	movw	r13,r2
+	movw	r14,r3
+	addw	r13,#0x6
+	addcw	r14,#0x0
+_2096:
+
+; pedalSensors.c	    35      
+; pedalSensors.c	    36      // TPS polarity settings
+; pedalSensors.c	    37      me->primary_reverse = FALSE;
+	movb	rh4,#0x0
+_2097:
+	exts	r14,#0x1
+	movw	[r13],r11
+	addw	r13,#0x2
+	addcw	r14,#0x0
+_2098:
+	movw	r11,r2
+_2099:
+	exts	r14,#0x1
+	movw	[r13],r12
+_2100:
+	movw	r12,r3
+	addw	r11,#0xa
+	addcw	r12,#0x0
+_2101:
+
+; pedalSensors.c	    38      me->secondary_reverse = TRUE;
+	movb	rl4,#0x1
+_2102:
+	exts	r12,#0x1
+	movb	[r11],rh4
+_2103:
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0xb
+	addcw	r12,#0x0
+_2104:
+
+; pedalSensors.c	    39      
+; pedalSensors.c	    40      // TPS-specific settings
+; pedalSensors.c	    41      me->outputCurveExponent = 1.0; // Linear by default
+	movw	r14,#0x0
+_2105:
+	exts	r12,#0x1
+	movb	[r11],rl4
+_2106:
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x14
+	addcw	r12,#0x0
+_2107:
+	movw	r13,#0x3f80
+_2108:
+	exts	r12,#0x1
+	movw	[r11],r14
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r13
+_2109:
+
+; pedalSensors.c	    42      
+; pedalSensors.c	    43      // Initialize calibration data
+; pedalSensors.c	    44      me->calibMin_primary = 0;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x18
+	addcw	r12,#0x0
+_2110:
+	exts	r12,#0x1
+	movw	[r11],r14
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r14
+_2111:
+
+; pedalSensors.c	    45      me->calibMax_primary = 0;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x1c
+	addcw	r12,#0x0
+_2112:
+	exts	r12,#0x1
+	movw	[r11],r14
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r14
+_2113:
+
+; pedalSensors.c	    46      me->calibMin_secondary = 0;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x20
+	addcw	r12,#0x0
+_2114:
+	exts	r12,#0x1
+	movw	[r11],r14
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r14
+_2115:
+
+; pedalSensors.c	    47      me->calibMax_secondary = 0;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x24
+	addcw	r12,#0x0
+_2116:
+	exts	r12,#0x1
+	movw	[r11],r14
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r14
+_2117:
+
+; pedalSensors.c	    48      
+; pedalSensors.c	    49      // Initialize state
+; pedalSensors.c	    50      me->percent = 0;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0xe
+	addcw	r12,#0x0
+_2118:
+	exts	r12,#0x1
+	movw	[r11],r14
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r14
+_2119:
+
+; pedalSensors.c	    51      me->brakesAreOn = FALSE; // Not applicable for TPS
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x12
+	addcw	r12,#0x0
+_2120:
+	exts	r12,#0x1
+	movb	[r11],rh4
+_2121:
+
+; pedalSensors.c	    52      me->runCalibration = FALSE;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0xc
+	addcw	r12,#0x0
+_2122:
+	exts	r12,#0x1
+	movb	[r11],rh4
+_2123:
+
+; pedalSensors.c	    53      me->calibrated = FALSE;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0xd
+	addcw	r12,#0x0
+_2124:
+	exts	r12,#0x1
+	movb	[r11],rh4
+_2125:
+
+; pedalSensors.c	    54      me->primary_value = 0;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x28
+	addcw	r12,#0x0
+_2126:
+	exts	r12,#0x1
+	movw	[r11],r14
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r14
+_2127:
+
+; pedalSensors.c	    55      me->secondary_value = 0;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x2c
+	addcw	r12,#0x0
+_2128:
+	exts	r12,#0x1
+	movw	[r11],r14
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r14
+_2129:
+
+; pedalSensors.c	    56      me->timestamp_calibrationStart = 0;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x30
+	addcw	r12,#0x0
+_2130:
+	exts	r12,#0x1
+	movw	[r11],r14
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r14
+_2131:
+
+; pedalSensors.c	    57      me->timestamp_calibrationEnd = 0;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x34
+	addcw	r12,#0x0
+_2132:
+	exts	r12,#0x1
+	movw	[r11],r14
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r14
+_2133:
+
+; pedalSensors.c	    58      
+; pedalSensors.c	    59      return me;
+; pedalSensors.c	    60  }
+	movw	r6,[r15+]
+_466:
+	ret
+_302:
+	; End of function
+	; End of section
+
+code_PedalSensor_new_BPS	.section	code, cluster 'PedalSensor_new_BPS', new
+	.global	_PedalSensor_new_BPS
+
+; pedalSensors.c	    61  
+; pedalSensors.c	    62  PedalSensor* PedalSensor_new_BPS(void)
+; Function _PedalSensor_new_BPS
+_79:
+_PedalSensor_new_BPS	.proc	far
+
+; pedalSensors.c	    63  {
+; pedalSensors.c	    64      PedalSensor* me = (PedalSensor*)malloc(sizeof(PedalSensor));
+	movw	r2,#0x3a
+	call	_malloc
+_2138:
+
+; pedalSensors.c	    65      me->type = PEDAL_TYPE_BPS;
+; pedalSensors.c	    66      me->bench = FALSE; // BPS doesn't have bench mode
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x38
+	addcw	r12,#0x0
+_2139:
+	movb	rh4,#0x1
+_2140:
+	exts	r3,#0x1
+	movb	[r2],rh4
+_2141:
+	movb	rh4,#0x0
+_2142:
+	exts	r12,#0x1
+	movb	[r11],rh4
+_2143:
+
+; pedalSensors.c	    67      
+; pedalSensors.c	    68      // Set up primary sensor only (BPS typically has one sensor)
+; pedalSensors.c	    69      me->primary = &Sensor_BPS0;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x2
+	addcw	r12,#0x0
+_2144:
+	movw	r13,#@sof(_Sensor_BPS0)
+_2145:
+	exts	r12,#0x1
+	movw	[r11],r13
+	addw	r11,#0x2
+	addcw	r12,#0x0
+_2146:
+	movw	r14,#@seg(_Sensor_BPS0)
+_2147:
+	exts	r12,#0x1
+	movw	[r11],r14
+_2148:
+
+; pedalSensors.c	    70      me->secondary = NULL; // BPS doesn't have secondary sensor
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x6
+	addcw	r12,#0x0
+_2149:
+	movw	r13,#0x0
+_2150:
+	exts	r12,#0x1
+	movw	[r11],r13
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r13
+_2151:
+
+; pedalSensors.c	    71      
+; pedalSensors.c	    72      // BPS polarity settings
+; pedalSensors.c	    73      me->primary_reverse = FALSE;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0xa
+	addcw	r12,#0x0
+_2152:
+	exts	r12,#0x1
+	movb	[r11],rh4
+_2153:
+
+; pedalSensors.c	    74      me->secondary_reverse = FALSE;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0xb
+	addcw	r12,#0x0
+_2154:
+	exts	r12,#0x1
+	movb	[r11],rh4
+_2155:
+
+; pedalSensors.c	    75      
+; pedalSensors.c	    76      // Initialize calibration data
+; pedalSensors.c	    77      me->calibMin_primary = 0;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x18
+	addcw	r12,#0x0
+_2156:
+	exts	r12,#0x1
+	movw	[r11],r13
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r13
+_2157:
+
+; pedalSensors.c	    78      me->calibMax_primary = 0;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x1c
+	addcw	r12,#0x0
+_2158:
+	exts	r12,#0x1
+	movw	[r11],r13
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r13
+_2159:
+
+; pedalSensors.c	    79      me->calibMin_secondary = 0;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x20
+	addcw	r12,#0x0
+_2160:
+	exts	r12,#0x1
+	movw	[r11],r13
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r13
+_2161:
+
+; pedalSensors.c	    80      me->calibMax_secondary = 0;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x24
+	addcw	r12,#0x0
+_2162:
+	exts	r12,#0x1
+	movw	[r11],r13
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r13
+_2163:
+
+; pedalSensors.c	    81      
+; pedalSensors.c	    82      // Initialize state
+; pedalSensors.c	    83      me->percent = 0;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0xe
+	addcw	r12,#0x0
+_2164:
+	exts	r12,#0x1
+	movw	[r11],r13
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r13
+_2165:
+
+; pedalSensors.c	    84      me->brakesAreOn = FALSE;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x12
+	addcw	r12,#0x0
+_2166:
+	exts	r12,#0x1
+	movb	[r11],rh4
+_2167:
+
+; pedalSensors.c	    85      me->runCalibration = FALSE;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0xc
+	addcw	r12,#0x0
+_2168:
+	exts	r12,#0x1
+	movb	[r11],rh4
+_2169:
+
+; pedalSensors.c	    86      me->calibrated = FALSE;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0xd
+	addcw	r12,#0x0
+_2170:
+	exts	r12,#0x1
+	movb	[r11],rh4
+_2171:
+
+; pedalSensors.c	    87      me->primary_value = 0;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x28
+	addcw	r12,#0x0
+_2172:
+	exts	r12,#0x1
+	movw	[r11],r13
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r13
+_2173:
+
+; pedalSensors.c	    88      me->secondary_value = 0;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x2c
+	addcw	r12,#0x0
+_2174:
+	exts	r12,#0x1
+	movw	[r11],r13
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r13
+_2175:
+
+; pedalSensors.c	    89      me->timestamp_calibrationStart = 0;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x30
+	addcw	r12,#0x0
+_2176:
+	exts	r12,#0x1
+	movw	[r11],r13
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r13
+_2177:
+
+; pedalSensors.c	    90      me->timestamp_calibrationEnd = 0;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x34
+	addcw	r12,#0x0
+_2178:
+	exts	r12,#0x1
+	movw	[r11],r13
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r13
+_2179:
+
+; pedalSensors.c	    91      
+; pedalSensors.c	    92      return me;
+; pedalSensors.c	    93  }
+	ret
+_307:
+	; End of function
+	; End of section
+
+code_PedalSensor_update	.section	code, cluster 'PedalSensor_update', new
+	.global	_PedalSensor_update
+
+; pedalSensors.c	    94  
+; pedalSensors.c	    95  /*****************************************************************************
+; pedalSensors.c	    96  * Core Functions
+; pedalSensors.c	    97  *****************************************************************************/
+; pedalSensors.c	    98  
+; pedalSensors.c	    99  void PedalSensor_update(PedalSensor* me, bool benchMode)
+; Function _PedalSensor_update
+_91:
+_PedalSensor_update	.proc	far
+	subw	r15,#0x2
+_499:
+	CoSTORE	[r15-],MSW
+_510:
+	CoSTORE	[r15-],MAL
+_521:
+	CoSTORE	[r15],MAH
+	movw	[-r15],r0
+_532:
+	movw	[-r15],r1
+_543:
+	movw	[-r15],r6
+_554:
+	movw	[-r15],r7
+_565:
+	movw	r7,r2
+	movw	[-r15],r8
+_576:
+	movw	[-r15],r9
+_587:
+	movw	[-r15],r10
+_598:
+	movw	[-r15],r3
+_609:
+
+; pedalSensors.c	   100  {
+; pedalSensors.c	   101      if (me->type == PEDAL_TYPE_TPS) {
+	exts	r3,#0x1
+	movb	rh4,[r7]
+_2184:
+	jmp+	cc_ne,_8
+_2185:
+
+; pedalSensors.c	   102          // TPS update logic
+; pedalSensors.c	   103          me->primary_value = me->primary->sensorValue;
+	movw	r11,[r15]
+_2186:
+	movw	r12,r7
+_2187:
+	movw	r5,r11
+_2188:
+	addw	r12,#0x2
+	addcw	r11,#0x0
+_2189:
+	movw	r14,r7
+_2190:
+	exts	r11,#0x1
+	movw	r13,[r12]
+	addw	r12,#0x2
+	addcw	r11,#0x0
+_2191:
+	addw	r14,#0x28
+	addcw	r5,#0x0
+_2192:
+	exts	r11,#0x1
+	movw	r11,[r12]
+_2193:
+	addw	r13,#0x8
+	addcw	r11,#0x0
+_2194:
+	movw	r4,r5
+_964:
+	exts	r11,#0x1
+	movw	r12,[r13]
+	addw	r13,#0x2
+	addcw	r11,#0x0
+_2195:
+
+; pedalSensors.c	   104          me->secondary_value = me->secondary->sensorValue;
+	movw	r8,r7
+_2196:
+	exts	r11,#0x1
+	movw	r11,[r13]
+_2197:
+	movw	r13,r14
+_401:
+
+; pedalSensors.c	   105          
+; pedalSensors.c	   106          // Calculate individual sensor percentages
+; pedalSensors.c	   107          float4 tps0_percent = 0;
+	movw	r10,#0x0
+_402:
+	exts	r4,#0x1
+	movw	[r13],r12
+	addw	r13,#0x2
+	addcw	r4,#0x0
+_2198:
+	movw	r12,r7
+_2199:
+	exts	r4,#0x1
+	movw	[r13],r11
+_2200:
+	movw	r11,[r15]
+	movw	r9,r11
+_2201:
+	addw	r12,#0x6
+	addcw	r11,#0x0
+_2202:
+	addw	r8,#0x2c
+	addcw	r9,#0x0
+_2203:
+	exts	r11,#0x1
+	movw	r13,[r12]
+	addw	r12,#0x2
+	addcw	r11,#0x0
+_2204:
+	movw	r4,r9
+_2205:
+	exts	r11,#0x1
+	movw	r11,[r12]
+_2206:
+	addw	r13,#0x8
+	addcw	r11,#0x0
+_403:
+	movw	r0,#0x0
+_404:
+	exts	r11,#0x1
+	movw	r12,[r13]
+	addw	r13,#0x2
+	addcw	r11,#0x0
+	exts	r11,#0x1
+	movw	r11,[r13]
+_2207:
+	movw	r13,r8
+	exts	r4,#0x1
+	movw	[r13],r12
+	addw	r13,#0x2
+	addcw	r4,#0x0
+_405:
+
+; pedalSensors.c	   108          float4 tps1_percent = 0;
+	movw	r12,#0x0
+_406:
+	exts	r4,#0x1
+	movw	[r13],r11
+_407:
+
+; pedalSensors.c	   109          
+; pedalSensors.c	   110          if (me->calibrated) {
+	movw	r13,r7
+	movw	r4,[r15]
+	addw	r13,#0xd
+	addcw	r4,#0x0
+_2208:
+	movw	r11,#0x0
+_967:
+	exts	r4,#0x1
+	movb	rh4,[r13]
+_2209:
+	jmp-	cc_eq,_9
+_413:
+
+; pedalSensors.c	   111              // Primary sensor (TPS0)
+; pedalSensors.c	   112              ubyte4 rawValue = me->primary_value;
+	exts	r5,#0x1
+	movw	r11,[r14]
+_968:
+	addw	r14,#0x2
+	addcw	r5,#0x0
+_2210:
+
+; pedalSensors.c	   113              if (me->primary_reverse) {
+	movw	r12,[r15]
+_2211:
+	exts	r5,#0x1
+	CoLOAD	r11,[r14]
+_969:
+	movw	r11,r7
+	addw	r11,#0xa
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movb	rh4,[r11]
+_2212:
+	jmp-	cc_eq,_10
+_2213:
+
+; pedalSensors.c	   114                  rawValue = me->calibMax_primary - rawValue;
+	movw	r11,r7
+	movw	r12,[r15]
+	addw	r11,#0x1c
+	addcw	r12,#0x0
+_2214:
+	exts	r12,#0x1
+	movw	r13,[r11]
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	CoSUBR	r13,[r11]
+_10:
+
+; pedalSensors.c	   115              }
+; pedalSensors.c	   116              tps0_percent = getPercent(rawValue, me->calibMin_primary, me->calibMax_primary, TRUE);
+	movw	r12,r7
+	movw	r13,[r15]
+_2215:
+	movw	r14,r7
+	movw	r10,[r15]
+_966:
+	addw	r12,#0x18
+	addcw	r13,#0x0
+_2216:
+	addw	r14,#0x1c
+	addcw	r10,#0x0
+_2217:
+	exts	r13,#0x1
+	movw	r4,[r12]
+	addw	r12,#0x2
+	addcw	r13,#0x0
+_2218:
+	exts	r10,#0x1
+	movw	r11,[r14]
+	addw	r14,#0x2
+	addcw	r10,#0x0
+_2219:
+	CoSTORE	r2,MAL
+_965:
+	CoSTORE	r3,MAH
+	exts	r13,#0x1
+	movw	r5,[r12]
+	exts	r10,#0x1
+	movw	r12,[r14]
+	movw	r13,#0x1
+	call	_getPercent
+_2220:
+
+; pedalSensors.c	   117              
+; pedalSensors.c	   118              // Secondary sensor (TPS1)
+; pedalSensors.c	   119              rawValue = me->secondary_value;
+	exts	r9,#0x1
+	movw	r11,[r8]
+	addw	r8,#0x2
+	addcw	r9,#0x0
+_2221:
+
+; pedalSensors.c	   120              if (me->secondary_reverse) {
+	movw	r12,[r15]
+_2222:
+	exts	r9,#0x1
+	CoLOAD	r11,[r8]
+_2223:
+	movw	r11,r7
+	addw	r11,#0xb
+	addcw	r12,#0x0
+_2224:
+	call	__s2spf
+_2225:
+	movw	r10,r2
+_970:
+	movw	r0,r3
+_2226:
+	exts	r12,#0x1
+	movb	rh4,[r11]
+_2227:
+	jmp-	cc_eq,_11
+_2228:
+
+; pedalSensors.c	   121                  rawValue = me->calibMax_secondary - rawValue;
+	movw	r11,r7
+	movw	r12,[r15]
+	addw	r11,#0x24
+	addcw	r12,#0x0
+_2229:
+	exts	r12,#0x1
+	movw	r13,[r11]
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	CoSUBR	r13,[r11]
+_11:
+
+; pedalSensors.c	   122              }
+; pedalSensors.c	   123              tps1_percent = getPercent(rawValue, me->calibMin_secondary, me->calibMax_secondary, TRUE);
+	movw	r12,r7
+	movw	r13,[r15]
+_2230:
+	movw	r14,r7
+	movw	r8,[r15]
+_2231:
+	addw	r12,#0x20
+	addcw	r13,#0x0
+_2232:
+	addw	r14,#0x24
+	addcw	r8,#0x0
+_2233:
+	exts	r13,#0x1
+	movw	r4,[r12]
+	addw	r12,#0x2
+	addcw	r13,#0x0
+_2234:
+	exts	r8,#0x1
+	movw	r11,[r14]
+	addw	r14,#0x2
+	addcw	r8,#0x0
+_2235:
+	CoSTORE	r2,MAL
+	CoSTORE	r3,MAH
+	exts	r13,#0x1
+	movw	r5,[r12]
+	exts	r8,#0x1
+	movw	r12,[r14]
+	movw	r13,#0x1
+	call	_getPercent
+_2236:
+	call	__s2spf
+_2237:
+	movw	r12,r2
+	movw	r11,r3
+_9:
+
+; pedalSensors.c	   124          }
+; pedalSensors.c	   125          
+; pedalSensors.c	   126          // Average the two sensors for final output
+; pedalSensors.c	   127          me->percent = (tps0_percent + tps1_percent) / 2.0;
+	movw	r2,r10
+	movw	r3,r0
+	movw	r4,r12
+	movw	r5,r11
+	call	__add_spf
+_2238:
+	movw	r9,r7
+	movw	r8,[r15]
+_2239:
+	call	__spf2dpf
+_2240:
+	movw	r14,#0x3fe0
+_2241:
+	movw	r11,#0x0
+_972:
+	movw	r12,#0x0
+	movw	r13,#0x0
+_2242:
+	addw	r9,#0xe
+	addcw	r8,#0x0
+_2243:
+	call	__mul_dpf
+_971:
+	movw	r11,r9
+_2244:
+	call	__dpf2spf
+_2245:
+	movw	r12,r8
+	exts	r12,#0x1
+	movw	[r11],r2
+	addw	r11,#0x2
+	addcw	r12,#0x0
+_2246:
+
+; pedalSensors.c	   128          
+; pedalSensors.c	   129          // Apply output curve (TPS only)
+; pedalSensors.c	   130          if (me->percent > 0) {
+	movw	r4,#0x0
+_2247:
+	exts	r12,#0x1
+	movw	[r11],r3
+_2248:
+	movw	r11,r9
+	movw	r12,r8
+	exts	r12,#0x1
+	movw	r13,[r11]
+	addw	r11,#0x2
+	addcw	r12,#0x0
+_2249:
+	movw	r2,r13
+_2250:
+	exts	r12,#0x1
+	movw	r3,[r11]
+_2251:
+	movw	r5,#0x0
+	call	__larger_than_spf
+	movb	rl2,rl2
+_2252:
+	jmp+	cc_eq,_12
+_2253:
+
+; pedalSensors.c	   131              me->percent = powf(me->percent, me->outputCurveExponent);
+	movw	r11,[r15]
+	addw	r7,#0x14
+	addcw	r11,#0x0
+	exts	r11,#0x1
+	movw	r4,[r7]
+	addw	r7,#0x2
+	addcw	r11,#0x0
+	movw	r2,r13
+	exts	r11,#0x1
+	movw	r5,[r7]
+	call	_powf
+_2254:
+	exts	r8,#0x1
+	movw	[r9],r2
+	addw	r9,#0x2
+	addcw	r8,#0x0
+	exts	r8,#0x1
+	movw	[r9],r3
+_408:
+	jmp	_13
+_8:
+
+; pedalSensors.c	   132          }
+; pedalSensors.c	   133          
+; pedalSensors.c	   134      } else if (me->type == PEDAL_TYPE_BPS) {
+	cmpb	rh4,#0x1
+	jmp+	cc_ne,_14
+_2255:
+
+; pedalSensors.c	   135          // BPS update logic
+; pedalSensors.c	   136          me->primary_value = me->primary->sensorValue;
+	movw	r11,[r15]
+_2256:
+	movw	r12,r7
+_2257:
+	movw	r5,r11
+_2258:
+	addw	r12,#0x2
+	addcw	r11,#0x0
+_2259:
+	movw	r2,r7
+_974:
+	exts	r11,#0x1
+	movw	r13,[r12]
+	addw	r12,#0x2
+	addcw	r11,#0x0
+_2260:
+	addw	r2,#0x28
+	addcw	r5,#0x0
+_2261:
+	exts	r11,#0x1
+	movw	r11,[r12]
+_2262:
+	addw	r13,#0x8
+	addcw	r11,#0x0
+_2263:
+	movw	r14,r5
+_2264:
+	exts	r11,#0x1
+	movw	r12,[r13]
+	addw	r13,#0x2
+	addcw	r11,#0x0
+	exts	r11,#0x1
+	movw	r11,[r13]
+_2265:
+	movw	r13,r2
+	exts	r14,#0x1
+	movw	[r13],r12
+	addw	r13,#0x2
+	addcw	r14,#0x0
+	exts	r14,#0x1
+	movw	[r13],r11
+_2266:
+
+; pedalSensors.c	   137          
+; pedalSensors.c	   138          if (me->calibrated) {
+	movw	r11,r7
+	movw	r12,[r15]
+	addw	r11,#0xd
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movb	rh4,[r11]
+_2267:
+	jmp-	cc_eq,_15
+_416:
+
+; pedalSensors.c	   139              ubyte4 rawValue = me->primary_value;
+	exts	r5,#0x1
+	movw	r11,[r2]
+	addw	r2,#0x2
+	addcw	r5,#0x0
+_2268:
+
+; pedalSensors.c	   140              if (me->primary_reverse) {
+	movw	r12,[r15]
+_2269:
+	exts	r5,#0x1
+	CoLOAD	r11,[r2]
+_975:
+	movw	r11,r7
+	addw	r11,#0xa
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movb	rh4,[r11]
+_2270:
+	jmp-	cc_eq,_16
+_2271:
+
+; pedalSensors.c	   141                  rawValue = me->calibMax_primary - rawValue;
+	movw	r11,r7
+	movw	r12,[r15]
+	addw	r11,#0x1c
+	addcw	r12,#0x0
+_2272:
+	exts	r12,#0x1
+	movw	r13,[r11]
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	CoSUBR	r13,[r11]
+_16:
+
+; pedalSensors.c	   142              }
+; pedalSensors.c	   143              me->percent = getPercent(rawValue, me->calibMin_primary, me->calibMax_primary, TRUE);
+	movw	r12,[r15]
+_2273:
+	movw	r13,r7
+_2274:
+	movw	r14,r7
+	movw	r10,[r15]
+_2275:
+	movw	r9,r12
+_2276:
+	addw	r13,#0x18
+	addcw	r12,#0x0
+_2277:
+	addw	r14,#0x1c
+	addcw	r10,#0x0
+_2278:
+	exts	r12,#0x1
+	movw	r4,[r13]
+_973:
+	addw	r13,#0x2
+	addcw	r12,#0x0
+_2279:
+	exts	r10,#0x1
+	movw	r11,[r14]
+	addw	r14,#0x2
+	addcw	r10,#0x0
+_2280:
+	movw	r8,r7
+	addw	r8,#0xe
+	addcw	r9,#0x0
+_2281:
+	CoSTORE	r2,MAL
+	CoSTORE	r3,MAH
+	exts	r12,#0x1
+	movw	r5,[r13]
+	exts	r10,#0x1
+	movw	r12,[r14]
+	movw	r13,#0x1
+	call	_getPercent
+_2282:
+	call	__s2spf
+_2283:
+	exts	r9,#0x1
+	movw	[r8],r2
+	addw	r8,#0x2
+	addcw	r9,#0x0
+	exts	r9,#0x1
+	movw	[r8],r3
+_15:
+	movw	r11,r7
+	movw	r12,[r15]
+	addw	r11,#0xe
+	addcw	r12,#0x0
+_409:
+
+; pedalSensors.c	   144          }
+; pedalSensors.c	   145          
+; pedalSensors.c	   146          // Set brake status (BPS only)
+; pedalSensors.c	   147          me->brakesAreOn = (me->percent > 0.1); // 10% threshold
+	movw	r8,[r15]
+_976:
+	exts	r12,#0x1
+	movw	r2,[r11]
+	addw	r11,#0x2
+	addcw	r12,#0x0
+_2284:
+	addw	r7,#0x12
+_977:
+	addcw	r8,#0x0
+_2285:
+	exts	r12,#0x1
+	movw	r3,[r11]
+	call	__spf2dpf
+_2286:
+	movw	r11,#0x999a
+	movw	r12,#0x9999
+	movw	r14,#0x3fb9
+_2287:
+	movw	r13,r12
+	call	__larger_than_dpf
+_2288:
+	exts	r8,#0x1
+	movb	[r7],rl2
+_14:
+_13:
+_12:
+
+; pedalSensors.c	   148      }
+; pedalSensors.c	   149  }
+	addw	r15,#0x2
+_620:
+	movw	r10,[r15+]
+_631:
+	movw	r9,[r15+]
+_642:
+	movw	r8,[r15+]
+_653:
+	movw	r7,[r15+]
+_664:
+	movw	r6,[r15+]
+_675:
+	movw	r1,[r15+]
+_686:
+	movw	r0,[r15+]
+_697:
+	movw	MAH,[r15]
+_931:
+	addw	r15,#0x2
+_708:
+	movw	MAL,[r15]
+_942:
+	addw	r15,#0x2
+_719:
+	movw	MSW,[r15]
+_953:
+	addw	r15,#0x2
+_730:
+	ret
+_312:
+	; End of function
+	; End of section
+
+code_PedalSensor_calibrationCycle	.section	code, cluster 'PedalSensor_calibrationCycle', new
+	.global	_PedalSensor_calibrationCycle
+
+; pedalSensors.c	   150  
+; pedalSensors.c	   151  void PedalSensor_calibrationCycle(PedalSensor* me, ubyte1* calibrationErrors)
+; Function _PedalSensor_calibrationCycle
+_103:
+_PedalSensor_calibrationCycle	.proc	far
+	movw	[-r15],r6
+_978:
+	movw	[-r15],r8
+_989:
+	movw	[-r15],r9
+_1000:
+	movw	[-r15],r10
+_1011:
+
+; pedalSensors.c	   152  {
+; pedalSensors.c	   153      if (!me->runCalibration) {
+	movw	r10,r2
+	movw	r6,r3
+	addw	r10,#0xc
+	addcw	r6,#0x0
+_2293:
+	movw	r8,r2
+	movw	r9,r3
+_1148:
+	exts	r6,#0x1
+	movb	rh4,[r10]
+_1146:
+	jmp+	cc_eq,_17
+_421:
+
+; pedalSensors.c	   154          return;
+; pedalSensors.c	   155      }
+; pedalSensors.c	   156      
+; pedalSensors.c	   157      ubyte4 currentTime = IO_RTC_GetTimeUS(0);
+	movw	r2,#0x0
+_1147:
+	movw	r3,#0x0
+	call	_IO_RTC_GetTimeUS
+_2294:
+	movw	r5,r2
+_2295:
+
+; pedalSensors.c	   158      
+; pedalSensors.c	   159      if (me->type == PEDAL_TYPE_TPS) {
+	exts	r9,#0x1
+	movb	rh4,[r8]
+_2296:
+	jmp+	cc_ne,_18
+_2297:
+
+; pedalSensors.c	   160          // TPS calibration logic
+; pedalSensors.c	   161          if (currentTime - me->timestamp_calibrationStart < 5000000) { // 5 seconds
+	movw	r2,r8
+	movw	r11,r9
+	addw	r2,#0x30
+	addcw	r11,#0x0
+	movw	r12,r5
+_2298:
+	exts	r11,#0x1
+	movw	r14,[r2]
+	addw	r2,#0x2
+	addcw	r11,#0x0
+_1150:
+	movw	r13,r3
+_1151:
+	subw	r12,r14
+	exts	r11,#0x1
+	subcw	r13,[r2]
+_2299:
+	cmpw	r12,#0x4b40
+	subcw	r13,#0x4c
+	jmp	cc_uge,_19
+_423:
+
+; pedalSensors.c	   162              // Still in calibration period
+; pedalSensors.c	   163              ubyte4 tps0_value = me->primary->sensorValue;
+	movw	r11,r8
+	movw	r12,r9
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	r13,[r11]
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	r11,[r11]
+_2300:
+	addw	r13,#0x8
+	addcw	r11,#0x0
+_2301:
+
+; pedalSensors.c	   164              ubyte4 tps1_value = me->secondary->sensorValue;
+	movw	r12,r9
+_2302:
+	exts	r11,#0x1
+	movw	r5,[r13]
+	addw	r13,#0x2
+	addcw	r11,#0x0
+	exts	r11,#0x1
+	movw	r2,[r13]
+_1152:
+	movw	r11,r8
+	addw	r11,#0x6
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	r13,[r11]
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	r11,[r11]
+_2303:
+	addw	r13,#0x8
+	addcw	r11,#0x0
+_2304:
+
+; pedalSensors.c	   165              
+; pedalSensors.c	   166              if (tps0_value < me->calibMin_primary || me->calibMin_primary == 0) {
+	movw	r12,r9
+_2305:
+	exts	r11,#0x1
+	movw	r3,[r13]
+	addw	r13,#0x2
+	addcw	r11,#0x0
+	exts	r11,#0x1
+	movw	r10,[r13]
+_1153:
+	movw	r11,r8
+	addw	r11,#0x18
+	addcw	r12,#0x0
+	movw	r13,r11
+	movw	r14,r12
+	exts	r14,#0x1
+	movw	r4,[r13]
+	addw	r13,#0x2
+	addcw	r14,#0x0
+	exts	r14,#0x1
+	movw	r13,[r13]
+_2306:
+	movw	r14,r2
+	cmpw	r5,r4
+	subcw	r14,r13
+	jmp-	cc_ult,_20
+_2307:
+	orw	r13,r4
+	jmp+	cc_ne,_21
+_20:
+
+; pedalSensors.c	   167                  me->calibMin_primary = tps0_value;
+	exts	r12,#0x1
+	movw	[r11],r5
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r2
+_21:
+
+; pedalSensors.c	   168              }
+; pedalSensors.c	   169              if (tps0_value > me->calibMax_primary) {
+	movw	r11,r8
+	movw	r12,r9
+	addw	r11,#0x1c
+	addcw	r12,#0x0
+	movw	r13,r11
+	movw	r14,r12
+	exts	r14,#0x1
+	movw	r4,[r13]
+	addw	r13,#0x2
+	addcw	r14,#0x0
+	exts	r14,#0x1
+	movw	r13,[r13]
+_2308:
+	movw	r14,r2
+	cmpw	r5,r4
+	subcw	r14,r13
+	jmp-	cc_ule,_22
+_2309:
+
+; pedalSensors.c	   170                  me->calibMax_primary = tps0_value;
+	exts	r12,#0x1
+	movw	[r11],r5
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r2
+_22:
+
+; pedalSensors.c	   171              }
+; pedalSensors.c	   172              
+; pedalSensors.c	   173              if (tps1_value < me->calibMin_secondary || me->calibMin_secondary == 0) {
+	movw	r11,r8
+	movw	r12,r9
+	addw	r11,#0x20
+	addcw	r12,#0x0
+	movw	r13,r11
+	movw	r14,r12
+	exts	r14,#0x1
+	movw	r4,[r13]
+	addw	r13,#0x2
+	addcw	r14,#0x0
+	exts	r14,#0x1
+	movw	r13,[r13]
+_2310:
+	movw	r14,r10
+	cmpw	r3,r4
+	subcw	r14,r13
+	jmp-	cc_ult,_23
+_2311:
+	orw	r13,r4
+	jmp+	cc_ne,_24
+_23:
+
+; pedalSensors.c	   174                  me->calibMin_secondary = tps1_value;
+	exts	r12,#0x1
+	movw	[r11],r3
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r10
+_24:
+
+; pedalSensors.c	   175              }
+; pedalSensors.c	   176              if (tps1_value > me->calibMax_secondary) {
+	addw	r8,#0x24
+_1149:
+	addcw	r9,#0x0
+	movw	r11,r8
+	movw	r12,r9
+	exts	r12,#0x1
+	movw	r13,[r11]
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	r11,[r11]
+_2312:
+	movw	r12,r10
+	cmpw	r3,r13
+	subcw	r12,r11
+	jmp-	cc_ule,_25
+_2313:
+
+; pedalSensors.c	   177                  me->calibMax_secondary = tps1_value;
+	exts	r9,#0x1
+	movw	[r8],r3
+	addw	r8,#0x2
+	addcw	r9,#0x0
+	exts	r9,#0x1
+	movw	[r8],r10
+_424:
+	jmp	_26
+_18:
+
+; pedalSensors.c	   178              }
+; pedalSensors.c	   179          } else {
+; pedalSensors.c	   180              // Calibration complete
+; pedalSensors.c	   181              me->runCalibration = FALSE;
+; pedalSensors.c	   182              me->calibrated = TRUE;
+; pedalSensors.c	   183              me->timestamp_calibrationEnd = currentTime;
+; pedalSensors.c	   184          }
+; pedalSensors.c	   185          
+; pedalSensors.c	   186      } else if (me->type == PEDAL_TYPE_BPS) {
+	cmpb	rh4,#0x1
+	jmp	cc_ne,_27
+_2314:
+
+; pedalSensors.c	   187          // BPS calibration logic
+; pedalSensors.c	   188          if (currentTime - me->timestamp_calibrationStart < 3000000) { // 3 seconds
+	movw	r2,r8
+	movw	r11,r9
+	addw	r2,#0x30
+	addcw	r11,#0x0
+	movw	r12,r5
+_2315:
+	exts	r11,#0x1
+	movw	r14,[r2]
+	addw	r2,#0x2
+	addcw	r11,#0x0
+_1155:
+	movw	r13,r3
+_1156:
+	subw	r12,r14
+	exts	r11,#0x1
+	subcw	r13,[r2]
+_2316:
+	cmpw	r12,#0xc6c0
+	subcw	r13,#0x2d
+	jmp	cc_uge,_28
+_427:
+
+; pedalSensors.c	   189              // Still in calibration period
+; pedalSensors.c	   190              ubyte4 bps0_value = me->primary->sensorValue;
+	movw	r11,r8
+	movw	r12,r9
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	r13,[r11]
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	r11,[r11]
+_2317:
+	addw	r13,#0x8
+	addcw	r11,#0x0
+_2318:
+
+; pedalSensors.c	   191              
+; pedalSensors.c	   192              if (bps0_value < me->calibMin_primary || me->calibMin_primary == 0) {
+	movw	r12,r9
+_2319:
+	exts	r11,#0x1
+	movw	r5,[r13]
+	addw	r13,#0x2
+	addcw	r11,#0x0
+	exts	r11,#0x1
+	movw	r2,[r13]
+_1157:
+	movw	r11,r8
+	addw	r11,#0x18
+	addcw	r12,#0x0
+	movw	r13,r11
+	movw	r14,r12
+	exts	r14,#0x1
+	movw	r4,[r13]
+	addw	r13,#0x2
+	addcw	r14,#0x0
+	exts	r14,#0x1
+	movw	r13,[r13]
+_2320:
+	movw	r14,r2
+	cmpw	r5,r4
+	subcw	r14,r13
+	jmp-	cc_ult,_29
+_2321:
+	orw	r13,r4
+	jmp+	cc_ne,_30
+_29:
+
+; pedalSensors.c	   193                  me->calibMin_primary = bps0_value;
+	exts	r12,#0x1
+	movw	[r11],r5
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r2
+_30:
+
+; pedalSensors.c	   194              }
+; pedalSensors.c	   195              if (bps0_value > me->calibMax_primary) {
+	addw	r8,#0x1c
+_1154:
+	addcw	r9,#0x0
+	movw	r11,r8
+	movw	r12,r9
+	exts	r12,#0x1
+	movw	r13,[r11]
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	r11,[r11]
+_2322:
+	movw	r12,r2
+	cmpw	r5,r13
+	subcw	r12,r11
+	jmp-	cc_ule,_31
+_2323:
+
+; pedalSensors.c	   196                  me->calibMax_primary = bps0_value;
+	exts	r9,#0x1
+	movw	[r8],r5
+	addw	r8,#0x2
+	addcw	r9,#0x0
+	exts	r9,#0x1
+	movw	[r8],r2
+_428:
+	jmp	_32
+_28:
+_19:
+
+; pedalSensors.c	   197              }
+; pedalSensors.c	   198          } else {
+; pedalSensors.c	   199              // Calibration complete
+; pedalSensors.c	   200              me->runCalibration = FALSE;
+; pedalSensors.c	   201              me->calibrated = TRUE;
+	movw	r11,r8
+	movw	r12,r9
+	addw	r11,#0xd
+	addcw	r12,#0x0
+_2324:
+
+; pedalSensors.c	   202              me->timestamp_calibrationEnd = currentTime;
+	addw	r8,#0x34
+_1158:
+	addcw	r9,#0x0
+_2325:
+	movb	rh4,#0x0
+_2326:
+	exts	r6,#0x1
+	movb	[r10],rh4
+_2327:
+	movb	rh4,#0x1
+_2328:
+	exts	r12,#0x1
+	movb	[r11],rh4
+_2329:
+	exts	r9,#0x1
+	movw	[r8],r5
+	addw	r8,#0x2
+	addcw	r9,#0x0
+_1159:
+	exts	r9,#0x1
+	movw	[r8],r3
+_32:
+_31:
+_27:
+_26:
+_25:
+
+; pedalSensors.c	   203          }
+; pedalSensors.c	   204      }
+; pedalSensors.c	   205  }
+_17:
+	movw	r10,[r15+]
+_1022:
+	movw	r9,[r15+]
+_1033:
+	movw	r8,[r15+]
+_1044:
+	movw	r6,[r15+]
+_1055:
+	ret
+_317:
+	; End of function
+	; End of section
+
+code_PedalSensor_startCalibration	.section	code, cluster 'PedalSensor_startCalibration', new
+	.global	_PedalSensor_startCalibration
+
+; pedalSensors.c	   206  
+; pedalSensors.c	   207  void PedalSensor_startCalibration(PedalSensor* me, ubyte1 seconds)
+; Function _PedalSensor_startCalibration
+_115:
+_PedalSensor_startCalibration	.proc	far
+
+; pedalSensors.c	   208  {
+; pedalSensors.c	   209      me->runCalibration = TRUE;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0xc
+	addcw	r12,#0x0
+_2334:
+	movw	[-r15],r6
+_1160:
+	movw	[-r15],r8
+_1171:
+	movw	[-r15],r9
+_1182:
+	movw	[-r15],r10
+_1193:
+	movb	rh4,#0x1
+_2335:
+	exts	r12,#0x1
+	movb	[r11],rh4
+_2336:
+
+; pedalSensors.c	   210      me->calibrated = FALSE;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0xd
+	addcw	r12,#0x0
+_2337:
+
+; pedalSensors.c	   211      me->timestamp_calibrationStart = IO_RTC_GetTimeUS(0);
+	movw	r10,r2
+	movw	r6,r3
+	addw	r10,#0x30
+	addcw	r6,#0x0
+_2338:
+	movb	rh4,#0x0
+_2339:
+	exts	r12,#0x1
+	movb	[r11],rh4
+_2340:
+	movw	r8,r2
+	movw	r9,r3
+_1330:
+	movw	r2,#0x0
+_1328:
+	movw	r3,#0x0
+	call	_IO_RTC_GetTimeUS
+_1329:
+	exts	r6,#0x1
+	movw	[r10],r2
+	addw	r10,#0x2
+	addcw	r6,#0x0
+_2341:
+
+; pedalSensors.c	   212      
+; pedalSensors.c	   213      // Reset calibration values
+; pedalSensors.c	   214      me->calibMin_primary = 0xFFFF;
+	movw	r11,r8
+	movw	r12,r9
+	addw	r11,#0x18
+	addcw	r12,#0x0
+_2342:
+	exts	r6,#0x1
+	movw	[r10],r3
+_2343:
+	movw	r13,#0xffff
+_2344:
+	exts	r12,#0x1
+	movw	[r11],r13
+	addw	r11,#0x2
+	addcw	r12,#0x0
+_2345:
+	movw	r14,#0x0
+_2346:
+	exts	r12,#0x1
+	movw	[r11],r14
+_2347:
+
+; pedalSensors.c	   215      me->calibMax_primary = 0;
+	movw	r11,r8
+	movw	r12,r9
+	addw	r11,#0x1c
+	addcw	r12,#0x0
+_2348:
+	exts	r12,#0x1
+	movw	[r11],r14
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r14
+_2349:
+
+; pedalSensors.c	   216      me->calibMin_secondary = 0xFFFF;
+	movw	r11,r8
+	movw	r12,r9
+	addw	r11,#0x20
+	addcw	r12,#0x0
+_2350:
+
+; pedalSensors.c	   217      me->calibMax_secondary = 0;
+	addw	r8,#0x24
+	addcw	r9,#0x0
+_2351:
+	exts	r12,#0x1
+	movw	[r11],r13
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r14
+_2352:
+	exts	r9,#0x1
+	movw	[r8],r14
+	addw	r8,#0x2
+	addcw	r9,#0x0
+	exts	r9,#0x1
+	movw	[r8],r14
+_2353:
+
+; pedalSensors.c	   218  }
+	movw	r10,[r15+]
+_1204:
+	movw	r9,[r15+]
+_1215:
+	movw	r8,[r15+]
+_1226:
+	movw	r6,[r15+]
+_1237:
+	ret
+_322:
+	; End of function
+	; End of section
+
+code_PedalSensor_resetCalibration	.section	code, cluster 'PedalSensor_resetCalibration', new
+	.global	_PedalSensor_resetCalibration
+
+; pedalSensors.c	   219  
+; pedalSensors.c	   220  void PedalSensor_resetCalibration(PedalSensor* me)
+; Function _PedalSensor_resetCalibration
+_127:
+_PedalSensor_resetCalibration	.proc	far
+
+; pedalSensors.c	   221  {
+; pedalSensors.c	   222      me->calibrated = FALSE;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0xd
+	addcw	r12,#0x0
+_2358:
+	movb	rh4,#0x0
+_2359:
+	exts	r12,#0x1
+	movb	[r11],rh4
+_2360:
+
+; pedalSensors.c	   223      me->runCalibration = FALSE;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0xc
+	addcw	r12,#0x0
+_2361:
+
+; pedalSensors.c	   224      me->calibMin_primary = 0;
+	movw	r13,#0x0
+_2362:
+	exts	r12,#0x1
+	movb	[r11],rh4
+_2363:
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x18
+	addcw	r12,#0x0
+_2364:
+	exts	r12,#0x1
+	movw	[r11],r13
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r13
+_2365:
+
+; pedalSensors.c	   225      me->calibMax_primary = 0;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x1c
+	addcw	r12,#0x0
+_2366:
+	exts	r12,#0x1
+	movw	[r11],r13
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r13
+_2367:
+
+; pedalSensors.c	   226      me->calibMin_secondary = 0;
+	movw	r11,r2
+	movw	r12,r3
+	addw	r11,#0x20
+	addcw	r12,#0x0
+_2368:
+
+; pedalSensors.c	   227      me->calibMax_secondary = 0;
+	addw	r2,#0x24
+_1331:
+	addcw	r3,#0x0
+_2369:
+	exts	r12,#0x1
+	movw	[r11],r13
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	[r11],r13
+_2370:
+	exts	r3,#0x1
+	movw	[r2],r13
+	addw	r2,#0x2
+	addcw	r3,#0x0
+	exts	r3,#0x1
+	movw	[r2],r13
+_2371:
+
+; pedalSensors.c	   228  }
+	ret
+_327:
+	; End of function
+	; End of section
+
+code_PedalSensor_getPercent	.section	code, cluster 'PedalSensor_getPercent', new
+	.global	_PedalSensor_getPercent
+
+; pedalSensors.c	   229  
+; pedalSensors.c	   230  /*****************************************************************************
+; pedalSensors.c	   231  * Getter Functions
+; pedalSensors.c	   232  *****************************************************************************/
+; pedalSensors.c	   233  
+; pedalSensors.c	   234  float4 PedalSensor_getPercent(PedalSensor* me)
+; Function _PedalSensor_getPercent
+_139:
+_PedalSensor_getPercent	.proc	far
+
+; pedalSensors.c	   235  {
+; pedalSensors.c	   236      return me->percent;
+	movw	r11,r2
+	addw	r11,#0xe
+	addcw	r3,#0x0
+_1332:
+	exts	r3,#0x1
+	movw	r2,[r11]
+	addw	r11,#0x2
+	addcw	r3,#0x0
+	exts	r3,#0x1
+	movw	r3,[r11]
+_2376:
+
+; pedalSensors.c	   237  }
+	ret
+_332:
+	; End of function
+	; End of section
+
+code_PedalSensor_getBrakesOn	.section	code, cluster 'PedalSensor_getBrakesOn', new
+	.global	_PedalSensor_getBrakesOn
+
+; pedalSensors.c	   238  
+; pedalSensors.c	   239  bool PedalSensor_getBrakesOn(PedalSensor* me)
+; Function _PedalSensor_getBrakesOn
+_151:
+_PedalSensor_getBrakesOn	.proc	far
+
+; pedalSensors.c	   240  {
+; pedalSensors.c	   241      return me->brakesAreOn;
+	addw	r2,#0x12
+_1333:
+	addcw	r3,#0x0
+	exts	r3,#0x1
+	movb	rl2,[r2]
+_2381:
+
+; pedalSensors.c	   242  }
+	ret
+_337:
+	; End of function
+	; End of section
+
+code_PedalSensor_getCalibrated	.section	code, cluster 'PedalSensor_getCalibrated', new
+	.global	_PedalSensor_getCalibrated
+
+; pedalSensors.c	   243  
+; pedalSensors.c	   244  bool PedalSensor_getCalibrated(PedalSensor* me)
+; Function _PedalSensor_getCalibrated
+_163:
+_PedalSensor_getCalibrated	.proc	far
+
+; pedalSensors.c	   245  {
+; pedalSensors.c	   246      return me->calibrated;
+	addw	r2,#0xd
+_1334:
+	addcw	r3,#0x0
+	exts	r3,#0x1
+	movb	rl2,[r2]
+_2386:
+
+; pedalSensors.c	   247  }
+	ret
+_342:
+	; End of function
+	; End of section
+
+code_PedalSensor_getIndividualSensorPercent	.section	code, cluster 'PedalSensor_getIndividualSensorPercent', new
+	.global	_PedalSensor_getIndividualSensorPercent
+
+; pedalSensors.c	   248  
+; pedalSensors.c	   249  // Additional getter functions for CAN messages and compatibility
+; pedalSensors.c	   250  float4 PedalSensor_getIndividualSensorPercent(PedalSensor* me, ubyte1 sensorNumber)
+; Function _PedalSensor_getIndividualSensorPercent
+_175:
+_PedalSensor_getIndividualSensorPercent	.proc	far
+	subw	r15,#0x2
+_1335:
+	movw	r13,r2
+	movw	r14,r3
+_1550:
+	CoSTORE	[r15-],MSW
+_1346:
+	CoSTORE	[r15-],MAL
+_1357:
+	CoSTORE	[r15],MAH
+	movw	[-r15],r1
+_1368:
+	movw	[-r15],r6
+_1379:
+
+; pedalSensors.c	   251  {
+; pedalSensors.c	   252      if (me->type == PEDAL_TYPE_TPS && me->calibrated) {
+	exts	r14,#0x1
+	movb	rh4,[r13]
+_2391:
+	jmp-	cc_ne,_36
+_2392:
+	movw	r11,r13
+	movw	r12,r14
+	addw	r11,#0xd
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movb	rh4,[r11]
+	jmp	cc_eq,_37
+_2393:
+
+; pedalSensors.c	   253          if (sensorNumber == 0) {
+	cmpb	rl4,#0x0
+	jmp+	cc_ne,_38
+_438:
+
+; pedalSensors.c	   254              // Primary sensor (TPS0)
+; pedalSensors.c	   255              ubyte4 rawValue = me->primary_value;
+	movw	r11,r13
+	movw	r12,r14
+	addw	r11,#0x28
+	addcw	r12,#0x0
+_2394:
+	exts	r12,#0x1
+	movw	r4,[r11]
+_1549:
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	CoLOAD	r4,[r11]
+_1552:
+
+; pedalSensors.c	   256              if (me->primary_reverse) {
+	movw	r11,r13
+	movw	r12,r14
+	addw	r11,#0xa
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movb	rh4,[r11]
+_2395:
+	jmp-	cc_eq,_39
+_2396:
+
+; pedalSensors.c	   257                  rawValue = me->calibMax_primary - rawValue;
+	movw	r11,r13
+	movw	r12,r14
+	addw	r11,#0x1c
+	addcw	r12,#0x0
+_2397:
+	exts	r12,#0x1
+	movw	r4,[r11]
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	CoSUBR	r4,[r11]
+_39:
+
+; pedalSensors.c	   258              }
+; pedalSensors.c	   259              return getPercent(rawValue, me->calibMin_primary, me->calibMax_primary, TRUE);
+	movw	r12,r13
+	movw	r5,r14
+	addw	r12,#0x18
+	addcw	r5,#0x0
+_2398:
+	addw	r13,#0x1c
+_1548:
+	addcw	r14,#0x0
+_2399:
+	exts	r5,#0x1
+	movw	r4,[r12]
+	addw	r12,#0x2
+	addcw	r5,#0x0
+_2400:
+	exts	r14,#0x1
+	movw	r11,[r13]
+	addw	r13,#0x2
+	addcw	r14,#0x0
+_2401:
+	CoSTORE	r2,MAL
+	CoSTORE	r3,MAH
+	exts	r5,#0x1
+	movw	r5,[r12]
+	exts	r14,#0x1
+	movw	r12,[r13]
+	movw	r13,#0x1
+_1551:
+	call	_getPercent
+_2402:
+	call	__s2spf
+_2403:
+	jmp	_40
+_38:
+
+; pedalSensors.c	   260          } else if (sensorNumber == 1) {
+	cmpb	rl4,#0x1
+	jmp+	cc_ne,_41
+_440:
+
+; pedalSensors.c	   261              // Secondary sensor (TPS1)
+; pedalSensors.c	   262              ubyte4 rawValue = me->secondary_value;
+	movw	r11,r13
+	movw	r12,r14
+	addw	r11,#0x2c
+	addcw	r12,#0x0
+_2404:
+	exts	r12,#0x1
+	movw	r4,[r11]
+_1555:
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	CoLOAD	r4,[r11]
+_1556:
+
+; pedalSensors.c	   263              if (me->secondary_reverse) {
+	movw	r11,r13
+	movw	r12,r14
+	addw	r11,#0xb
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movb	rh4,[r11]
+_2405:
+	jmp-	cc_eq,_42
+_2406:
+
+; pedalSensors.c	   264                  rawValue = me->calibMax_secondary - rawValue;
+	movw	r11,r13
+	movw	r12,r14
+	addw	r11,#0x24
+	addcw	r12,#0x0
+_2407:
+	exts	r12,#0x1
+	movw	r4,[r11]
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	CoSUBR	r4,[r11]
+_42:
+
+; pedalSensors.c	   265              }
+; pedalSensors.c	   266              return getPercent(rawValue, me->calibMin_secondary, me->calibMax_secondary, TRUE);
+	movw	r12,r13
+	movw	r5,r14
+	addw	r12,#0x20
+	addcw	r5,#0x0
+_2408:
+	addw	r13,#0x24
+_1554:
+	addcw	r14,#0x0
+_2409:
+	exts	r5,#0x1
+	movw	r4,[r12]
+	addw	r12,#0x2
+	addcw	r5,#0x0
+_2410:
+	exts	r14,#0x1
+	movw	r11,[r13]
+	addw	r13,#0x2
+	addcw	r14,#0x0
+_2411:
+	CoSTORE	r2,MAL
+	CoSTORE	r3,MAH
+	exts	r5,#0x1
+	movw	r5,[r12]
+	exts	r14,#0x1
+	movw	r12,[r13]
+	movw	r13,#0x1
+_1553:
+	call	_getPercent
+_2412:
+	call	__s2spf
+_2413:
+	jmp	_43
+_41:
+_37:
+_36:
+
+; pedalSensors.c	   267          }
+; pedalSensors.c	   268      }
+; pedalSensors.c	   269      return 0.0;
+	movw	r2,#0x0
+_1557:
+	movw	r3,#0x0
+
+; pedalSensors.c	   270  }
+_43:
+_40:
+	movw	r6,[r15+]
+_1390:
+	movw	r1,[r15+]
+_1401:
+	movw	MAH,[r15]
+_1515:
+	addw	r15,#0x2
+_1412:
+	movw	MAL,[r15]
+_1526:
+	addw	r15,#0x2
+_1423:
+	movw	MSW,[r15]
+_1537:
+	addw	r15,#0x2
+_1434:
+	ret
+_347:
+	; End of function
+	; End of section
+
+code_PedalSensor_getTravelPercent	.section	code, cluster 'PedalSensor_getTravelPercent', new
+	.global	_PedalSensor_getTravelPercent
+
+; pedalSensors.c	   271  
+; pedalSensors.c	   272  float4 PedalSensor_getTravelPercent(PedalSensor* me)
+; Function _PedalSensor_getTravelPercent
+_187:
+_PedalSensor_getTravelPercent	.proc	far
+
+; pedalSensors.c	   273  {
+; pedalSensors.c	   274      return me->percent;
+	movw	r11,r2
+	addw	r11,#0xe
+	addcw	r3,#0x0
+_1558:
+	exts	r3,#0x1
+	movw	r2,[r11]
+	addw	r11,#0x2
+	addcw	r3,#0x0
+	exts	r3,#0x1
+	movw	r3,[r11]
+_2418:
+
+; pedalSensors.c	   275  }
+	ret
+_352:
+	; End of function
+	; End of section
+
+code_PedalSensor_getCalibMinPrimary	.section	code, cluster 'PedalSensor_getCalibMinPrimary', new
+	.global	_PedalSensor_getCalibMinPrimary
+
+; pedalSensors.c	   276  
+; pedalSensors.c	   277  ubyte4 PedalSensor_getCalibMinPrimary(PedalSensor* me)
+; Function _PedalSensor_getCalibMinPrimary
+_199:
+_PedalSensor_getCalibMinPrimary	.proc	far
+
+; pedalSensors.c	   278  {
+; pedalSensors.c	   279      return me->calibMin_primary;
+	movw	r11,r2
+	addw	r11,#0x18
+	addcw	r3,#0x0
+_1559:
+	exts	r3,#0x1
+	movw	r2,[r11]
+	addw	r11,#0x2
+	addcw	r3,#0x0
+	exts	r3,#0x1
+	movw	r3,[r11]
+_2423:
+
+; pedalSensors.c	   280  }
+	ret
+_357:
+	; End of function
+	; End of section
+
+code_PedalSensor_getCalibMaxPrimary	.section	code, cluster 'PedalSensor_getCalibMaxPrimary', new
+	.global	_PedalSensor_getCalibMaxPrimary
+
+; pedalSensors.c	   281  
+; pedalSensors.c	   282  ubyte4 PedalSensor_getCalibMaxPrimary(PedalSensor* me)
+; Function _PedalSensor_getCalibMaxPrimary
+_211:
+_PedalSensor_getCalibMaxPrimary	.proc	far
+
+; pedalSensors.c	   283  {
+; pedalSensors.c	   284      return me->calibMax_primary;
+	movw	r11,r2
+	addw	r11,#0x1c
+	addcw	r3,#0x0
+_1560:
+	exts	r3,#0x1
+	movw	r2,[r11]
+	addw	r11,#0x2
+	addcw	r3,#0x0
+	exts	r3,#0x1
+	movw	r3,[r11]
+_2428:
+
+; pedalSensors.c	   285  }
+	ret
+_362:
+	; End of function
+	; End of section
+
+code_PedalSensor_getCalibMinSecondary	.section	code, cluster 'PedalSensor_getCalibMinSecondary', new
+	.global	_PedalSensor_getCalibMinSecondary
+
+; pedalSensors.c	   286  
+; pedalSensors.c	   287  ubyte4 PedalSensor_getCalibMinSecondary(PedalSensor* me)
+; Function _PedalSensor_getCalibMinSecondary
+_223:
+_PedalSensor_getCalibMinSecondary	.proc	far
+
+; pedalSensors.c	   288  {
+; pedalSensors.c	   289      return me->calibMin_secondary;
+	movw	r11,r2
+	addw	r11,#0x20
+	addcw	r3,#0x0
+_1561:
+	exts	r3,#0x1
+	movw	r2,[r11]
+	addw	r11,#0x2
+	addcw	r3,#0x0
+	exts	r3,#0x1
+	movw	r3,[r11]
+_2433:
+
+; pedalSensors.c	   290  }
+	ret
+_367:
+	; End of function
+	; End of section
+
+code_PedalSensor_getCalibMaxSecondary	.section	code, cluster 'PedalSensor_getCalibMaxSecondary', new
+	.global	_PedalSensor_getCalibMaxSecondary
+
+; pedalSensors.c	   291  
+; pedalSensors.c	   292  ubyte4 PedalSensor_getCalibMaxSecondary(PedalSensor* me)
+; Function _PedalSensor_getCalibMaxSecondary
+_235:
+_PedalSensor_getCalibMaxSecondary	.proc	far
+
+; pedalSensors.c	   293  {
+; pedalSensors.c	   294      return me->calibMax_secondary;
+	movw	r11,r2
+	addw	r11,#0x24
+	addcw	r3,#0x0
+_1562:
+	exts	r3,#0x1
+	movw	r2,[r11]
+	addw	r11,#0x2
+	addcw	r3,#0x0
+	exts	r3,#0x1
+	movw	r3,[r11]
+_2438:
+
+; pedalSensors.c	   295  }
+	ret
+_372:
+	; End of function
+	; End of section
+
+code_PedalSensor_getSensorValuePrimary	.section	code, cluster 'PedalSensor_getSensorValuePrimary', new
+	.global	_PedalSensor_getSensorValuePrimary
+
+; pedalSensors.c	   296  
+; pedalSensors.c	   297  ubyte4 PedalSensor_getSensorValuePrimary(PedalSensor* me)
+; Function _PedalSensor_getSensorValuePrimary
+_247:
+_PedalSensor_getSensorValuePrimary	.proc	far
+
+; pedalSensors.c	   298  {
+; pedalSensors.c	   299      return me->primary_value;
+	movw	r11,r2
+	addw	r11,#0x28
+	addcw	r3,#0x0
+_1563:
+	exts	r3,#0x1
+	movw	r2,[r11]
+	addw	r11,#0x2
+	addcw	r3,#0x0
+	exts	r3,#0x1
+	movw	r3,[r11]
+_2443:
+
+; pedalSensors.c	   300  }
+	ret
+_377:
+	; End of function
+	; End of section
+
+code_PedalSensor_getSensorValueSecondary	.section	code, cluster 'PedalSensor_getSensorValueSecondary', new
+	.global	_PedalSensor_getSensorValueSecondary
+
+; pedalSensors.c	   301  
+; pedalSensors.c	   302  ubyte4 PedalSensor_getSensorValueSecondary(PedalSensor* me)
+; Function _PedalSensor_getSensorValueSecondary
+_259:
+_PedalSensor_getSensorValueSecondary	.proc	far
+
+; pedalSensors.c	   303  {
+; pedalSensors.c	   304      return me->secondary_value;
+	movw	r11,r2
+	addw	r11,#0x2c
+	addcw	r3,#0x0
+_1564:
+	exts	r3,#0x1
+	movw	r2,[r11]
+	addw	r11,#0x2
+	addcw	r3,#0x0
+	exts	r3,#0x1
+	movw	r3,[r11]
+_2448:
+
+; pedalSensors.c	   305  }
+	ret
+_382:
+	; End of function
+	; End of section
+
+code_PedalSensor_checkImplausibility	.section	code, cluster 'PedalSensor_checkImplausibility', new
+	.global	_PedalSensor_checkImplausibility
+
+; pedalSensors.c	   306  
+; pedalSensors.c	   307  /*****************************************************************************
+; pedalSensors.c	   308  * Safety and Validation Functions
+; pedalSensors.c	   309  *****************************************************************************/
+; pedalSensors.c	   310  
+; pedalSensors.c	   311  bool PedalSensor_checkImplausibility(PedalSensor* me)
+; Function _PedalSensor_checkImplausibility
+_271:
+_PedalSensor_checkImplausibility	.proc	far
+	subw	r15,#0x2
+_1565:
+	CoSTORE	[r15-],MSW
+_1576:
+	CoSTORE	[r15-],MAL
+_1587:
+	CoSTORE	[r15],MAH
+	movw	[-r15],r0
+_1598:
+	movw	[-r15],r1
+_1609:
+	movw	[-r15],r6
+_1620:
+	movw	[-r15],r7
+_1631:
+	movw	[-r15],r8
+_1642:
+	movw	r8,r2
+	movw	[-r15],r9
+_1653:
+	movw	[-r15],r10
+_1664:
+	movw	r9,r3
+_1989:
+
+; pedalSensors.c	   312  {
+; pedalSensors.c	   313      if (me->type == PEDAL_TYPE_TPS && me->calibrated) {
+	exts	r9,#0x1
+	movb	rh4,[r8]
+_2453:
+	jmp-	cc_ne,_52
+_2454:
+	movw	r11,r8
+	movw	r12,r9
+	addw	r11,#0xd
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movb	rh4,[r11]
+	jmp-	cc_eq,_53
+_450:
+
+; pedalSensors.c	   314          // Check TPS implausibility (EV2.3.5 rule)
+; pedalSensors.c	   315          float4 tps0_percent = 0;
+; pedalSensors.c	   316          float4 tps1_percent = 0;
+; pedalSensors.c	   317          
+; pedalSensors.c	   318          ubyte4 rawValue = me->primary_value;
+	movw	r11,r8
+	movw	r12,r9
+	addw	r11,#0x28
+	addcw	r12,#0x0
+_2455:
+	exts	r12,#0x1
+	movw	r13,[r11]
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	CoLOAD	r13,[r11]
+_1990:
+
+; pedalSensors.c	   319          if (me->primary_reverse) {
+	movw	r11,r8
+	movw	r12,r9
+	addw	r11,#0xa
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movb	rh4,[r11]
+_2456:
+	jmp-	cc_eq,_54
+_2457:
+
+; pedalSensors.c	   320              rawValue = me->calibMax_primary - rawValue;
+	movw	r11,r8
+	movw	r12,r9
+	addw	r11,#0x1c
+	addcw	r12,#0x0
+_2458:
+	exts	r12,#0x1
+	movw	r13,[r11]
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	CoSUBR	r13,[r11]
+_54:
+
+; pedalSensors.c	   321          }
+; pedalSensors.c	   322          tps0_percent = getPercent(rawValue, me->calibMin_primary, me->calibMax_primary, TRUE);
+	movw	r12,r8
+	movw	r13,r9
+_2459:
+	movw	r14,r8
+	movw	r10,r9
+_2460:
+	addw	r12,#0x18
+	addcw	r13,#0x0
+_2461:
+	addw	r14,#0x1c
+	addcw	r10,#0x0
+_2462:
+	exts	r13,#0x1
+	movw	r4,[r12]
+	addw	r12,#0x2
+	addcw	r13,#0x0
+_2463:
+	exts	r10,#0x1
+	movw	r11,[r14]
+	addw	r14,#0x2
+	addcw	r10,#0x0
+_2464:
+	CoSTORE	r2,MAL
+_1988:
+	CoSTORE	r3,MAH
+	exts	r13,#0x1
+	movw	r5,[r12]
+	exts	r10,#0x1
+	movw	r12,[r14]
+	movw	r13,#0x1
+	call	_getPercent
+_2465:
+
+; pedalSensors.c	   323          
+; pedalSensors.c	   324          rawValue = me->secondary_value;
+	movw	r11,r8
+	movw	r12,r9
+	addw	r11,#0x2c
+	addcw	r12,#0x0
+_2466:
+	call	__s2spf
+_2467:
+	exts	r12,#0x1
+	movw	r13,[r11]
+	addw	r11,#0x2
+	addcw	r12,#0x0
+_2468:
+	movw	r10,r2
+_2469:
+	exts	r12,#0x1
+	CoLOAD	r13,[r11]
+_2470:
+
+; pedalSensors.c	   325          if (me->secondary_reverse) {
+	movw	r11,r8
+	movw	r12,r9
+	addw	r11,#0xb
+	addcw	r12,#0x0
+_2471:
+	movw	r7,r3
+_1991:
+	exts	r12,#0x1
+	movb	rh4,[r11]
+_2472:
+	jmp-	cc_eq,_55
+_2473:
+
+; pedalSensors.c	   326              rawValue = me->calibMax_secondary - rawValue;
+	movw	r11,r8
+	movw	r12,r9
+	addw	r11,#0x24
+	addcw	r12,#0x0
+_2474:
+	exts	r12,#0x1
+	movw	r13,[r11]
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	CoSUBR	r13,[r11]
+_55:
+
+; pedalSensors.c	   327          }
+; pedalSensors.c	   328          tps1_percent = getPercent(rawValue, me->calibMin_secondary, me->calibMax_secondary, TRUE);
+	movw	r12,r8
+	movw	r13,r9
+	addw	r12,#0x20
+	addcw	r13,#0x0
+_2475:
+	addw	r8,#0x24
+	addcw	r9,#0x0
+_2476:
+	exts	r13,#0x1
+	movw	r4,[r12]
+	addw	r12,#0x2
+	addcw	r13,#0x0
+_2477:
+	exts	r9,#0x1
+	movw	r11,[r8]
+	addw	r8,#0x2
+	addcw	r9,#0x0
+_2478:
+	CoSTORE	r2,MAL
+	CoSTORE	r3,MAH
+	exts	r13,#0x1
+	movw	r5,[r12]
+	exts	r9,#0x1
+	movw	r12,[r8]
+	movw	r13,#0x1
+	call	_getPercent
+_2479:
+	call	__s2spf
+_2480:
+
+; pedalSensors.c	   329          
+; pedalSensors.c	   330          // Check for implausibility (deviation > 10%)
+; pedalSensors.c	   331          return (fabsf(tps1_percent - tps0_percent) > 0.1);
+	movw	r4,r10
+	movw	r5,r7
+	call	__sub_spf
+	call	_fabsf
+_2481:
+	call	__spf2dpf
+_2482:
+	movw	r11,#0x999a
+	movw	r12,#0x9999
+	movw	r14,#0x3fb9
+_2483:
+	movw	r13,r12
+	call	__larger_than_dpf
+_2484:
+	jmp	_56
+_53:
+_52:
+
+; pedalSensors.c	   332      }
+; pedalSensors.c	   333      
+; pedalSensors.c	   334      return FALSE;
+	movb	rl2,#0x0
+
+; pedalSensors.c	   335  }
+_56:
+	movw	r10,[r15+]
+_1675:
+	movw	r9,[r15+]
+_1686:
+	movw	r8,[r15+]
+_1697:
+	movw	r7,[r15+]
+_1708:
+	movw	r6,[r15+]
+_1719:
+	movw	r1,[r15+]
+_1730:
+	movw	r0,[r15+]
+_1741:
+	movw	MAH,[r15]
+_1955:
+	addw	r15,#0x2
+_1752:
+	movw	MAL,[r15]
+_1966:
+	addw	r15,#0x2
+_1763:
+	movw	MSW,[r15]
+_1977:
+	addw	r15,#0x2
+_1774:
+	ret
+_387:
+	; End of function
+	; End of section
+
+code_PedalSensor_checkRange	.section	code, cluster 'PedalSensor_checkRange', new
+	.global	_PedalSensor_checkRange
+
+; pedalSensors.c	   336  
+; pedalSensors.c	   337  bool PedalSensor_checkRange(PedalSensor* me)
+; Function _PedalSensor_checkRange
+_283:
+_PedalSensor_checkRange	.proc	far
+	movw	[-r15],r8
+_1992:
+	movw	r5,r2
+	movw	r8,r3
+_2077:
+
+; pedalSensors.c	   338  {
+; pedalSensors.c	   339      // Check if sensor values are within expected range
+; pedalSensors.c	   340      if (me->primary && me->primary->sensorValue < me->primary->specMin || 
+	addw	r2,#0x2
+_2076:
+	addcw	r3,#0x0
+_2489:
+	movw	[-r15],r9
+_2003:
+	exts	r3,#0x1
+	movw	r9,[r2]
+	addw	r2,#0x2
+	addcw	r3,#0x0
+	exts	r3,#0x1
+	movw	r2,[r2]
+_2490:
+	movw	r11,r2
+	orw	r11,r9
+	jmp-	cc_eq,_58
+_2491:
+	movw	r11,r9
+	movw	r12,r2
+	addw	r11,#0x8
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	r13,[r11]
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	r11,[r11]
+_2492:
+	movw	r12,r9
+	movw	r14,r2
+	exts	r14,#0x1
+	movw	r4,[r12]
+	addw	r12,#0x2
+	addcw	r14,#0x0
+	exts	r14,#0x1
+	movw	r12,[r12]
+_2493:
+	cmpw	r13,r4
+	subcw	r11,r12
+	jmp-	cc_ult,_59
+_58:
+
+; pedalSensors.c	   341          me->primary->sensorValue > me->primary->specMax) {
+	movw	r11,r9
+	movw	r12,r2
+	addw	r11,#0x8
+	addcw	r12,#0x0
+_2494:
+	addw	r9,#0x4
+	addcw	r2,#0x0
+_2495:
+	exts	r12,#0x1
+	movw	r13,[r11]
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	r11,[r11]
+_2496:
+	exts	r2,#0x1
+	movw	r12,[r9]
+	addw	r9,#0x2
+	addcw	r2,#0x0
+	exts	r2,#0x1
+	movw	r14,[r9]
+_2497:
+	cmpw	r13,r12
+	subcw	r11,r14
+	jmp-	cc_ugt,_60
+_2498:
+
+; pedalSensors.c	   342          return FALSE;
+; pedalSensors.c	   343      }
+; pedalSensors.c	   344      
+; pedalSensors.c	   345      if (me->secondary && me->secondary->sensorValue < me->secondary->specMin || 
+	addw	r5,#0x6
+_2078:
+	addcw	r8,#0x0
+	exts	r8,#0x1
+	movw	r2,[r5]
+	addw	r5,#0x2
+	addcw	r8,#0x0
+	exts	r8,#0x1
+	movw	r5,[r5]
+_2499:
+	movw	r11,r5
+	orw	r11,r2
+	jmp-	cc_eq,_61
+_2500:
+	movw	r11,r2
+	movw	r12,r5
+	addw	r11,#0x8
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	r13,[r11]
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	r11,[r11]
+_2501:
+	movw	r12,r2
+	movw	r14,r5
+	exts	r14,#0x1
+	movw	r4,[r12]
+	addw	r12,#0x2
+	addcw	r14,#0x0
+	exts	r14,#0x1
+	movw	r12,[r12]
+_2502:
+	cmpw	r13,r4
+	subcw	r11,r12
+	jmp-	cc_ult,_62
+_61:
+
+; pedalSensors.c	   346          me->secondary->sensorValue > me->secondary->specMax) {
+	movw	r11,r2
+	movw	r12,r5
+	addw	r11,#0x8
+	addcw	r12,#0x0
+_2503:
+	addw	r2,#0x4
+	addcw	r5,#0x0
+_2504:
+	exts	r12,#0x1
+	movw	r13,[r11]
+	addw	r11,#0x2
+	addcw	r12,#0x0
+	exts	r12,#0x1
+	movw	r11,[r11]
+_2505:
+	exts	r5,#0x1
+	movw	r12,[r2]
+	addw	r2,#0x2
+	addcw	r5,#0x0
+	exts	r5,#0x1
+	movw	r14,[r2]
+_2506:
+	cmpw	r13,r12
+	subcw	r11,r14
+	jmp+	cc_ule,_63
+_62:
+
+; pedalSensors.c	   347          return FALSE;
+; pedalSensors.c	   348      }
+; pedalSensors.c	   349      
+; pedalSensors.c	   350      return TRUE;
+; pedalSensors.c	   350  }
+
+_60:
+_59:
+	movb	rl2,#0x0
+	jmp	_64
+_63:
+	movb	rl2,#0x1
+
+
+_64:
+
+
+	movw	r9,[r15+]
+_2014:
+
+
+	movw	r8,[r15+]
+_2025:
+
+
+	ret
+_392:
+	; End of function
+	; End of section
+
+	.calls	'_PedalSensor_update','__s2spf',4,0
+	.calls	'_PedalSensor_update','__add_spf',8,0
+	.calls	'_PedalSensor_update','__spf2dpf',8,2
+	.calls	'_PedalSensor_update','__mul_dpf',8,4
+	.calls	'_PedalSensor_update','__dpf2spf',8,2
+	.calls	'_PedalSensor_update','__larger_than_spf',8,0
+	.calls	'_PedalSensor_update','__larger_than_dpf',8,0
+	.calls	'_PedalSensor_getIndividualSensorPercent','__s2spf',4,0
+	.calls	'_PedalSensor_checkImplausibility','__s2spf',4,0
+	.calls	'_PedalSensor_checkImplausibility','__sub_spf',8,0
+	.calls	'_PedalSensor_checkImplausibility','__spf2dpf',8,2
+	.calls	'_PedalSensor_checkImplausibility','__larger_than_dpf',8,0
+	.calls	'_PedalSensor_new_TPS','_malloc'
+	.calls	'_PedalSensor_new_BPS','_malloc'
+	.calls	'_PedalSensor_update','_getPercent'
+	.calls	'_PedalSensor_update','_powf'
+	.calls	'_PedalSensor_calibrationCycle','_IO_RTC_GetTimeUS'
+	.calls	'_PedalSensor_startCalibration','_IO_RTC_GetTimeUS'
+	.calls	'_PedalSensor_getIndividualSensorPercent','_getPercent'
+	.calls	'_PedalSensor_checkImplausibility','_getPercent'
+	.calls	'_PedalSensor_checkImplausibility','_fabsf'
+	.calls	'_PedalSensor_new_TPS','',4,2
+	.calls	'_PedalSensor_new_BPS','',4,0
+	.calls	'_PedalSensor_update','',4,22
+	.calls	'_PedalSensor_calibrationCycle','',4,8
+	.calls	'_PedalSensor_startCalibration','',4,8
+	.calls	'_PedalSensor_resetCalibration','',4,0
+	.calls	'_PedalSensor_getPercent','',4,0
+	.calls	'_PedalSensor_getBrakesOn','',4,0
+	.calls	'_PedalSensor_getCalibrated','',4,0
+	.calls	'_PedalSensor_getIndividualSensorPercent','',4,10
+	.calls	'_PedalSensor_getTravelPercent','',4,0
+	.calls	'_PedalSensor_getCalibMinPrimary','',4,0
+	.calls	'_PedalSensor_getCalibMaxPrimary','',4,0
+	.calls	'_PedalSensor_getCalibMinSecondary','',4,0
+	.calls	'_PedalSensor_getCalibMaxSecondary','',4,0
+	.calls	'_PedalSensor_getSensorValuePrimary','',4,0
+	.calls	'_PedalSensor_getSensorValueSecondary','',4,0
+	.calls	'_PedalSensor_checkImplausibility','',4,20
+	.calls	'_PedalSensor_checkRange','',4,4
+	.extern	_malloc : far
+	.extern	_fabsf : far
+	.extern	_powf : far
+	.extern	_IO_RTC_GetTimeUS : far
+	.extern	_Sensor_TPS0 : word
+	.extern	_Sensor_TPS1 : word
+	.extern	_Sensor_BPS0 : word
+	.extern	_Sensor_BenchTPS0 : word
+	.extern	_Sensor_BenchTPS1 : word
+	.extern	_getPercent : far
+	.extern	__s2spf : far
+	.extern	__add_spf : far
+	.extern	__spf2dpf : far
+	.extern	__mul_dpf : far
+	.extern	__dpf2spf : far
+	.extern	__larger_than_spf : far
+	.extern	__larger_than_dpf : far
+	.extern	__sub_spf : far
+	.debug		.debug_info
+_295:
+	.dl	1575
+	.dw	3
+	.dl	_296
+	.db	4
+_294:
+	.db	1
+	.db	'pedalSensors.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	12,1
+	.dl	_297
+	.db	2
+	.db	'void',0,3,5
+	.dl	169
+	.db	4
+	.db	'unsigned int',0,2,7,5
+	.db	'malloc',0,1,78,33,6
+	.dl	175
+	.db	1,1,1,1,6,1,78,44,2
+	.dl	181
+	.db	0
+_410:
+	.db	4
+	.db	'float',0,4,4,5
+	.db	'fabsf',0,2,164,1,25,6
+	.dl	227
+	.db	1,1,1,1,6,2,164,1,43,2
+	.dl	227
+	.db	0,5
+	.db	'powf',0,2,170,1,25,6
+	.dl	227
+	.db	1,1,1,1,6,2,170,1,43,2
+	.dl	227
+	.db	6,2,170,1,50,2
+	.dl	227
+	.db	0
+_414:
+	.db	4
+	.db	'unsigned long int',0,4,7,5
+	.db	'IO_RTC_GetTimeUS',0,3,143,1,9,6
+	.dl	307
+	.db	1,1,1,1,7
+	.db	'timestamp',0,3,143,1,35,2
+	.dl	307
+	.db	0,8,4,16,9,1,9
+	.db	'PEDAL_TYPE_TPS',0,0,9
+	.db	'PEDAL_TYPE_BPS',0,1,0
+_394:
+	.db	4
+	.db	'unsigned char',0,1,8,10
+	.db	'_Sensor',0,5,126,16,30,11
+	.db	'specMin',0
+	.dl	307
+	.db	4,2,35,0,11
+	.db	'specMax',0
+	.dl	307
+	.db	4,2,35,4,11
+	.db	'sensorValue',0
+	.dl	307
+	.db	4,2,35,8,11
+	.db	'heldSensorValue',0
+	.dl	307
+	.db	4,2,35,12,11
+	.db	'timestamp',0
+	.dl	307
+	.db	4,2,35,16,11
+	.db	'fresh',0
+	.dl	420
+	.db	1,2,35,20,11
+	.db	'ioErr_powerInit',0
+	.dl	181
+	.db	2,2,35,22,11
+	.db	'ioErr_powerSet',0
+	.dl	181
+	.db	2,2,35,24,11
+	.db	'ioErr_signalInit',0
+	.dl	181
+	.db	2,2,35,26,11
+	.db	'ioErr_signalGet',0
+	.dl	181
+	.db	2,2,35,28,0,3,5
+	.dl	437
+	.db	10
+	.db	'_PedalSensor',0,4,22,16,58,11
+	.db	'type',0
+	.dl	380
+	.db	1,2,35,0,11
+	.db	'primary',0
+	.dl	665
+	.db	4,2,35,2,11
+	.db	'secondary',0
+	.dl	665
+	.db	4,2,35,6,11
+	.db	'primary_reverse',0
+	.dl	420
+	.db	1,2,35,10,11
+	.db	'secondary_reverse',0
+	.dl	420
+	.db	1,2,35,11,11
+	.db	'runCalibration',0
+	.dl	420
+	.db	1,2,35,12,11
+	.db	'calibrated',0
+	.dl	420
+	.db	1,2,35,13,11
+	.db	'percent',0
+	.dl	227
+	.db	4,2,35,14,11
+	.db	'brakesAreOn',0
+	.dl	420
+	.db	1,2,35,18,11
+	.db	'outputCurveExponent',0
+	.dl	227
+	.db	4,2,35,20,11
+	.db	'calibMin_primary',0
+	.dl	307
+	.db	4,2,35,24,11
+	.db	'calibMax_primary',0
+	.dl	307
+	.db	4,2,35,28,11
+	.db	'calibMin_secondary',0
+	.dl	307
+	.db	4,2,35,32,11
+	.db	'calibMax_secondary',0
+	.dl	307
+	.db	4,2,35,36,11
+	.db	'primary_value',0
+	.dl	307
+	.db	4,2,35,40,11
+	.db	'secondary_value',0
+	.dl	307
+	.db	4,2,35,44,11
+	.db	'timestamp_calibrationStart',0
+	.dl	307
+	.db	4,2,35,48,11
+	.db	'timestamp_calibrationEnd',0
+	.dl	307
+	.db	4,2,35,52,11
+	.db	'bench',0
+	.dl	420
+	.db	1,2,35,56,0
+_393:
+	.db	3,5
+	.dl	671
+_419:
+	.db	3,5
+	.dl	420
+	.db	4
+	.db	'int',0,2,5,12
+	.db	'getPercent',0,6,116,28,6
+	.dl	1156
+	.db	1,1,1,4
+	.db	'unsigned short int',0,2,7,13
+	.db	'__wchar_t',0,6,1,1
+	.dl	1186
+	.db	13
+	.db	'__size_t',0,6,1,1
+	.dl	181
+	.db	3,5
+	.dl	169
+	.db	13
+	.db	'__prof_adm',0,6,1,1
+	.dl	1243
+	.db	13
+	.db	'__codeptr',0,6,1,1
+	.dl	307
+	.db	13
+	.db	'size_t',0,1,29,25
+	.dl	181
+	.db	13
+	.db	'ubyte1',0,7,21,29
+	.dl	420
+	.db	13
+	.db	'ubyte2',0,7,22,29
+	.dl	181
+	.db	13
+	.db	'ubyte4',0,7,23,29
+	.dl	307
+	.db	13
+	.db	'float4',0,7,29,29
+	.dl	227
+	.db	13
+	.db	'bool',0,7,31,29
+	.dl	420
+	.db	13
+	.db	'IO_ErrorType',0,8,150,1,17
+	.dl	181
+	.db	13
+	.db	'Sensor',0,5,145,1,3
+	.dl	437
+	.db	14
+	.db	'Sensor_TPS0',0,5,154,1,15,5
+	.dl	437
+	.db	1,1,14
+	.db	'Sensor_TPS1',0,5,155,1,15,5
+	.dl	437
+	.db	1,1,14
+	.db	'Sensor_BPS0',0,5,158,1,15,5
+	.dl	437
+	.db	1,1,13
+	.db	'PedalType',0,4,19,3
+	.dl	380
+	.db	13
+	.db	'PedalSensor',0,4,61,3
+	.dl	671
+	.db	14
+	.db	'Sensor_BenchTPS0',0,6,19,15,5
+	.dl	437
+	.db	1,1,14
+	.db	'Sensor_BenchTPS1',0,6,20,15,5
+	.dl	437
+	.db	1,1,0
+	; End of section
+
+	.debug		.debug_abbrev
+_296:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,59,0,3,8,0,0,3,15,0,51,15,73,19,0,0,4,36,0,3,8,11,15,62
+	.db	15,0,0,5,46,1,3,8,58,15,59,15,57,15,51,15,73,19,54,15,39,12,63,12,60,12,0,0,6,5,0,58,15,59,15,57,15,51
+	.db	15,73,19,0,0,7,5,0,3,8,58,15,59,15,57,15,51,15,73,19,0,0,8,4,1,58,15,59,15,57,15,11,15,0,0,9,40,0,3,8
+	.db	28,13,0,0,10,19,1,3,8,58,15,59,15,57,15,11,15,0,0,11,13,0,3,8,73,19,11,15,56,9,0,0,12,46,0,3,8,58,15,59
+	.db	15,57,15,51,15,73,19,54,15,63,12,60,12,0,0,13,22,0,3,8,58,15,59,15,57,15,73,19,0,0,14,52,0,3,8,58,15,59
+	.db	15,57,15,51,15,73,19,63,12,60,12,0,0,0
+	; End of section
+
+	.debug		.debug_line
+_297:
+	.dl	_2080-_2079
+_2079:
+	.dw	3
+	.dl	_2082-_2081
+_2081:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1
+	.db	'c:\\Program Files (x86)\\TASKING\\C166-VX v4.0r1\\include\\',0
+	.db	'..\\..\\..\\Environment\\inc',0,0
+	.db	'stdlib.h',0,1,0,0
+	.db	'math.h',0,1,0,0
+	.db	'IO_RTC.h',0,2,0,0
+	.db	'pedalSensors.h',0,0,0,0
+	.db	'sensors.h',0,0,0,0
+	.db	'pedalSensors.c',0,0,0,0
+	.db	'ptypes_xe167.h',0,2,0,0
+	.db	'IO_Constants.h',0,2,0,0,0
+_2082:
+_2080:
+	; End of section
+
+	.debug		.debug_pubnames
+	.dl	80
+	.dw	2
+	.dl	_295,1579,197
+	.db	'malloc',0
+	.dl	236
+	.db	'fabsf',0
+	.dl	267
+	.db	'powf',0
+	.dl	328
+	.db	'IO_RTC_GetTimeUS',0
+	.dl	1163
+	.db	'getPercent',0
+	.dl	0
+	; End of section
+
+	.debug		.debug_info, cluster 'PedalSensor_new_TPS'
+_298:
+	.dl	282
+	.dw	3
+	.dl	_299
+	.db	4,1
+	.db	'pedalSensors.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	12,1
+	.dl	_301,_300
+	.db	2
+	.dl	_294
+	.db	3
+	.db	'PedalSensor_new_TPS',0,1,26,14,6
+	.dl	_393
+	.db	1,1,1
+	.dl	_67,_302,_66
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.db	'benchMode',0,1,26,39,2
+	.dl	_394,_395
+	.db	5
+	.dl	_67,_302
+	.db	6
+	.db	'me',0,1,28,18,2
+	.dl	_393,_396
+	.db	0,0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'PedalSensor_new_TPS'
+_299:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	73,16,54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,5,11,1
+	.db	17,1,18,1,0,0,6,52,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'PedalSensor_new_TPS'
+_300:
+	.dl	_2084-_2083
+_2083:
+	.dw	3
+	.dl	_2086-_2085
+_2085:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'pedalSensors.c',0,0,0,0,0
+_2086:
+	.db	5,14,7,0,5,2
+	.dl	_67
+	.db	3,25,1,5,44,9
+	.dw	_498-_67
+	.db	3,2,1,5,7,9
+	.dw	_2087-_498
+	.db	3,2,1,5,16,9
+	.dw	_2088-_2087
+	.db	3,127,1,5,14,9
+	.dw	_2089-_2088
+	.db	1,5,15,9
+	.dw	_2090-_2089
+	.db	3,1,1,5,19,9
+	.dw	_2091-_2090
+	.db	3,3,1,5,39,9
+	.dw	_2092-_2091
+	.db	1,5,7,9
+	.dw	_2-_2092
+	.db	1,5,17,9
+	.dw	_2093-_2
+	.db	1,5,21,9
+	.dw	_2094-_2093
+	.db	3,1,1,5,41,9
+	.dw	_2095-_2094
+	.db	1,5,7,9
+	.dw	_4-_2095
+	.db	1,5,27,9
+	.dw	_2096-_4
+	.db	3,3,1,5,19,9
+	.dw	_2097-_2096
+	.db	3,125,1,5,7,9
+	.dw	_2098-_2097
+	.db	3,3,1,5,19,9
+	.dw	_2099-_2098
+	.db	3,125,1,5,7,9
+	.dw	_2100-_2099
+	.db	3,3,1,5,29,9
+	.dw	_2101-_2100
+	.db	3,1,1,5,25,9
+	.dw	_2102-_2101
+	.db	3,127,1,5,7,9
+	.dw	_2103-_2102
+	.db	3,1,1,5,31,9
+	.dw	_2104-_2103
+	.db	3,3,1,5,27,9
+	.dw	_2105-_2104
+	.db	3,125,1,5,7,9
+	.dw	_2106-_2105
+	.db	3,3,1,5,31,9
+	.dw	_2107-_2106
+	.db	1,5,29,9
+	.dw	_2108-_2107
+	.db	1,5,7,9
+	.dw	_2109-_2108
+	.db	3,3,1,5,26,9
+	.dw	_2110-_2109
+	.db	1,5,7,9
+	.dw	_2111-_2110
+	.db	3,1,1,5,26,9
+	.dw	_2112-_2111
+	.db	1,5,7,9
+	.dw	_2113-_2112
+	.db	3,1,1,5,28,9
+	.dw	_2114-_2113
+	.db	1,5,7,9
+	.dw	_2115-_2114
+	.db	3,1,1,5,28,9
+	.dw	_2116-_2115
+	.db	1,5,7,9
+	.dw	_2117-_2116
+	.db	3,3,1,5,17,9
+	.dw	_2118-_2117
+	.db	1,5,7,9
+	.dw	_2119-_2118
+	.db	3,1,1,5,21,9
+	.dw	_2120-_2119
+	.db	1,5,7,9
+	.dw	_2121-_2120
+	.db	3,1,1,5,24,9
+	.dw	_2122-_2121
+	.db	1,5,7,9
+	.dw	_2123-_2122
+	.db	3,1,1,5,20,9
+	.dw	_2124-_2123
+	.db	1,5,7,9
+	.dw	_2125-_2124
+	.db	3,1,1,5,23,9
+	.dw	_2126-_2125
+	.db	1,5,7,9
+	.dw	_2127-_2126
+	.db	3,1,1,5,25,9
+	.dw	_2128-_2127
+	.db	1,5,7,9
+	.dw	_2129-_2128
+	.db	3,1,1,5,36,9
+	.dw	_2130-_2129
+	.db	1,5,7,9
+	.dw	_2131-_2130
+	.db	3,1,1,5,34,9
+	.dw	_2132-_2131
+	.db	1,5,1,9
+	.dw	_2133-_2132
+	.db	3,3,1,9
+	.dw	_302-_2133
+	.db	0,1,1
+_2084:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'PedalSensor_new_TPS'
+_301:
+	.dl	-1,_67,0,_302-_67,0,0
+	; End of section
+
+	.debug		.debug_pubnames
+	.dl	38
+	.dw	2
+	.dl	_298,286,178
+	.db	'PedalSensor_new_TPS',0
+	.dl	0
+	; End of section
+
+	.debug		.debug_info, cluster 'PedalSensor_new_BPS'
+_303:
+	.dl	259
+	.dw	3
+	.dl	_304
+	.db	4,1
+	.db	'pedalSensors.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	12,1
+	.dl	_306,_305
+	.db	2
+	.dl	_294
+	.db	3
+	.db	'PedalSensor_new_BPS',0,1,62,14,6
+	.dl	_393
+	.db	1,1,1
+	.dl	_79,_307,_78
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.dl	_79,_307
+	.db	5
+	.db	'me',0,1,64,18,2
+	.dl	_393,_397
+	.db	0,0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'PedalSensor_new_BPS'
+_304:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	73,16,54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,11,1,17,1,18,1,0,0,5,52,0,3,8,58,15,59,15,57,15,51,15
+	.db	73,16,2,6,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'PedalSensor_new_BPS'
+_305:
+	.dl	_2135-_2134
+_2134:
+	.dw	3
+	.dl	_2137-_2136
+_2136:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'pedalSensors.c',0,0,0,0,0
+_2137:
+	.db	5,44,7,0,5,2
+	.dl	_79
+	.db	3,63,1,5,7,9
+	.dw	_2138-_79
+	.db	3,2,1,5,16,9
+	.dw	_2139-_2138
+	.db	3,127,1,5,14,9
+	.dw	_2140-_2139
+	.db	1,5,17,9
+	.dw	_2141-_2140
+	.db	3,1,1,5,15,9
+	.dw	_2142-_2141
+	.db	1,5,7,9
+	.dw	_2143-_2142
+	.db	3,3,1,5,20,9
+	.dw	_2144-_2143
+	.db	1,5,17,9
+	.dw	_2145-_2144
+	.db	1,5,20,9
+	.dw	_2146-_2145
+	.db	1,5,17,9
+	.dw	_2147-_2146
+	.db	1,5,7,9
+	.dw	_2148-_2147
+	.db	3,1,1,5,21,9
+	.dw	_2149-_2148
+	.db	1,5,19,9
+	.dw	_2150-_2149
+	.db	1,5,7,9
+	.dw	_2151-_2150
+	.db	3,3,1,5,25,9
+	.dw	_2152-_2151
+	.db	1,5,7,9
+	.dw	_2153-_2152
+	.db	3,1,1,5,27,9
+	.dw	_2154-_2153
+	.db	1,5,7,9
+	.dw	_2155-_2154
+	.db	3,3,1,5,26,9
+	.dw	_2156-_2155
+	.db	1,5,7,9
+	.dw	_2157-_2156
+	.db	3,1,1,5,26,9
+	.dw	_2158-_2157
+	.db	1,5,7,9
+	.dw	_2159-_2158
+	.db	3,1,1,5,28,9
+	.dw	_2160-_2159
+	.db	1,5,7,9
+	.dw	_2161-_2160
+	.db	3,1,1,5,28,9
+	.dw	_2162-_2161
+	.db	1,5,7,9
+	.dw	_2163-_2162
+	.db	3,3,1,5,17,9
+	.dw	_2164-_2163
+	.db	1,5,7,9
+	.dw	_2165-_2164
+	.db	3,1,1,5,21,9
+	.dw	_2166-_2165
+	.db	1,5,7,9
+	.dw	_2167-_2166
+	.db	3,1,1,5,24,9
+	.dw	_2168-_2167
+	.db	1,5,7,9
+	.dw	_2169-_2168
+	.db	3,1,1,5,20,9
+	.dw	_2170-_2169
+	.db	1,5,7,9
+	.dw	_2171-_2170
+	.db	3,1,1,5,23,9
+	.dw	_2172-_2171
+	.db	1,5,7,9
+	.dw	_2173-_2172
+	.db	3,1,1,5,25,9
+	.dw	_2174-_2173
+	.db	1,5,7,9
+	.dw	_2175-_2174
+	.db	3,1,1,5,36,9
+	.dw	_2176-_2175
+	.db	1,5,7,9
+	.dw	_2177-_2176
+	.db	3,1,1,5,34,9
+	.dw	_2178-_2177
+	.db	1,5,1,9
+	.dw	_2179-_2178
+	.db	3,3,1,7,9
+	.dw	_307-_2179
+	.db	0,1,1
+_2135:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'PedalSensor_new_BPS'
+_306:
+	.dl	-1,_79,0,_307-_79,0,0
+	; End of section
+
+	.debug		.debug_pubnames
+	.dl	38
+	.dw	2
+	.dl	_303,263,178
+	.db	'PedalSensor_new_BPS',0
+	.dl	0
+	; End of section
+
+	.debug		.debug_info, cluster 'PedalSensor_update'
+_308:
+	.dl	400
+	.dw	3
+	.dl	_309
+	.db	4,1
+	.db	'pedalSensors.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	12,1
+	.dl	_311,_310
+	.db	2
+	.dl	_294
+	.db	3
+	.db	'PedalSensor_update',0,1,99,6,6,1,1,1
+	.dl	_91,_312,_90
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.db	'me',0,1,99,38,2
+	.dl	_393,_398
+	.db	4
+	.db	'benchMode',0,1,99,47,2
+	.dl	_394,_399
+	.db	5
+	.dl	_91,_312
+	.db	6
+	.dl	_400
+	.db	7
+	.db	'tps0_percent',0,1,107,16,2
+	.dl	_410,_411
+	.db	7
+	.db	'tps1_percent',0,1,108,16,2
+	.dl	_410,_412
+	.db	5
+	.dl	_413,_9
+	.db	7
+	.db	'rawValue',0,1,112,20,2
+	.dl	_414,_415
+	.db	0,0,5
+	.dl	_416,_15
+	.db	7
+	.db	'rawValue',0,1,139,1,20,2
+	.dl	_414,_417
+	.db	0,0,0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'PedalSensor_update'
+_309:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,5,11,1,17,1
+	.db	18,1,0,0,6,11,1,85,6,0,0,7,52,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'PedalSensor_update'
+_310:
+	.dl	_2181-_2180
+_2180:
+	.dw	3
+	.dl	_2183-_2182
+_2182:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'pedalSensors.c',0,0,0,0,0
+_2183:
+	.db	5,6,7,0,5,2
+	.dl	_91
+	.db	3,226,0,1,5,11,9
+	.dw	_609-_91
+	.db	3,2,1,5,5,9
+	.dw	_2184-_609
+	.db	1,5,11,7,9
+	.dw	_2185-_2184
+	.db	3,2,1,5,31,9
+	.dw	_2186-_2185
+	.db	1,5,11,9
+	.dw	_2187-_2186
+	.db	1,5,31,9
+	.dw	_2188-_2187
+	.db	1,5,11,9
+	.dw	_2189-_2188
+	.db	1,5,31,9
+	.dw	_2190-_2189
+	.db	1,5,11,9
+	.dw	_2191-_2190
+	.db	1,5,31,9
+	.dw	_2192-_2191
+	.db	1,5,40,9
+	.dw	_2193-_2192
+	.db	1,5,27,9
+	.dw	_2194-_2193
+	.db	1,5,40,9
+	.dw	_964-_2194
+	.db	1,5,11,9
+	.dw	_2195-_964
+	.db	3,1,1,5,40,9
+	.dw	_2196-_2195
+	.db	3,127,1,5,27,9
+	.dw	_2197-_2196
+	.db	1,5,29,9
+	.dw	_401-_2197
+	.db	3,4,1,5,27,9
+	.dw	_402-_401
+	.db	3,124,1,5,33,9
+	.dw	_2198-_402
+	.db	3,1,1,5,27,9
+	.dw	_2199-_2198
+	.db	3,127,1,5,11,9
+	.dw	_2200-_2199
+	.db	3,1,1,5,33,9
+	.dw	_2201-_2200
+	.db	1,5,11,9
+	.dw	_2202-_2201
+	.db	1,5,33,9
+	.dw	_2203-_2202
+	.db	1,5,29,9
+	.dw	_2204-_2203
+	.db	1,5,33,9
+	.dw	_2205-_2204
+	.db	1,5,44,9
+	.dw	_2206-_2205
+	.db	1,5,29,9
+	.dw	_403-_2206
+	.db	3,3,1,5,44,9
+	.dw	_404-_403
+	.db	3,125,1,5,29,9
+	.dw	_2207-_404
+	.db	1,9
+	.dw	_405-_2207
+	.db	3,4,1,9
+	.dw	_406-_405
+	.db	3,124,1,5,15,9
+	.dw	_407-_406
+	.db	3,6,1,5,29,9
+	.dw	_2208-_407
+	.db	3,126,1,5,15,9
+	.dw	_967-_2208
+	.db	3,2,1,5,9,9
+	.dw	_2209-_967
+	.db	1,5,29,7,9
+	.dw	_413-_2209
+	.db	3,2,1,5,19,9
+	.dw	_2210-_413
+	.db	3,1,1,5,29,9
+	.dw	_2211-_2210
+	.db	3,127,1,5,19,9
+	.dw	_969-_2211
+	.db	3,1,1,5,13,9
+	.dw	_2212-_969
+	.db	1,5,30,7,9
+	.dw	_2213-_2212
+	.db	3,1,1,5,49,9
+	.dw	_2214-_2213
+	.db	1,5,51,9
+	.dw	_10-_2214
+	.db	3,2,1,5,73,9
+	.dw	_2215-_10
+	.db	1,5,51,9
+	.dw	_966-_2215
+	.db	1,5,73,9
+	.dw	_2216-_966
+	.db	1,5,51,9
+	.dw	_2217-_2216
+	.db	1,5,73,9
+	.dw	_2218-_2217
+	.db	1,5,93,9
+	.dw	_2219-_2218
+	.db	1,5,22,9
+	.dw	_2220-_2219
+	.db	3,3,1,5,19,9
+	.dw	_2221-_2220
+	.db	3,1,1,5,22,9
+	.dw	_2222-_2221
+	.db	3,127,1,5,19,9
+	.dw	_2223-_2222
+	.db	3,1,1,5,38,9
+	.dw	_2224-_2223
+	.db	3,124,1,5,26,9
+	.dw	_2225-_2224
+	.db	1,5,19,9
+	.dw	_2226-_2225
+	.db	3,4,1,5,13,9
+	.dw	_2227-_2226
+	.db	1,5,30,7,9
+	.dw	_2228-_2227
+	.db	3,1,1,5,51,9
+	.dw	_2229-_2228
+	.db	1,9
+	.dw	_11-_2229
+	.db	3,2,1,5,75,9
+	.dw	_2230-_11
+	.db	1,5,51,9
+	.dw	_2231-_2230
+	.db	1,5,75,9
+	.dw	_2232-_2231
+	.db	1,5,51,9
+	.dw	_2233-_2232
+	.db	1,5,75,9
+	.dw	_2234-_2233
+	.db	1,5,97,9
+	.dw	_2235-_2234
+	.db	1,5,38,9
+	.dw	_2236-_2235
+	.db	1,5,26,9
+	.dw	_2237-_2236
+	.db	1,5,37,9
+	.dw	_9-_2237
+	.db	3,4,1,5,11,9
+	.dw	_2238-_9
+	.db	1,5,37,9
+	.dw	_2239-_2238
+	.db	1,5,55,9
+	.dw	_2240-_2239
+	.db	1,5,37,9
+	.dw	_2241-_2240
+	.db	1,5,11,9
+	.dw	_2242-_2241
+	.db	1,5,37,9
+	.dw	_2243-_2242
+	.db	1,5,21,9
+	.dw	_971-_2243
+	.db	1,5,53,9
+	.dw	_2244-_971
+	.db	1,5,21,9
+	.dw	_2245-_2244
+	.db	1,5,25,9
+	.dw	_2246-_2245
+	.db	3,3,1,5,21,9
+	.dw	_2247-_2246
+	.db	3,125,1,5,15,9
+	.dw	_2248-_2247
+	.db	3,3,1,5,25,9
+	.dw	_2249-_2248
+	.db	1,5,15,9
+	.dw	_2250-_2249
+	.db	1,5,25,9
+	.dw	_2251-_2250
+	.db	1,5,9,9
+	.dw	_2252-_2251
+	.db	1,5,47,7,9
+	.dw	_2253-_2252
+	.db	3,1,1,5,25,9
+	.dw	_2254-_2253
+	.db	1,5,9,9
+	.dw	_408-_2254
+	.db	3,127,1,5,12,9
+	.dw	_8-_408
+	.db	3,4,1,5,11,9
+	.dw	_2255-_8
+	.db	3,2,1,5,31,9
+	.dw	_2256-_2255
+	.db	1,5,11,9
+	.dw	_2257-_2256
+	.db	1,5,31,9
+	.dw	_2258-_2257
+	.db	1,5,11,9
+	.dw	_2259-_2258
+	.db	1,5,31,9
+	.dw	_974-_2259
+	.db	1,5,11,9
+	.dw	_2260-_974
+	.db	1,5,31,9
+	.dw	_2261-_2260
+	.db	1,5,40,9
+	.dw	_2262-_2261
+	.db	1,5,27,9
+	.dw	_2263-_2262
+	.db	1,5,40,9
+	.dw	_2264-_2263
+	.db	1,5,27,9
+	.dw	_2265-_2264
+	.db	1,5,15,9
+	.dw	_2266-_2265
+	.db	3,2,1,5,9,9
+	.dw	_2267-_2266
+	.db	1,5,29,7,9
+	.dw	_416-_2267
+	.db	3,1,1,5,19,9
+	.dw	_2268-_416
+	.db	3,1,1,5,29,9
+	.dw	_2269-_2268
+	.db	3,127,1,5,19,9
+	.dw	_975-_2269
+	.db	3,1,1,5,13,9
+	.dw	_2270-_975
+	.db	1,5,30,7,9
+	.dw	_2271-_2270
+	.db	3,1,1,5,49,9
+	.dw	_2272-_2271
+	.db	1,5,15,9
+	.dw	_16-_2272
+	.db	3,2,1,5,50,9
+	.dw	_2273-_16
+	.db	1,5,72,9
+	.dw	_2274-_2273
+	.db	1,5,15,9
+	.dw	_2275-_2274
+	.db	1,5,50,9
+	.dw	_2276-_2275
+	.db	1,5,72,9
+	.dw	_2277-_2276
+	.db	1,5,50,9
+	.dw	_2278-_2277
+	.db	1,5,72,9
+	.dw	_2279-_2278
+	.db	1,5,15,9
+	.dw	_2280-_2279
+	.db	1,5,92,9
+	.dw	_2281-_2280
+	.db	1,5,37,9
+	.dw	_2282-_2281
+	.db	1,5,25,9
+	.dw	_2283-_2282
+	.db	1,5,11,9
+	.dw	_15-_2283
+	.db	3,112,1,9
+	.dw	_409-_15
+	.db	3,20,1,5,30,9
+	.dw	_976-_409
+	.db	1,5,11,9
+	.dw	_2284-_976
+	.db	1,5,30,9
+	.dw	_2285-_2284
+	.db	1,5,42,9
+	.dw	_2286-_2285
+	.db	1,5,40,9
+	.dw	_2287-_2286
+	.db	1,5,25,9
+	.dw	_2288-_2287
+	.db	1,5,1,9
+	.dw	_12-_2288
+	.db	3,2,1,9
+	.dw	_312-_12
+	.db	0,1,1
+_2181:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'PedalSensor_update'
+_311:
+	.dl	-1,_91,0,_312-_91,0,0
+_400:
+	.dl	-1,_91,_401-_91,_402-_91,_403-_91,_404-_91,_405-_91,_406-_91,_407-_91,_408-_91,_15-_91,_409-_91,0,0
+	; End of section
+
+	.debug		.debug_pubnames
+	.dl	37
+	.dw	2
+	.dl	_308,404,178
+	.db	'PedalSensor_update',0
+	.dl	0
+	; End of section
+
+	.debug		.debug_info, cluster 'PedalSensor_calibrationCycle'
+_313:
+	.dl	429
+	.dw	3
+	.dl	_314
+	.db	4,1
+	.db	'pedalSensors.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	12,1
+	.dl	_316,_315
+	.db	2
+	.dl	_294
+	.db	3
+	.db	'PedalSensor_calibrationCycle',0,1,151,1,6,6,1,1,1
+	.dl	_103,_317,_102
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.db	'me',0,1,151,1,48,2
+	.dl	_393,_418
+	.db	4
+	.db	'calibrationErrors',0,1,151,1,60,2
+	.dl	_419,_420
+	.db	5
+	.dl	_103,_317
+	.db	5
+	.dl	_421,_317
+	.db	6
+	.db	'currentTime',0,1,157,1,12,2
+	.dl	_414,_422
+	.db	5
+	.dl	_423,_424
+	.db	6
+	.db	'tps0_value',0,1,163,1,20,2
+	.dl	_414,_425
+	.db	6
+	.db	'tps1_value',0,1,164,1,20,2
+	.dl	_414,_426
+	.db	0,5
+	.dl	_427,_428
+	.db	6
+	.db	'bps0_value',0,1,190,1,20,2
+	.dl	_414,_429
+	.db	0,0,0,0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'PedalSensor_calibrationCycle'
+_314:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,5,11,1,17,1
+	.db	18,1,0,0,6,52,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'PedalSensor_calibrationCycle'
+_315:
+	.dl	_2290-_2289
+_2289:
+	.dw	3
+	.dl	_2292-_2291
+_2291:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'pedalSensors.c',0,0,0,0,0
+_2292:
+	.db	5,6,7,0,5,2
+	.dl	_103
+	.db	3,150,1,1,5,12,9
+	.dw	_1011-_103
+	.db	3,2,1,5,6,9
+	.dw	_2293-_1011
+	.db	3,126,1,5,12,9
+	.dw	_1148-_2293
+	.db	3,2,1,5,10,9
+	.dw	_1146-_1148
+	.db	1,5,43,7,9
+	.dw	_421-_1146
+	.db	3,4,1,5,24,9
+	.dw	_2294-_421
+	.db	1,5,11,9
+	.dw	_2295-_2294
+	.db	3,2,1,5,5,9
+	.dw	_2296-_2295
+	.db	1,5,29,7,9
+	.dw	_2297-_2296
+	.db	3,2,1,5,25,9
+	.dw	_2298-_2297
+	.db	1,5,29,9
+	.dw	_1150-_2298
+	.db	1,5,25,9
+	.dw	_1151-_1150
+	.db	1,5,9,9
+	.dw	_2299-_1151
+	.db	1,5,35,9
+	.dw	_423-_2299
+	.db	3,2,1,5,44,9
+	.dw	_2300-_423
+	.db	1,5,35,9
+	.dw	_2301-_2300
+	.db	3,1,1,5,31,9
+	.dw	_2302-_2301
+	.db	3,127,1,5,35,9
+	.dw	_1152-_2302
+	.db	3,1,1,5,46,9
+	.dw	_2303-_1152
+	.db	1,5,32,9
+	.dw	_2304-_2303
+	.db	3,2,1,5,31,9
+	.dw	_2305-_2304
+	.db	3,126,1,5,32,9
+	.dw	_1153-_2305
+	.db	3,2,1,5,17,9
+	.dw	_2306-_1153
+	.db	1,5,75,9
+	.dw	_2307-_2306
+	.db	1,5,38,9
+	.dw	_20-_2307
+	.db	3,1,1,5,32,9
+	.dw	_21-_20
+	.db	3,2,1,5,13,9
+	.dw	_2308-_21
+	.db	1,5,38,9
+	.dw	_2309-_2308
+	.db	3,1,1,5,32,9
+	.dw	_22-_2309
+	.db	3,3,1,5,17,9
+	.dw	_2310-_22
+	.db	1,5,79,9
+	.dw	_2311-_2310
+	.db	1,5,40,9
+	.dw	_23-_2311
+	.db	3,1,1,5,32,9
+	.dw	_24-_23
+	.db	3,2,1,5,13,9
+	.dw	_2312-_24
+	.db	1,5,40,9
+	.dw	_2313-_2312
+	.db	3,1,1,5,13,9
+	.dw	_424-_2313
+	.db	3,127,1,5,12,9
+	.dw	_18-_424
+	.db	3,10,1,5,29,9
+	.dw	_2314-_18
+	.db	3,2,1,5,25,9
+	.dw	_2315-_2314
+	.db	1,5,29,9
+	.dw	_1155-_2315
+	.db	1,5,25,9
+	.dw	_1156-_1155
+	.db	1,5,9,9
+	.dw	_2316-_1156
+	.db	1,5,35,9
+	.dw	_427-_2316
+	.db	3,2,1,5,44,9
+	.dw	_2317-_427
+	.db	1,5,32,9
+	.dw	_2318-_2317
+	.db	3,2,1,5,31,9
+	.dw	_2319-_2318
+	.db	3,126,1,5,32,9
+	.dw	_1157-_2319
+	.db	3,2,1,5,17,9
+	.dw	_2320-_1157
+	.db	1,5,75,9
+	.dw	_2321-_2320
+	.db	1,5,38,9
+	.dw	_29-_2321
+	.db	3,1,1,5,32,9
+	.dw	_30-_29
+	.db	3,2,1,5,13,9
+	.dw	_2322-_30
+	.db	1,5,38,9
+	.dw	_2323-_2322
+	.db	3,1,1,5,13,9
+	.dw	_428-_2323
+	.db	3,127,1,5,15,9
+	.dw	_19-_428
+	.db	3,6,1,9
+	.dw	_2324-_19
+	.db	3,1,1,5,34,9
+	.dw	_2325-_2324
+	.db	3,126,1,5,32,9
+	.dw	_2326-_2325
+	.db	1,5,30,9
+	.dw	_2327-_2326
+	.db	3,1,1,5,28,9
+	.dw	_2328-_2327
+	.db	1,5,42,9
+	.dw	_2329-_2328
+	.db	3,1,1,5,1,9
+	.dw	_17-_2329
+	.db	3,3,1,9
+	.dw	_317-_17
+	.db	0,1,1
+_2290:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'PedalSensor_calibrationCycle'
+_316:
+	.dl	-1,_103,0,_317-_103,0,0
+	; End of section
+
+	.debug		.debug_pubnames
+	.dl	47
+	.dw	2
+	.dl	_313,433,178
+	.db	'PedalSensor_calibrationCycle',0
+	.dl	0
+	; End of section
+
+	.debug		.debug_info, cluster 'PedalSensor_startCalibration'
+_318:
+	.dl	287
+	.dw	3
+	.dl	_319
+	.db	4,1
+	.db	'pedalSensors.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	12,1
+	.dl	_321,_320
+	.db	2
+	.dl	_294
+	.db	3
+	.db	'PedalSensor_startCalibration',0,1,207,1,6,6,1,1,1
+	.dl	_115,_322,_114
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.db	'me',0,1,207,1,48,2
+	.dl	_393,_430
+	.db	4
+	.db	'seconds',0,1,207,1,59,2
+	.dl	_394,_431
+	.db	5
+	.dl	_115,_322
+	.db	0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'PedalSensor_startCalibration'
+_319:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,5,11,0,17,1
+	.db	18,1,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'PedalSensor_startCalibration'
+_320:
+	.dl	_2331-_2330
+_2330:
+	.dw	3
+	.dl	_2333-_2332
+_2332:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'pedalSensors.c',0,0,0,0,0
+_2333:
+	.db	5,7,7,0,5,2
+	.dl	_115
+	.db	3,208,1,1,5,6,9
+	.dw	_2334-_115
+	.db	3,126,1,5,26,9
+	.dw	_1193-_2334
+	.db	3,2,1,5,24,9
+	.dw	_2335-_1193
+	.db	1,5,7,9
+	.dw	_2336-_2335
+	.db	3,1,1,9
+	.dw	_2337-_2336
+	.db	3,1,1,5,22,9
+	.dw	_2338-_2337
+	.db	3,127,1,5,20,9
+	.dw	_2339-_2338
+	.db	1,5,6,9
+	.dw	_2340-_2339
+	.db	3,125,1,5,55,9
+	.dw	_1330-_2340
+	.db	3,4,1,5,36,9
+	.dw	_1329-_1330
+	.db	1,5,7,9
+	.dw	_2341-_1329
+	.db	3,3,1,5,36,9
+	.dw	_2342-_2341
+	.db	3,125,1,5,28,9
+	.dw	_2343-_2342
+	.db	3,3,1,5,26,9
+	.dw	_2344-_2343
+	.db	1,5,28,9
+	.dw	_2345-_2344
+	.db	1,5,26,9
+	.dw	_2346-_2345
+	.db	1,5,7,9
+	.dw	_2347-_2346
+	.db	3,1,1,5,26,9
+	.dw	_2348-_2347
+	.db	1,5,7,9
+	.dw	_2349-_2348
+	.db	3,1,1,9
+	.dw	_2350-_2349
+	.db	3,1,1,5,28,9
+	.dw	_2351-_2350
+	.db	3,127,1,9
+	.dw	_2352-_2351
+	.db	3,1,1,5,1,9
+	.dw	_2353-_2352
+	.db	3,1,1,9
+	.dw	_322-_2353
+	.db	0,1,1
+_2331:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'PedalSensor_startCalibration'
+_321:
+	.dl	-1,_115,0,_322-_115,0,0
+	; End of section
+
+	.debug		.debug_pubnames
+	.dl	47
+	.dw	2
+	.dl	_318,291,178
+	.db	'PedalSensor_startCalibration',0
+	.dl	0
+	; End of section
+
+	.debug		.debug_info, cluster 'PedalSensor_resetCalibration'
+_323:
+	.dl	265
+	.dw	3
+	.dl	_324
+	.db	4,1
+	.db	'pedalSensors.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	12,1
+	.dl	_326,_325
+	.db	2
+	.dl	_294
+	.db	3
+	.db	'PedalSensor_resetCalibration',0,1,220,1,6,6,1,1,1
+	.dl	_127,_327,_126
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.db	'me',0,1,220,1,48,2
+	.dl	_393,_432
+	.db	5
+	.dl	_127,_327
+	.db	0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'PedalSensor_resetCalibration'
+_324:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,5,11,0,17,1
+	.db	18,1,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'PedalSensor_resetCalibration'
+_325:
+	.dl	_2355-_2354
+_2354:
+	.dw	3
+	.dl	_2357-_2356
+_2356:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'pedalSensors.c',0,0,0,0,0
+_2357:
+	.db	5,7,7,0,5,2
+	.dl	_127
+	.db	3,221,1,1,5,22,9
+	.dw	_2358-_127
+	.db	1,5,20,9
+	.dw	_2359-_2358
+	.db	1,5,7,9
+	.dw	_2360-_2359
+	.db	3,1,1,5,28,9
+	.dw	_2361-_2360
+	.db	3,1,1,5,24,9
+	.dw	_2362-_2361
+	.db	3,127,1,5,7,9
+	.dw	_2363-_2362
+	.db	3,1,1,5,26,9
+	.dw	_2364-_2363
+	.db	1,5,7,9
+	.dw	_2365-_2364
+	.db	3,1,1,5,26,9
+	.dw	_2366-_2365
+	.db	1,5,7,9
+	.dw	_2367-_2366
+	.db	3,1,1,9
+	.dw	_2368-_2367
+	.db	3,1,1,5,28,9
+	.dw	_2369-_2368
+	.db	3,127,1,9
+	.dw	_2370-_2369
+	.db	3,1,1,5,1,9
+	.dw	_2371-_2370
+	.db	3,1,1,7,9
+	.dw	_327-_2371
+	.db	0,1,1
+_2355:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'PedalSensor_resetCalibration'
+_326:
+	.dl	-1,_127,0,_327-_127,0,0
+	; End of section
+
+	.debug		.debug_pubnames
+	.dl	47
+	.dw	2
+	.dl	_323,269,178
+	.db	'PedalSensor_resetCalibration',0
+	.dl	0
+	; End of section
+
+	.debug		.debug_info, cluster 'PedalSensor_getPercent'
+_328:
+	.dl	263
+	.dw	3
+	.dl	_329
+	.db	4,1
+	.db	'pedalSensors.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	12,1
+	.dl	_331,_330
+	.db	2
+	.dl	_294
+	.db	3
+	.db	'PedalSensor_getPercent',0,1,234,1,8,6
+	.dl	_410
+	.db	1,1,1
+	.dl	_139,_332,_138
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.db	'me',0,1,234,1,44,2
+	.dl	_393,_433
+	.db	5
+	.dl	_139,_332
+	.db	0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'PedalSensor_getPercent'
+_329:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	73,16,54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,5,11,0
+	.db	17,1,18,1,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'PedalSensor_getPercent'
+_330:
+	.dl	_2373-_2372
+_2372:
+	.dw	3
+	.dl	_2375-_2374
+_2374:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'pedalSensors.c',0,0,0,0,0
+_2375:
+	.db	5,14,7,0,5,2
+	.dl	_139
+	.db	3,235,1,1,5,1,9
+	.dw	_2376-_139
+	.db	3,1,1,7,9
+	.dw	_332-_2376
+	.db	0,1,1
+_2373:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'PedalSensor_getPercent'
+_331:
+	.dl	-1,_139,0,_332-_139,0,0
+	; End of section
+
+	.debug		.debug_pubnames
+	.dl	41
+	.dw	2
+	.dl	_328,267,178
+	.db	'PedalSensor_getPercent',0
+	.dl	0
+	; End of section
+
+	.debug		.debug_info, cluster 'PedalSensor_getBrakesOn'
+_333:
+	.dl	264
+	.dw	3
+	.dl	_334
+	.db	4,1
+	.db	'pedalSensors.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	12,1
+	.dl	_336,_335
+	.db	2
+	.dl	_294
+	.db	3
+	.db	'PedalSensor_getBrakesOn',0,1,239,1,6,6
+	.dl	_394
+	.db	1,1,1
+	.dl	_151,_337,_150
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.db	'me',0,1,239,1,43,2
+	.dl	_393,_434
+	.db	5
+	.dl	_151,_337
+	.db	0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'PedalSensor_getBrakesOn'
+_334:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	73,16,54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,5,11,0
+	.db	17,1,18,1,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'PedalSensor_getBrakesOn'
+_335:
+	.dl	_2378-_2377
+_2377:
+	.dw	3
+	.dl	_2380-_2379
+_2379:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'pedalSensors.c',0,0,0,0,0
+_2380:
+	.db	5,14,7,0,5,2
+	.dl	_151
+	.db	3,240,1,1,5,1,9
+	.dw	_2381-_151
+	.db	3,1,1,7,9
+	.dw	_337-_2381
+	.db	0,1,1
+_2378:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'PedalSensor_getBrakesOn'
+_336:
+	.dl	-1,_151,0,_337-_151,0,0
+	; End of section
+
+	.debug		.debug_pubnames
+	.dl	42
+	.dw	2
+	.dl	_333,268,178
+	.db	'PedalSensor_getBrakesOn',0
+	.dl	0
+	; End of section
+
+	.debug		.debug_info, cluster 'PedalSensor_getCalibrated'
+_338:
+	.dl	266
+	.dw	3
+	.dl	_339
+	.db	4,1
+	.db	'pedalSensors.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	12,1
+	.dl	_341,_340
+	.db	2
+	.dl	_294
+	.db	3
+	.db	'PedalSensor_getCalibrated',0,1,244,1,6,6
+	.dl	_394
+	.db	1,1,1
+	.dl	_163,_342,_162
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.db	'me',0,1,244,1,45,2
+	.dl	_393,_435
+	.db	5
+	.dl	_163,_342
+	.db	0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'PedalSensor_getCalibrated'
+_339:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	73,16,54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,5,11,0
+	.db	17,1,18,1,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'PedalSensor_getCalibrated'
+_340:
+	.dl	_2383-_2382
+_2382:
+	.dw	3
+	.dl	_2385-_2384
+_2384:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'pedalSensors.c',0,0,0,0,0
+_2385:
+	.db	5,14,7,0,5,2
+	.dl	_163
+	.db	3,245,1,1,5,1,9
+	.dw	_2386-_163
+	.db	3,1,1,7,9
+	.dw	_342-_2386
+	.db	0,1,1
+_2383:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'PedalSensor_getCalibrated'
+_341:
+	.dl	-1,_163,0,_342-_163,0,0
+	; End of section
+
+	.debug		.debug_pubnames
+	.dl	44
+	.dw	2
+	.dl	_338,270,178
+	.db	'PedalSensor_getCalibrated',0
+	.dl	0
+	; End of section
+
+	.debug		.debug_info, cluster 'PedalSensor_getIndividualSensorPercent'
+_343:
+	.dl	373
+	.dw	3
+	.dl	_344
+	.db	4,1
+	.db	'pedalSensors.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	12,1
+	.dl	_346,_345
+	.db	2
+	.dl	_294
+	.db	3
+	.db	'PedalSensor_getIndividualSensorPercent',0,1,250,1,8,6
+	.dl	_410
+	.db	1,1,1
+	.dl	_175,_347,_174
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.db	'me',0,1,250,1,60,2
+	.dl	_393,_436
+	.db	4
+	.db	'sensorNumber',0,1,250,1,71,2
+	.dl	_394,_437
+	.db	5
+	.dl	_175,_347
+	.db	5
+	.dl	_438,_38
+	.db	6
+	.db	'rawValue',0,1,255,1,20,2
+	.dl	_414,_439
+	.db	0,5
+	.dl	_440,_36
+	.db	6
+	.db	'rawValue',0,1,134,2,20,2
+	.dl	_414,_441
+	.db	0,0,0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'PedalSensor_getIndividualSensorPercent'
+_344:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	73,16,54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,5,11,1
+	.db	17,1,18,1,0,0,6,52,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'PedalSensor_getIndividualSensorPercent'
+_345:
+	.dl	_2388-_2387
+_2387:
+	.dw	3
+	.dl	_2390-_2389
+_2389:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'pedalSensors.c',0,0,0,0,0
+_2390:
+	.db	5,8,7,0,5,2
+	.dl	_175
+	.db	3,249,1,1,5,11,9
+	.dw	_1379-_175
+	.db	3,2,1,5,9,9
+	.dw	_2391-_1379
+	.db	1,5,41,7,9
+	.dw	_2392-_2391
+	.db	1,5,9,9
+	.dw	_2393-_2392
+	.db	3,1,1,5,33,9
+	.dw	_438-_2393
+	.db	3,2,1,5,29,9
+	.dw	_2394-_438
+	.db	1,5,19,9
+	.dw	_1552-_2394
+	.db	3,1,1,5,13,9
+	.dw	_2395-_1552
+	.db	1,5,30,7,9
+	.dw	_2396-_2395
+	.db	3,1,1,5,49,9
+	.dw	_2397-_2396
+	.db	1,5,43,9
+	.dw	_39-_2397
+	.db	3,2,1,5,65,9
+	.dw	_2398-_39
+	.db	1,5,43,9
+	.dw	_2399-_2398
+	.db	1,5,65,9
+	.dw	_2400-_2399
+	.db	1,5,85,9
+	.dw	_2401-_2400
+	.db	1,5,30,9
+	.dw	_2402-_2401
+	.db	1,5,13,9
+	.dw	_2403-_2402
+	.db	1,5,16,9
+	.dw	_38-_2403
+	.db	3,1,1,5,33,9
+	.dw	_440-_38
+	.db	3,2,1,5,29,9
+	.dw	_2404-_440
+	.db	1,5,19,9
+	.dw	_1556-_2404
+	.db	3,1,1,5,13,9
+	.dw	_2405-_1556
+	.db	1,5,30,7,9
+	.dw	_2406-_2405
+	.db	3,1,1,5,51,9
+	.dw	_2407-_2406
+	.db	1,5,43,9
+	.dw	_42-_2407
+	.db	3,2,1,5,67,9
+	.dw	_2408-_42
+	.db	1,5,43,9
+	.dw	_2409-_2408
+	.db	1,5,67,9
+	.dw	_2410-_2409
+	.db	1,5,89,9
+	.dw	_2411-_2410
+	.db	1,5,30,9
+	.dw	_2412-_2411
+	.db	1,5,13,9
+	.dw	_2413-_2412
+	.db	1,5,5,9
+	.dw	_36-_2413
+	.db	3,3,1,5,1,9
+	.dw	_40-_36
+	.db	3,1,1,9
+	.dw	_347-_40
+	.db	0,1,1
+_2388:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'PedalSensor_getIndividualSensorPercent'
+_346:
+	.dl	-1,_175,0,_347-_175,0,0
+	; End of section
+
+	.debug		.debug_pubnames
+	.dl	57
+	.dw	2
+	.dl	_343,377,178
+	.db	'PedalSensor_getIndividualSensorPercent',0
+	.dl	0
+	; End of section
+
+	.debug		.debug_info, cluster 'PedalSensor_getTravelPercent'
+_348:
+	.dl	269
+	.dw	3
+	.dl	_349
+	.db	4,1
+	.db	'pedalSensors.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	12,1
+	.dl	_351,_350
+	.db	2
+	.dl	_294
+	.db	3
+	.db	'PedalSensor_getTravelPercent',0,1,144,2,8,6
+	.dl	_410
+	.db	1,1,1
+	.dl	_187,_352,_186
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.db	'me',0,1,144,2,50,2
+	.dl	_393,_442
+	.db	5
+	.dl	_187,_352
+	.db	0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'PedalSensor_getTravelPercent'
+_349:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	73,16,54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,5,11,0
+	.db	17,1,18,1,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'PedalSensor_getTravelPercent'
+_350:
+	.dl	_2415-_2414
+_2414:
+	.dw	3
+	.dl	_2417-_2416
+_2416:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'pedalSensors.c',0,0,0,0,0
+_2417:
+	.db	5,14,7,0,5,2
+	.dl	_187
+	.db	3,145,2,1,5,1,9
+	.dw	_2418-_187
+	.db	3,1,1,7,9
+	.dw	_352-_2418
+	.db	0,1,1
+_2415:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'PedalSensor_getTravelPercent'
+_351:
+	.dl	-1,_187,0,_352-_187,0,0
+	; End of section
+
+	.debug		.debug_pubnames
+	.dl	47
+	.dw	2
+	.dl	_348,273,178
+	.db	'PedalSensor_getTravelPercent',0
+	.dl	0
+	; End of section
+
+	.debug		.debug_info, cluster 'PedalSensor_getCalibMinPrimary'
+_353:
+	.dl	271
+	.dw	3
+	.dl	_354
+	.db	4,1
+	.db	'pedalSensors.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	12,1
+	.dl	_356,_355
+	.db	2
+	.dl	_294
+	.db	3
+	.db	'PedalSensor_getCalibMinPrimary',0,1,149,2,8,6
+	.dl	_414
+	.db	1,1,1
+	.dl	_199,_357,_198
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.db	'me',0,1,149,2,52,2
+	.dl	_393,_443
+	.db	5
+	.dl	_199,_357
+	.db	0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'PedalSensor_getCalibMinPrimary'
+_354:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	73,16,54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,5,11,0
+	.db	17,1,18,1,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'PedalSensor_getCalibMinPrimary'
+_355:
+	.dl	_2420-_2419
+_2419:
+	.dw	3
+	.dl	_2422-_2421
+_2421:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'pedalSensors.c',0,0,0,0,0
+_2422:
+	.db	5,14,7,0,5,2
+	.dl	_199
+	.db	3,150,2,1,5,1,9
+	.dw	_2423-_199
+	.db	3,1,1,7,9
+	.dw	_357-_2423
+	.db	0,1,1
+_2420:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'PedalSensor_getCalibMinPrimary'
+_356:
+	.dl	-1,_199,0,_357-_199,0,0
+	; End of section
+
+	.debug		.debug_pubnames
+	.dl	49
+	.dw	2
+	.dl	_353,275,178
+	.db	'PedalSensor_getCalibMinPrimary',0
+	.dl	0
+	; End of section
+
+	.debug		.debug_info, cluster 'PedalSensor_getCalibMaxPrimary'
+_358:
+	.dl	271
+	.dw	3
+	.dl	_359
+	.db	4,1
+	.db	'pedalSensors.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	12,1
+	.dl	_361,_360
+	.db	2
+	.dl	_294
+	.db	3
+	.db	'PedalSensor_getCalibMaxPrimary',0,1,154,2,8,6
+	.dl	_414
+	.db	1,1,1
+	.dl	_211,_362,_210
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.db	'me',0,1,154,2,52,2
+	.dl	_393,_444
+	.db	5
+	.dl	_211,_362
+	.db	0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'PedalSensor_getCalibMaxPrimary'
+_359:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	73,16,54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,5,11,0
+	.db	17,1,18,1,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'PedalSensor_getCalibMaxPrimary'
+_360:
+	.dl	_2425-_2424
+_2424:
+	.dw	3
+	.dl	_2427-_2426
+_2426:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'pedalSensors.c',0,0,0,0,0
+_2427:
+	.db	5,14,7,0,5,2
+	.dl	_211
+	.db	3,155,2,1,5,1,9
+	.dw	_2428-_211
+	.db	3,1,1,7,9
+	.dw	_362-_2428
+	.db	0,1,1
+_2425:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'PedalSensor_getCalibMaxPrimary'
+_361:
+	.dl	-1,_211,0,_362-_211,0,0
+	; End of section
+
+	.debug		.debug_pubnames
+	.dl	49
+	.dw	2
+	.dl	_358,275,178
+	.db	'PedalSensor_getCalibMaxPrimary',0
+	.dl	0
+	; End of section
+
+	.debug		.debug_info, cluster 'PedalSensor_getCalibMinSecondary'
+_363:
+	.dl	273
+	.dw	3
+	.dl	_364
+	.db	4,1
+	.db	'pedalSensors.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	12,1
+	.dl	_366,_365
+	.db	2
+	.dl	_294
+	.db	3
+	.db	'PedalSensor_getCalibMinSecondary',0,1,159,2,8,6
+	.dl	_414
+	.db	1,1,1
+	.dl	_223,_367,_222
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.db	'me',0,1,159,2,54,2
+	.dl	_393,_445
+	.db	5
+	.dl	_223,_367
+	.db	0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'PedalSensor_getCalibMinSecondary'
+_364:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	73,16,54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,5,11,0
+	.db	17,1,18,1,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'PedalSensor_getCalibMinSecondary'
+_365:
+	.dl	_2430-_2429
+_2429:
+	.dw	3
+	.dl	_2432-_2431
+_2431:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'pedalSensors.c',0,0,0,0,0
+_2432:
+	.db	5,14,7,0,5,2
+	.dl	_223
+	.db	3,160,2,1,5,1,9
+	.dw	_2433-_223
+	.db	3,1,1,7,9
+	.dw	_367-_2433
+	.db	0,1,1
+_2430:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'PedalSensor_getCalibMinSecondary'
+_366:
+	.dl	-1,_223,0,_367-_223,0,0
+	; End of section
+
+	.debug		.debug_pubnames
+	.dl	51
+	.dw	2
+	.dl	_363,277,178
+	.db	'PedalSensor_getCalibMinSecondary',0
+	.dl	0
+	; End of section
+
+	.debug		.debug_info, cluster 'PedalSensor_getCalibMaxSecondary'
+_368:
+	.dl	273
+	.dw	3
+	.dl	_369
+	.db	4,1
+	.db	'pedalSensors.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	12,1
+	.dl	_371,_370
+	.db	2
+	.dl	_294
+	.db	3
+	.db	'PedalSensor_getCalibMaxSecondary',0,1,164,2,8,6
+	.dl	_414
+	.db	1,1,1
+	.dl	_235,_372,_234
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.db	'me',0,1,164,2,54,2
+	.dl	_393,_446
+	.db	5
+	.dl	_235,_372
+	.db	0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'PedalSensor_getCalibMaxSecondary'
+_369:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	73,16,54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,5,11,0
+	.db	17,1,18,1,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'PedalSensor_getCalibMaxSecondary'
+_370:
+	.dl	_2435-_2434
+_2434:
+	.dw	3
+	.dl	_2437-_2436
+_2436:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'pedalSensors.c',0,0,0,0,0
+_2437:
+	.db	5,14,7,0,5,2
+	.dl	_235
+	.db	3,165,2,1,5,1,9
+	.dw	_2438-_235
+	.db	3,1,1,7,9
+	.dw	_372-_2438
+	.db	0,1,1
+_2435:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'PedalSensor_getCalibMaxSecondary'
+_371:
+	.dl	-1,_235,0,_372-_235,0,0
+	; End of section
+
+	.debug		.debug_pubnames
+	.dl	51
+	.dw	2
+	.dl	_368,277,178
+	.db	'PedalSensor_getCalibMaxSecondary',0
+	.dl	0
+	; End of section
+
+	.debug		.debug_info, cluster 'PedalSensor_getSensorValuePrimary'
+_373:
+	.dl	274
+	.dw	3
+	.dl	_374
+	.db	4,1
+	.db	'pedalSensors.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	12,1
+	.dl	_376,_375
+	.db	2
+	.dl	_294
+	.db	3
+	.db	'PedalSensor_getSensorValuePrimary',0,1,169,2,8,6
+	.dl	_414
+	.db	1,1,1
+	.dl	_247,_377,_246
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.db	'me',0,1,169,2,55,2
+	.dl	_393,_447
+	.db	5
+	.dl	_247,_377
+	.db	0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'PedalSensor_getSensorValuePrimary'
+_374:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	73,16,54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,5,11,0
+	.db	17,1,18,1,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'PedalSensor_getSensorValuePrimary'
+_375:
+	.dl	_2440-_2439
+_2439:
+	.dw	3
+	.dl	_2442-_2441
+_2441:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'pedalSensors.c',0,0,0,0,0
+_2442:
+	.db	5,14,7,0,5,2
+	.dl	_247
+	.db	3,170,2,1,5,1,9
+	.dw	_2443-_247
+	.db	3,1,1,7,9
+	.dw	_377-_2443
+	.db	0,1,1
+_2440:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'PedalSensor_getSensorValuePrimary'
+_376:
+	.dl	-1,_247,0,_377-_247,0,0
+	; End of section
+
+	.debug		.debug_pubnames
+	.dl	52
+	.dw	2
+	.dl	_373,278,178
+	.db	'PedalSensor_getSensorValuePrimary',0
+	.dl	0
+	; End of section
+
+	.debug		.debug_info, cluster 'PedalSensor_getSensorValueSecondary'
+_378:
+	.dl	276
+	.dw	3
+	.dl	_379
+	.db	4,1
+	.db	'pedalSensors.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	12,1
+	.dl	_381,_380
+	.db	2
+	.dl	_294
+	.db	3
+	.db	'PedalSensor_getSensorValueSecondary',0,1,174,2,8,6
+	.dl	_414
+	.db	1,1,1
+	.dl	_259,_382,_258
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.db	'me',0,1,174,2,57,2
+	.dl	_393,_448
+	.db	5
+	.dl	_259,_382
+	.db	0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'PedalSensor_getSensorValueSecondary'
+_379:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	73,16,54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,5,11,0
+	.db	17,1,18,1,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'PedalSensor_getSensorValueSecondary'
+_380:
+	.dl	_2445-_2444
+_2444:
+	.dw	3
+	.dl	_2447-_2446
+_2446:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'pedalSensors.c',0,0,0,0,0
+_2447:
+	.db	5,14,7,0,5,2
+	.dl	_259
+	.db	3,175,2,1,5,1,9
+	.dw	_2448-_259
+	.db	3,1,1,7,9
+	.dw	_382-_2448
+	.db	0,1,1
+_2445:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'PedalSensor_getSensorValueSecondary'
+_381:
+	.dl	-1,_259,0,_382-_259,0,0
+	; End of section
+
+	.debug		.debug_pubnames
+	.dl	54
+	.dw	2
+	.dl	_378,280,178
+	.db	'PedalSensor_getSensorValueSecondary',0
+	.dl	0
+	; End of section
+
+	.debug		.debug_info, cluster 'PedalSensor_checkImplausibility'
+_383:
+	.dl	360
+	.dw	3
+	.dl	_384
+	.db	4,1
+	.db	'pedalSensors.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	12,1
+	.dl	_386,_385
+	.db	2
+	.dl	_294
+	.db	3
+	.db	'PedalSensor_checkImplausibility',0,1,183,2,6,6
+	.dl	_394
+	.db	1,1,1
+	.dl	_271,_387,_270
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.db	'me',0,1,183,2,51,2
+	.dl	_393,_449
+	.db	5
+	.dl	_271,_387
+	.db	5
+	.dl	_450,_52
+	.db	6
+	.db	'tps0_percent',0,1,187,2,16,2
+	.dl	_410,_451
+	.db	6
+	.db	'tps1_percent',0,1,188,2,16,2
+	.dl	_410,_452
+	.db	6
+	.db	'rawValue',0,1,190,2,16,2
+	.dl	_414,_453
+	.db	0,0,0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'PedalSensor_checkImplausibility'
+_384:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	73,16,54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,5,11,1
+	.db	17,1,18,1,0,0,6,52,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'PedalSensor_checkImplausibility'
+_385:
+	.dl	_2450-_2449
+_2449:
+	.dw	3
+	.dl	_2452-_2451
+_2451:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'pedalSensors.c',0,0,0,0,0
+_2452:
+	.db	5,6,7,0,5,2
+	.dl	_271
+	.db	3,182,2,1,5,11,9
+	.dw	_1989-_271
+	.db	3,2,1,5,9,9
+	.dw	_2453-_1989
+	.db	1,5,41,7,9
+	.dw	_2454-_2453
+	.db	1,5,29,9
+	.dw	_450-_2454
+	.db	3,5,1,5,25,9
+	.dw	_2455-_450
+	.db	1,5,15,9
+	.dw	_1990-_2455
+	.db	3,1,1,5,9,9
+	.dw	_2456-_1990
+	.db	1,5,26,7,9
+	.dw	_2457-_2456
+	.db	3,1,1,5,45,9
+	.dw	_2458-_2457
+	.db	1,5,47,9
+	.dw	_54-_2458
+	.db	3,2,1,5,69,9
+	.dw	_2459-_54
+	.db	1,5,47,9
+	.dw	_2460-_2459
+	.db	1,5,69,9
+	.dw	_2461-_2460
+	.db	1,5,47,9
+	.dw	_2462-_2461
+	.db	1,5,69,9
+	.dw	_2463-_2462
+	.db	1,5,89,9
+	.dw	_2464-_2463
+	.db	1,5,22,9
+	.dw	_2465-_2464
+	.db	3,2,1,5,34,9
+	.dw	_2466-_2465
+	.db	3,126,1,5,18,9
+	.dw	_2467-_2466
+	.db	3,2,1,5,22,9
+	.dw	_2468-_2467
+	.db	3,126,1,5,18,9
+	.dw	_2469-_2468
+	.db	3,2,1,5,15,9
+	.dw	_2470-_2469
+	.db	3,1,1,5,22,9
+	.dw	_2471-_2470
+	.db	3,125,1,5,15,9
+	.dw	_1991-_2471
+	.db	3,3,1,5,9,9
+	.dw	_2472-_1991
+	.db	1,5,26,7,9
+	.dw	_2473-_2472
+	.db	3,1,1,5,47,9
+	.dw	_2474-_2473
+	.db	1,9
+	.dw	_55-_2474
+	.db	3,2,1,5,71,9
+	.dw	_2475-_55
+	.db	1,5,47,9
+	.dw	_2476-_2475
+	.db	1,5,71,9
+	.dw	_2477-_2476
+	.db	1,5,93,9
+	.dw	_2478-_2477
+	.db	1,5,34,9
+	.dw	_2479-_2478
+	.db	1,5,36,9
+	.dw	_2480-_2479
+	.db	3,3,1,5,22,9
+	.dw	_2481-_2480
+	.db	1,5,54,9
+	.dw	_2482-_2481
+	.db	1,5,52,9
+	.dw	_2483-_2482
+	.db	1,5,9,9
+	.dw	_2484-_2483
+	.db	1,5,5,9
+	.dw	_52-_2484
+	.db	3,3,1,5,1,9
+	.dw	_56-_52
+	.db	3,1,1,9
+	.dw	_387-_56
+	.db	0,1,1
+_2450:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'PedalSensor_checkImplausibility'
+_386:
+	.dl	-1,_271,0,_387-_271,0,0
+	; End of section
+
+	.debug		.debug_pubnames
+	.dl	50
+	.dw	2
+	.dl	_383,364,178
+	.db	'PedalSensor_checkImplausibility',0
+	.dl	0
+	; End of section
+
+	.debug		.debug_info, cluster 'PedalSensor_checkRange'
+_388:
+	.dl	263
+	.dw	3
+	.dl	_389
+	.db	4,1
+	.db	'pedalSensors.c',0
+	.db	'TASKING VX-toolset for C166: C compiler',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	12,1
+	.dl	_391,_390
+	.db	2
+	.dl	_294
+	.db	3
+	.db	'PedalSensor_checkRange',0,1,209,2,6,6
+	.dl	_394
+	.db	1,1,1
+	.dl	_283,_392,_282
+	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
+	.db	'me',0,1,209,2,42,2
+	.dl	_393,_454
+	.db	5
+	.dl	_283,_392
+	.db	0,0
+	; End of section
+
+	.debug		.debug_abbrev, cluster 'PedalSensor_checkRange'
+_389:
+	.db	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,51,15
+	.db	73,16,54,15,39,12,63,12,17,1,18,1,64,6,42,9,0,0,4,5,0,3,8,58,15,59,15,57,15,51,15,73,16,2,6,0,0,5,11,0
+	.db	17,1,18,1,0,0,0
+	; End of section
+
+	.debug		.debug_line, cluster 'PedalSensor_checkRange'
+_390:
+	.dl	_2486-_2485
+_2485:
+	.dw	3
+	.dl	_2488-_2487
+_2487:
+	.db	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.db	'pedalSensors.c',0,0,0,0,0
+_2488:
+	.db	5,6,7,0,5,2
+	.dl	_283
+	.db	3,208,2,1,5,11,9
+	.dw	_2077-_283
+	.db	3,3,1,5,6,9
+	.dw	_2489-_2077
+	.db	3,125,1,5,11,9
+	.dw	_2003-_2489
+	.db	3,3,1,5,9,9
+	.dw	_2490-_2003
+	.db	1,5,35,9
+	.dw	_2491-_2490
+	.db	1,5,62,9
+	.dw	_2492-_2491
+	.db	1,5,49,9
+	.dw	_2493-_2492
+	.db	1,5,20,9
+	.dw	_58-_2493
+	.db	3,1,1,5,47,9
+	.dw	_2494-_58
+	.db	1,5,20,9
+	.dw	_2495-_2494
+	.db	1,5,47,9
+	.dw	_2496-_2495
+	.db	1,5,34,9
+	.dw	_2497-_2496
+	.db	1,5,11,9
+	.dw	_2498-_2497
+	.db	3,4,1,5,9,9
+	.dw	_2499-_2498
+	.db	1,5,39,9
+	.dw	_2500-_2499
+	.db	1,5,68,9
+	.dw	_2501-_2500
+	.db	1,5,53,9
+	.dw	_2502-_2501
+	.db	1,5,22,9
+	.dw	_61-_2502
+	.db	3,1,1,5,51,9
+	.dw	_2503-_61
+	.db	1,5,22,9
+	.dw	_2504-_2503
+	.db	1,5,51,9
+	.dw	_2505-_2504
+	.db	1,5,36,9
+	.dw	_2506-_2505
+	.db	1,5,9,9
+	.dw	_59-_2506
+	.db	3,1,1,5,5,9
+	.dw	_63-_59
+	.db	3,3,1,5,1,9
+	.dw	_64-_63
+	.db	3,1,1,9
+	.dw	_392-_64
+	.db	0,1,1
+_2486:
+	; End of section
+
+	.debug		.debug_ranges, cluster 'PedalSensor_checkRange'
+_391:
+	.dl	-1,_283,0,_392-_283,0,0
+	; End of section
+
+	.debug		.debug_pubnames
+	.dl	41
+	.dw	2
+	.dl	_388,267,178
+	.db	'PedalSensor_checkRange',0
+	.dl	0
+	; End of section
+
+	.debug		.debug_loc, cluster 'PedalSensor_calibrationCycle'
+_102:
+	.dl	-1,_103,0,_978-_103
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_104-_108
+_108:
+	.db	146,177,2,0,47
+	.dw	_107-_109
+_109:
+_104:
+	.db	18,49,46,40
+	.dw	_105-_110
+_110:
+	.db	146,178,2,0,47
+	.dw	_107-_111
+_111:
+_105:
+	.db	18,50,46,40
+	.dw	_106-_112
+_112:
+	.db	146,179,2,0,47
+	.dw	_107-_113
+_113:
+_106:
+	.db	146,180,2,0
+_107:
+	.db	22,19,62,36,33
+	.dl	_978-_103,_989-_103
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_979-_983
+_983:
+	.db	146,177,2,0,47
+	.dw	_982-_984
+_984:
+_979:
+	.db	18,49,46,40
+	.dw	_980-_985
+_985:
+	.db	146,178,2,0,47
+	.dw	_982-_986
+_986:
+_980:
+	.db	18,50,46,40
+	.dw	_981-_987
+_987:
+	.db	146,179,2,0,47
+	.dw	_982-_988
+_988:
+_981:
+	.db	146,180,2,0
+_982:
+	.db	22,19,62,36,33,50,34
+	.dl	_989-_103,_1000-_103
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_990-_994
+_994:
+	.db	146,177,2,0,47
+	.dw	_993-_995
+_995:
+_990:
+	.db	18,49,46,40
+	.dw	_991-_996
+_996:
+	.db	146,178,2,0,47
+	.dw	_993-_997
+_997:
+_991:
+	.db	18,50,46,40
+	.dw	_992-_998
+_998:
+	.db	146,179,2,0,47
+	.dw	_993-_999
+_999:
+_992:
+	.db	146,180,2,0
+_993:
+	.db	22,19,62,36,33,52,34
+	.dl	_1000-_103,_1011-_103
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1001-_1005
+_1005:
+	.db	146,177,2,0,47
+	.dw	_1004-_1006
+_1006:
+_1001:
+	.db	18,49,46,40
+	.dw	_1002-_1007
+_1007:
+	.db	146,178,2,0,47
+	.dw	_1004-_1008
+_1008:
+_1002:
+	.db	18,50,46,40
+	.dw	_1003-_1009
+_1009:
+	.db	146,179,2,0,47
+	.dw	_1004-_1010
+_1010:
+_1003:
+	.db	146,180,2,0
+_1004:
+	.db	22,19,62,36,33,54,34
+	.dl	_1011-_103,_1022-_103
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1012-_1016
+_1016:
+	.db	146,177,2,0,47
+	.dw	_1015-_1017
+_1017:
+_1012:
+	.db	18,49,46,40
+	.dw	_1013-_1018
+_1018:
+	.db	146,178,2,0,47
+	.dw	_1015-_1019
+_1019:
+_1013:
+	.db	18,50,46,40
+	.dw	_1014-_1020
+_1020:
+	.db	146,179,2,0,47
+	.dw	_1015-_1021
+_1021:
+_1014:
+	.db	146,180,2,0
+_1015:
+	.db	22,19,62,36,33,56,34
+	.dl	_1022-_103,_1033-_103
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1023-_1027
+_1027:
+	.db	146,177,2,0,47
+	.dw	_1026-_1028
+_1028:
+_1023:
+	.db	18,49,46,40
+	.dw	_1024-_1029
+_1029:
+	.db	146,178,2,0,47
+	.dw	_1026-_1030
+_1030:
+_1024:
+	.db	18,50,46,40
+	.dw	_1025-_1031
+_1031:
+	.db	146,179,2,0,47
+	.dw	_1026-_1032
+_1032:
+_1025:
+	.db	146,180,2,0
+_1026:
+	.db	22,19,62,36,33,54,34
+	.dl	_1033-_103,_1044-_103
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1034-_1038
+_1038:
+	.db	146,177,2,0,47
+	.dw	_1037-_1039
+_1039:
+_1034:
+	.db	18,49,46,40
+	.dw	_1035-_1040
+_1040:
+	.db	146,178,2,0,47
+	.dw	_1037-_1041
+_1041:
+_1035:
+	.db	18,50,46,40
+	.dw	_1036-_1042
+_1042:
+	.db	146,179,2,0,47
+	.dw	_1037-_1043
+_1043:
+_1036:
+	.db	146,180,2,0
+_1037:
+	.db	22,19,62,36,33,52,34
+	.dl	_1044-_103,_1055-_103
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1045-_1049
+_1049:
+	.db	146,177,2,0,47
+	.dw	_1048-_1050
+_1050:
+_1045:
+	.db	18,49,46,40
+	.dw	_1046-_1051
+_1051:
+	.db	146,178,2,0,47
+	.dw	_1048-_1052
+_1052:
+_1046:
+	.db	18,50,46,40
+	.dw	_1047-_1053
+_1053:
+	.db	146,179,2,0,47
+	.dw	_1048-_1054
+_1054:
+_1047:
+	.db	146,180,2,0
+_1048:
+	.db	22,19,62,36,33,50,34
+	.dl	_1055-_103,_317-_103
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1056-_1060
+_1060:
+	.db	146,177,2,0,47
+	.dw	_1059-_1061
+_1061:
+_1056:
+	.db	18,49,46,40
+	.dw	_1057-_1062
+_1062:
+	.db	146,178,2,0,47
+	.dw	_1059-_1063
+_1063:
+_1057:
+	.db	18,50,46,40
+	.dw	_1058-_1064
+_1064:
+	.db	146,179,2,0,47
+	.dw	_1059-_1065
+_1065:
+_1058:
+	.db	146,180,2,0
+_1059:
+	.db	22,19,62,36,33
+	.dl	0,0
+_429:
+	.dl	-1,_103,_1157-_103,_19-_103
+	.dw	6
+	.db	85,147,2,82,147,2
+	.dl	0,0
+_420:
+	.dl	-1,_103,0,_1146-_103
+	.dw	6
+	.db	84,147,2,85,147,2
+	.dl	0,0
+_422:
+	.dl	-1,_103,_1150-_103,_1151-_103
+	.dw	6
+	.db	85,147,2,83,147,2
+	.dl	_1155-_103,_1156-_103
+	.dw	6
+	.db	85,147,2,83,147,2
+	.dl	_1159-_103,_17-_103
+	.dw	6
+	.db	85,147,2,83,147,2
+	.dl	0,0
+_418:
+	.dl	-1,_103,0,_1147-_103
+	.dw	6
+	.db	82,147,2,83,147,2
+	.dl	_1148-_103,_1149-_103
+	.dw	6
+	.db	88,147,2,89,147,2
+	.dl	_18-_103,_1154-_103
+	.dw	6
+	.db	88,147,2,89,147,2
+	.dl	_19-_103,_1158-_103
+	.dw	6
+	.db	88,147,2,89,147,2
+	.dl	0,0
+_425:
+	.dl	-1,_103,_1152-_103,_18-_103
+	.dw	6
+	.db	85,147,2,82,147,2
+	.dl	0,0
+_426:
+	.dl	-1,_103,_1153-_103,_18-_103
+	.dw	6
+	.db	83,147,2,90,147,2
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'PedalSensor_checkImplausibility'
+_270:
+	.dl	-1,_271,0,_1565-_271
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_272-_276
+_276:
+	.db	146,177,2,0,47
+	.dw	_275-_277
+_277:
+_272:
+	.db	18,49,46,40
+	.dw	_273-_278
+_278:
+	.db	146,178,2,0,47
+	.dw	_275-_279
+_279:
+_273:
+	.db	18,50,46,40
+	.dw	_274-_280
+_280:
+	.db	146,179,2,0,47
+	.dw	_275-_281
+_281:
+_274:
+	.db	146,180,2,0
+_275:
+	.db	22,19,62,36,33
+	.dl	_1565-_271,_1576-_271
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1566-_1570
+_1570:
+	.db	146,177,2,0,47
+	.dw	_1569-_1571
+_1571:
+_1566:
+	.db	18,49,46,40
+	.dw	_1567-_1572
+_1572:
+	.db	146,178,2,0,47
+	.dw	_1569-_1573
+_1573:
+_1567:
+	.db	18,50,46,40
+	.dw	_1568-_1574
+_1574:
+	.db	146,179,2,0,47
+	.dw	_1569-_1575
+_1575:
+_1568:
+	.db	146,180,2,0
+_1569:
+	.db	22,19,62,36,33,50,34
+	.dl	_1576-_271,_1587-_271
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1577-_1581
+_1581:
+	.db	146,177,2,0,47
+	.dw	_1580-_1582
+_1582:
+_1577:
+	.db	18,49,46,40
+	.dw	_1578-_1583
+_1583:
+	.db	146,178,2,0,47
+	.dw	_1580-_1584
+_1584:
+_1578:
+	.db	18,50,46,40
+	.dw	_1579-_1585
+_1585:
+	.db	146,179,2,0,47
+	.dw	_1580-_1586
+_1586:
+_1579:
+	.db	146,180,2,0
+_1580:
+	.db	22,19,62,36,33,52,34
+	.dl	_1587-_271,_1598-_271
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1588-_1592
+_1592:
+	.db	146,177,2,0,47
+	.dw	_1591-_1593
+_1593:
+_1588:
+	.db	18,49,46,40
+	.dw	_1589-_1594
+_1594:
+	.db	146,178,2,0,47
+	.dw	_1591-_1595
+_1595:
+_1589:
+	.db	18,50,46,40
+	.dw	_1590-_1596
+_1596:
+	.db	146,179,2,0,47
+	.dw	_1591-_1597
+_1597:
+_1590:
+	.db	146,180,2,0
+_1591:
+	.db	22,19,62,36,33,54,34
+	.dl	_1598-_271,_1609-_271
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1599-_1603
+_1603:
+	.db	146,177,2,0,47
+	.dw	_1602-_1604
+_1604:
+_1599:
+	.db	18,49,46,40
+	.dw	_1600-_1605
+_1605:
+	.db	146,178,2,0,47
+	.dw	_1602-_1606
+_1606:
+_1600:
+	.db	18,50,46,40
+	.dw	_1601-_1607
+_1607:
+	.db	146,179,2,0,47
+	.dw	_1602-_1608
+_1608:
+_1601:
+	.db	146,180,2,0
+_1602:
+	.db	22,19,62,36,33,56,34
+	.dl	_1609-_271,_1620-_271
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1610-_1614
+_1614:
+	.db	146,177,2,0,47
+	.dw	_1613-_1615
+_1615:
+_1610:
+	.db	18,49,46,40
+	.dw	_1611-_1616
+_1616:
+	.db	146,178,2,0,47
+	.dw	_1613-_1617
+_1617:
+_1611:
+	.db	18,50,46,40
+	.dw	_1612-_1618
+_1618:
+	.db	146,179,2,0,47
+	.dw	_1613-_1619
+_1619:
+_1612:
+	.db	146,180,2,0
+_1613:
+	.db	22,19,62,36,33,58,34
+	.dl	_1620-_271,_1631-_271
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1621-_1625
+_1625:
+	.db	146,177,2,0,47
+	.dw	_1624-_1626
+_1626:
+_1621:
+	.db	18,49,46,40
+	.dw	_1622-_1627
+_1627:
+	.db	146,178,2,0,47
+	.dw	_1624-_1628
+_1628:
+_1622:
+	.db	18,50,46,40
+	.dw	_1623-_1629
+_1629:
+	.db	146,179,2,0,47
+	.dw	_1624-_1630
+_1630:
+_1623:
+	.db	146,180,2,0
+_1624:
+	.db	22,19,62,36,33,60,34
+	.dl	_1631-_271,_1642-_271
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1632-_1636
+_1636:
+	.db	146,177,2,0,47
+	.dw	_1635-_1637
+_1637:
+_1632:
+	.db	18,49,46,40
+	.dw	_1633-_1638
+_1638:
+	.db	146,178,2,0,47
+	.dw	_1635-_1639
+_1639:
+_1633:
+	.db	18,50,46,40
+	.dw	_1634-_1640
+_1640:
+	.db	146,179,2,0,47
+	.dw	_1635-_1641
+_1641:
+_1634:
+	.db	146,180,2,0
+_1635:
+	.db	22,19,62,36,33,62,34
+	.dl	_1642-_271,_1653-_271
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1643-_1647
+_1647:
+	.db	146,177,2,0,47
+	.dw	_1646-_1648
+_1648:
+_1643:
+	.db	18,49,46,40
+	.dw	_1644-_1649
+_1649:
+	.db	146,178,2,0,47
+	.dw	_1646-_1650
+_1650:
+_1644:
+	.db	18,50,46,40
+	.dw	_1645-_1651
+_1651:
+	.db	146,179,2,0,47
+	.dw	_1646-_1652
+_1652:
+_1645:
+	.db	146,180,2,0
+_1646:
+	.db	22,19,62,36,33,64,34
+	.dl	_1653-_271,_1664-_271
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1654-_1658
+_1658:
+	.db	146,177,2,0,47
+	.dw	_1657-_1659
+_1659:
+_1654:
+	.db	18,49,46,40
+	.dw	_1655-_1660
+_1660:
+	.db	146,178,2,0,47
+	.dw	_1657-_1661
+_1661:
+_1655:
+	.db	18,50,46,40
+	.dw	_1656-_1662
+_1662:
+	.db	146,179,2,0,47
+	.dw	_1657-_1663
+_1663:
+_1656:
+	.db	146,180,2,0
+_1657:
+	.db	22,19,62,36,33,66,34
+	.dl	_1664-_271,_1675-_271
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1665-_1669
+_1669:
+	.db	146,177,2,0,47
+	.dw	_1668-_1670
+_1670:
+_1665:
+	.db	18,49,46,40
+	.dw	_1666-_1671
+_1671:
+	.db	146,178,2,0,47
+	.dw	_1668-_1672
+_1672:
+_1666:
+	.db	18,50,46,40
+	.dw	_1667-_1673
+_1673:
+	.db	146,179,2,0,47
+	.dw	_1668-_1674
+_1674:
+_1667:
+	.db	146,180,2,0
+_1668:
+	.db	22,19,62,36,33,68,34
+	.dl	_1675-_271,_1686-_271
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1676-_1680
+_1680:
+	.db	146,177,2,0,47
+	.dw	_1679-_1681
+_1681:
+_1676:
+	.db	18,49,46,40
+	.dw	_1677-_1682
+_1682:
+	.db	146,178,2,0,47
+	.dw	_1679-_1683
+_1683:
+_1677:
+	.db	18,50,46,40
+	.dw	_1678-_1684
+_1684:
+	.db	146,179,2,0,47
+	.dw	_1679-_1685
+_1685:
+_1678:
+	.db	146,180,2,0
+_1679:
+	.db	22,19,62,36,33,66,34
+	.dl	_1686-_271,_1697-_271
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1687-_1691
+_1691:
+	.db	146,177,2,0,47
+	.dw	_1690-_1692
+_1692:
+_1687:
+	.db	18,49,46,40
+	.dw	_1688-_1693
+_1693:
+	.db	146,178,2,0,47
+	.dw	_1690-_1694
+_1694:
+_1688:
+	.db	18,50,46,40
+	.dw	_1689-_1695
+_1695:
+	.db	146,179,2,0,47
+	.dw	_1690-_1696
+_1696:
+_1689:
+	.db	146,180,2,0
+_1690:
+	.db	22,19,62,36,33,64,34
+	.dl	_1697-_271,_1708-_271
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1698-_1702
+_1702:
+	.db	146,177,2,0,47
+	.dw	_1701-_1703
+_1703:
+_1698:
+	.db	18,49,46,40
+	.dw	_1699-_1704
+_1704:
+	.db	146,178,2,0,47
+	.dw	_1701-_1705
+_1705:
+_1699:
+	.db	18,50,46,40
+	.dw	_1700-_1706
+_1706:
+	.db	146,179,2,0,47
+	.dw	_1701-_1707
+_1707:
+_1700:
+	.db	146,180,2,0
+_1701:
+	.db	22,19,62,36,33,62,34
+	.dl	_1708-_271,_1719-_271
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1709-_1713
+_1713:
+	.db	146,177,2,0,47
+	.dw	_1712-_1714
+_1714:
+_1709:
+	.db	18,49,46,40
+	.dw	_1710-_1715
+_1715:
+	.db	146,178,2,0,47
+	.dw	_1712-_1716
+_1716:
+_1710:
+	.db	18,50,46,40
+	.dw	_1711-_1717
+_1717:
+	.db	146,179,2,0,47
+	.dw	_1712-_1718
+_1718:
+_1711:
+	.db	146,180,2,0
+_1712:
+	.db	22,19,62,36,33,60,34
+	.dl	_1719-_271,_1730-_271
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1720-_1724
+_1724:
+	.db	146,177,2,0,47
+	.dw	_1723-_1725
+_1725:
+_1720:
+	.db	18,49,46,40
+	.dw	_1721-_1726
+_1726:
+	.db	146,178,2,0,47
+	.dw	_1723-_1727
+_1727:
+_1721:
+	.db	18,50,46,40
+	.dw	_1722-_1728
+_1728:
+	.db	146,179,2,0,47
+	.dw	_1723-_1729
+_1729:
+_1722:
+	.db	146,180,2,0
+_1723:
+	.db	22,19,62,36,33,58,34
+	.dl	_1730-_271,_1741-_271
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1731-_1735
+_1735:
+	.db	146,177,2,0,47
+	.dw	_1734-_1736
+_1736:
+_1731:
+	.db	18,49,46,40
+	.dw	_1732-_1737
+_1737:
+	.db	146,178,2,0,47
+	.dw	_1734-_1738
+_1738:
+_1732:
+	.db	18,50,46,40
+	.dw	_1733-_1739
+_1739:
+	.db	146,179,2,0,47
+	.dw	_1734-_1740
+_1740:
+_1733:
+	.db	146,180,2,0
+_1734:
+	.db	22,19,62,36,33,56,34
+	.dl	_1741-_271,_1752-_271
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1742-_1746
+_1746:
+	.db	146,177,2,0,47
+	.dw	_1745-_1747
+_1747:
+_1742:
+	.db	18,49,46,40
+	.dw	_1743-_1748
+_1748:
+	.db	146,178,2,0,47
+	.dw	_1745-_1749
+_1749:
+_1743:
+	.db	18,50,46,40
+	.dw	_1744-_1750
+_1750:
+	.db	146,179,2,0,47
+	.dw	_1745-_1751
+_1751:
+_1744:
+	.db	146,180,2,0
+_1745:
+	.db	22,19,62,36,33,54,34
+	.dl	_1752-_271,_1763-_271
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1753-_1757
+_1757:
+	.db	146,177,2,0,47
+	.dw	_1756-_1758
+_1758:
+_1753:
+	.db	18,49,46,40
+	.dw	_1754-_1759
+_1759:
+	.db	146,178,2,0,47
+	.dw	_1756-_1760
+_1760:
+_1754:
+	.db	18,50,46,40
+	.dw	_1755-_1761
+_1761:
+	.db	146,179,2,0,47
+	.dw	_1756-_1762
+_1762:
+_1755:
+	.db	146,180,2,0
+_1756:
+	.db	22,19,62,36,33,52,34
+	.dl	_1763-_271,_1774-_271
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1764-_1768
+_1768:
+	.db	146,177,2,0,47
+	.dw	_1767-_1769
+_1769:
+_1764:
+	.db	18,49,46,40
+	.dw	_1765-_1770
+_1770:
+	.db	146,178,2,0,47
+	.dw	_1767-_1771
+_1771:
+_1765:
+	.db	18,50,46,40
+	.dw	_1766-_1772
+_1772:
+	.db	146,179,2,0,47
+	.dw	_1767-_1773
+_1773:
+_1766:
+	.db	146,180,2,0
+_1767:
+	.db	22,19,62,36,33,50,34
+	.dl	_1774-_271,_387-_271
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1775-_1779
+_1779:
+	.db	146,177,2,0,47
+	.dw	_1778-_1780
+_1780:
+_1775:
+	.db	18,49,46,40
+	.dw	_1776-_1781
+_1781:
+	.db	146,178,2,0,47
+	.dw	_1778-_1782
+_1782:
+_1776:
+	.db	18,50,46,40
+	.dw	_1777-_1783
+_1783:
+	.db	146,179,2,0,47
+	.dw	_1778-_1784
+_1784:
+_1777:
+	.db	146,180,2,0
+_1778:
+	.db	22,19,62,36,33
+	.dl	0,0
+_449:
+	.dl	-1,_271,0,_1988-_271
+	.dw	6
+	.db	82,147,2,83,147,2
+	.dl	_1989-_271,_1686-_271
+	.dw	6
+	.db	88,147,2,89,147,2
+	.dl	_52-_271,_56-_271
+	.dw	6
+	.db	82,147,2,83,147,2
+	.dl	0,0
+_453:
+	.dl	-1,_271,_1990-_271,_52-_271
+	.dw	3
+	.db	144,162,2
+	.dl	0,0
+_451:
+	.dl	-1,_271,_1991-_271,_52-_271
+	.dw	6
+	.db	90,147,2,87,147,2
+	.dl	0,0
+_452:
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'PedalSensor_checkRange'
+_282:
+	.dl	-1,_283,0,_1992-_283
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_284-_288
+_288:
+	.db	146,177,2,0,47
+	.dw	_287-_289
+_289:
+_284:
+	.db	18,49,46,40
+	.dw	_285-_290
+_290:
+	.db	146,178,2,0,47
+	.dw	_287-_291
+_291:
+_285:
+	.db	18,50,46,40
+	.dw	_286-_292
+_292:
+	.db	146,179,2,0,47
+	.dw	_287-_293
+_293:
+_286:
+	.db	146,180,2,0
+_287:
+	.db	22,19,62,36,33
+	.dl	_1992-_283,_2003-_283
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1993-_1997
+_1997:
+	.db	146,177,2,0,47
+	.dw	_1996-_1998
+_1998:
+_1993:
+	.db	18,49,46,40
+	.dw	_1994-_1999
+_1999:
+	.db	146,178,2,0,47
+	.dw	_1996-_2000
+_2000:
+_1994:
+	.db	18,50,46,40
+	.dw	_1995-_2001
+_2001:
+	.db	146,179,2,0,47
+	.dw	_1996-_2002
+_2002:
+_1995:
+	.db	146,180,2,0
+_1996:
+	.db	22,19,62,36,33,50,34
+	.dl	_2003-_283,_2014-_283
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_2004-_2008
+_2008:
+	.db	146,177,2,0,47
+	.dw	_2007-_2009
+_2009:
+_2004:
+	.db	18,49,46,40
+	.dw	_2005-_2010
+_2010:
+	.db	146,178,2,0,47
+	.dw	_2007-_2011
+_2011:
+_2005:
+	.db	18,50,46,40
+	.dw	_2006-_2012
+_2012:
+	.db	146,179,2,0,47
+	.dw	_2007-_2013
+_2013:
+_2006:
+	.db	146,180,2,0
+_2007:
+	.db	22,19,62,36,33,52,34
+	.dl	_2014-_283,_2025-_283
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_2015-_2019
+_2019:
+	.db	146,177,2,0,47
+	.dw	_2018-_2020
+_2020:
+_2015:
+	.db	18,49,46,40
+	.dw	_2016-_2021
+_2021:
+	.db	146,178,2,0,47
+	.dw	_2018-_2022
+_2022:
+_2016:
+	.db	18,50,46,40
+	.dw	_2017-_2023
+_2023:
+	.db	146,179,2,0,47
+	.dw	_2018-_2024
+_2024:
+_2017:
+	.db	146,180,2,0
+_2018:
+	.db	22,19,62,36,33,50,34
+	.dl	_2025-_283,_392-_283
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_2026-_2030
+_2030:
+	.db	146,177,2,0,47
+	.dw	_2029-_2031
+_2031:
+_2026:
+	.db	18,49,46,40
+	.dw	_2027-_2032
+_2032:
+	.db	146,178,2,0,47
+	.dw	_2029-_2033
+_2033:
+_2027:
+	.db	18,50,46,40
+	.dw	_2028-_2034
+_2034:
+	.db	146,179,2,0,47
+	.dw	_2029-_2035
+_2035:
+_2028:
+	.db	146,180,2,0
+_2029:
+	.db	22,19,62,36,33
+	.dl	0,0
+_454:
+	.dl	-1,_283,0,_2076-_283
+	.dw	6
+	.db	82,147,2,83,147,2
+	.dl	_2077-_283,_2078-_283
+	.dw	6
+	.db	85,147,2,88,147,2
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'PedalSensor_getBrakesOn'
+_150:
+	.dl	-1,_151,0,_337-_151
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_152-_156
+_156:
+	.db	146,177,2,0,47
+	.dw	_155-_157
+_157:
+_152:
+	.db	18,49,46,40
+	.dw	_153-_158
+_158:
+	.db	146,178,2,0,47
+	.dw	_155-_159
+_159:
+_153:
+	.db	18,50,46,40
+	.dw	_154-_160
+_160:
+	.db	146,179,2,0,47
+	.dw	_155-_161
+_161:
+_154:
+	.db	146,180,2,0
+_155:
+	.db	22,19,62,36,33
+	.dl	0,0
+_434:
+	.dl	-1,_151,0,_1333-_151
+	.dw	6
+	.db	82,147,2,83,147,2
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'PedalSensor_getCalibMaxPrimary'
+_210:
+	.dl	-1,_211,0,_362-_211
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_212-_216
+_216:
+	.db	146,177,2,0,47
+	.dw	_215-_217
+_217:
+_212:
+	.db	18,49,46,40
+	.dw	_213-_218
+_218:
+	.db	146,178,2,0,47
+	.dw	_215-_219
+_219:
+_213:
+	.db	18,50,46,40
+	.dw	_214-_220
+_220:
+	.db	146,179,2,0,47
+	.dw	_215-_221
+_221:
+_214:
+	.db	146,180,2,0
+_215:
+	.db	22,19,62,36,33
+	.dl	0,0
+_444:
+	.dl	-1,_211,0,_1560-_211
+	.dw	6
+	.db	82,147,2,83,147,2
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'PedalSensor_getCalibMaxSecondary'
+_234:
+	.dl	-1,_235,0,_372-_235
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_236-_240
+_240:
+	.db	146,177,2,0,47
+	.dw	_239-_241
+_241:
+_236:
+	.db	18,49,46,40
+	.dw	_237-_242
+_242:
+	.db	146,178,2,0,47
+	.dw	_239-_243
+_243:
+_237:
+	.db	18,50,46,40
+	.dw	_238-_244
+_244:
+	.db	146,179,2,0,47
+	.dw	_239-_245
+_245:
+_238:
+	.db	146,180,2,0
+_239:
+	.db	22,19,62,36,33
+	.dl	0,0
+_446:
+	.dl	-1,_235,0,_1562-_235
+	.dw	6
+	.db	82,147,2,83,147,2
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'PedalSensor_getCalibMinPrimary'
+_198:
+	.dl	-1,_199,0,_357-_199
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_200-_204
+_204:
+	.db	146,177,2,0,47
+	.dw	_203-_205
+_205:
+_200:
+	.db	18,49,46,40
+	.dw	_201-_206
+_206:
+	.db	146,178,2,0,47
+	.dw	_203-_207
+_207:
+_201:
+	.db	18,50,46,40
+	.dw	_202-_208
+_208:
+	.db	146,179,2,0,47
+	.dw	_203-_209
+_209:
+_202:
+	.db	146,180,2,0
+_203:
+	.db	22,19,62,36,33
+	.dl	0,0
+_443:
+	.dl	-1,_199,0,_1559-_199
+	.dw	6
+	.db	82,147,2,83,147,2
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'PedalSensor_getCalibMinSecondary'
+_222:
+	.dl	-1,_223,0,_367-_223
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_224-_228
+_228:
+	.db	146,177,2,0,47
+	.dw	_227-_229
+_229:
+_224:
+	.db	18,49,46,40
+	.dw	_225-_230
+_230:
+	.db	146,178,2,0,47
+	.dw	_227-_231
+_231:
+_225:
+	.db	18,50,46,40
+	.dw	_226-_232
+_232:
+	.db	146,179,2,0,47
+	.dw	_227-_233
+_233:
+_226:
+	.db	146,180,2,0
+_227:
+	.db	22,19,62,36,33
+	.dl	0,0
+_445:
+	.dl	-1,_223,0,_1561-_223
+	.dw	6
+	.db	82,147,2,83,147,2
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'PedalSensor_getCalibrated'
+_162:
+	.dl	-1,_163,0,_342-_163
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_164-_168
+_168:
+	.db	146,177,2,0,47
+	.dw	_167-_169
+_169:
+_164:
+	.db	18,49,46,40
+	.dw	_165-_170
+_170:
+	.db	146,178,2,0,47
+	.dw	_167-_171
+_171:
+_165:
+	.db	18,50,46,40
+	.dw	_166-_172
+_172:
+	.db	146,179,2,0,47
+	.dw	_167-_173
+_173:
+_166:
+	.db	146,180,2,0
+_167:
+	.db	22,19,62,36,33
+	.dl	0,0
+_435:
+	.dl	-1,_163,0,_1334-_163
+	.dw	6
+	.db	82,147,2,83,147,2
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'PedalSensor_getIndividualSensorPercent'
+_174:
+	.dl	-1,_175,0,_1335-_175
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_176-_180
+_180:
+	.db	146,177,2,0,47
+	.dw	_179-_181
+_181:
+_176:
+	.db	18,49,46,40
+	.dw	_177-_182
+_182:
+	.db	146,178,2,0,47
+	.dw	_179-_183
+_183:
+_177:
+	.db	18,50,46,40
+	.dw	_178-_184
+_184:
+	.db	146,179,2,0,47
+	.dw	_179-_185
+_185:
+_178:
+	.db	146,180,2,0
+_179:
+	.db	22,19,62,36,33
+	.dl	_1335-_175,_1346-_175
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1336-_1340
+_1340:
+	.db	146,177,2,0,47
+	.dw	_1339-_1341
+_1341:
+_1336:
+	.db	18,49,46,40
+	.dw	_1337-_1342
+_1342:
+	.db	146,178,2,0,47
+	.dw	_1339-_1343
+_1343:
+_1337:
+	.db	18,50,46,40
+	.dw	_1338-_1344
+_1344:
+	.db	146,179,2,0,47
+	.dw	_1339-_1345
+_1345:
+_1338:
+	.db	146,180,2,0
+_1339:
+	.db	22,19,62,36,33,50,34
+	.dl	_1346-_175,_1357-_175
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1347-_1351
+_1351:
+	.db	146,177,2,0,47
+	.dw	_1350-_1352
+_1352:
+_1347:
+	.db	18,49,46,40
+	.dw	_1348-_1353
+_1353:
+	.db	146,178,2,0,47
+	.dw	_1350-_1354
+_1354:
+_1348:
+	.db	18,50,46,40
+	.dw	_1349-_1355
+_1355:
+	.db	146,179,2,0,47
+	.dw	_1350-_1356
+_1356:
+_1349:
+	.db	146,180,2,0
+_1350:
+	.db	22,19,62,36,33,52,34
+	.dl	_1357-_175,_1368-_175
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1358-_1362
+_1362:
+	.db	146,177,2,0,47
+	.dw	_1361-_1363
+_1363:
+_1358:
+	.db	18,49,46,40
+	.dw	_1359-_1364
+_1364:
+	.db	146,178,2,0,47
+	.dw	_1361-_1365
+_1365:
+_1359:
+	.db	18,50,46,40
+	.dw	_1360-_1366
+_1366:
+	.db	146,179,2,0,47
+	.dw	_1361-_1367
+_1367:
+_1360:
+	.db	146,180,2,0
+_1361:
+	.db	22,19,62,36,33,54,34
+	.dl	_1368-_175,_1379-_175
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1369-_1373
+_1373:
+	.db	146,177,2,0,47
+	.dw	_1372-_1374
+_1374:
+_1369:
+	.db	18,49,46,40
+	.dw	_1370-_1375
+_1375:
+	.db	146,178,2,0,47
+	.dw	_1372-_1376
+_1376:
+_1370:
+	.db	18,50,46,40
+	.dw	_1371-_1377
+_1377:
+	.db	146,179,2,0,47
+	.dw	_1372-_1378
+_1378:
+_1371:
+	.db	146,180,2,0
+_1372:
+	.db	22,19,62,36,33,56,34
+	.dl	_1379-_175,_1390-_175
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1380-_1384
+_1384:
+	.db	146,177,2,0,47
+	.dw	_1383-_1385
+_1385:
+_1380:
+	.db	18,49,46,40
+	.dw	_1381-_1386
+_1386:
+	.db	146,178,2,0,47
+	.dw	_1383-_1387
+_1387:
+_1381:
+	.db	18,50,46,40
+	.dw	_1382-_1388
+_1388:
+	.db	146,179,2,0,47
+	.dw	_1383-_1389
+_1389:
+_1382:
+	.db	146,180,2,0
+_1383:
+	.db	22,19,62,36,33,58,34
+	.dl	_1390-_175,_1401-_175
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1391-_1395
+_1395:
+	.db	146,177,2,0,47
+	.dw	_1394-_1396
+_1396:
+_1391:
+	.db	18,49,46,40
+	.dw	_1392-_1397
+_1397:
+	.db	146,178,2,0,47
+	.dw	_1394-_1398
+_1398:
+_1392:
+	.db	18,50,46,40
+	.dw	_1393-_1399
+_1399:
+	.db	146,179,2,0,47
+	.dw	_1394-_1400
+_1400:
+_1393:
+	.db	146,180,2,0
+_1394:
+	.db	22,19,62,36,33,56,34
+	.dl	_1401-_175,_1412-_175
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1402-_1406
+_1406:
+	.db	146,177,2,0,47
+	.dw	_1405-_1407
+_1407:
+_1402:
+	.db	18,49,46,40
+	.dw	_1403-_1408
+_1408:
+	.db	146,178,2,0,47
+	.dw	_1405-_1409
+_1409:
+_1403:
+	.db	18,50,46,40
+	.dw	_1404-_1410
+_1410:
+	.db	146,179,2,0,47
+	.dw	_1405-_1411
+_1411:
+_1404:
+	.db	146,180,2,0
+_1405:
+	.db	22,19,62,36,33,54,34
+	.dl	_1412-_175,_1423-_175
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1413-_1417
+_1417:
+	.db	146,177,2,0,47
+	.dw	_1416-_1418
+_1418:
+_1413:
+	.db	18,49,46,40
+	.dw	_1414-_1419
+_1419:
+	.db	146,178,2,0,47
+	.dw	_1416-_1420
+_1420:
+_1414:
+	.db	18,50,46,40
+	.dw	_1415-_1421
+_1421:
+	.db	146,179,2,0,47
+	.dw	_1416-_1422
+_1422:
+_1415:
+	.db	146,180,2,0
+_1416:
+	.db	22,19,62,36,33,52,34
+	.dl	_1423-_175,_1434-_175
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1424-_1428
+_1428:
+	.db	146,177,2,0,47
+	.dw	_1427-_1429
+_1429:
+_1424:
+	.db	18,49,46,40
+	.dw	_1425-_1430
+_1430:
+	.db	146,178,2,0,47
+	.dw	_1427-_1431
+_1431:
+_1425:
+	.db	18,50,46,40
+	.dw	_1426-_1432
+_1432:
+	.db	146,179,2,0,47
+	.dw	_1427-_1433
+_1433:
+_1426:
+	.db	146,180,2,0
+_1427:
+	.db	22,19,62,36,33,50,34
+	.dl	_1434-_175,_347-_175
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1435-_1439
+_1439:
+	.db	146,177,2,0,47
+	.dw	_1438-_1440
+_1440:
+_1435:
+	.db	18,49,46,40
+	.dw	_1436-_1441
+_1441:
+	.db	146,178,2,0,47
+	.dw	_1438-_1442
+_1442:
+_1436:
+	.db	18,50,46,40
+	.dw	_1437-_1443
+_1443:
+	.db	146,179,2,0,47
+	.dw	_1438-_1444
+_1444:
+_1437:
+	.db	146,180,2,0
+_1438:
+	.db	22,19,62,36,33
+	.dl	0,0
+_436:
+	.dl	-1,_175,0,_1548-_175
+	.dw	6
+	.db	82,147,2,83,147,2
+	.dl	_1550-_175,_1551-_175
+	.dw	6
+	.db	93,147,2,94,147,2
+	.dl	_38-_175,_1553-_175
+	.dw	6
+	.db	93,147,2,94,147,2
+	.dl	_38-_175,_1554-_175
+	.dw	6
+	.db	82,147,2,83,147,2
+	.dl	_36-_175,_40-_175
+	.dw	6
+	.db	93,147,2,94,147,2
+	.dl	_36-_175,_1557-_175
+	.dw	6
+	.db	82,147,2,83,147,2
+	.dl	0,0
+_439:
+	.dl	-1,_175,_1552-_175,_38-_175
+	.dw	3
+	.db	144,162,2
+	.dl	0,0
+_441:
+	.dl	-1,_175,_1556-_175,_36-_175
+	.dw	3
+	.db	144,162,2
+	.dl	0,0
+_437:
+	.dl	-1,_175,0,_1549-_175
+	.dw	4
+	.db	84,157,8,0
+	.dl	_38-_175,_1555-_175
+	.dw	4
+	.db	84,157,8,0
+	.dl	_36-_175,_40-_175
+	.dw	4
+	.db	84,157,8,0
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'PedalSensor_getPercent'
+_138:
+	.dl	-1,_139,0,_332-_139
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_140-_144
+_144:
+	.db	146,177,2,0,47
+	.dw	_143-_145
+_145:
+_140:
+	.db	18,49,46,40
+	.dw	_141-_146
+_146:
+	.db	146,178,2,0,47
+	.dw	_143-_147
+_147:
+_141:
+	.db	18,50,46,40
+	.dw	_142-_148
+_148:
+	.db	146,179,2,0,47
+	.dw	_143-_149
+_149:
+_142:
+	.db	146,180,2,0
+_143:
+	.db	22,19,62,36,33
+	.dl	0,0
+_433:
+	.dl	-1,_139,0,_1332-_139
+	.dw	6
+	.db	82,147,2,83,147,2
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'PedalSensor_getSensorValuePrimary'
+_246:
+	.dl	-1,_247,0,_377-_247
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_248-_252
+_252:
+	.db	146,177,2,0,47
+	.dw	_251-_253
+_253:
+_248:
+	.db	18,49,46,40
+	.dw	_249-_254
+_254:
+	.db	146,178,2,0,47
+	.dw	_251-_255
+_255:
+_249:
+	.db	18,50,46,40
+	.dw	_250-_256
+_256:
+	.db	146,179,2,0,47
+	.dw	_251-_257
+_257:
+_250:
+	.db	146,180,2,0
+_251:
+	.db	22,19,62,36,33
+	.dl	0,0
+_447:
+	.dl	-1,_247,0,_1563-_247
+	.dw	6
+	.db	82,147,2,83,147,2
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'PedalSensor_getSensorValueSecondary'
+_258:
+	.dl	-1,_259,0,_382-_259
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_260-_264
+_264:
+	.db	146,177,2,0,47
+	.dw	_263-_265
+_265:
+_260:
+	.db	18,49,46,40
+	.dw	_261-_266
+_266:
+	.db	146,178,2,0,47
+	.dw	_263-_267
+_267:
+_261:
+	.db	18,50,46,40
+	.dw	_262-_268
+_268:
+	.db	146,179,2,0,47
+	.dw	_263-_269
+_269:
+_262:
+	.db	146,180,2,0
+_263:
+	.db	22,19,62,36,33
+	.dl	0,0
+_448:
+	.dl	-1,_259,0,_1564-_259
+	.dw	6
+	.db	82,147,2,83,147,2
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'PedalSensor_getTravelPercent'
+_186:
+	.dl	-1,_187,0,_352-_187
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_188-_192
+_192:
+	.db	146,177,2,0,47
+	.dw	_191-_193
+_193:
+_188:
+	.db	18,49,46,40
+	.dw	_189-_194
+_194:
+	.db	146,178,2,0,47
+	.dw	_191-_195
+_195:
+_189:
+	.db	18,50,46,40
+	.dw	_190-_196
+_196:
+	.db	146,179,2,0,47
+	.dw	_191-_197
+_197:
+_190:
+	.db	146,180,2,0
+_191:
+	.db	22,19,62,36,33
+	.dl	0,0
+_442:
+	.dl	-1,_187,0,_1558-_187
+	.dw	6
+	.db	82,147,2,83,147,2
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'PedalSensor_new_BPS'
+_78:
+	.dl	-1,_79,0,_307-_79
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_80-_84
+_84:
+	.db	146,177,2,0,47
+	.dw	_83-_85
+_85:
+_80:
+	.db	18,49,46,40
+	.dw	_81-_86
+_86:
+	.db	146,178,2,0,47
+	.dw	_83-_87
+_87:
+_81:
+	.db	18,50,46,40
+	.dw	_82-_88
+_88:
+	.db	146,179,2,0,47
+	.dw	_83-_89
+_89:
+_82:
+	.db	146,180,2,0
+_83:
+	.db	22,19,62,36,33
+	.dl	0,0
+_397:
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'PedalSensor_new_TPS'
+_66:
+	.dl	-1,_67,0,_455-_67
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_68-_72
+_72:
+	.db	146,177,2,0,47
+	.dw	_71-_73
+_73:
+_68:
+	.db	18,49,46,40
+	.dw	_69-_74
+_74:
+	.db	146,178,2,0,47
+	.dw	_71-_75
+_75:
+_69:
+	.db	18,50,46,40
+	.dw	_70-_76
+_76:
+	.db	146,179,2,0,47
+	.dw	_71-_77
+_77:
+_70:
+	.db	146,180,2,0
+_71:
+	.db	22,19,62,36,33
+	.dl	_455-_67,_466-_67
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_456-_460
+_460:
+	.db	146,177,2,0,47
+	.dw	_459-_461
+_461:
+_456:
+	.db	18,49,46,40
+	.dw	_457-_462
+_462:
+	.db	146,178,2,0,47
+	.dw	_459-_463
+_463:
+_457:
+	.db	18,50,46,40
+	.dw	_458-_464
+_464:
+	.db	146,179,2,0,47
+	.dw	_459-_465
+_465:
+_458:
+	.db	146,180,2,0
+_459:
+	.db	22,19,62,36,33,50,34
+	.dl	_466-_67,_302-_67
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_467-_471
+_471:
+	.db	146,177,2,0,47
+	.dw	_470-_472
+_472:
+_467:
+	.db	18,49,46,40
+	.dw	_468-_473
+_473:
+	.db	146,178,2,0,47
+	.dw	_470-_474
+_474:
+_468:
+	.db	18,50,46,40
+	.dw	_469-_475
+_475:
+	.db	146,179,2,0,47
+	.dw	_470-_476
+_476:
+_469:
+	.db	146,180,2,0
+_470:
+	.db	22,19,62,36,33
+	.dl	0,0
+_395:
+	.dl	-1,_67,0,_497-_67
+	.dw	4
+	.db	82,157,8,0
+	.dl	_498-_67,_466-_67
+	.dw	4
+	.db	86,157,8,8
+	.dl	0,0
+_396:
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'PedalSensor_resetCalibration'
+_126:
+	.dl	-1,_127,0,_327-_127
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_128-_132
+_132:
+	.db	146,177,2,0,47
+	.dw	_131-_133
+_133:
+_128:
+	.db	18,49,46,40
+	.dw	_129-_134
+_134:
+	.db	146,178,2,0,47
+	.dw	_131-_135
+_135:
+_129:
+	.db	18,50,46,40
+	.dw	_130-_136
+_136:
+	.db	146,179,2,0,47
+	.dw	_131-_137
+_137:
+_130:
+	.db	146,180,2,0
+_131:
+	.db	22,19,62,36,33
+	.dl	0,0
+_432:
+	.dl	-1,_127,0,_1331-_127
+	.dw	6
+	.db	82,147,2,83,147,2
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'PedalSensor_startCalibration'
+_114:
+	.dl	-1,_115,0,_1160-_115
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_116-_120
+_120:
+	.db	146,177,2,0,47
+	.dw	_119-_121
+_121:
+_116:
+	.db	18,49,46,40
+	.dw	_117-_122
+_122:
+	.db	146,178,2,0,47
+	.dw	_119-_123
+_123:
+_117:
+	.db	18,50,46,40
+	.dw	_118-_124
+_124:
+	.db	146,179,2,0,47
+	.dw	_119-_125
+_125:
+_118:
+	.db	146,180,2,0
+_119:
+	.db	22,19,62,36,33
+	.dl	_1160-_115,_1171-_115
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1161-_1165
+_1165:
+	.db	146,177,2,0,47
+	.dw	_1164-_1166
+_1166:
+_1161:
+	.db	18,49,46,40
+	.dw	_1162-_1167
+_1167:
+	.db	146,178,2,0,47
+	.dw	_1164-_1168
+_1168:
+_1162:
+	.db	18,50,46,40
+	.dw	_1163-_1169
+_1169:
+	.db	146,179,2,0,47
+	.dw	_1164-_1170
+_1170:
+_1163:
+	.db	146,180,2,0
+_1164:
+	.db	22,19,62,36,33,50,34
+	.dl	_1171-_115,_1182-_115
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1172-_1176
+_1176:
+	.db	146,177,2,0,47
+	.dw	_1175-_1177
+_1177:
+_1172:
+	.db	18,49,46,40
+	.dw	_1173-_1178
+_1178:
+	.db	146,178,2,0,47
+	.dw	_1175-_1179
+_1179:
+_1173:
+	.db	18,50,46,40
+	.dw	_1174-_1180
+_1180:
+	.db	146,179,2,0,47
+	.dw	_1175-_1181
+_1181:
+_1174:
+	.db	146,180,2,0
+_1175:
+	.db	22,19,62,36,33,52,34
+	.dl	_1182-_115,_1193-_115
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1183-_1187
+_1187:
+	.db	146,177,2,0,47
+	.dw	_1186-_1188
+_1188:
+_1183:
+	.db	18,49,46,40
+	.dw	_1184-_1189
+_1189:
+	.db	146,178,2,0,47
+	.dw	_1186-_1190
+_1190:
+_1184:
+	.db	18,50,46,40
+	.dw	_1185-_1191
+_1191:
+	.db	146,179,2,0,47
+	.dw	_1186-_1192
+_1192:
+_1185:
+	.db	146,180,2,0
+_1186:
+	.db	22,19,62,36,33,54,34
+	.dl	_1193-_115,_1204-_115
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1194-_1198
+_1198:
+	.db	146,177,2,0,47
+	.dw	_1197-_1199
+_1199:
+_1194:
+	.db	18,49,46,40
+	.dw	_1195-_1200
+_1200:
+	.db	146,178,2,0,47
+	.dw	_1197-_1201
+_1201:
+_1195:
+	.db	18,50,46,40
+	.dw	_1196-_1202
+_1202:
+	.db	146,179,2,0,47
+	.dw	_1197-_1203
+_1203:
+_1196:
+	.db	146,180,2,0
+_1197:
+	.db	22,19,62,36,33,56,34
+	.dl	_1204-_115,_1215-_115
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1205-_1209
+_1209:
+	.db	146,177,2,0,47
+	.dw	_1208-_1210
+_1210:
+_1205:
+	.db	18,49,46,40
+	.dw	_1206-_1211
+_1211:
+	.db	146,178,2,0,47
+	.dw	_1208-_1212
+_1212:
+_1206:
+	.db	18,50,46,40
+	.dw	_1207-_1213
+_1213:
+	.db	146,179,2,0,47
+	.dw	_1208-_1214
+_1214:
+_1207:
+	.db	146,180,2,0
+_1208:
+	.db	22,19,62,36,33,54,34
+	.dl	_1215-_115,_1226-_115
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1216-_1220
+_1220:
+	.db	146,177,2,0,47
+	.dw	_1219-_1221
+_1221:
+_1216:
+	.db	18,49,46,40
+	.dw	_1217-_1222
+_1222:
+	.db	146,178,2,0,47
+	.dw	_1219-_1223
+_1223:
+_1217:
+	.db	18,50,46,40
+	.dw	_1218-_1224
+_1224:
+	.db	146,179,2,0,47
+	.dw	_1219-_1225
+_1225:
+_1218:
+	.db	146,180,2,0
+_1219:
+	.db	22,19,62,36,33,52,34
+	.dl	_1226-_115,_1237-_115
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1227-_1231
+_1231:
+	.db	146,177,2,0,47
+	.dw	_1230-_1232
+_1232:
+_1227:
+	.db	18,49,46,40
+	.dw	_1228-_1233
+_1233:
+	.db	146,178,2,0,47
+	.dw	_1230-_1234
+_1234:
+_1228:
+	.db	18,50,46,40
+	.dw	_1229-_1235
+_1235:
+	.db	146,179,2,0,47
+	.dw	_1230-_1236
+_1236:
+_1229:
+	.db	146,180,2,0
+_1230:
+	.db	22,19,62,36,33,50,34
+	.dl	_1237-_115,_322-_115
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1238-_1242
+_1242:
+	.db	146,177,2,0,47
+	.dw	_1241-_1243
+_1243:
+_1238:
+	.db	18,49,46,40
+	.dw	_1239-_1244
+_1244:
+	.db	146,178,2,0,47
+	.dw	_1241-_1245
+_1245:
+_1239:
+	.db	18,50,46,40
+	.dw	_1240-_1246
+_1246:
+	.db	146,179,2,0,47
+	.dw	_1241-_1247
+_1247:
+_1240:
+	.db	146,180,2,0
+_1241:
+	.db	22,19,62,36,33
+	.dl	0,0
+_430:
+	.dl	-1,_115,0,_1328-_115
+	.dw	6
+	.db	82,147,2,83,147,2
+	.dl	_1330-_115,_1215-_115
+	.dw	6
+	.db	88,147,2,89,147,2
+	.dl	0,0
+_431:
+	.dl	-1,_115,0,_1329-_115
+	.dw	4
+	.db	84,157,8,0
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_loc, cluster 'PedalSensor_update'
+_90:
+	.dl	-1,_91,0,_499-_91
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_92-_96
+_96:
+	.db	146,177,2,0,47
+	.dw	_95-_97
+_97:
+_92:
+	.db	18,49,46,40
+	.dw	_93-_98
+_98:
+	.db	146,178,2,0,47
+	.dw	_95-_99
+_99:
+_93:
+	.db	18,50,46,40
+	.dw	_94-_100
+_100:
+	.db	146,179,2,0,47
+	.dw	_95-_101
+_101:
+_94:
+	.db	146,180,2,0
+_95:
+	.db	22,19,62,36,33
+	.dl	_499-_91,_510-_91
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_500-_504
+_504:
+	.db	146,177,2,0,47
+	.dw	_503-_505
+_505:
+_500:
+	.db	18,49,46,40
+	.dw	_501-_506
+_506:
+	.db	146,178,2,0,47
+	.dw	_503-_507
+_507:
+_501:
+	.db	18,50,46,40
+	.dw	_502-_508
+_508:
+	.db	146,179,2,0,47
+	.dw	_503-_509
+_509:
+_502:
+	.db	146,180,2,0
+_503:
+	.db	22,19,62,36,33,50,34
+	.dl	_510-_91,_521-_91
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_511-_515
+_515:
+	.db	146,177,2,0,47
+	.dw	_514-_516
+_516:
+_511:
+	.db	18,49,46,40
+	.dw	_512-_517
+_517:
+	.db	146,178,2,0,47
+	.dw	_514-_518
+_518:
+_512:
+	.db	18,50,46,40
+	.dw	_513-_519
+_519:
+	.db	146,179,2,0,47
+	.dw	_514-_520
+_520:
+_513:
+	.db	146,180,2,0
+_514:
+	.db	22,19,62,36,33,52,34
+	.dl	_521-_91,_532-_91
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_522-_526
+_526:
+	.db	146,177,2,0,47
+	.dw	_525-_527
+_527:
+_522:
+	.db	18,49,46,40
+	.dw	_523-_528
+_528:
+	.db	146,178,2,0,47
+	.dw	_525-_529
+_529:
+_523:
+	.db	18,50,46,40
+	.dw	_524-_530
+_530:
+	.db	146,179,2,0,47
+	.dw	_525-_531
+_531:
+_524:
+	.db	146,180,2,0
+_525:
+	.db	22,19,62,36,33,54,34
+	.dl	_532-_91,_543-_91
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_533-_537
+_537:
+	.db	146,177,2,0,47
+	.dw	_536-_538
+_538:
+_533:
+	.db	18,49,46,40
+	.dw	_534-_539
+_539:
+	.db	146,178,2,0,47
+	.dw	_536-_540
+_540:
+_534:
+	.db	18,50,46,40
+	.dw	_535-_541
+_541:
+	.db	146,179,2,0,47
+	.dw	_536-_542
+_542:
+_535:
+	.db	146,180,2,0
+_536:
+	.db	22,19,62,36,33,56,34
+	.dl	_543-_91,_554-_91
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_544-_548
+_548:
+	.db	146,177,2,0,47
+	.dw	_547-_549
+_549:
+_544:
+	.db	18,49,46,40
+	.dw	_545-_550
+_550:
+	.db	146,178,2,0,47
+	.dw	_547-_551
+_551:
+_545:
+	.db	18,50,46,40
+	.dw	_546-_552
+_552:
+	.db	146,179,2,0,47
+	.dw	_547-_553
+_553:
+_546:
+	.db	146,180,2,0
+_547:
+	.db	22,19,62,36,33,58,34
+	.dl	_554-_91,_565-_91
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_555-_559
+_559:
+	.db	146,177,2,0,47
+	.dw	_558-_560
+_560:
+_555:
+	.db	18,49,46,40
+	.dw	_556-_561
+_561:
+	.db	146,178,2,0,47
+	.dw	_558-_562
+_562:
+_556:
+	.db	18,50,46,40
+	.dw	_557-_563
+_563:
+	.db	146,179,2,0,47
+	.dw	_558-_564
+_564:
+_557:
+	.db	146,180,2,0
+_558:
+	.db	22,19,62,36,33,60,34
+	.dl	_565-_91,_576-_91
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_566-_570
+_570:
+	.db	146,177,2,0,47
+	.dw	_569-_571
+_571:
+_566:
+	.db	18,49,46,40
+	.dw	_567-_572
+_572:
+	.db	146,178,2,0,47
+	.dw	_569-_573
+_573:
+_567:
+	.db	18,50,46,40
+	.dw	_568-_574
+_574:
+	.db	146,179,2,0,47
+	.dw	_569-_575
+_575:
+_568:
+	.db	146,180,2,0
+_569:
+	.db	22,19,62,36,33,62,34
+	.dl	_576-_91,_587-_91
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_577-_581
+_581:
+	.db	146,177,2,0,47
+	.dw	_580-_582
+_582:
+_577:
+	.db	18,49,46,40
+	.dw	_578-_583
+_583:
+	.db	146,178,2,0,47
+	.dw	_580-_584
+_584:
+_578:
+	.db	18,50,46,40
+	.dw	_579-_585
+_585:
+	.db	146,179,2,0,47
+	.dw	_580-_586
+_586:
+_579:
+	.db	146,180,2,0
+_580:
+	.db	22,19,62,36,33,64,34
+	.dl	_587-_91,_598-_91
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_588-_592
+_592:
+	.db	146,177,2,0,47
+	.dw	_591-_593
+_593:
+_588:
+	.db	18,49,46,40
+	.dw	_589-_594
+_594:
+	.db	146,178,2,0,47
+	.dw	_591-_595
+_595:
+_589:
+	.db	18,50,46,40
+	.dw	_590-_596
+_596:
+	.db	146,179,2,0,47
+	.dw	_591-_597
+_597:
+_590:
+	.db	146,180,2,0
+_591:
+	.db	22,19,62,36,33,66,34
+	.dl	_598-_91,_609-_91
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_599-_603
+_603:
+	.db	146,177,2,0,47
+	.dw	_602-_604
+_604:
+_599:
+	.db	18,49,46,40
+	.dw	_600-_605
+_605:
+	.db	146,178,2,0,47
+	.dw	_602-_606
+_606:
+_600:
+	.db	18,50,46,40
+	.dw	_601-_607
+_607:
+	.db	146,179,2,0,47
+	.dw	_602-_608
+_608:
+_601:
+	.db	146,180,2,0
+_602:
+	.db	22,19,62,36,33,68,34
+	.dl	_609-_91,_620-_91
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_610-_614
+_614:
+	.db	146,177,2,0,47
+	.dw	_613-_615
+_615:
+_610:
+	.db	18,49,46,40
+	.dw	_611-_616
+_616:
+	.db	146,178,2,0,47
+	.dw	_613-_617
+_617:
+_611:
+	.db	18,50,46,40
+	.dw	_612-_618
+_618:
+	.db	146,179,2,0,47
+	.dw	_613-_619
+_619:
+_612:
+	.db	146,180,2,0
+_613:
+	.db	22,19,62,36,33,70,34
+	.dl	_620-_91,_631-_91
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_621-_625
+_625:
+	.db	146,177,2,0,47
+	.dw	_624-_626
+_626:
+_621:
+	.db	18,49,46,40
+	.dw	_622-_627
+_627:
+	.db	146,178,2,0,47
+	.dw	_624-_628
+_628:
+_622:
+	.db	18,50,46,40
+	.dw	_623-_629
+_629:
+	.db	146,179,2,0,47
+	.dw	_624-_630
+_630:
+_623:
+	.db	146,180,2,0
+_624:
+	.db	22,19,62,36,33,68,34
+	.dl	_631-_91,_642-_91
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_632-_636
+_636:
+	.db	146,177,2,0,47
+	.dw	_635-_637
+_637:
+_632:
+	.db	18,49,46,40
+	.dw	_633-_638
+_638:
+	.db	146,178,2,0,47
+	.dw	_635-_639
+_639:
+_633:
+	.db	18,50,46,40
+	.dw	_634-_640
+_640:
+	.db	146,179,2,0,47
+	.dw	_635-_641
+_641:
+_634:
+	.db	146,180,2,0
+_635:
+	.db	22,19,62,36,33,66,34
+	.dl	_642-_91,_653-_91
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_643-_647
+_647:
+	.db	146,177,2,0,47
+	.dw	_646-_648
+_648:
+_643:
+	.db	18,49,46,40
+	.dw	_644-_649
+_649:
+	.db	146,178,2,0,47
+	.dw	_646-_650
+_650:
+_644:
+	.db	18,50,46,40
+	.dw	_645-_651
+_651:
+	.db	146,179,2,0,47
+	.dw	_646-_652
+_652:
+_645:
+	.db	146,180,2,0
+_646:
+	.db	22,19,62,36,33,64,34
+	.dl	_653-_91,_664-_91
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_654-_658
+_658:
+	.db	146,177,2,0,47
+	.dw	_657-_659
+_659:
+_654:
+	.db	18,49,46,40
+	.dw	_655-_660
+_660:
+	.db	146,178,2,0,47
+	.dw	_657-_661
+_661:
+_655:
+	.db	18,50,46,40
+	.dw	_656-_662
+_662:
+	.db	146,179,2,0,47
+	.dw	_657-_663
+_663:
+_656:
+	.db	146,180,2,0
+_657:
+	.db	22,19,62,36,33,62,34
+	.dl	_664-_91,_675-_91
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_665-_669
+_669:
+	.db	146,177,2,0,47
+	.dw	_668-_670
+_670:
+_665:
+	.db	18,49,46,40
+	.dw	_666-_671
+_671:
+	.db	146,178,2,0,47
+	.dw	_668-_672
+_672:
+_666:
+	.db	18,50,46,40
+	.dw	_667-_673
+_673:
+	.db	146,179,2,0,47
+	.dw	_668-_674
+_674:
+_667:
+	.db	146,180,2,0
+_668:
+	.db	22,19,62,36,33,60,34
+	.dl	_675-_91,_686-_91
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_676-_680
+_680:
+	.db	146,177,2,0,47
+	.dw	_679-_681
+_681:
+_676:
+	.db	18,49,46,40
+	.dw	_677-_682
+_682:
+	.db	146,178,2,0,47
+	.dw	_679-_683
+_683:
+_677:
+	.db	18,50,46,40
+	.dw	_678-_684
+_684:
+	.db	146,179,2,0,47
+	.dw	_679-_685
+_685:
+_678:
+	.db	146,180,2,0
+_679:
+	.db	22,19,62,36,33,58,34
+	.dl	_686-_91,_697-_91
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_687-_691
+_691:
+	.db	146,177,2,0,47
+	.dw	_690-_692
+_692:
+_687:
+	.db	18,49,46,40
+	.dw	_688-_693
+_693:
+	.db	146,178,2,0,47
+	.dw	_690-_694
+_694:
+_688:
+	.db	18,50,46,40
+	.dw	_689-_695
+_695:
+	.db	146,179,2,0,47
+	.dw	_690-_696
+_696:
+_689:
+	.db	146,180,2,0
+_690:
+	.db	22,19,62,36,33,56,34
+	.dl	_697-_91,_708-_91
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_698-_702
+_702:
+	.db	146,177,2,0,47
+	.dw	_701-_703
+_703:
+_698:
+	.db	18,49,46,40
+	.dw	_699-_704
+_704:
+	.db	146,178,2,0,47
+	.dw	_701-_705
+_705:
+_699:
+	.db	18,50,46,40
+	.dw	_700-_706
+_706:
+	.db	146,179,2,0,47
+	.dw	_701-_707
+_707:
+_700:
+	.db	146,180,2,0
+_701:
+	.db	22,19,62,36,33,54,34
+	.dl	_708-_91,_719-_91
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_709-_713
+_713:
+	.db	146,177,2,0,47
+	.dw	_712-_714
+_714:
+_709:
+	.db	18,49,46,40
+	.dw	_710-_715
+_715:
+	.db	146,178,2,0,47
+	.dw	_712-_716
+_716:
+_710:
+	.db	18,50,46,40
+	.dw	_711-_717
+_717:
+	.db	146,179,2,0,47
+	.dw	_712-_718
+_718:
+_711:
+	.db	146,180,2,0
+_712:
+	.db	22,19,62,36,33,52,34
+	.dl	_719-_91,_730-_91
+	.dw	60
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_720-_724
+_724:
+	.db	146,177,2,0,47
+	.dw	_723-_725
+_725:
+_720:
+	.db	18,49,46,40
+	.dw	_721-_726
+_726:
+	.db	146,178,2,0,47
+	.dw	_723-_727
+_727:
+_721:
+	.db	18,50,46,40
+	.dw	_722-_728
+_728:
+	.db	146,179,2,0,47
+	.dw	_723-_729
+_729:
+_722:
+	.db	146,180,2,0
+_723:
+	.db	22,19,62,36,33,50,34
+	.dl	_730-_91,_312-_91
+	.dw	58
+	.db	127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_731-_735
+_735:
+	.db	146,177,2,0,47
+	.dw	_734-_736
+_736:
+_731:
+	.db	18,49,46,40
+	.dw	_732-_737
+_737:
+	.db	146,178,2,0,47
+	.dw	_734-_738
+_738:
+_732:
+	.db	18,50,46,40
+	.dw	_733-_739
+_739:
+	.db	146,179,2,0,47
+	.dw	_734-_740
+_740:
+_733:
+	.db	146,180,2,0
+_734:
+	.db	22,19,62,36,33
+	.dl	0,0
+_399:
+	.dl	-1,_91,0,_964-_91
+	.dw	4
+	.db	84,157,8,0
+	.dl	_8-_91,_973-_91
+	.dw	4
+	.db	84,157,8,0
+	.dl	0,0
+_398:
+	.dl	-1,_91,0,_965-_91
+	.dw	6
+	.db	82,147,2,83,147,2
+	.dl	_8-_91,_974-_91
+	.dw	6
+	.db	82,147,2,83,147,2
+	.dl	_976-_91,_977-_91
+	.dw	6
+	.db	87,147,2,88,147,2
+	.dl	0,0
+_415:
+	.dl	-1,_91,_969-_91,_9-_91
+	.dw	3
+	.db	144,162,2
+	.dl	0,0
+_417:
+	.dl	-1,_91,_975-_91,_15-_91
+	.dw	3
+	.db	144,162,2
+	.dl	0,0
+_411:
+	.dl	-1,_91,_404-_91,_966-_91
+	.dw	6
+	.db	90,147,2,80,147,2
+	.dl	_970-_91,_971-_91
+	.dw	6
+	.db	90,147,2,80,147,2
+	.dl	0,0
+_412:
+	.dl	-1,_91,_967-_91,_968-_91
+	.dw	6
+	.db	92,147,2,91,147,2
+	.dl	_9-_91,_972-_91
+	.dw	6
+	.db	92,147,2,91,147,2
+	.dl	0,0
+	; End of section
+
+	.debug		.debug_frame
+_2507:
+	.dl	184
+	.dl	-1
+	.db	3,0,2,2,173,2,15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_2508-_2512
+_2512:
+	.db	146,177,2,0,47
+	.dw	_2511-_2513
+_2513:
+_2508:
+	.db	18,49,46,40
+	.dw	_2509-_2514
+_2514:
+	.db	146,178,2,0,47
+	.dw	_2511-_2515
+_2515:
+_2509:
+	.db	18,50,46,40
+	.dw	_2510-_2516
+_2516:
+	.db	146,179,2,0,47
+	.dw	_2511-_2517
+_2517:
+_2510:
+	.db	146,180,2,0
+_2511:
+	.db	22,19,62,36,33,48,34,16,173,2,12,19,146,176,2,0,64,36,146,161,2,0,33,8,15,22,161,2,5,19,146,161,2,4,8
+	.db	162,2,8,166,2,8,177,2,8,178,2,8,179,2,8,180,2,8,0,8,1,8,6,8,7,8,8,8,9,8,10,8,167,2,8,168,2,8,169,2,8,170
+	.db	2,8,171,2,8,172,2,16,174,2,12,19,146,176,2,0,64,36,146,161,2,0,33,16,175,2,12,19,146,176,2,0,64,36,146
+	.db	161,2,2,33,8,176,2
+	; End of section
+
+	.debug		.debug_frame, cluster 'PedalSensor_new_TPS'
+	.dl	160
+	.dl	_2507,_67,_302-_67
+	.db	4
+	.dl	(_455-_67)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_477-_481
+_481:
+	.db	146,177,2,0,47
+	.dw	_480-_482
+_482:
+_477:
+	.db	18,49,46,40
+	.dw	_478-_483
+_483:
+	.db	146,178,2,0,47
+	.dw	_480-_484
+_484:
+_478:
+	.db	18,50,46,40
+	.dw	_479-_485
+_485:
+	.db	146,179,2,0,47
+	.dw	_480-_486
+_486:
+_479:
+	.db	146,180,2,0
+_480:
+	.db	22,19,62,36,33,50,34,22,15,3,19,127,2,17,6,127,4
+	.dl	(_466-_455)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_487-_491
+_491:
+	.db	146,177,2,0,47
+	.dw	_490-_492
+_492:
+_487:
+	.db	18,49,46,40
+	.dw	_488-_493
+_493:
+	.db	146,178,2,0,47
+	.dw	_490-_494
+_494:
+_488:
+	.db	18,50,46,40
+	.dw	_489-_495
+_495:
+	.db	146,179,2,0,47
+	.dw	_490-_496
+_496:
+_489:
+	.db	146,180,2,0
+_490:
+	.db	22,19,62,36,33,48,34,8,15,198,0,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'PedalSensor_new_BPS'
+	.dl	12
+	.dl	_2507,_79,_307-_79
+	; End of section
+
+	.debug		.debug_frame, cluster 'PedalSensor_update'
+	.dl	1668
+	.dl	_2507,_91,_312-_91
+	.db	4
+	.dl	(_499-_91)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_741-_745
+_745:
+	.db	146,177,2,0,47
+	.dw	_744-_746
+_746:
+_741:
+	.db	18,49,46,40
+	.dw	_742-_747
+_747:
+	.db	146,178,2,0,47
+	.dw	_744-_748
+_748:
+_742:
+	.db	18,50,46,40
+	.dw	_743-_749
+_749:
+	.db	146,179,2,0,47
+	.dw	_744-_750
+_750:
+_743:
+	.db	146,180,2,0
+_744:
+	.db	22,19,62,36,33,50,34,22,15,3,19,127,2,4
+	.dl	(_510-_499)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_751-_755
+_755:
+	.db	146,177,2,0,47
+	.dw	_754-_756
+_756:
+_751:
+	.db	18,49,46,40
+	.dw	_752-_757
+_757:
+	.db	146,178,2,0,47
+	.dw	_754-_758
+_758:
+_752:
+	.db	18,50,46,40
+	.dw	_753-_759
+_759:
+	.db	146,179,2,0,47
+	.dw	_754-_760
+_760:
+_753:
+	.db	146,180,2,0
+_754:
+	.db	22,19,62,36,33,52,34,22,15,3,19,127,4,4
+	.dl	(_521-_510)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_761-_765
+_765:
+	.db	146,177,2,0,47
+	.dw	_764-_766
+_766:
+_761:
+	.db	18,49,46,40
+	.dw	_762-_767
+_767:
+	.db	146,178,2,0,47
+	.dw	_764-_768
+_768:
+_762:
+	.db	18,50,46,40
+	.dw	_763-_769
+_769:
+	.db	146,179,2,0,47
+	.dw	_764-_770
+_770:
+_763:
+	.db	146,180,2,0
+_764:
+	.db	22,19,62,36,33,54,34,22,15,3,19,127,6,4
+	.dl	(_532-_521)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_771-_775
+_775:
+	.db	146,177,2,0,47
+	.dw	_774-_776
+_776:
+_771:
+	.db	18,49,46,40
+	.dw	_772-_777
+_777:
+	.db	146,178,2,0,47
+	.dw	_774-_778
+_778:
+_772:
+	.db	18,50,46,40
+	.dw	_773-_779
+_779:
+	.db	146,179,2,0,47
+	.dw	_774-_780
+_780:
+_773:
+	.db	146,180,2,0
+_774:
+	.db	22,19,62,36,33,56,34,22,15,3,19,127,8,17,0,124,4
+	.dl	(_543-_532)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_781-_785
+_785:
+	.db	146,177,2,0,47
+	.dw	_784-_786
+_786:
+_781:
+	.db	18,49,46,40
+	.dw	_782-_787
+_787:
+	.db	146,178,2,0,47
+	.dw	_784-_788
+_788:
+_782:
+	.db	18,50,46,40
+	.dw	_783-_789
+_789:
+	.db	146,179,2,0,47
+	.dw	_784-_790
+_790:
+_783:
+	.db	146,180,2,0
+_784:
+	.db	22,19,62,36,33,58,34,22,15,3,19,127,10,17,1,123,4
+	.dl	(_554-_543)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_791-_795
+_795:
+	.db	146,177,2,0,47
+	.dw	_794-_796
+_796:
+_791:
+	.db	18,49,46,40
+	.dw	_792-_797
+_797:
+	.db	146,178,2,0,47
+	.dw	_794-_798
+_798:
+_792:
+	.db	18,50,46,40
+	.dw	_793-_799
+_799:
+	.db	146,179,2,0,47
+	.dw	_794-_800
+_800:
+_793:
+	.db	146,180,2,0
+_794:
+	.db	22,19,62,36,33,60,34,22,15,3,19,127,12,17,6,122,4
+	.dl	(_565-_554)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_801-_805
+_805:
+	.db	146,177,2,0,47
+	.dw	_804-_806
+_806:
+_801:
+	.db	18,49,46,40
+	.dw	_802-_807
+_807:
+	.db	146,178,2,0,47
+	.dw	_804-_808
+_808:
+_802:
+	.db	18,50,46,40
+	.dw	_803-_809
+_809:
+	.db	146,179,2,0,47
+	.dw	_804-_810
+_810:
+_803:
+	.db	146,180,2,0
+_804:
+	.db	22,19,62,36,33,62,34,22,15,3,19,127,14,17,7,121,4
+	.dl	(_576-_565)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_811-_815
+_815:
+	.db	146,177,2,0,47
+	.dw	_814-_816
+_816:
+_811:
+	.db	18,49,46,40
+	.dw	_812-_817
+_817:
+	.db	146,178,2,0,47
+	.dw	_814-_818
+_818:
+_812:
+	.db	18,50,46,40
+	.dw	_813-_819
+_819:
+	.db	146,179,2,0,47
+	.dw	_814-_820
+_820:
+_813:
+	.db	146,180,2,0
+_814:
+	.db	22,19,62,36,33,64,34,22,15,3,19,127,16,17,8,120,4
+	.dl	(_587-_576)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_821-_825
+_825:
+	.db	146,177,2,0,47
+	.dw	_824-_826
+_826:
+_821:
+	.db	18,49,46,40
+	.dw	_822-_827
+_827:
+	.db	146,178,2,0,47
+	.dw	_824-_828
+_828:
+_822:
+	.db	18,50,46,40
+	.dw	_823-_829
+_829:
+	.db	146,179,2,0,47
+	.dw	_824-_830
+_830:
+_823:
+	.db	146,180,2,0
+_824:
+	.db	22,19,62,36,33,66,34,22,15,3,19,127,18,17,9,119,4
+	.dl	(_598-_587)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_831-_835
+_835:
+	.db	146,177,2,0,47
+	.dw	_834-_836
+_836:
+_831:
+	.db	18,49,46,40
+	.dw	_832-_837
+_837:
+	.db	146,178,2,0,47
+	.dw	_834-_838
+_838:
+_832:
+	.db	18,50,46,40
+	.dw	_833-_839
+_839:
+	.db	146,179,2,0,47
+	.dw	_834-_840
+_840:
+_833:
+	.db	146,180,2,0
+_834:
+	.db	22,19,62,36,33,68,34,22,15,3,19,127,20,17,10,118,4
+	.dl	(_609-_598)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_841-_845
+_845:
+	.db	146,177,2,0,47
+	.dw	_844-_846
+_846:
+_841:
+	.db	18,49,46,40
+	.dw	_842-_847
+_847:
+	.db	146,178,2,0,47
+	.dw	_844-_848
+_848:
+_842:
+	.db	18,50,46,40
+	.dw	_843-_849
+_849:
+	.db	146,179,2,0,47
+	.dw	_844-_850
+_850:
+_843:
+	.db	146,180,2,0
+_844:
+	.db	22,19,62,36,33,70,34,22,15,3,19,127,22,4
+	.dl	(_620-_609)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_851-_855
+_855:
+	.db	146,177,2,0,47
+	.dw	_854-_856
+_856:
+_851:
+	.db	18,49,46,40
+	.dw	_852-_857
+_857:
+	.db	146,178,2,0,47
+	.dw	_854-_858
+_858:
+_852:
+	.db	18,50,46,40
+	.dw	_853-_859
+_859:
+	.db	146,179,2,0,47
+	.dw	_854-_860
+_860:
+_853:
+	.db	146,180,2,0
+_854:
+	.db	22,19,62,36,33,68,34,22,15,3,19,127,20,4
+	.dl	(_631-_620)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_861-_865
+_865:
+	.db	146,177,2,0,47
+	.dw	_864-_866
+_866:
+_861:
+	.db	18,49,46,40
+	.dw	_862-_867
+_867:
+	.db	146,178,2,0,47
+	.dw	_864-_868
+_868:
+_862:
+	.db	18,50,46,40
+	.dw	_863-_869
+_869:
+	.db	146,179,2,0,47
+	.dw	_864-_870
+_870:
+_863:
+	.db	146,180,2,0
+_864:
+	.db	22,19,62,36,33,66,34,22,15,3,19,127,18,202,4
+	.dl	(_642-_631)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_871-_875
+_875:
+	.db	146,177,2,0,47
+	.dw	_874-_876
+_876:
+_871:
+	.db	18,49,46,40
+	.dw	_872-_877
+_877:
+	.db	146,178,2,0,47
+	.dw	_874-_878
+_878:
+_872:
+	.db	18,50,46,40
+	.dw	_873-_879
+_879:
+	.db	146,179,2,0,47
+	.dw	_874-_880
+_880:
+_873:
+	.db	146,180,2,0
+_874:
+	.db	22,19,62,36,33,64,34,22,15,3,19,127,16,201,4
+	.dl	(_653-_642)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_881-_885
+_885:
+	.db	146,177,2,0,47
+	.dw	_884-_886
+_886:
+_881:
+	.db	18,49,46,40
+	.dw	_882-_887
+_887:
+	.db	146,178,2,0,47
+	.dw	_884-_888
+_888:
+_882:
+	.db	18,50,46,40
+	.dw	_883-_889
+_889:
+	.db	146,179,2,0,47
+	.dw	_884-_890
+_890:
+_883:
+	.db	146,180,2,0
+_884:
+	.db	22,19,62,36,33,62,34,22,15,3,19,127,14,200,4
+	.dl	(_664-_653)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_891-_895
+_895:
+	.db	146,177,2,0,47
+	.dw	_894-_896
+_896:
+_891:
+	.db	18,49,46,40
+	.dw	_892-_897
+_897:
+	.db	146,178,2,0,47
+	.dw	_894-_898
+_898:
+_892:
+	.db	18,50,46,40
+	.dw	_893-_899
+_899:
+	.db	146,179,2,0,47
+	.dw	_894-_900
+_900:
+_893:
+	.db	146,180,2,0
+_894:
+	.db	22,19,62,36,33,60,34,22,15,3,19,127,12,199,4
+	.dl	(_675-_664)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_901-_905
+_905:
+	.db	146,177,2,0,47
+	.dw	_904-_906
+_906:
+_901:
+	.db	18,49,46,40
+	.dw	_902-_907
+_907:
+	.db	146,178,2,0,47
+	.dw	_904-_908
+_908:
+_902:
+	.db	18,50,46,40
+	.dw	_903-_909
+_909:
+	.db	146,179,2,0,47
+	.dw	_904-_910
+_910:
+_903:
+	.db	146,180,2,0
+_904:
+	.db	22,19,62,36,33,58,34,22,15,3,19,127,10,198,4
+	.dl	(_686-_675)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_911-_915
+_915:
+	.db	146,177,2,0,47
+	.dw	_914-_916
+_916:
+_911:
+	.db	18,49,46,40
+	.dw	_912-_917
+_917:
+	.db	146,178,2,0,47
+	.dw	_914-_918
+_918:
+_912:
+	.db	18,50,46,40
+	.dw	_913-_919
+_919:
+	.db	146,179,2,0,47
+	.dw	_914-_920
+_920:
+_913:
+	.db	146,180,2,0
+_914:
+	.db	22,19,62,36,33,56,34,22,15,3,19,127,8,193,4
+	.dl	(_697-_686)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_921-_925
+_925:
+	.db	146,177,2,0,47
+	.dw	_924-_926
+_926:
+_921:
+	.db	18,49,46,40
+	.dw	_922-_927
+_927:
+	.db	146,178,2,0,47
+	.dw	_924-_928
+_928:
+_922:
+	.db	18,50,46,40
+	.dw	_923-_929
+_929:
+	.db	146,179,2,0,47
+	.dw	_924-_930
+_930:
+_923:
+	.db	146,180,2,0
+_924:
+	.db	22,19,62,36,33,54,34,22,15,3,19,127,6,192,4
+	.dl	(_931-_697)/2
+	.db	6,163,2,4
+	.dl	(_708-_931)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_932-_936
+_936:
+	.db	146,177,2,0,47
+	.dw	_935-_937
+_937:
+_932:
+	.db	18,49,46,40
+	.dw	_933-_938
+_938:
+	.db	146,178,2,0,47
+	.dw	_935-_939
+_939:
+_933:
+	.db	18,50,46,40
+	.dw	_934-_940
+_940:
+	.db	146,179,2,0,47
+	.dw	_935-_941
+_941:
+_934:
+	.db	146,180,2,0
+_935:
+	.db	22,19,62,36,33,52,34,22,15,3,19,127,4,4
+	.dl	(_942-_708)/2
+	.db	6,164,2,4
+	.dl	(_719-_942)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_943-_947
+_947:
+	.db	146,177,2,0,47
+	.dw	_946-_948
+_948:
+_943:
+	.db	18,49,46,40
+	.dw	_944-_949
+_949:
+	.db	146,178,2,0,47
+	.dw	_946-_950
+_950:
+_944:
+	.db	18,50,46,40
+	.dw	_945-_951
+_951:
+	.db	146,179,2,0,47
+	.dw	_946-_952
+_952:
+_945:
+	.db	146,180,2,0
+_946:
+	.db	22,19,62,36,33,50,34,22,15,3,19,127,2,4
+	.dl	(_953-_719)/2
+	.db	6,165,2,4
+	.dl	(_730-_953)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_954-_958
+_958:
+	.db	146,177,2,0,47
+	.dw	_957-_959
+_959:
+_954:
+	.db	18,49,46,40
+	.dw	_955-_960
+_960:
+	.db	146,178,2,0,47
+	.dw	_957-_961
+_961:
+_955:
+	.db	18,50,46,40
+	.dw	_956-_962
+_962:
+	.db	146,179,2,0,47
+	.dw	_957-_963
+_963:
+_956:
+	.db	146,180,2,0
+_957:
+	.db	22,19,62,36,33,48,34,8,15,0,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'PedalSensor_calibrationCycle'
+	.dl	608
+	.dl	_2507,_103,_317-_103
+	.db	4
+	.dl	(_978-_103)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1066-_1070
+_1070:
+	.db	146,177,2,0,47
+	.dw	_1069-_1071
+_1071:
+_1066:
+	.db	18,49,46,40
+	.dw	_1067-_1072
+_1072:
+	.db	146,178,2,0,47
+	.dw	_1069-_1073
+_1073:
+_1067:
+	.db	18,50,46,40
+	.dw	_1068-_1074
+_1074:
+	.db	146,179,2,0,47
+	.dw	_1069-_1075
+_1075:
+_1068:
+	.db	146,180,2,0
+_1069:
+	.db	22,19,62,36,33,50,34,22,15,3,19,127,2,17,6,127,4
+	.dl	(_989-_978)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1076-_1080
+_1080:
+	.db	146,177,2,0,47
+	.dw	_1079-_1081
+_1081:
+_1076:
+	.db	18,49,46,40
+	.dw	_1077-_1082
+_1082:
+	.db	146,178,2,0,47
+	.dw	_1079-_1083
+_1083:
+_1077:
+	.db	18,50,46,40
+	.dw	_1078-_1084
+_1084:
+	.db	146,179,2,0,47
+	.dw	_1079-_1085
+_1085:
+_1078:
+	.db	146,180,2,0
+_1079:
+	.db	22,19,62,36,33,52,34,22,15,3,19,127,4,17,8,126,4
+	.dl	(_1000-_989)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1086-_1090
+_1090:
+	.db	146,177,2,0,47
+	.dw	_1089-_1091
+_1091:
+_1086:
+	.db	18,49,46,40
+	.dw	_1087-_1092
+_1092:
+	.db	146,178,2,0,47
+	.dw	_1089-_1093
+_1093:
+_1087:
+	.db	18,50,46,40
+	.dw	_1088-_1094
+_1094:
+	.db	146,179,2,0,47
+	.dw	_1089-_1095
+_1095:
+_1088:
+	.db	146,180,2,0
+_1089:
+	.db	22,19,62,36,33,54,34,22,15,3,19,127,6,17,9,125,4
+	.dl	(_1011-_1000)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1096-_1100
+_1100:
+	.db	146,177,2,0,47
+	.dw	_1099-_1101
+_1101:
+_1096:
+	.db	18,49,46,40
+	.dw	_1097-_1102
+_1102:
+	.db	146,178,2,0,47
+	.dw	_1099-_1103
+_1103:
+_1097:
+	.db	18,50,46,40
+	.dw	_1098-_1104
+_1104:
+	.db	146,179,2,0,47
+	.dw	_1099-_1105
+_1105:
+_1098:
+	.db	146,180,2,0
+_1099:
+	.db	22,19,62,36,33,56,34,22,15,3,19,127,8,17,10,124,4
+	.dl	(_1022-_1011)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1106-_1110
+_1110:
+	.db	146,177,2,0,47
+	.dw	_1109-_1111
+_1111:
+_1106:
+	.db	18,49,46,40
+	.dw	_1107-_1112
+_1112:
+	.db	146,178,2,0,47
+	.dw	_1109-_1113
+_1113:
+_1107:
+	.db	18,50,46,40
+	.dw	_1108-_1114
+_1114:
+	.db	146,179,2,0,47
+	.dw	_1109-_1115
+_1115:
+_1108:
+	.db	146,180,2,0
+_1109:
+	.db	22,19,62,36,33,54,34,22,15,3,19,127,6,202,4
+	.dl	(_1033-_1022)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1116-_1120
+_1120:
+	.db	146,177,2,0,47
+	.dw	_1119-_1121
+_1121:
+_1116:
+	.db	18,49,46,40
+	.dw	_1117-_1122
+_1122:
+	.db	146,178,2,0,47
+	.dw	_1119-_1123
+_1123:
+_1117:
+	.db	18,50,46,40
+	.dw	_1118-_1124
+_1124:
+	.db	146,179,2,0,47
+	.dw	_1119-_1125
+_1125:
+_1118:
+	.db	146,180,2,0
+_1119:
+	.db	22,19,62,36,33,52,34,22,15,3,19,127,4,201,4
+	.dl	(_1044-_1033)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1126-_1130
+_1130:
+	.db	146,177,2,0,47
+	.dw	_1129-_1131
+_1131:
+_1126:
+	.db	18,49,46,40
+	.dw	_1127-_1132
+_1132:
+	.db	146,178,2,0,47
+	.dw	_1129-_1133
+_1133:
+_1127:
+	.db	18,50,46,40
+	.dw	_1128-_1134
+_1134:
+	.db	146,179,2,0,47
+	.dw	_1129-_1135
+_1135:
+_1128:
+	.db	146,180,2,0
+_1129:
+	.db	22,19,62,36,33,50,34,22,15,3,19,127,2,200,4
+	.dl	(_1055-_1044)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1136-_1140
+_1140:
+	.db	146,177,2,0,47
+	.dw	_1139-_1141
+_1141:
+_1136:
+	.db	18,49,46,40
+	.dw	_1137-_1142
+_1142:
+	.db	146,178,2,0,47
+	.dw	_1139-_1143
+_1143:
+_1137:
+	.db	18,50,46,40
+	.dw	_1138-_1144
+_1144:
+	.db	146,179,2,0,47
+	.dw	_1139-_1145
+_1145:
+_1138:
+	.db	146,180,2,0
+_1139:
+	.db	22,19,62,36,33,48,34,8,15,198
+	; End of section
+
+	.debug		.debug_frame, cluster 'PedalSensor_startCalibration'
+	.dl	608
+	.dl	_2507,_115,_322-_115
+	.db	4
+	.dl	(_1160-_115)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1248-_1252
+_1252:
+	.db	146,177,2,0,47
+	.dw	_1251-_1253
+_1253:
+_1248:
+	.db	18,49,46,40
+	.dw	_1249-_1254
+_1254:
+	.db	146,178,2,0,47
+	.dw	_1251-_1255
+_1255:
+_1249:
+	.db	18,50,46,40
+	.dw	_1250-_1256
+_1256:
+	.db	146,179,2,0,47
+	.dw	_1251-_1257
+_1257:
+_1250:
+	.db	146,180,2,0
+_1251:
+	.db	22,19,62,36,33,50,34,22,15,3,19,127,2,17,6,127,4
+	.dl	(_1171-_1160)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1258-_1262
+_1262:
+	.db	146,177,2,0,47
+	.dw	_1261-_1263
+_1263:
+_1258:
+	.db	18,49,46,40
+	.dw	_1259-_1264
+_1264:
+	.db	146,178,2,0,47
+	.dw	_1261-_1265
+_1265:
+_1259:
+	.db	18,50,46,40
+	.dw	_1260-_1266
+_1266:
+	.db	146,179,2,0,47
+	.dw	_1261-_1267
+_1267:
+_1260:
+	.db	146,180,2,0
+_1261:
+	.db	22,19,62,36,33,52,34,22,15,3,19,127,4,17,8,126,4
+	.dl	(_1182-_1171)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1268-_1272
+_1272:
+	.db	146,177,2,0,47
+	.dw	_1271-_1273
+_1273:
+_1268:
+	.db	18,49,46,40
+	.dw	_1269-_1274
+_1274:
+	.db	146,178,2,0,47
+	.dw	_1271-_1275
+_1275:
+_1269:
+	.db	18,50,46,40
+	.dw	_1270-_1276
+_1276:
+	.db	146,179,2,0,47
+	.dw	_1271-_1277
+_1277:
+_1270:
+	.db	146,180,2,0
+_1271:
+	.db	22,19,62,36,33,54,34,22,15,3,19,127,6,17,9,125,4
+	.dl	(_1193-_1182)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1278-_1282
+_1282:
+	.db	146,177,2,0,47
+	.dw	_1281-_1283
+_1283:
+_1278:
+	.db	18,49,46,40
+	.dw	_1279-_1284
+_1284:
+	.db	146,178,2,0,47
+	.dw	_1281-_1285
+_1285:
+_1279:
+	.db	18,50,46,40
+	.dw	_1280-_1286
+_1286:
+	.db	146,179,2,0,47
+	.dw	_1281-_1287
+_1287:
+_1280:
+	.db	146,180,2,0
+_1281:
+	.db	22,19,62,36,33,56,34,22,15,3,19,127,8,17,10,124,4
+	.dl	(_1204-_1193)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1288-_1292
+_1292:
+	.db	146,177,2,0,47
+	.dw	_1291-_1293
+_1293:
+_1288:
+	.db	18,49,46,40
+	.dw	_1289-_1294
+_1294:
+	.db	146,178,2,0,47
+	.dw	_1291-_1295
+_1295:
+_1289:
+	.db	18,50,46,40
+	.dw	_1290-_1296
+_1296:
+	.db	146,179,2,0,47
+	.dw	_1291-_1297
+_1297:
+_1290:
+	.db	146,180,2,0
+_1291:
+	.db	22,19,62,36,33,54,34,22,15,3,19,127,6,202,4
+	.dl	(_1215-_1204)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1298-_1302
+_1302:
+	.db	146,177,2,0,47
+	.dw	_1301-_1303
+_1303:
+_1298:
+	.db	18,49,46,40
+	.dw	_1299-_1304
+_1304:
+	.db	146,178,2,0,47
+	.dw	_1301-_1305
+_1305:
+_1299:
+	.db	18,50,46,40
+	.dw	_1300-_1306
+_1306:
+	.db	146,179,2,0,47
+	.dw	_1301-_1307
+_1307:
+_1300:
+	.db	146,180,2,0
+_1301:
+	.db	22,19,62,36,33,52,34,22,15,3,19,127,4,201,4
+	.dl	(_1226-_1215)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1308-_1312
+_1312:
+	.db	146,177,2,0,47
+	.dw	_1311-_1313
+_1313:
+_1308:
+	.db	18,49,46,40
+	.dw	_1309-_1314
+_1314:
+	.db	146,178,2,0,47
+	.dw	_1311-_1315
+_1315:
+_1309:
+	.db	18,50,46,40
+	.dw	_1310-_1316
+_1316:
+	.db	146,179,2,0,47
+	.dw	_1311-_1317
+_1317:
+_1310:
+	.db	146,180,2,0
+_1311:
+	.db	22,19,62,36,33,50,34,22,15,3,19,127,2,200,4
+	.dl	(_1237-_1226)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1318-_1322
+_1322:
+	.db	146,177,2,0,47
+	.dw	_1321-_1323
+_1323:
+_1318:
+	.db	18,49,46,40
+	.dw	_1319-_1324
+_1324:
+	.db	146,178,2,0,47
+	.dw	_1321-_1325
+_1325:
+_1319:
+	.db	18,50,46,40
+	.dw	_1320-_1326
+_1326:
+	.db	146,179,2,0,47
+	.dw	_1321-_1327
+_1327:
+_1320:
+	.db	146,180,2,0
+_1321:
+	.db	22,19,62,36,33,48,34,8,15,198
+	; End of section
+
+	.debug		.debug_frame, cluster 'PedalSensor_resetCalibration'
+	.dl	20
+	.dl	_2507,_127,_327-_127
+	.db	8,160,2,8,5,8,14,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'PedalSensor_getPercent'
+	.dl	28
+	.dl	_2507,_139,_332-_139
+	.db	8,160,2,8,4,8,5,8,12,8,13,8,14,0,0,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'PedalSensor_getBrakesOn'
+	.dl	28
+	.dl	_2507,_151,_337-_151
+	.db	8,160,2,8,4,8,5,8,11,8,12,8,13,8,14,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'PedalSensor_getCalibrated'
+	.dl	28
+	.dl	_2507,_163,_342-_163
+	.db	8,160,2,8,4,8,5,8,11,8,12,8,13,8,14,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'PedalSensor_getIndividualSensorPercent'
+	.dl	772
+	.dl	_2507,_175,_347-_175
+	.db	4
+	.dl	(_1335-_175)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1445-_1449
+_1449:
+	.db	146,177,2,0,47
+	.dw	_1448-_1450
+_1450:
+_1445:
+	.db	18,49,46,40
+	.dw	_1446-_1451
+_1451:
+	.db	146,178,2,0,47
+	.dw	_1448-_1452
+_1452:
+_1446:
+	.db	18,50,46,40
+	.dw	_1447-_1453
+_1453:
+	.db	146,179,2,0,47
+	.dw	_1448-_1454
+_1454:
+_1447:
+	.db	146,180,2,0
+_1448:
+	.db	22,19,62,36,33,50,34,22,15,3,19,127,2,4
+	.dl	(_1346-_1335)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1455-_1459
+_1459:
+	.db	146,177,2,0,47
+	.dw	_1458-_1460
+_1460:
+_1455:
+	.db	18,49,46,40
+	.dw	_1456-_1461
+_1461:
+	.db	146,178,2,0,47
+	.dw	_1458-_1462
+_1462:
+_1456:
+	.db	18,50,46,40
+	.dw	_1457-_1463
+_1463:
+	.db	146,179,2,0,47
+	.dw	_1458-_1464
+_1464:
+_1457:
+	.db	146,180,2,0
+_1458:
+	.db	22,19,62,36,33,52,34,22,15,3,19,127,4,4
+	.dl	(_1357-_1346)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1465-_1469
+_1469:
+	.db	146,177,2,0,47
+	.dw	_1468-_1470
+_1470:
+_1465:
+	.db	18,49,46,40
+	.dw	_1466-_1471
+_1471:
+	.db	146,178,2,0,47
+	.dw	_1468-_1472
+_1472:
+_1466:
+	.db	18,50,46,40
+	.dw	_1467-_1473
+_1473:
+	.db	146,179,2,0,47
+	.dw	_1468-_1474
+_1474:
+_1467:
+	.db	146,180,2,0
+_1468:
+	.db	22,19,62,36,33,54,34,22,15,3,19,127,6,4
+	.dl	(_1368-_1357)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1475-_1479
+_1479:
+	.db	146,177,2,0,47
+	.dw	_1478-_1480
+_1480:
+_1475:
+	.db	18,49,46,40
+	.dw	_1476-_1481
+_1481:
+	.db	146,178,2,0,47
+	.dw	_1478-_1482
+_1482:
+_1476:
+	.db	18,50,46,40
+	.dw	_1477-_1483
+_1483:
+	.db	146,179,2,0,47
+	.dw	_1478-_1484
+_1484:
+_1477:
+	.db	146,180,2,0
+_1478:
+	.db	22,19,62,36,33,56,34,22,15,3,19,127,8,17,1,124,4
+	.dl	(_1379-_1368)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1485-_1489
+_1489:
+	.db	146,177,2,0,47
+	.dw	_1488-_1490
+_1490:
+_1485:
+	.db	18,49,46,40
+	.dw	_1486-_1491
+_1491:
+	.db	146,178,2,0,47
+	.dw	_1488-_1492
+_1492:
+_1486:
+	.db	18,50,46,40
+	.dw	_1487-_1493
+_1493:
+	.db	146,179,2,0,47
+	.dw	_1488-_1494
+_1494:
+_1487:
+	.db	146,180,2,0
+_1488:
+	.db	22,19,62,36,33,58,34,22,15,3,19,127,10,17,6,123,4
+	.dl	(_1390-_1379)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1495-_1499
+_1499:
+	.db	146,177,2,0,47
+	.dw	_1498-_1500
+_1500:
+_1495:
+	.db	18,49,46,40
+	.dw	_1496-_1501
+_1501:
+	.db	146,178,2,0,47
+	.dw	_1498-_1502
+_1502:
+_1496:
+	.db	18,50,46,40
+	.dw	_1497-_1503
+_1503:
+	.db	146,179,2,0,47
+	.dw	_1498-_1504
+_1504:
+_1497:
+	.db	146,180,2,0
+_1498:
+	.db	22,19,62,36,33,56,34,22,15,3,19,127,8,198,4
+	.dl	(_1401-_1390)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1505-_1509
+_1509:
+	.db	146,177,2,0,47
+	.dw	_1508-_1510
+_1510:
+_1505:
+	.db	18,49,46,40
+	.dw	_1506-_1511
+_1511:
+	.db	146,178,2,0,47
+	.dw	_1508-_1512
+_1512:
+_1506:
+	.db	18,50,46,40
+	.dw	_1507-_1513
+_1513:
+	.db	146,179,2,0,47
+	.dw	_1508-_1514
+_1514:
+_1507:
+	.db	146,180,2,0
+_1508:
+	.db	22,19,62,36,33,54,34,22,15,3,19,127,6,193,4
+	.dl	(_1515-_1401)/2
+	.db	6,163,2,4
+	.dl	(_1412-_1515)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1516-_1520
+_1520:
+	.db	146,177,2,0,47
+	.dw	_1519-_1521
+_1521:
+_1516:
+	.db	18,49,46,40
+	.dw	_1517-_1522
+_1522:
+	.db	146,178,2,0,47
+	.dw	_1519-_1523
+_1523:
+_1517:
+	.db	18,50,46,40
+	.dw	_1518-_1524
+_1524:
+	.db	146,179,2,0,47
+	.dw	_1519-_1525
+_1525:
+_1518:
+	.db	146,180,2,0
+_1519:
+	.db	22,19,62,36,33,52,34,22,15,3,19,127,4,4
+	.dl	(_1526-_1412)/2
+	.db	6,164,2,4
+	.dl	(_1423-_1526)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1527-_1531
+_1531:
+	.db	146,177,2,0,47
+	.dw	_1530-_1532
+_1532:
+_1527:
+	.db	18,49,46,40
+	.dw	_1528-_1533
+_1533:
+	.db	146,178,2,0,47
+	.dw	_1530-_1534
+_1534:
+_1528:
+	.db	18,50,46,40
+	.dw	_1529-_1535
+_1535:
+	.db	146,179,2,0,47
+	.dw	_1530-_1536
+_1536:
+_1529:
+	.db	146,180,2,0
+_1530:
+	.db	22,19,62,36,33,50,34,22,15,3,19,127,2,4
+	.dl	(_1537-_1423)/2
+	.db	6,165,2,4
+	.dl	(_1434-_1537)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1538-_1542
+_1542:
+	.db	146,177,2,0,47
+	.dw	_1541-_1543
+_1543:
+_1538:
+	.db	18,49,46,40
+	.dw	_1539-_1544
+_1544:
+	.db	146,178,2,0,47
+	.dw	_1541-_1545
+_1545:
+_1539:
+	.db	18,50,46,40
+	.dw	_1540-_1546
+_1546:
+	.db	146,179,2,0,47
+	.dw	_1541-_1547
+_1547:
+_1540:
+	.db	146,180,2,0
+_1541:
+	.db	22,19,62,36,33,48,34,8,15,0,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'PedalSensor_getTravelPercent'
+	.dl	28
+	.dl	_2507,_187,_352-_187
+	.db	8,160,2,8,4,8,5,8,12,8,13,8,14,0,0,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'PedalSensor_getCalibMinPrimary'
+	.dl	28
+	.dl	_2507,_199,_357-_199
+	.db	8,160,2,8,4,8,5,8,12,8,13,8,14,0,0,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'PedalSensor_getCalibMaxPrimary'
+	.dl	28
+	.dl	_2507,_211,_362-_211
+	.db	8,160,2,8,4,8,5,8,12,8,13,8,14,0,0,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'PedalSensor_getCalibMinSecondary'
+	.dl	28
+	.dl	_2507,_223,_367-_223
+	.db	8,160,2,8,4,8,5,8,12,8,13,8,14,0,0,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'PedalSensor_getCalibMaxSecondary'
+	.dl	28
+	.dl	_2507,_235,_372-_235
+	.db	8,160,2,8,4,8,5,8,12,8,13,8,14,0,0,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'PedalSensor_getSensorValuePrimary'
+	.dl	28
+	.dl	_2507,_247,_377-_247
+	.db	8,160,2,8,4,8,5,8,12,8,13,8,14,0,0,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'PedalSensor_getSensorValueSecondary'
+	.dl	28
+	.dl	_2507,_259,_382-_259
+	.db	8,160,2,8,4,8,5,8,12,8,13,8,14,0,0,0
+	; End of section
+
+	.debug		.debug_frame, cluster 'PedalSensor_checkImplausibility'
+	.dl	1520
+	.dl	_2507,_271,_387-_271
+	.db	4
+	.dl	(_1565-_271)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1785-_1789
+_1789:
+	.db	146,177,2,0,47
+	.dw	_1788-_1790
+_1790:
+_1785:
+	.db	18,49,46,40
+	.dw	_1786-_1791
+_1791:
+	.db	146,178,2,0,47
+	.dw	_1788-_1792
+_1792:
+_1786:
+	.db	18,50,46,40
+	.dw	_1787-_1793
+_1793:
+	.db	146,179,2,0,47
+	.dw	_1788-_1794
+_1794:
+_1787:
+	.db	146,180,2,0
+_1788:
+	.db	22,19,62,36,33,50,34,22,15,3,19,127,2,4
+	.dl	(_1576-_1565)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1795-_1799
+_1799:
+	.db	146,177,2,0,47
+	.dw	_1798-_1800
+_1800:
+_1795:
+	.db	18,49,46,40
+	.dw	_1796-_1801
+_1801:
+	.db	146,178,2,0,47
+	.dw	_1798-_1802
+_1802:
+_1796:
+	.db	18,50,46,40
+	.dw	_1797-_1803
+_1803:
+	.db	146,179,2,0,47
+	.dw	_1798-_1804
+_1804:
+_1797:
+	.db	146,180,2,0
+_1798:
+	.db	22,19,62,36,33,52,34,22,15,3,19,127,4,4
+	.dl	(_1587-_1576)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1805-_1809
+_1809:
+	.db	146,177,2,0,47
+	.dw	_1808-_1810
+_1810:
+_1805:
+	.db	18,49,46,40
+	.dw	_1806-_1811
+_1811:
+	.db	146,178,2,0,47
+	.dw	_1808-_1812
+_1812:
+_1806:
+	.db	18,50,46,40
+	.dw	_1807-_1813
+_1813:
+	.db	146,179,2,0,47
+	.dw	_1808-_1814
+_1814:
+_1807:
+	.db	146,180,2,0
+_1808:
+	.db	22,19,62,36,33,54,34,22,15,3,19,127,6,4
+	.dl	(_1598-_1587)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1815-_1819
+_1819:
+	.db	146,177,2,0,47
+	.dw	_1818-_1820
+_1820:
+_1815:
+	.db	18,49,46,40
+	.dw	_1816-_1821
+_1821:
+	.db	146,178,2,0,47
+	.dw	_1818-_1822
+_1822:
+_1816:
+	.db	18,50,46,40
+	.dw	_1817-_1823
+_1823:
+	.db	146,179,2,0,47
+	.dw	_1818-_1824
+_1824:
+_1817:
+	.db	146,180,2,0
+_1818:
+	.db	22,19,62,36,33,56,34,22,15,3,19,127,8,17,0,124,4
+	.dl	(_1609-_1598)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1825-_1829
+_1829:
+	.db	146,177,2,0,47
+	.dw	_1828-_1830
+_1830:
+_1825:
+	.db	18,49,46,40
+	.dw	_1826-_1831
+_1831:
+	.db	146,178,2,0,47
+	.dw	_1828-_1832
+_1832:
+_1826:
+	.db	18,50,46,40
+	.dw	_1827-_1833
+_1833:
+	.db	146,179,2,0,47
+	.dw	_1828-_1834
+_1834:
+_1827:
+	.db	146,180,2,0
+_1828:
+	.db	22,19,62,36,33,58,34,22,15,3,19,127,10,17,1,123,4
+	.dl	(_1620-_1609)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1835-_1839
+_1839:
+	.db	146,177,2,0,47
+	.dw	_1838-_1840
+_1840:
+_1835:
+	.db	18,49,46,40
+	.dw	_1836-_1841
+_1841:
+	.db	146,178,2,0,47
+	.dw	_1838-_1842
+_1842:
+_1836:
+	.db	18,50,46,40
+	.dw	_1837-_1843
+_1843:
+	.db	146,179,2,0,47
+	.dw	_1838-_1844
+_1844:
+_1837:
+	.db	146,180,2,0
+_1838:
+	.db	22,19,62,36,33,60,34,22,15,3,19,127,12,17,6,122,4
+	.dl	(_1631-_1620)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1845-_1849
+_1849:
+	.db	146,177,2,0,47
+	.dw	_1848-_1850
+_1850:
+_1845:
+	.db	18,49,46,40
+	.dw	_1846-_1851
+_1851:
+	.db	146,178,2,0,47
+	.dw	_1848-_1852
+_1852:
+_1846:
+	.db	18,50,46,40
+	.dw	_1847-_1853
+_1853:
+	.db	146,179,2,0,47
+	.dw	_1848-_1854
+_1854:
+_1847:
+	.db	146,180,2,0
+_1848:
+	.db	22,19,62,36,33,62,34,22,15,3,19,127,14,17,7,121,4
+	.dl	(_1642-_1631)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1855-_1859
+_1859:
+	.db	146,177,2,0,47
+	.dw	_1858-_1860
+_1860:
+_1855:
+	.db	18,49,46,40
+	.dw	_1856-_1861
+_1861:
+	.db	146,178,2,0,47
+	.dw	_1858-_1862
+_1862:
+_1856:
+	.db	18,50,46,40
+	.dw	_1857-_1863
+_1863:
+	.db	146,179,2,0,47
+	.dw	_1858-_1864
+_1864:
+_1857:
+	.db	146,180,2,0
+_1858:
+	.db	22,19,62,36,33,64,34,22,15,3,19,127,16,17,8,120,4
+	.dl	(_1653-_1642)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1865-_1869
+_1869:
+	.db	146,177,2,0,47
+	.dw	_1868-_1870
+_1870:
+_1865:
+	.db	18,49,46,40
+	.dw	_1866-_1871
+_1871:
+	.db	146,178,2,0,47
+	.dw	_1868-_1872
+_1872:
+_1866:
+	.db	18,50,46,40
+	.dw	_1867-_1873
+_1873:
+	.db	146,179,2,0,47
+	.dw	_1868-_1874
+_1874:
+_1867:
+	.db	146,180,2,0
+_1868:
+	.db	22,19,62,36,33,66,34,22,15,3,19,127,18,17,9,119,4
+	.dl	(_1664-_1653)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1875-_1879
+_1879:
+	.db	146,177,2,0,47
+	.dw	_1878-_1880
+_1880:
+_1875:
+	.db	18,49,46,40
+	.dw	_1876-_1881
+_1881:
+	.db	146,178,2,0,47
+	.dw	_1878-_1882
+_1882:
+_1876:
+	.db	18,50,46,40
+	.dw	_1877-_1883
+_1883:
+	.db	146,179,2,0,47
+	.dw	_1878-_1884
+_1884:
+_1877:
+	.db	146,180,2,0
+_1878:
+	.db	22,19,62,36,33,68,34,22,15,3,19,127,20,17,10,118,4
+	.dl	(_1675-_1664)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1885-_1889
+_1889:
+	.db	146,177,2,0,47
+	.dw	_1888-_1890
+_1890:
+_1885:
+	.db	18,49,46,40
+	.dw	_1886-_1891
+_1891:
+	.db	146,178,2,0,47
+	.dw	_1888-_1892
+_1892:
+_1886:
+	.db	18,50,46,40
+	.dw	_1887-_1893
+_1893:
+	.db	146,179,2,0,47
+	.dw	_1888-_1894
+_1894:
+_1887:
+	.db	146,180,2,0
+_1888:
+	.db	22,19,62,36,33,66,34,22,15,3,19,127,18,202,4
+	.dl	(_1686-_1675)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1895-_1899
+_1899:
+	.db	146,177,2,0,47
+	.dw	_1898-_1900
+_1900:
+_1895:
+	.db	18,49,46,40
+	.dw	_1896-_1901
+_1901:
+	.db	146,178,2,0,47
+	.dw	_1898-_1902
+_1902:
+_1896:
+	.db	18,50,46,40
+	.dw	_1897-_1903
+_1903:
+	.db	146,179,2,0,47
+	.dw	_1898-_1904
+_1904:
+_1897:
+	.db	146,180,2,0
+_1898:
+	.db	22,19,62,36,33,64,34,22,15,3,19,127,16,201,4
+	.dl	(_1697-_1686)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1905-_1909
+_1909:
+	.db	146,177,2,0,47
+	.dw	_1908-_1910
+_1910:
+_1905:
+	.db	18,49,46,40
+	.dw	_1906-_1911
+_1911:
+	.db	146,178,2,0,47
+	.dw	_1908-_1912
+_1912:
+_1906:
+	.db	18,50,46,40
+	.dw	_1907-_1913
+_1913:
+	.db	146,179,2,0,47
+	.dw	_1908-_1914
+_1914:
+_1907:
+	.db	146,180,2,0
+_1908:
+	.db	22,19,62,36,33,62,34,22,15,3,19,127,14,200,4
+	.dl	(_1708-_1697)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1915-_1919
+_1919:
+	.db	146,177,2,0,47
+	.dw	_1918-_1920
+_1920:
+_1915:
+	.db	18,49,46,40
+	.dw	_1916-_1921
+_1921:
+	.db	146,178,2,0,47
+	.dw	_1918-_1922
+_1922:
+_1916:
+	.db	18,50,46,40
+	.dw	_1917-_1923
+_1923:
+	.db	146,179,2,0,47
+	.dw	_1918-_1924
+_1924:
+_1917:
+	.db	146,180,2,0
+_1918:
+	.db	22,19,62,36,33,60,34,22,15,3,19,127,12,199,4
+	.dl	(_1719-_1708)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1925-_1929
+_1929:
+	.db	146,177,2,0,47
+	.dw	_1928-_1930
+_1930:
+_1925:
+	.db	18,49,46,40
+	.dw	_1926-_1931
+_1931:
+	.db	146,178,2,0,47
+	.dw	_1928-_1932
+_1932:
+_1926:
+	.db	18,50,46,40
+	.dw	_1927-_1933
+_1933:
+	.db	146,179,2,0,47
+	.dw	_1928-_1934
+_1934:
+_1927:
+	.db	146,180,2,0
+_1928:
+	.db	22,19,62,36,33,58,34,22,15,3,19,127,10,198,4
+	.dl	(_1730-_1719)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1935-_1939
+_1939:
+	.db	146,177,2,0,47
+	.dw	_1938-_1940
+_1940:
+_1935:
+	.db	18,49,46,40
+	.dw	_1936-_1941
+_1941:
+	.db	146,178,2,0,47
+	.dw	_1938-_1942
+_1942:
+_1936:
+	.db	18,50,46,40
+	.dw	_1937-_1943
+_1943:
+	.db	146,179,2,0,47
+	.dw	_1938-_1944
+_1944:
+_1937:
+	.db	146,180,2,0
+_1938:
+	.db	22,19,62,36,33,56,34,22,15,3,19,127,8,193,4
+	.dl	(_1741-_1730)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1945-_1949
+_1949:
+	.db	146,177,2,0,47
+	.dw	_1948-_1950
+_1950:
+_1945:
+	.db	18,49,46,40
+	.dw	_1946-_1951
+_1951:
+	.db	146,178,2,0,47
+	.dw	_1948-_1952
+_1952:
+_1946:
+	.db	18,50,46,40
+	.dw	_1947-_1953
+_1953:
+	.db	146,179,2,0,47
+	.dw	_1948-_1954
+_1954:
+_1947:
+	.db	146,180,2,0
+_1948:
+	.db	22,19,62,36,33,54,34,22,15,3,19,127,6,192,4
+	.dl	(_1955-_1741)/2
+	.db	6,163,2,4
+	.dl	(_1752-_1955)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1956-_1960
+_1960:
+	.db	146,177,2,0,47
+	.dw	_1959-_1961
+_1961:
+_1956:
+	.db	18,49,46,40
+	.dw	_1957-_1962
+_1962:
+	.db	146,178,2,0,47
+	.dw	_1959-_1963
+_1963:
+_1957:
+	.db	18,50,46,40
+	.dw	_1958-_1964
+_1964:
+	.db	146,179,2,0,47
+	.dw	_1959-_1965
+_1965:
+_1958:
+	.db	146,180,2,0
+_1959:
+	.db	22,19,62,36,33,52,34,22,15,3,19,127,4,4
+	.dl	(_1966-_1752)/2
+	.db	6,164,2,4
+	.dl	(_1763-_1966)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1967-_1971
+_1971:
+	.db	146,177,2,0,47
+	.dw	_1970-_1972
+_1972:
+_1967:
+	.db	18,49,46,40
+	.dw	_1968-_1973
+_1973:
+	.db	146,178,2,0,47
+	.dw	_1970-_1974
+_1974:
+_1968:
+	.db	18,50,46,40
+	.dw	_1969-_1975
+_1975:
+	.db	146,179,2,0,47
+	.dw	_1970-_1976
+_1976:
+_1969:
+	.db	146,180,2,0
+_1970:
+	.db	22,19,62,36,33,50,34,22,15,3,19,127,2,4
+	.dl	(_1977-_1763)/2
+	.db	6,165,2,4
+	.dl	(_1774-_1977)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_1978-_1982
+_1982:
+	.db	146,177,2,0,47
+	.dw	_1981-_1983
+_1983:
+_1978:
+	.db	18,49,46,40
+	.dw	_1979-_1984
+_1984:
+	.db	146,178,2,0,47
+	.dw	_1981-_1985
+_1985:
+_1979:
+	.db	18,50,46,40
+	.dw	_1980-_1986
+_1986:
+	.db	146,179,2,0,47
+	.dw	_1981-_1987
+_1987:
+_1980:
+	.db	146,180,2,0
+_1981:
+	.db	22,19,62,36,33,48,34,8,15
+	; End of section
+
+	.debug		.debug_frame, cluster 'PedalSensor_checkRange'
+	.dl	312
+	.dl	_2507,_283,_392-_283
+	.db	8,160,2,4
+	.dl	(_1992-_283)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_2036-_2040
+_2040:
+	.db	146,177,2,0,47
+	.dw	_2039-_2041
+_2041:
+_2036:
+	.db	18,49,46,40
+	.dw	_2037-_2042
+_2042:
+	.db	146,178,2,0,47
+	.dw	_2039-_2043
+_2043:
+_2037:
+	.db	18,50,46,40
+	.dw	_2038-_2044
+_2044:
+	.db	146,179,2,0,47
+	.dw	_2039-_2045
+_2045:
+_2038:
+	.db	146,180,2,0
+_2039:
+	.db	22,19,62,36,33,50,34,22,15,3,19,127,2,17,8,127,4
+	.dl	(_2003-_1992)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_2046-_2050
+_2050:
+	.db	146,177,2,0,47
+	.dw	_2049-_2051
+_2051:
+_2046:
+	.db	18,49,46,40
+	.dw	_2047-_2052
+_2052:
+	.db	146,178,2,0,47
+	.dw	_2049-_2053
+_2053:
+_2047:
+	.db	18,50,46,40
+	.dw	_2048-_2054
+_2054:
+	.db	146,179,2,0,47
+	.dw	_2049-_2055
+_2055:
+_2048:
+	.db	146,180,2,0
+_2049:
+	.db	22,19,62,36,33,52,34,22,15,3,19,127,4,17,9,126,4
+	.dl	(_2014-_2003)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_2056-_2060
+_2060:
+	.db	146,177,2,0,47
+	.dw	_2059-_2061
+_2061:
+_2056:
+	.db	18,49,46,40
+	.dw	_2057-_2062
+_2062:
+	.db	146,178,2,0,47
+	.dw	_2059-_2063
+_2063:
+_2057:
+	.db	18,50,46,40
+	.dw	_2058-_2064
+_2064:
+	.db	146,179,2,0,47
+	.dw	_2059-_2065
+_2065:
+_2058:
+	.db	146,180,2,0
+_2059:
+	.db	22,19,62,36,33,50,34,22,15,3,19,127,2,201,4
+	.dl	(_2025-_2014)/2
+	.db	15,60,127,0,18,10
+	.dw	16383
+	.db	26,22,62,37,18,48,46,40
+	.dw	_2066-_2070
+_2070:
+	.db	146,177,2,0,47
+	.dw	_2069-_2071
+_2071:
+_2066:
+	.db	18,49,46,40
+	.dw	_2067-_2072
+_2072:
+	.db	146,178,2,0,47
+	.dw	_2069-_2073
+_2073:
+_2067:
+	.db	18,50,46,40
+	.dw	_2068-_2074
+_2074:
+	.db	146,179,2,0,47
+	.dw	_2069-_2075
+_2075:
+_2068:
+	.db	146,180,2,0
+_2069:
+	.db	22,19,62,36,33,48,34,8,15,200,0
+	; End of section
+
+
+
+	; Module end
+	.end

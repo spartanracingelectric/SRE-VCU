@@ -304,6 +304,17 @@ ubyte4 PedalSensor_getSensorValueSecondary(PedalSensor* me)
     return me->secondary_value;
 }
 
+// Sensor object getters (for direct sensor access)
+Sensor* PedalSensor_getPrimarySensor(PedalSensor* me)
+{
+    return me->primary;
+}
+
+Sensor* PedalSensor_getSecondarySensor(PedalSensor* me)
+{
+    return me->secondary;
+}
+
 /*****************************************************************************
 * Safety and Validation Functions
 *****************************************************************************/
