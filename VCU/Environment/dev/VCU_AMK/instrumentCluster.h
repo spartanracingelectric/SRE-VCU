@@ -31,7 +31,6 @@ void IC_parseCanMessage(InstrumentCluster* me, IO_CAN_DATA_FRAME* icCanMessage);
 //----------------------------------------------------------------------------
 
 ubyte1 IC_getTorqueMapMode(InstrumentCluster *me);
-ubyte1 IC_getLaunchControlSensitivity(InstrumentCluster *me);
 
 /*
 void IC_to_MCM_setMaxTorqueDNm(MotorController* mcm, ubyte2 newTorque);

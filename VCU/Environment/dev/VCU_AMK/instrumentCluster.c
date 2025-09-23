@@ -89,10 +89,6 @@ ubyte1 IC_getTorqueMapMode(InstrumentCluster *me)
     return me->torqueMapMode;
 }
 
-ubyte1 IC_getLaunchControlSensitivity(InstrumentCluster *me)
-{
-    return me->launchControlSensitivity;
-}
 
 /*****************************************************************************
 * Motor Controller module Accessors / Mutators (Set/Get)
