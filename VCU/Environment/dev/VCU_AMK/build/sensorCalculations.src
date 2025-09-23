@@ -1,5 +1,5 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc8908a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2025 -DRTS_TTC_FLASH_DATE_MONTH=9 -DRTS_TTC_FLASH_DATE_DAY=23 -DRTS_TTC_FLASH_DATE_HOUR=12 -DRTS_TTC_FLASH_DATE_MINUTE=30 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\sensorCalculations.src
+	; Options: -f cc2964a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2025 -DRTS_TTC_FLASH_DATE_MONTH=9 -DRTS_TTC_FLASH_DATE_DAY=23 -DRTS_TTC_FLASH_DATE_HOUR=12 -DRTS_TTC_FLASH_DATE_MINUTE=54 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\sensorCalculations.src
 	; Module start
 	.source	'sensorCalculations.c'
 code_CalibrateBPS	.section	code, cluster 'CalibrateBPS', new
@@ -37,213 +37,212 @@ code_CalibrateBPS	.section	code, cluster 'CalibrateBPS', new
 ; sensorCalculations.c	    30  #include "IO_RTC.h"
 ; sensorCalculations.c	    31  #include "sensorCalculations.h"
 ; sensorCalculations.c	    32  #include "sensors.h"
-; sensorCalculations.c	    33  #include "mathFunctions.h"
-; sensorCalculations.c	    34  
-; sensorCalculations.c	    35  extern Sensor Sensor_TPS0;
-; sensorCalculations.c	    36  extern Sensor Sensor_TPS1;
-; sensorCalculations.c	    37  extern Sensor Sensor_BPS0;
-; sensorCalculations.c	    38  extern Sensor Sensor_BPS1;
-; sensorCalculations.c	    39  
-; sensorCalculations.c	    40  extern Sensor Sensor_SAS;
-; sensorCalculations.c	    41  extern Sensor Sensor_LVBattery;
-; sensorCalculations.c	    42  extern Sensor Sensor_DRSKnob;
-; sensorCalculations.c	    43  extern Sensor Sensor_DRSButton;
-; sensorCalculations.c	    44  
-; sensorCalculations.c	    45  extern Sensor Sensor_BenchTPS0;
-; sensorCalculations.c	    46  extern Sensor Sensor_BenchTPS1;
-; sensorCalculations.c	    47  
-; sensorCalculations.c	    48  extern Sensor Sensor_RTDButton;
-; sensorCalculations.c	    49  extern Sensor Sensor_EcoButton;
-; sensorCalculations.c	    50  extern Sensor Sensor_TCSSwitchUp;
-; sensorCalculations.c	    51  extern Sensor Sensor_TCSSwitchDown;
-; sensorCalculations.c	    52  extern Sensor Sensor_HVILTerminationSense;
-; sensorCalculations.c	    53  
-; sensorCalculations.c	    54  /*****************************************************************************
-; sensorCalculations.c	    55  * Torque Encoder (TPS) functions
-; sensorCalculations.c	    56  * RULE EV2.3.5:
-; sensorCalculations.c	    57  * If an implausibility occurs between the values of these two sensors the power to the motor(s) must be immediately shut down completely.
-; sensorCalculations.c	    58  * It is not necessary to completely deactivate the tractive system, the motor controller(s) shutting down the power to the motor(s) is sufficient.
-; sensorCalculations.c	    59  ****************************************************************************/
-; sensorCalculations.c	    60  
-; sensorCalculations.c	    61  // Physical pedal travel will only occur across the center (about 1/2) of the actual sensor's range of travel
-; sensorCalculations.c	    62  // The rules (especially EV2.3.6) are written about % of PEDAL travel, not percent of sensor range, so we must calculate pedal travel by recording the min/max voltages at min/max throttle positions
-; sensorCalculations.c	    63  
-; sensorCalculations.c	    64  ///*-------------------------------------------------------------------
-; sensorCalculations.c	    65  //* CalibrateTPS
-; sensorCalculations.c	    66  //* Description: Records TPS minimum/maximum voltages (when?) and stores them (where?)
-; sensorCalculations.c	    67  //* Parameters:
-; sensorCalculations.c	    68  //* Inputs:
-; sensorCalculations.c	    69  //* Returns:
-; sensorCalculations.c	    70  //* Notes:
-; sensorCalculations.c	    71  //* Throws:
-; sensorCalculations.c	    72  //-------------------------------------------------------------------*/
-; sensorCalculations.c	    73  //void calibrateTPS(bool bench, ubyte1 secondsToRunCalibration)
-; sensorCalculations.c	    74  //{
-; sensorCalculations.c	    75  //    Sensor* tps0;
-; sensorCalculations.c	    76  //    Sensor* tps1;
-; sensorCalculations.c	    77  //    //TODO: Make sure the main loop is running before doing this
-; sensorCalculations.c	    78  //    tps0 = (bench == TRUE) ? &Sensor_BenchTPS0 : &Sensor_TPS0;
-; sensorCalculations.c	    79  //    tps1 = (bench == TRUE) ? &Sensor_BenchTPS1 : &Sensor_TPS1;
-; sensorCalculations.c	    80  //
-; sensorCalculations.c	    81  //    //Reset calibration data
-; sensorCalculations.c	    82  // /*   tps0->calibMin = tps0->specMax;
-; sensorCalculations.c	    83  //    tps0->calibMax = tps0->specMin;
-; sensorCalculations.c	    84  //    tps0->isCalibrated = FALSE;
-; sensorCalculations.c	    85  //    tps1->calibMin = tps1->specMax;
-; sensorCalculations.c	    86  //    tps1->calibMax = tps1->specMin;
-; sensorCalculations.c	    87  //    tps1->isCalibrated = FALSE;
-; sensorCalculations.c	    88  //*/
-; sensorCalculations.c	    89  ////    ubyte4 timestamp_calibrationstart = 0;
-; sensorCalculations.c	    90  ////    IO_RTC_StartTime(&timestamp_calibrationstart);  //Get a timestamp of when this task started from the Real Time Clock
-; sensorCalculations.c	    91  ////                                                    //TODO: Don't start coundown until values have been set
-; sensorCalculations.c	    92  ////    while (IO_RTC_GetTimeUS(timestamp_calibrationstart) < (ubyte4)secondsToRunCalibration * 1000 * 1000)   // Give the user # seconds to do this
-; sensorCalculations.c	    93  ////    {
-; sensorCalculations.c	    94  //        //TODO: Do something on the display to show that voltages are being recorded
-; sensorCalculations.c	    95  //        //Idea: Display "bars" filling up on right segment (for gas pedal) _=E=_=E...
-; sensorCalculations.c	    96  //        //      Once calibration data makes sense, show pedal location (0-10%, 10-90%, 90-100%) with bars
-; sensorCalculations.c	    97  //
-; sensorCalculations.c	    98  //        //Record min/max voltages
-; sensorCalculations.c	    99  //        if (tps0->sensorValue < tps0->calibMin) { tps0->calibMin = tps0->sensorValue; }
-; sensorCalculations.c	   100  //        if (tps0->sensorValue > tps0->calibMax) { tps0->calibMax = tps0->sensorValue; }
-; sensorCalculations.c	   101  //        if (tps1->sensorValue < tps1->calibMin) { tps1->calibMin = tps1->sensorValue; }
-; sensorCalculations.c	   102  //        if (tps1->sensorValue > tps1->calibMax) { tps1->calibMax = tps1->sensorValue; }
-; sensorCalculations.c	   103  //
-; sensorCalculations.c	   104  ////    }
-; sensorCalculations.c	   105  //
-; sensorCalculations.c	   106  //    //TODO: Write calibration data to EEPROM
-; sensorCalculations.c	   107  //
-; sensorCalculations.c	   108  //    //TODO: Check for valid/reasonable calibration data
-; sensorCalculations.c	   109  //    tps0->isCalibrated = TRUE;
-; sensorCalculations.c	   110  //    tps1->isCalibrated = TRUE;
-; sensorCalculations.c	   111  //
-; sensorCalculations.c	   112  //    //TODO: Return the display to normal
-; sensorCalculations.c	   113  //}
-; sensorCalculations.c	   114  
-; sensorCalculations.c	   115  ///*-------------------------------------------------------------------
-; sensorCalculations.c	   116  //* GetThrottlePosition
-; sensorCalculations.c	   117  //* Description: Reads TPS Pin voltages and returns % of throttle pedal travel.
-; sensorCalculations.c	   118  //* Parameters:  None
-; sensorCalculations.c	   119  //* Inputs:      Assumes TPS#.sensorValue has been set by main loop
-; sensorCalculations.c	   120  //* Returns:     Throttle value in percent (from 0 to 1)
-; sensorCalculations.c	   121  //* Notes:       Valid pedal travel is from 10% (0.10) to 90% (0.90), not including mechanical limits.
-; sensorCalculations.c	   122  //* Throws:      000 - TPS0 voltage out of range
-; sensorCalculations.c	   123  //*              001 - TPS1 voltage out of range, 002
-; sensorCalculations.c	   124  //-------------------------------------------------------------------*/
-; sensorCalculations.c	   125  //float4 getThrottlePercent(bool bench, ubyte1* errorCount)
-; sensorCalculations.c	   126  //{
-; sensorCalculations.c	   127  //    ubyte2 TPS0_Val = bench ? Sensor_BenchTPS0.sensorValue : Sensor_TPS0.sensorValue;
-; sensorCalculations.c	   128  //    ubyte2 TPS1_Val = bench ? Sensor_BenchTPS1.sensorValue : Sensor_TPS1.sensorValue;
-; sensorCalculations.c	   129  //
-; sensorCalculations.c	   130  //    ubyte2 TPS0_Min = bench ? Sensor_BenchTPS0.specMin : Sensor_TPS0.specMin;
-; sensorCalculations.c	   131  //    ubyte2 TPS0_Max = bench ? Sensor_BenchTPS0.specMax : Sensor_TPS0.specMax;
-; sensorCalculations.c	   132  //    ubyte2 TPS1_Min = bench ? Sensor_BenchTPS1.specMin : Sensor_TPS1.specMin;
-; sensorCalculations.c	   133  //    ubyte2 TPS1_Max = bench ? Sensor_BenchTPS1.specMax : Sensor_TPS1.specMax;
-; sensorCalculations.c	   134  //
-; sensorCalculations.c	   135  //    ubyte2 TPS0_CalMin = bench ? Sensor_BenchTPS0.calibMin : Sensor_TPS0.calibMin;
-; sensorCalculations.c	   136  //    ubyte2 TPS0_CalMax = bench ? Sensor_BenchTPS0.calibMax : Sensor_TPS0.calibMax;
-; sensorCalculations.c	   137  //    ubyte2 TPS1_CalMin = bench ? Sensor_BenchTPS1.calibMin : Sensor_TPS1.calibMin;
-; sensorCalculations.c	   138  //    ubyte2 TPS1_CalMax = bench ? Sensor_BenchTPS1.calibMax : Sensor_TPS1.calibMax;
-; sensorCalculations.c	   139  //
-; sensorCalculations.c	   140  //    //TODO: Should we calculate this during the main loop? (probably not - what if it's not calibrated?)
-; sensorCalculations.c	   141  //    //      or should we only run this when someone specifically asks for throttle position? (probably)
-; sensorCalculations.c	   142  //
-; sensorCalculations.c	   143  //    *errorCount = 0; //No errors have been detected so far.
-; sensorCalculations.c	   144  //
-; sensorCalculations.c	   145  //    //-------------------------------------------------------------------
-; sensorCalculations.c	   146  //    //First check for implausibility at the pin level
-; sensorCalculations.c	   147  //    //USE SPEC SHEET VALUES, NOT CALIBRATION VALUES
-; sensorCalculations.c	   148  //    //RULE: EV2.3.10 - signal outside of operating range is considered a failure
-; sensorCalculations.c	   149  //    //Note: IC cars may continue to drive for up to 100ms until valid readings are restored, but EVs must immediately cut power
-; sensorCalculations.c	   150  //    //Note: We need to decide how to report errors and how to perform actions when those errors occur.  For now, I'm calling an imaginary Err.Report function
-; sensorCalculations.c	   151  //    //-------------------------------------------------------------------
-; sensorCalculations.c	   152  //    if ((TPS0_Val < TPS0_Min) || (TPS0_Val > TPS0_Max))
-; sensorCalculations.c	   153  //    {
-; sensorCalculations.c	   154  //        //TODO: Err.Report(Err.Codes.TPS0Range, "TPS0 out of range:" & TPS0.sensorValue, Motor.Disable);
-; sensorCalculations.c	   155  //        //Note: We want to continue to run the rest of the code in this function to detect additional errors which we can report back to the dash.  To prevent the rest of the code from applying throttle, we take note that an error has occurred
-; sensorCalculations.c	   156  //        (*errorCount)++;
-; sensorCalculations.c	   157  //    }
-; sensorCalculations.c	   158  //
-; sensorCalculations.c	   159  //    if ((TPS1_Val < TPS1_Min) || (TPS1_Val > TPS1_Max))
-; sensorCalculations.c	   160  //    {
-; sensorCalculations.c	   161  //        //TODO: Err.Report(Err.Codes.TPS1Range, "TPS1 out of range" & Pin140.sensorValue, Motor.Disable);
-; sensorCalculations.c	   162  //        (*errorCount)++;
-; sensorCalculations.c	   163  //
-; sensorCalculations.c	   164  //    }
-; sensorCalculations.c	   165  //
-; sensorCalculations.c	   166  //    //-------------------------------------------------------------------
-; sensorCalculations.c	   167  //    // If there are no issues at the pin level, then the next step
-; sensorCalculations.c	   168  //    // is to make sure the sensors actually agree with each other
-; sensorCalculations.c	   169  //    //-------------------------------------------------------------------
-; sensorCalculations.c	   170  //    //Calculate individual throttle percentages
-; sensorCalculations.c	   171  //    //Percent = (Voltage - CalibMin) / (CalibMax - CalibMin)
-; sensorCalculations.c	   172  //    float4 TPS0PedalPercent = getPercent(TPS0_Val, TPS0_CalMin, TPS0_CalMax, TRUE); //Analog Input 0
-; sensorCalculations.c	   173  //    float4 TPS1PedalPercent = getPercent(TPS1_Val, TPS1_CalMin, TPS1_CalMax, TRUE); //Analog input 1
-; sensorCalculations.c	   174  //
-; sensorCalculations.c	   175  //    //Check for implausibility (discrepancy > 10%)
-; sensorCalculations.c	   176  //    //RULE: EV2.3.6 Implausibility is defined as a deviation of more than 10% pedal travel between the sensors.
-; sensorCalculations.c	   177  //    if (fabs(TPS1PedalPercent - TPS0PedalPercent) > .1)
-; sensorCalculations.c	   178  //    {
-; sensorCalculations.c	   179  //        //Err.Report(Err.Codes.TPSDiscrepancy, "TPS discrepancy of over 10%", Motor.Stop);
-; sensorCalculations.c	   180  //        (*errorCount)++;
-; sensorCalculations.c	   181  //    }
-; sensorCalculations.c	   182  //
-; sensorCalculations.c	   183  //    //-------------------------------------------------------------------
-; sensorCalculations.c	   184  //    //Make sure the sensors have been calibrated
-; sensorCalculations.c	   185  //    //-------------------------------------------------------------------
-; sensorCalculations.c	   186  //    if ((Sensor_TPS0.isCalibrated == FALSE) || (Sensor_TPS1.isCalibrated == FALSE))
-; sensorCalculations.c	   187  //    {
-; sensorCalculations.c	   188  //        (*errorCount)++;
-; sensorCalculations.c	   189  //    }
-; sensorCalculations.c	   190  //
-; sensorCalculations.c	   191  //    //What about other error states?
-; sensorCalculations.c	   192  //    //Voltage outside of calibration range
-; sensorCalculations.c	   193  //    //Voltages off center
-; sensorCalculations.c	   194  //
-; sensorCalculations.c	   195  ////    if (errorCount > 0)
-; sensorCalculations.c	   196  ////    {
-; sensorCalculations.c	   197  ////        return 0;
-; sensorCalculations.c	   198  ////    }
-; sensorCalculations.c	   199  ////    else
-; sensorCalculations.c	   200  ////    {
-; sensorCalculations.c	   201  //        return (TPS0PedalPercent + TPS1PedalPercent) / 2;
-; sensorCalculations.c	   202  ////    }
-; sensorCalculations.c	   203  //}
+; sensorCalculations.c	    33  
+; sensorCalculations.c	    34  extern Sensor Sensor_TPS0;
+; sensorCalculations.c	    35  extern Sensor Sensor_TPS1;
+; sensorCalculations.c	    36  extern Sensor Sensor_BPS0;
+; sensorCalculations.c	    37  extern Sensor Sensor_BPS1;
+; sensorCalculations.c	    38  
+; sensorCalculations.c	    39  extern Sensor Sensor_SAS;
+; sensorCalculations.c	    40  extern Sensor Sensor_LVBattery;
+; sensorCalculations.c	    41  extern Sensor Sensor_DRSKnob;
+; sensorCalculations.c	    42  extern Sensor Sensor_DRSButton;
+; sensorCalculations.c	    43  
+; sensorCalculations.c	    44  extern Sensor Sensor_BenchTPS0;
+; sensorCalculations.c	    45  extern Sensor Sensor_BenchTPS1;
+; sensorCalculations.c	    46  
+; sensorCalculations.c	    47  extern Sensor Sensor_RTDButton;
+; sensorCalculations.c	    48  extern Sensor Sensor_EcoButton;
+; sensorCalculations.c	    49  extern Sensor Sensor_TCSSwitchUp;
+; sensorCalculations.c	    50  extern Sensor Sensor_TCSSwitchDown;
+; sensorCalculations.c	    51  extern Sensor Sensor_HVILTerminationSense;
+; sensorCalculations.c	    52  
+; sensorCalculations.c	    53  /*****************************************************************************
+; sensorCalculations.c	    54  * Torque Encoder (TPS) functions
+; sensorCalculations.c	    55  * RULE EV2.3.5:
+; sensorCalculations.c	    56  * If an implausibility occurs between the values of these two sensors the power to the motor(s) must be immediately shut down completely.
+; sensorCalculations.c	    57  * It is not necessary to completely deactivate the tractive system, the motor controller(s) shutting down the power to the motor(s) is sufficient.
+; sensorCalculations.c	    58  ****************************************************************************/
+; sensorCalculations.c	    59  
+; sensorCalculations.c	    60  // Physical pedal travel will only occur across the center (about 1/2) of the actual sensor's range of travel
+; sensorCalculations.c	    61  // The rules (especially EV2.3.6) are written about % of PEDAL travel, not percent of sensor range, so we must calculate pedal travel by recording the min/max voltages at min/max throttle positions
+; sensorCalculations.c	    62  
+; sensorCalculations.c	    63  ///*-------------------------------------------------------------------
+; sensorCalculations.c	    64  //* CalibrateTPS
+; sensorCalculations.c	    65  //* Description: Records TPS minimum/maximum voltages (when?) and stores them (where?)
+; sensorCalculations.c	    66  //* Parameters:
+; sensorCalculations.c	    67  //* Inputs:
+; sensorCalculations.c	    68  //* Returns:
+; sensorCalculations.c	    69  //* Notes:
+; sensorCalculations.c	    70  //* Throws:
+; sensorCalculations.c	    71  //-------------------------------------------------------------------*/
+; sensorCalculations.c	    72  //void calibrateTPS(bool bench, ubyte1 secondsToRunCalibration)
+; sensorCalculations.c	    73  //{
+; sensorCalculations.c	    74  //    Sensor* tps0;
+; sensorCalculations.c	    75  //    Sensor* tps1;
+; sensorCalculations.c	    76  //    //TODO: Make sure the main loop is running before doing this
+; sensorCalculations.c	    77  //    tps0 = (bench == TRUE) ? &Sensor_BenchTPS0 : &Sensor_TPS0;
+; sensorCalculations.c	    78  //    tps1 = (bench == TRUE) ? &Sensor_BenchTPS1 : &Sensor_TPS1;
+; sensorCalculations.c	    79  //
+; sensorCalculations.c	    80  //    //Reset calibration data
+; sensorCalculations.c	    81  // /*   tps0->calibMin = tps0->specMax;
+; sensorCalculations.c	    82  //    tps0->calibMax = tps0->specMin;
+; sensorCalculations.c	    83  //    tps0->isCalibrated = FALSE;
+; sensorCalculations.c	    84  //    tps1->calibMin = tps1->specMax;
+; sensorCalculations.c	    85  //    tps1->calibMax = tps1->specMin;
+; sensorCalculations.c	    86  //    tps1->isCalibrated = FALSE;
+; sensorCalculations.c	    87  //*/
+; sensorCalculations.c	    88  ////    ubyte4 timestamp_calibrationstart = 0;
+; sensorCalculations.c	    89  ////    IO_RTC_StartTime(&timestamp_calibrationstart);  //Get a timestamp of when this task started from the Real Time Clock
+; sensorCalculations.c	    90  ////                                                    //TODO: Don't start coundown until values have been set
+; sensorCalculations.c	    91  ////    while (IO_RTC_GetTimeUS(timestamp_calibrationstart) < (ubyte4)secondsToRunCalibration * 1000 * 1000)   // Give the user # seconds to do this
+; sensorCalculations.c	    92  ////    {
+; sensorCalculations.c	    93  //        //TODO: Do something on the display to show that voltages are being recorded
+; sensorCalculations.c	    94  //        //Idea: Display "bars" filling up on right segment (for gas pedal) _=E=_=E...
+; sensorCalculations.c	    95  //        //      Once calibration data makes sense, show pedal location (0-10%, 10-90%, 90-100%) with bars
+; sensorCalculations.c	    96  //
+; sensorCalculations.c	    97  //        //Record min/max voltages
+; sensorCalculations.c	    98  //        if (tps0->sensorValue < tps0->calibMin) { tps0->calibMin = tps0->sensorValue; }
+; sensorCalculations.c	    99  //        if (tps0->sensorValue > tps0->calibMax) { tps0->calibMax = tps0->sensorValue; }
+; sensorCalculations.c	   100  //        if (tps1->sensorValue < tps1->calibMin) { tps1->calibMin = tps1->sensorValue; }
+; sensorCalculations.c	   101  //        if (tps1->sensorValue > tps1->calibMax) { tps1->calibMax = tps1->sensorValue; }
+; sensorCalculations.c	   102  //
+; sensorCalculations.c	   103  ////    }
+; sensorCalculations.c	   104  //
+; sensorCalculations.c	   105  //    //TODO: Write calibration data to EEPROM
+; sensorCalculations.c	   106  //
+; sensorCalculations.c	   107  //    //TODO: Check for valid/reasonable calibration data
+; sensorCalculations.c	   108  //    tps0->isCalibrated = TRUE;
+; sensorCalculations.c	   109  //    tps1->isCalibrated = TRUE;
+; sensorCalculations.c	   110  //
+; sensorCalculations.c	   111  //    //TODO: Return the display to normal
+; sensorCalculations.c	   112  //}
+; sensorCalculations.c	   113  
+; sensorCalculations.c	   114  ///*-------------------------------------------------------------------
+; sensorCalculations.c	   115  //* GetThrottlePosition
+; sensorCalculations.c	   116  //* Description: Reads TPS Pin voltages and returns % of throttle pedal travel.
+; sensorCalculations.c	   117  //* Parameters:  None
+; sensorCalculations.c	   118  //* Inputs:      Assumes TPS#.sensorValue has been set by main loop
+; sensorCalculations.c	   119  //* Returns:     Throttle value in percent (from 0 to 1)
+; sensorCalculations.c	   120  //* Notes:       Valid pedal travel is from 10% (0.10) to 90% (0.90), not including mechanical limits.
+; sensorCalculations.c	   121  //* Throws:      000 - TPS0 voltage out of range
+; sensorCalculations.c	   122  //*              001 - TPS1 voltage out of range, 002
+; sensorCalculations.c	   123  //-------------------------------------------------------------------*/
+; sensorCalculations.c	   124  //float4 getThrottlePercent(bool bench, ubyte1* errorCount)
+; sensorCalculations.c	   125  //{
+; sensorCalculations.c	   126  //    ubyte2 TPS0_Val = bench ? Sensor_BenchTPS0.sensorValue : Sensor_TPS0.sensorValue;
+; sensorCalculations.c	   127  //    ubyte2 TPS1_Val = bench ? Sensor_BenchTPS1.sensorValue : Sensor_TPS1.sensorValue;
+; sensorCalculations.c	   128  //
+; sensorCalculations.c	   129  //    ubyte2 TPS0_Min = bench ? Sensor_BenchTPS0.specMin : Sensor_TPS0.specMin;
+; sensorCalculations.c	   130  //    ubyte2 TPS0_Max = bench ? Sensor_BenchTPS0.specMax : Sensor_TPS0.specMax;
+; sensorCalculations.c	   131  //    ubyte2 TPS1_Min = bench ? Sensor_BenchTPS1.specMin : Sensor_TPS1.specMin;
+; sensorCalculations.c	   132  //    ubyte2 TPS1_Max = bench ? Sensor_BenchTPS1.specMax : Sensor_TPS1.specMax;
+; sensorCalculations.c	   133  //
+; sensorCalculations.c	   134  //    ubyte2 TPS0_CalMin = bench ? Sensor_BenchTPS0.calibMin : Sensor_TPS0.calibMin;
+; sensorCalculations.c	   135  //    ubyte2 TPS0_CalMax = bench ? Sensor_BenchTPS0.calibMax : Sensor_TPS0.calibMax;
+; sensorCalculations.c	   136  //    ubyte2 TPS1_CalMin = bench ? Sensor_BenchTPS1.calibMin : Sensor_TPS1.calibMin;
+; sensorCalculations.c	   137  //    ubyte2 TPS1_CalMax = bench ? Sensor_BenchTPS1.calibMax : Sensor_TPS1.calibMax;
+; sensorCalculations.c	   138  //
+; sensorCalculations.c	   139  //    //TODO: Should we calculate this during the main loop? (probably not - what if it's not calibrated?)
+; sensorCalculations.c	   140  //    //      or should we only run this when someone specifically asks for throttle position? (probably)
+; sensorCalculations.c	   141  //
+; sensorCalculations.c	   142  //    *errorCount = 0; //No errors have been detected so far.
+; sensorCalculations.c	   143  //
+; sensorCalculations.c	   144  //    //-------------------------------------------------------------------
+; sensorCalculations.c	   145  //    //First check for implausibility at the pin level
+; sensorCalculations.c	   146  //    //USE SPEC SHEET VALUES, NOT CALIBRATION VALUES
+; sensorCalculations.c	   147  //    //RULE: EV2.3.10 - signal outside of operating range is considered a failure
+; sensorCalculations.c	   148  //    //Note: IC cars may continue to drive for up to 100ms until valid readings are restored, but EVs must immediately cut power
+; sensorCalculations.c	   149  //    //Note: We need to decide how to report errors and how to perform actions when those errors occur.  For now, I'm calling an imaginary Err.Report function
+; sensorCalculations.c	   150  //    //-------------------------------------------------------------------
+; sensorCalculations.c	   151  //    if ((TPS0_Val < TPS0_Min) || (TPS0_Val > TPS0_Max))
+; sensorCalculations.c	   152  //    {
+; sensorCalculations.c	   153  //        //TODO: Err.Report(Err.Codes.TPS0Range, "TPS0 out of range:" & TPS0.sensorValue, Motor.Disable);
+; sensorCalculations.c	   154  //        //Note: We want to continue to run the rest of the code in this function to detect additional errors which we can report back to the dash.  To prevent the rest of the code from applying throttle, we take note that an error has occurred
+; sensorCalculations.c	   155  //        (*errorCount)++;
+; sensorCalculations.c	   156  //    }
+; sensorCalculations.c	   157  //
+; sensorCalculations.c	   158  //    if ((TPS1_Val < TPS1_Min) || (TPS1_Val > TPS1_Max))
+; sensorCalculations.c	   159  //    {
+; sensorCalculations.c	   160  //        //TODO: Err.Report(Err.Codes.TPS1Range, "TPS1 out of range" & Pin140.sensorValue, Motor.Disable);
+; sensorCalculations.c	   161  //        (*errorCount)++;
+; sensorCalculations.c	   162  //
+; sensorCalculations.c	   163  //    }
+; sensorCalculations.c	   164  //
+; sensorCalculations.c	   165  //    //-------------------------------------------------------------------
+; sensorCalculations.c	   166  //    // If there are no issues at the pin level, then the next step
+; sensorCalculations.c	   167  //    // is to make sure the sensors actually agree with each other
+; sensorCalculations.c	   168  //    //-------------------------------------------------------------------
+; sensorCalculations.c	   169  //    //Calculate individual throttle percentages
+; sensorCalculations.c	   170  //    //Percent = (Voltage - CalibMin) / (CalibMax - CalibMin)
+; sensorCalculations.c	   171  //    float4 TPS0PedalPercent = getPercent(TPS0_Val, TPS0_CalMin, TPS0_CalMax, TRUE); //Analog Input 0
+; sensorCalculations.c	   172  //    float4 TPS1PedalPercent = getPercent(TPS1_Val, TPS1_CalMin, TPS1_CalMax, TRUE); //Analog input 1
+; sensorCalculations.c	   173  //
+; sensorCalculations.c	   174  //    //Check for implausibility (discrepancy > 10%)
+; sensorCalculations.c	   175  //    //RULE: EV2.3.6 Implausibility is defined as a deviation of more than 10% pedal travel between the sensors.
+; sensorCalculations.c	   176  //    if (fabs(TPS1PedalPercent - TPS0PedalPercent) > .1)
+; sensorCalculations.c	   177  //    {
+; sensorCalculations.c	   178  //        //Err.Report(Err.Codes.TPSDiscrepancy, "TPS discrepancy of over 10%", Motor.Stop);
+; sensorCalculations.c	   179  //        (*errorCount)++;
+; sensorCalculations.c	   180  //    }
+; sensorCalculations.c	   181  //
+; sensorCalculations.c	   182  //    //-------------------------------------------------------------------
+; sensorCalculations.c	   183  //    //Make sure the sensors have been calibrated
+; sensorCalculations.c	   184  //    //-------------------------------------------------------------------
+; sensorCalculations.c	   185  //    if ((Sensor_TPS0.isCalibrated == FALSE) || (Sensor_TPS1.isCalibrated == FALSE))
+; sensorCalculations.c	   186  //    {
+; sensorCalculations.c	   187  //        (*errorCount)++;
+; sensorCalculations.c	   188  //    }
+; sensorCalculations.c	   189  //
+; sensorCalculations.c	   190  //    //What about other error states?
+; sensorCalculations.c	   191  //    //Voltage outside of calibration range
+; sensorCalculations.c	   192  //    //Voltages off center
+; sensorCalculations.c	   193  //
+; sensorCalculations.c	   194  ////    if (errorCount > 0)
+; sensorCalculations.c	   195  ////    {
+; sensorCalculations.c	   196  ////        return 0;
+; sensorCalculations.c	   197  ////    }
+; sensorCalculations.c	   198  ////    else
+; sensorCalculations.c	   199  ////    {
+; sensorCalculations.c	   200  //        return (TPS0PedalPercent + TPS1PedalPercent) / 2;
+; sensorCalculations.c	   201  ////    }
+; sensorCalculations.c	   202  //}
+; sensorCalculations.c	   203  
 ; sensorCalculations.c	   204  
 ; sensorCalculations.c	   205  
-; sensorCalculations.c	   206  
-; sensorCalculations.c	   207  /*****************************************************************************
-; sensorCalculations.c	   208  * BPS (Brake Pressure Sensor) functions
-; sensorCalculations.c	   209  *
-; sensorCalculations.c	   210  ****************************************************************************/
-; sensorCalculations.c	   211  //Input: Voltage
-; sensorCalculations.c	   212  //Outputs: ???
-; sensorCalculations.c	   213  
-; sensorCalculations.c	   214  /*-------------------------------------------------------------------
-; sensorCalculations.c	   215  * CalibrateBPS
-; sensorCalculations.c	   216  * Description: Records brake system pressure at point where wheels
-; sensorCalculations.c	   217  *              lock up [THIS IS A SUGGESTION - maybe we just use the
-; sensorCalculations.c	   218  *              DAQ to determine this and hardcode a value
-; sensorCalculations.c	   219  * Parameters:
-; sensorCalculations.c	   220  * Inputs:      Pin151 = Analog Input 2
-; sensorCalculations.c	   221  * Returns:
-; sensorCalculations.c	   222  * Notes:
-; sensorCalculations.c	   223  * Throws:
-; sensorCalculations.c	   224  -------------------------------------------------------------------*/
-; sensorCalculations.c	   225  void CalibrateBPS(void) {
+; sensorCalculations.c	   206  /*****************************************************************************
+; sensorCalculations.c	   207  * BPS (Brake Pressure Sensor) functions
+; sensorCalculations.c	   208  *
+; sensorCalculations.c	   209  ****************************************************************************/
+; sensorCalculations.c	   210  //Input: Voltage
+; sensorCalculations.c	   211  //Outputs: ???
+; sensorCalculations.c	   212  
+; sensorCalculations.c	   213  /*-------------------------------------------------------------------
+; sensorCalculations.c	   214  * CalibrateBPS
+; sensorCalculations.c	   215  * Description: Records brake system pressure at point where wheels
+; sensorCalculations.c	   216  *              lock up [THIS IS A SUGGESTION - maybe we just use the
+; sensorCalculations.c	   217  *              DAQ to determine this and hardcode a value
+; sensorCalculations.c	   218  * Parameters:
+; sensorCalculations.c	   219  * Inputs:      Pin151 = Analog Input 2
+; sensorCalculations.c	   220  * Returns:
+; sensorCalculations.c	   221  * Notes:
+; sensorCalculations.c	   222  * Throws:
+; sensorCalculations.c	   223  -------------------------------------------------------------------*/
+; sensorCalculations.c	   224  void CalibrateBPS(void) {
 ; Function _CalibrateBPS
 _6:
 _CalibrateBPS	.proc	far
 
-; sensorCalculations.c	   226      //TODO: Figure out how much braking effort (in hydraulic system PSI) = 100%
-; sensorCalculations.c	   227      //      braking effort (shooting for 100 lbs pedal effort?)
-; sensorCalculations.c	   228      //TODO: Use above value for 100% of "pedal travel"
-; sensorCalculations.c	   229      //      For now, assume 4.5V = 100 lbs 
-; sensorCalculations.c	   230      //TODO: Decide how often this must be done.  Could resting pressure vary
-; sensorCalculations.c	   231      //      with ambient temperature enough to mess up regen levels?
-; sensorCalculations.c	   232      //Note: It may not be feasible to measure max pressure that each driver will apply.  Instead, it may be best to go with absolute values (.5 to 4.5 V), or to at least record PSI or Voltage at zero pedal.  Not sure how this is affected by having a Sealed sensor (as opposed to Gage), but presumably brake force is SIGNIFICANTLY higher than ambient temperature anyway.
-; sensorCalculations.c	   233      //Sensor_BPS0.CalibMin = Sensor_BPS0.GetVoltage.Min;
-; sensorCalculations.c	   234      //Sensor_BPS0.CalibMax = Sensor_BPS0.GetVoltage.Max;
-; sensorCalculations.c	   235  }
+; sensorCalculations.c	   225      //TODO: Figure out how much braking effort (in hydraulic system PSI) = 100%
+; sensorCalculations.c	   226      //      braking effort (shooting for 100 lbs pedal effort?)
+; sensorCalculations.c	   227      //TODO: Use above value for 100% of "pedal travel"
+; sensorCalculations.c	   228      //      For now, assume 4.5V = 100 lbs 
+; sensorCalculations.c	   229      //TODO: Decide how often this must be done.  Could resting pressure vary
+; sensorCalculations.c	   230      //      with ambient temperature enough to mess up regen levels?
+; sensorCalculations.c	   231      //Note: It may not be feasible to measure max pressure that each driver will apply.  Instead, it may be best to go with absolute values (.5 to 4.5 V), or to at least record PSI or Voltage at zero pedal.  Not sure how this is affected by having a Sealed sensor (as opposed to Gage), but presumably brake force is SIGNIFICANTLY higher than ambient temperature anyway.
+; sensorCalculations.c	   232      //Sensor_BPS0.CalibMin = Sensor_BPS0.GetVoltage.Min;
+; sensorCalculations.c	   233      //Sensor_BPS0.CalibMax = Sensor_BPS0.GetVoltage.Max;
+; sensorCalculations.c	   234  }
 	ret
 _73:
 	; End of function
@@ -252,51 +251,51 @@ _73:
 code_GetBrakePosition	.section	code, cluster 'GetBrakePosition', new
 	.global	_GetBrakePosition
 
-; sensorCalculations.c	   236  
-; sensorCalculations.c	   237  /*-------------------------------------------------------------------
-; sensorCalculations.c	   238  * GetBrakePosition
-; sensorCalculations.c	   239  * Description: Reads TPS Pin voltages and returns % of throttle pedal travel.
-; sensorCalculations.c	   240  * Parameters:  None
-; sensorCalculations.c	   241  * Inputs:
-; sensorCalculations.c	   242  * Returns:     Brake pedal travel in percent (from 0 to 1), where
-; sensorCalculations.c	   243  *              0 = no pedal travel and 100 = //TODO: 4 locked wheels???
-; sensorCalculations.c	   244  *              NOTE: This means values above 100% are both allowed
-; sensorCalculations.c	   245  *                    and EXPECTED during e.g. brake tests & extreme lockups
-; sensorCalculations.c	   246  * Notes:
-; sensorCalculations.c	   247  * Throws:
-; sensorCalculations.c	   248  -------------------------------------------------------------------*/
-; sensorCalculations.c	   249  void GetBrakePosition(void)
+; sensorCalculations.c	   235  
+; sensorCalculations.c	   236  /*-------------------------------------------------------------------
+; sensorCalculations.c	   237  * GetBrakePosition
+; sensorCalculations.c	   238  * Description: Reads TPS Pin voltages and returns % of throttle pedal travel.
+; sensorCalculations.c	   239  * Parameters:  None
+; sensorCalculations.c	   240  * Inputs:
+; sensorCalculations.c	   241  * Returns:     Brake pedal travel in percent (from 0 to 1), where
+; sensorCalculations.c	   242  *              0 = no pedal travel and 100 = //TODO: 4 locked wheels???
+; sensorCalculations.c	   243  *              NOTE: This means values above 100% are both allowed
+; sensorCalculations.c	   244  *                    and EXPECTED during e.g. brake tests & extreme lockups
+; sensorCalculations.c	   245  * Notes:
+; sensorCalculations.c	   246  * Throws:
+; sensorCalculations.c	   247  -------------------------------------------------------------------*/
+; sensorCalculations.c	   248  void GetBrakePosition(void)
 ; Function _GetBrakePosition
 _18:
 _GetBrakePosition	.proc	far
 
-; sensorCalculations.c	   250  {
-; sensorCalculations.c	   251      //GetTPSValue = 0;  //This is the default value that this function will return
-; sensorCalculations.c	   252      //TPSErrorState = 0; //No errors have been detected so far.
-; sensorCalculations.c	   253      //-------------------------------------------------------------------
-; sensorCalculations.c	   254      //First check for implausibility at the pin level
-; sensorCalculations.c	   255      //USE SPEC SHEET VALUES, NOT CALIBRATION VALUES
-; sensorCalculations.c	   256      //RULE: EV2.4.4 - signal outside of operating range (EV2.4.5) requires
-; sensorCalculations.c	   257      //                immediate shutdown of power to motor
-; sensorCalculations.c	   258      //-------------------------------------------------------------------
-; sensorCalculations.c	   259      //if(Sensor_BPS.GetVoltage < Sensor_BPS.SpecMin Or Sensor_BPS.GetVoltage > Sensor_BPS.SpecMax
-; sensorCalculations.c	   260      {
-; sensorCalculations.c	   261          //Err.Report(Err.Codes.BPSRange, "BPS voltage out of range:" & Sensor_BPS.GetVoltage, Motor.Disable);
-; sensorCalculations.c	   262          //TPSErrorState++;
-; sensorCalculations.c	   263      }
-; sensorCalculations.c	   264  
-; sensorCalculations.c	   265      //-------------------------------------------------------------------
-; sensorCalculations.c	   266      // Calculate pedal travel
-; sensorCalculations.c	   267      //-------------------------------------------------------------------
-; sensorCalculations.c	   268      //Sensor_BPS.PedalPercent = Sensor_BPS.GetVoltage / Sensor_BPS.CalibMax;
-; sensorCalculations.c	   269  
-; sensorCalculations.c	   270      //If TPSErrorState > 0 Then
-; sensorCalculations.c	   271      //Reduce motor torque to zero
-; sensorCalculations.c	   272      //GetTPSValue already = 0;
-; sensorCalculations.c	   273      //Else
-; sensorCalculations.c	   274      //GetBrakePosition = Sensor_BPS.PedalPercent;
-; sensorCalculations.c	   275      //End If
-; sensorCalculations.c	   276  }
+; sensorCalculations.c	   249  {
+; sensorCalculations.c	   250      //GetTPSValue = 0;  //This is the default value that this function will return
+; sensorCalculations.c	   251      //TPSErrorState = 0; //No errors have been detected so far.
+; sensorCalculations.c	   252      //-------------------------------------------------------------------
+; sensorCalculations.c	   253      //First check for implausibility at the pin level
+; sensorCalculations.c	   254      //USE SPEC SHEET VALUES, NOT CALIBRATION VALUES
+; sensorCalculations.c	   255      //RULE: EV2.4.4 - signal outside of operating range (EV2.4.5) requires
+; sensorCalculations.c	   256      //                immediate shutdown of power to motor
+; sensorCalculations.c	   257      //-------------------------------------------------------------------
+; sensorCalculations.c	   258      //if(Sensor_BPS.GetVoltage < Sensor_BPS.SpecMin Or Sensor_BPS.GetVoltage > Sensor_BPS.SpecMax
+; sensorCalculations.c	   259      {
+; sensorCalculations.c	   260          //Err.Report(Err.Codes.BPSRange, "BPS voltage out of range:" & Sensor_BPS.GetVoltage, Motor.Disable);
+; sensorCalculations.c	   261          //TPSErrorState++;
+; sensorCalculations.c	   262      }
+; sensorCalculations.c	   263  
+; sensorCalculations.c	   264      //-------------------------------------------------------------------
+; sensorCalculations.c	   265      // Calculate pedal travel
+; sensorCalculations.c	   266      //-------------------------------------------------------------------
+; sensorCalculations.c	   267      //Sensor_BPS.PedalPercent = Sensor_BPS.GetVoltage / Sensor_BPS.CalibMax;
+; sensorCalculations.c	   268  
+; sensorCalculations.c	   269      //If TPSErrorState > 0 Then
+; sensorCalculations.c	   270      //Reduce motor torque to zero
+; sensorCalculations.c	   271      //GetTPSValue already = 0;
+; sensorCalculations.c	   272      //Else
+; sensorCalculations.c	   273      //GetBrakePosition = Sensor_BPS.PedalPercent;
+; sensorCalculations.c	   274      //End If
+; sensorCalculations.c	   275  }
 	ret
 _78:
 	; End of function
@@ -305,21 +304,21 @@ _78:
 code_freq_to_rpm	.section	code, cluster 'freq_to_rpm', new
 	.global	_freq_to_rpm
 
+; sensorCalculations.c	   276  
 ; sensorCalculations.c	   277  
-; sensorCalculations.c	   278  
-; sensorCalculations.c	   279  /*****************************************************************************
-; sensorCalculations.c	   280  * Wheel Speed Sensor functions
-; sensorCalculations.c	   281  * FR = Pin275 = Digital Timer Input 0
-; sensorCalculations.c	   282  * FL = Pin268 = Digital Timer Input 1
-; sensorCalculations.c	   283  * RR = Pin274 = Digital Timer Input 2
-; sensorCalculations.c	   284  * RL = Pin267 = Digital Timer Input 3
-; sensorCalculations.c	   285  ****************************************************************************/
-; sensorCalculations.c	   286  //Inputs: Wheel speed sensor frequency
-; sensorCalculations.c	   287  //Outputs: 4 speeds, RPM, ground speed
-; sensorCalculations.c	   288  //4 funcs, one to get each wheel�s speed
-; sensorCalculations.c	   289  //16 bumps per rotation, 16 hz = 1 rotation per second
-; sensorCalculations.c	   290  
-; sensorCalculations.c	   291  double freq_to_rpm(double freq) {
+; sensorCalculations.c	   278  /*****************************************************************************
+; sensorCalculations.c	   279  * Wheel Speed Sensor functions
+; sensorCalculations.c	   280  * FR = Pin275 = Digital Timer Input 0
+; sensorCalculations.c	   281  * FL = Pin268 = Digital Timer Input 1
+; sensorCalculations.c	   282  * RR = Pin274 = Digital Timer Input 2
+; sensorCalculations.c	   283  * RL = Pin267 = Digital Timer Input 3
+; sensorCalculations.c	   284  ****************************************************************************/
+; sensorCalculations.c	   285  //Inputs: Wheel speed sensor frequency
+; sensorCalculations.c	   286  //Outputs: 4 speeds, RPM, ground speed
+; sensorCalculations.c	   287  //4 funcs, one to get each wheel�s speed
+; sensorCalculations.c	   288  //16 bumps per rotation, 16 hz = 1 rotation per second
+; sensorCalculations.c	   289  
+; sensorCalculations.c	   290  double freq_to_rpm(double freq) {
 ; Function _freq_to_rpm
 _30:
 _freq_to_rpm	.proc	far
@@ -330,7 +329,7 @@ _109:
 	movw	[-r15],r10
 _120:
 
-; sensorCalculations.c	   292      return (double)((freq / NUM_BUMPS_D)*60.0);
+; sensorCalculations.c	   291      return (double)((freq / NUM_BUMPS_D)*60.0);
 	movw	r14,#0x3fb0
 _581:
 	movw	r11,#0x0
@@ -346,7 +345,7 @@ _582:
 	call	__mul_dpf
 _583:
 
-; sensorCalculations.c	   293  }
+; sensorCalculations.c	   292  }
 	movw	r10,[r15+]
 _131:
 	movw	r1,[r15+]
@@ -361,10 +360,10 @@ _83:
 code_rpm_to_mph	.section	code, cluster 'rpm_to_mph', new
 	.global	_rpm_to_mph
 
-; sensorCalculations.c	   294  
-; sensorCalculations.c	   295  //Theoretical ground speed
-; sensorCalculations.c	   296  //63360 inches per mile. Wish we could use metric.
-; sensorCalculations.c	   297  double rpm_to_mph(double rpm) {
+; sensorCalculations.c	   293  
+; sensorCalculations.c	   294  //Theoretical ground speed
+; sensorCalculations.c	   295  //63360 inches per mile. Wish we could use metric.
+; sensorCalculations.c	   296  double rpm_to_mph(double rpm) {
 ; Function _rpm_to_mph
 _42:
 _rpm_to_mph	.proc	far
@@ -375,7 +374,7 @@ _236:
 	movw	[-r15],r10
 _247:
 
-; sensorCalculations.c	   298      return (double)((3.14159265*WHEEL_DIAMETER_D*rpm*60.0) / 63360.0);
+; sensorCalculations.c	   297      return (double)((3.14159265*WHEEL_DIAMETER_D*rpm*60.0) / 63360.0);
 	movw	r11,#0xd4f1
 	movw	r12,#0x53c8
 	movw	r13,#0x21fb
@@ -398,7 +397,7 @@ _591:
 	call	__div_dpf
 _592:
 
-; sensorCalculations.c	   299  }
+; sensorCalculations.c	   298  }
 	movw	r10,[r15+]
 _258:
 	movw	r1,[r15+]
@@ -413,50 +412,50 @@ _88:
 code_steering_degrees	.section	code, cluster 'steering_degrees', new
 	.global	_steering_degrees
 
+; sensorCalculations.c	   299  
 ; sensorCalculations.c	   300  
-; sensorCalculations.c	   301  
-; sensorCalculations.c	   302  /*****************************************************************************
-; sensorCalculations.c	   303  * Shock pot(iometer) functions - FOUR NEEDED
-; sensorCalculations.c	   304  * FR = Pin150 = Analog Input 4
-; sensorCalculations.c	   305  * FL = Pin138 = Analog Input 5
-; sensorCalculations.c	   306  * RR = Pin149 = Analog Input 6
-; sensorCalculations.c	   307  * RL = Pin137 = Analog Input 7
-; sensorCalculations.c	   308  * 0 = ride height
-; sensorCalculations.c	   309  ****************************************************************************/
-; sensorCalculations.c	   310  //Input: Ohms
-; sensorCalculations.c	   311  //Outputs: ???
-; sensorCalculations.c	   312  //See VCU Manual section 5.8.8 - there are different outputs depending on sensor resistance
-; sensorCalculations.c	   313  //Example sensor: Active Sensors CLS0950
-; sensorCalculations.c	   314  //Resistive range: 0.4 to 6.0 kohm
-; sensorCalculations.c	   315  //ShockPot.
-; sensorCalculations.c	   316  
-; sensorCalculations.c	   317  /****************************************************************************
-; sensorCalculations.c	   318   * Steering Angle Sensor (SAS)
-; sensorCalculations.c	   319   * Input: Voltage
-; sensorCalculations.c	   320   * Output: Degrees
-; sensorCalculations.c	   321   * **************************************************************************/
-; sensorCalculations.c	   322  
-; sensorCalculations.c	   323  sbyte4 steering_degrees(){
+; sensorCalculations.c	   301  /*****************************************************************************
+; sensorCalculations.c	   302  * Shock pot(iometer) functions - FOUR NEEDED
+; sensorCalculations.c	   303  * FR = Pin150 = Analog Input 4
+; sensorCalculations.c	   304  * FL = Pin138 = Analog Input 5
+; sensorCalculations.c	   305  * RR = Pin149 = Analog Input 6
+; sensorCalculations.c	   306  * RL = Pin137 = Analog Input 7
+; sensorCalculations.c	   307  * 0 = ride height
+; sensorCalculations.c	   308  ****************************************************************************/
+; sensorCalculations.c	   309  //Input: Ohms
+; sensorCalculations.c	   310  //Outputs: ???
+; sensorCalculations.c	   311  //See VCU Manual section 5.8.8 - there are different outputs depending on sensor resistance
+; sensorCalculations.c	   312  //Example sensor: Active Sensors CLS0950
+; sensorCalculations.c	   313  //Resistive range: 0.4 to 6.0 kohm
+; sensorCalculations.c	   314  //ShockPot.
+; sensorCalculations.c	   315  
+; sensorCalculations.c	   316  /****************************************************************************
+; sensorCalculations.c	   317   * Steering Angle Sensor (SAS)
+; sensorCalculations.c	   318   * Input: Voltage
+; sensorCalculations.c	   319   * Output: Degrees
+; sensorCalculations.c	   320   * **************************************************************************/
+; sensorCalculations.c	   321  
+; sensorCalculations.c	   322  sbyte4 steering_degrees(){
 ; Function _steering_degrees
 _54:
 _steering_degrees	.proc	far
 	subw	r15,#0x2
 _352:
 
-; sensorCalculations.c	   324      sbyte4 min_voltage = 960;
-; sensorCalculations.c	   325      sbyte4 max_voltage = 2560;
-; sensorCalculations.c	   326      sbyte4 min_angle = -90;
-; sensorCalculations.c	   327      sbyte4 max_angle = 90;
-; sensorCalculations.c	   328  
-; sensorCalculations.c	   329      sbyte4 voltage_range = max_voltage - min_voltage;
-; sensorCalculations.c	   330      sbyte4 angle_range = max_angle - min_angle;
-; sensorCalculations.c	   331      sbyte4 voltage = Sensor_SAS.sensorValue;
+; sensorCalculations.c	   323      sbyte4 min_voltage = 960;
+; sensorCalculations.c	   324      sbyte4 max_voltage = 2560;
+; sensorCalculations.c	   325      sbyte4 min_angle = -90;
+; sensorCalculations.c	   326      sbyte4 max_angle = 90;
+; sensorCalculations.c	   327  
+; sensorCalculations.c	   328      sbyte4 voltage_range = max_voltage - min_voltage;
+; sensorCalculations.c	   329      sbyte4 angle_range = max_angle - min_angle;
+; sensorCalculations.c	   330      sbyte4 voltage = Sensor_SAS.sensorValue;
 	exts	#@seg(_Sensor_SAS+0xa),#0x1
 	movw	r12,@sof(_Sensor_SAS+0xa)
 _597:
 
-; sensorCalculations.c	   332  
-; sensorCalculations.c	   333      sbyte4 deg = min_angle + (angle_range * (voltage - min_voltage)) / voltage_range;
+; sensorCalculations.c	   331  
+; sensorCalculations.c	   332      sbyte4 deg = min_angle + (angle_range * (voltage - min_voltage)) / voltage_range;
 	movw	r13,#0xb4
 _598:
 	CoSTORE	[r15-],MSW
@@ -489,8 +488,8 @@ _605:
 	call	__sdil
 _606:
 
-; sensorCalculations.c	   334      return deg;
-; sensorCalculations.c	   335  }
+; sensorCalculations.c	   333      return deg;
+; sensorCalculations.c	   334  }
 	movw	r10,[r15+]
 _407:
 	movw	r1,[r15+]
@@ -663,7 +662,7 @@ _69:
 	.db	2
 	.dl	_65
 	.db	3
-	.db	'CalibrateBPS',0,1,225,1,6,6,1,1,1
+	.db	'CalibrateBPS',0,1,224,1,6,6,1,1,1
 	.dl	_6,_73,_5
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
 	.dl	_6,_73
@@ -688,7 +687,7 @@ _571:
 _572:
 	.db	5,1,7,0,5,2
 	.dl	_6
-	.db	3,234,1,1,7,9
+	.db	3,233,1,1,7,9
 	.dw	_73-_6
 	.db	0,1,1
 _570:
@@ -721,7 +720,7 @@ _74:
 	.db	2
 	.dl	_65
 	.db	3
-	.db	'GetBrakePosition',0,1,249,1,6,6,1,1,1
+	.db	'GetBrakePosition',0,1,248,1,6,6,1,1,1
 	.dl	_18,_78,_17
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
 	.dl	_18,_78
@@ -746,7 +745,7 @@ _575:
 _576:
 	.db	5,1,7,0,5,2
 	.dl	_18
-	.db	3,147,2,1,7,9
+	.db	3,146,2,1,7,9
 	.dw	_78-_18
 	.db	0,1,1
 _574:
@@ -779,12 +778,12 @@ _79:
 	.db	2
 	.dl	_65
 	.db	3
-	.db	'freq_to_rpm',0,1,163,2,8,6
+	.db	'freq_to_rpm',0,1,162,2,8,6
 	.dl	_94
 	.db	1,1,1
 	.dl	_30,_83,_29
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'freq',0,1,163,2,27,2
+	.db	'freq',0,1,162,2,27,2
 	.dl	_94,_95
 	.db	5
 	.dl	_30,_83
@@ -810,7 +809,7 @@ _579:
 _580:
 	.db	5,8,7,0,5,2
 	.dl	_30
-	.db	3,162,2,1,5,29,9
+	.db	3,161,2,1,5,29,9
 	.dw	_120-_30
 	.db	3,1,1,5,22,9
 	.dw	_581-_120
@@ -853,12 +852,12 @@ _84:
 	.db	2
 	.dl	_65
 	.db	3
-	.db	'rpm_to_mph',0,1,169,2,8,6
+	.db	'rpm_to_mph',0,1,168,2,8,6
 	.dl	_94
 	.db	1,1,1
 	.dl	_42,_88,_41
 	.db	12,19,146,176,2,0,64,36,146,161,2,0,33,4
-	.db	'rpm',0,1,169,2,26,2
+	.db	'rpm',0,1,168,2,26,2
 	.dl	_94,_96
 	.db	5
 	.dl	_42,_88
@@ -884,7 +883,7 @@ _586:
 _587:
 	.db	5,8,7,0,5,2
 	.dl	_42
-	.db	3,168,2,1,5,32,9
+	.db	3,167,2,1,5,32,9
 	.dw	_247-_42
 	.db	3,1,1,5,50,9
 	.dw	_588-_247
@@ -931,7 +930,7 @@ _89:
 	.db	2
 	.dl	_65
 	.db	3
-	.db	'steering_degrees',0,1,195,2,8,6
+	.db	'steering_degrees',0,1,194,2,8,6
 	.dl	_97
 	.db	1,1
 	.dl	_54,_93,_53
@@ -958,7 +957,7 @@ _595:
 _596:
 	.db	5,8,7,0,5,2
 	.dl	_54
-	.db	3,194,2,1,5,32,9
+	.db	3,193,2,1,5,32,9
 	.dw	_352-_54
 	.db	3,8,1,5,31,9
 	.dw	_597-_352
@@ -2464,43 +2463,43 @@ _558:
 	; End of section
 
 
-; sensorCalculations.c	   336  
-; sensorCalculations.c	   337  /*****************************************************************************
-; sensorCalculations.c	   338  * Doppler speed sensor functions
-; sensorCalculations.c	   339  *
-; sensorCalculations.c	   340  ****************************************************************************/
-; sensorCalculations.c	   341  //Input: Frequency
-; sensorCalculations.c	   342  //Outputs: ???
-; sensorCalculations.c	   343  
-; sensorCalculations.c	   344  /*****************************************************************************
-; sensorCalculations.c	   345  * Water temp sensor functions
-; sensorCalculations.c	   346  *
-; sensorCalculations.c	   347  ****************************************************************************/
-; sensorCalculations.c	   348  //Input: Ohms
-; sensorCalculations.c	   349  //Outputs: ???
-; sensorCalculations.c	   350  
-; sensorCalculations.c	   351  /*****************************************************************************
-; sensorCalculations.c	   352  * Dash button functions
-; sensorCalculations.c	   353  *
-; sensorCalculations.c	   354  ****************************************************************************/
-; sensorCalculations.c	   355  //TCS
-; sensorCalculations.c	   356  //ECO
-; sensorCalculations.c	   357  //RTD
-; sensorCalculations.c	   358  //blablalba
+; sensorCalculations.c	   335  
+; sensorCalculations.c	   336  /*****************************************************************************
+; sensorCalculations.c	   337  * Doppler speed sensor functions
+; sensorCalculations.c	   338  *
+; sensorCalculations.c	   339  ****************************************************************************/
+; sensorCalculations.c	   340  //Input: Frequency
+; sensorCalculations.c	   341  //Outputs: ???
+; sensorCalculations.c	   342  
+; sensorCalculations.c	   343  /*****************************************************************************
+; sensorCalculations.c	   344  * Water temp sensor functions
+; sensorCalculations.c	   345  *
+; sensorCalculations.c	   346  ****************************************************************************/
+; sensorCalculations.c	   347  //Input: Ohms
+; sensorCalculations.c	   348  //Outputs: ???
+; sensorCalculations.c	   349  
+; sensorCalculations.c	   350  /*****************************************************************************
+; sensorCalculations.c	   351  * Dash button functions
+; sensorCalculations.c	   352  *
+; sensorCalculations.c	   353  ****************************************************************************/
+; sensorCalculations.c	   354  //TCS
+; sensorCalculations.c	   355  //ECO
+; sensorCalculations.c	   356  //RTD
+; sensorCalculations.c	   357  //blablalba
+; sensorCalculations.c	   358  
 ; sensorCalculations.c	   359  
 ; sensorCalculations.c	   360  
-; sensorCalculations.c	   361  
-; sensorCalculations.c	   362  /*****************************************************************************
-; sensorCalculations.c	   363  * Error Reporting Stuff
-; sensorCalculations.c	   364  *
-; sensorCalculations.c	   365  * TODO: Write error reporting functions
-; sensorCalculations.c	   366  ****************************************************************************/
-; sensorCalculations.c	   367  //Err.Report(ErrCode, ErrDesc, ErrAction) {
-; sensorCalculations.c	   368  //Write an error to the log
-; sensorCalculations.c	   369  //Add error code to dash
-; sensorCalculations.c	   370  //000 = TPS0 out of range
-; sensorCalculations.c	   371  //001 = TPS1 out of range
-; sensorCalculations.c	   372  //}
+; sensorCalculations.c	   361  /*****************************************************************************
+; sensorCalculations.c	   362  * Error Reporting Stuff
+; sensorCalculations.c	   363  *
+; sensorCalculations.c	   364  * TODO: Write error reporting functions
+; sensorCalculations.c	   365  ****************************************************************************/
+; sensorCalculations.c	   366  //Err.Report(ErrCode, ErrDesc, ErrAction) {
+; sensorCalculations.c	   367  //Write an error to the log
+; sensorCalculations.c	   368  //Add error code to dash
+; sensorCalculations.c	   369  //000 = TPS0 out of range
+; sensorCalculations.c	   370  //001 = TPS1 out of range
+; sensorCalculations.c	   371  //}
 
 	; Module end
 	.end

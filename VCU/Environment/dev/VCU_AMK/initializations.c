@@ -81,6 +81,10 @@ void vcu_initializeADC(bool benchMode)
     //TPS+BPS
     extern Sensor Sensor_BenchTPS0; //wtf where are these even defined?
     extern Sensor Sensor_BenchTPS1;
+    
+    // Define the bench TPS sensors
+    Sensor Sensor_BenchTPS0;
+    Sensor Sensor_BenchTPS1;
 
     //IO_ADC_ChannelInit(IO_ADC_5V_00, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_0, NULL);
     //IO_ADC_ChannelInit(IO_ADC_5V_01, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_1, NULL);

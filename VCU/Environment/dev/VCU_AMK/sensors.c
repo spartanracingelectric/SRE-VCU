@@ -46,8 +46,30 @@ extern Sensor Sensor_TVButton;
 /*-------------------------------------------------------------------
 * getPercent
 * Returns the % (position) of value, between min and max
+* Special features:
+*   - Handles cases where "start" is less than "end" (value goes backwards)
+* Automatically compensates for reverse-direction values: When min > max, value is assumed to travel in reverse direction.
 * If zeroToOneOnly is true, then % will be capped at 0%-100% (no negative % or > 100%)
+* If range == 0, then 0 will be returned.  (Safety: in case of problem during regen torque calculation)
 -------------------------------------------------------------------*/
+float4 getPercent(float4 value, float4 start, float4 end, bool zeroToOneOnly)
+{
+    float4 retVal = (value - start) / (end - start);
+
+    if (zeroToOneOnly == TRUE)
+    {
+        if (retVal < 0)
+        {
+            retVal = 0;
+        }
+        if (retVal > 1)
+        {
+            retVal = 1;
+        }
+    }
+
+    return retVal;
+}
 //----------------------------------------------------------------------------
 // Read sensors values from ADC channels
 // The sensor values should be stored in sensor objects.
