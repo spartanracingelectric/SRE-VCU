@@ -9,8 +9,7 @@
 #define _DRS_H
 
 #include "IO_Driver.h"
-#include "brakePressureSensor.h"
-#include "torqueEncoder.h"
+#include "pedalSensors.h"
 #include "sensorCalculations.h"
 
 // Rotary Switch modes:

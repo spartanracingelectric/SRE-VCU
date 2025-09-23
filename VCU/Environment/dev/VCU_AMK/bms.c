@@ -11,7 +11,7 @@
 #include "IO_Driver.h"
 #include "IO_RTC.h"
 #include "IO_DIO.h"
-#include "mathFunctions.h"
+#include "sensors.h"
 
 /*********************************************************
  *            *********** CAUTION ***********            *

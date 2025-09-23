@@ -12,7 +12,6 @@
 #include "IO_CAN.h"
 #include "IO_RTC.h"
 
-#include "mathFunctions.h"
 #include "sensors.h"
 #include "canManager.h"
 #include "avlTree.h"

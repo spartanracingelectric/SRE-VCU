@@ -10,8 +10,7 @@
 
 #include "IO_Driver.h"
 
-#include "torqueEncoder.h"
-#include "brakePressureSensor.h"
+#include "pedalSensors.h"
 #include "sensors.h"
 #include "bms.h"
 #include "wheelSpeeds.h"

@@ -11,8 +11,7 @@
 
 #include "drs.h"
 #include "sensors.h"
-#include "brakePressureSensor.h"
-#include "torqueEncoder.h"
+#include "pedalSensors.h"
 #include "sensorCalculations.h"
 
 extern Sensor Sensor_DRSButton; 

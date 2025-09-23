@@ -10,11 +10,9 @@
 
 #include "IO_Driver.h"
 #include "wheelSpeeds.h"
-#include "mathFunctions.h"
-#include "initializations.h"
 #include "sensors.h"
-#include "torqueEncoder.h"
-#include "brakePressureSensor.h"
+#include "initializations.h"
+#include "pedalSensors.h"
 #include "motorController.h"
 
 typedef struct _PIDController {

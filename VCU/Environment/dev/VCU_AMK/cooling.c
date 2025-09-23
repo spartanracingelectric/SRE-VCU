@@ -10,7 +10,6 @@
 
 #include "sensors.h"
 #include "cooling.h"
-#include "mathFunctions.h"
 #include "bms.h"
 
 extern Sensor Sensor_HVILTerminationSense;

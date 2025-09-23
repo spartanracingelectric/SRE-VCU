@@ -12,12 +12,9 @@
 #include "IO_CAN.h"
 
 #include "safety.h"
-#include "mathFunctions.h"
-
 #include "sensors.h"
 
-#include "torqueEncoder.h"
-#include "brakePressureSensor.h"
+#include "pedalSensors.h"
 
 #include "bms.h"
 

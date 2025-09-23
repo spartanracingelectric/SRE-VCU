@@ -11,9 +11,8 @@
 #include <stdlib.h> 
 #include "IO_CAN.h"
 #include "IO_Driver.h"
-#include "mathFunctions.h"
-#include "initializations.h"
 #include "sensors.h"
+#include "initializations.h"
 
 typedef struct DAQSensors {
     

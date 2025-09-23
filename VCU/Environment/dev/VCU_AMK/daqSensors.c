@@ -8,9 +8,8 @@
 #include <stdlib.h> 
 #include "IO_CAN.h"
 #include "IO_Driver.h"
-#include "mathFunctions.h"
-#include "initializations.h"
 #include "sensors.h"
+#include "initializations.h"
 #include "daqSensors.h"
 
 _DAQSensors* DAQ_Sensor_new(){

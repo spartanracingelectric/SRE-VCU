@@ -30,7 +30,6 @@
 #include "IO_RTC.h"
 #include "sensorCalculations.h"
 #include "sensors.h"
-#include "mathFunctions.h"
 
 extern Sensor Sensor_TPS0;
 extern Sensor Sensor_TPS1;

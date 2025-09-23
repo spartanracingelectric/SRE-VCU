@@ -1,5 +1,5 @@
 	; TASKING VX-toolset for C166: C compiler v4.0r1 Build 741 SN 09002374
-	; Options: -f cc3552a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2024 -DRTS_TTC_FLASH_DATE_MONTH=5 -DRTS_TTC_FLASH_DATE_DAY=4 -DRTS_TTC_FLASH_DATE_HOUR=13 -DRTS_TTC_FLASH_DATE_MINUTE=10 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\sensorCalculations.src
+	; Options: -f cc8908a -c99 -Mh --fp-model=FT -Cxc2287 --core=xc16x -DTASKING_VIPER -D__USIC_MEM_TYPE=__PAGE_080_MEM_TYPE -D__MULTICAN_MEM_TYPE=__PAGE_080_MEM_TYPE -DTTC60 -DRTS_TTC_FLASH_DATE_YEAR=2025 -DRTS_TTC_FLASH_DATE_MONTH=9 -DRTS_TTC_FLASH_DATE_DAY=23 -DRTS_TTC_FLASH_DATE_HOUR=12 -DRTS_TTC_FLASH_DATE_MINUTE=30 -I..\..\..\Environment\inc -I..\..\..\Environment\inc_int -I..\..\..\Environment\bsp -I. --tradeoff=0 --no-tasking-sfr -ga --language=+cmp14,+div32,-gcc,-strings -O3 --source --mac -o build\sensorCalculations.src
 	; Module start
 	.source	'sensorCalculations.c'
 code_CalibrateBPS	.section	code, cluster 'CalibrateBPS', new
@@ -530,7 +530,7 @@ _93:
 	.extern	__sdil : far
 	.debug		.debug_info
 _66:
-	.dl	732
+	.dl	718
 	.dw	3
 	.dl	_67
 	.db	4
@@ -538,7 +538,7 @@ _65:
 	.db	1
 	.db	'sensorCalculations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_68
 _94:
@@ -549,77 +549,77 @@ _97:
 	.db	'long int',0,4,5,2
 	.db	'unsigned int',0,2,7,3
 	.db	'__size_t',0,1,1,1
-	.dl	211
+	.dl	197
 	.db	4
 	.db	'void',0,5,5
-	.dl	244
+	.dl	230
 	.db	3
 	.db	'__prof_adm',0,1,1,1
-	.dl	250
+	.dl	236
 	.db	2
 	.db	'unsigned long int',0,4,7,3
 	.db	'__codeptr',0,1,1,1
-	.dl	275
+	.dl	261
 	.db	2
 	.db	'unsigned short int',0,2,7,3
 	.db	'_iob_flag_t',0,2,82,25
-	.dl	314
+	.dl	300
 	.db	2
 	.db	'unsigned char',0,1,8,3
 	.db	'ubyte1',0,3,21,29
-	.dl	356
+	.dl	342
 	.db	3
 	.db	'ubyte2',0,3,22,29
-	.dl	211
+	.dl	197
 	.db	3
 	.db	'ubyte4',0,3,23,29
-	.dl	275
+	.dl	261
 	.db	3
 	.db	'sbyte4',0,3,27,29
-	.dl	199
+	.dl	185
 	.db	3
 	.db	'bool',0,3,31,29
-	.dl	356
+	.dl	342
 	.db	3
 	.db	'IO_ErrorType',0,4,150,1,17
-	.dl	211
+	.dl	197
 	.db	6
 	.db	'_Sensor',0,5,126,16,30,7
 	.db	'specMin',0
-	.dl	275
+	.dl	261
 	.db	4,2,35,0,7
 	.db	'specMax',0
-	.dl	275
+	.dl	261
 	.db	4,2,35,4,7
 	.db	'sensorValue',0
-	.dl	275
+	.dl	261
 	.db	4,2,35,8,7
 	.db	'heldSensorValue',0
-	.dl	275
+	.dl	261
 	.db	4,2,35,12,7
 	.db	'timestamp',0
-	.dl	275
+	.dl	261
 	.db	4,2,35,16,7
 	.db	'fresh',0
-	.dl	356
+	.dl	342
 	.db	1,2,35,20,7
 	.db	'ioErr_powerInit',0
-	.dl	211
+	.dl	197
 	.db	2,2,35,22,7
 	.db	'ioErr_powerSet',0
-	.dl	211
+	.dl	197
 	.db	2,2,35,24,7
 	.db	'ioErr_signalInit',0
-	.dl	211
+	.dl	197
 	.db	2,2,35,26,7
 	.db	'ioErr_signalGet',0
-	.dl	211
+	.dl	197
 	.db	2,2,35,28,0,3
 	.db	'Sensor',0,5,145,1,3
-	.dl	468
+	.dl	454
 	.db	8
 	.db	'Sensor_SAS',0,5,174,1,15,5
-	.dl	468
+	.dl	454
 	.db	1,1,0
 	; End of section
 
@@ -651,13 +651,13 @@ _566:
 
 	.debug		.debug_info, cluster 'CalibrateBPS'
 _69:
-	.dl	252
+	.dl	238
 	.dw	3
 	.dl	_70
 	.db	4,1
 	.db	'sensorCalculations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_72,_71
 	.db	2
@@ -702,20 +702,20 @@ _72:
 	.debug		.debug_pubnames
 	.dl	31
 	.dw	2
-	.dl	_69,256,198
+	.dl	_69,242,184
 	.db	'CalibrateBPS',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'GetBrakePosition'
 _74:
-	.dl	256
+	.dl	242
 	.dw	3
 	.dl	_75
 	.db	4,1
 	.db	'sensorCalculations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_77,_76
 	.db	2
@@ -760,20 +760,20 @@ _77:
 	.debug		.debug_pubnames
 	.dl	35
 	.dw	2
-	.dl	_74,260,198
+	.dl	_74,246,184
 	.db	'GetBrakePosition',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'freq_to_rpm'
 _79:
-	.dl	274
+	.dl	260
 	.dw	3
 	.dl	_80
 	.db	4,1
 	.db	'sensorCalculations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_82,_81
 	.db	2
@@ -834,20 +834,20 @@ _82:
 	.debug		.debug_pubnames
 	.dl	30
 	.dw	2
-	.dl	_79,278,198
+	.dl	_79,264,184
 	.db	'freq_to_rpm',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'rpm_to_mph'
 _84:
-	.dl	272
+	.dl	258
 	.dw	3
 	.dl	_85
 	.db	4,1
 	.db	'sensorCalculations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_87,_86
 	.db	2
@@ -912,20 +912,20 @@ _87:
 	.debug		.debug_pubnames
 	.dl	29
 	.dw	2
-	.dl	_84,276,198
+	.dl	_84,262,184
 	.db	'rpm_to_mph',0
 	.dl	0
 	; End of section
 
 	.debug		.debug_info, cluster 'steering_degrees'
 _89:
-	.dl	259
+	.dl	245
 	.dw	3
 	.dl	_90
 	.db	4,1
 	.db	'sensorCalculations.c',0
 	.db	'TASKING VX-toolset for C166: C compiler',0
-	.db	'C:\\Users\\shini\\Desktop\\FSAE\\Spartan Racing Electric Git\\SRE7\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
+	.db	'C:\\Mac\\Home\\Documents\\Cursor\\VCU Code Refactor\\AMK-MotorController\\VCU\\Environment\\dev\\VCU_AMK\\',0
 	.db	12,1
 	.dl	_92,_91
 	.db	2
@@ -1002,7 +1002,7 @@ _92:
 	.debug		.debug_pubnames
 	.dl	35
 	.dw	2
-	.dl	_89,263,198
+	.dl	_89,249,184
 	.db	'steering_degrees',0
 	.dl	0
 	; End of section

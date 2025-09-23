@@ -10,7 +10,7 @@
 
 #include "IO_RTC.h"
 #include "IO_Driver.h"
-#include "mathFunctions.h"
+#include "sensors.h"
 #include "avlTree.h"
 
 //-------------------------------------------------------------------
