@@ -18,6 +18,10 @@
 #include "IO_CAN.h"
 #include "IO_DIO.h"
 
+// Global sensor definitions
+Sensor Sensor_BenchTPS0;
+Sensor Sensor_BenchTPS1;
+
 #include "sensors.h"
 #include "initializations.h"
 
@@ -79,9 +83,6 @@ void vcu_initializeADC(bool benchMode)
     //ADC channels
     //----------------------------------------------------------------------------
     //TPS+BPS
-    // Define the bench TPS sensors
-    Sensor Sensor_BenchTPS0;
-    Sensor Sensor_BenchTPS1;
 
     //IO_ADC_ChannelInit(IO_ADC_5V_00, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_0, NULL);
     //IO_ADC_ChannelInit(IO_ADC_5V_01, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_1, NULL);
