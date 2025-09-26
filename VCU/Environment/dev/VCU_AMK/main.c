@@ -179,7 +179,11 @@ void main(void)
     //vcu_init functions may have to be performed BEFORE creating CAN Manager object
 
     // Total CAN0 and CAN1 read & write 128 
-    CanManager *canMan = CanManager_new(500, 40, 40, 500, 20, 20, 200000); //3rd param = messages per node (can0/can1; read/write)
+    ubyte2 busSpeed[CAN_CHANNELS] = {500,500};
+    ubyte1 read_messageLimit[CAN_CHANNELS] = {40,20};
+    ubyte1 write_messageLimit[CAN_CHANNELS] = {40,20};
+
+    CanManager *canMan = CanManager_new(busSpeed, read_messageLimit, write_messageLimit, 200000); //3rd param = messages per node (can0/can1; read/write)
     //can0_busSpeed ---------------------^    ^   ^   ^    ^   ^     ^         
     //can0_read_messageLimit -----------------|   |   |    |   |     |         
     //can0_write_messageLimit---------------------+   |    |   |     |         

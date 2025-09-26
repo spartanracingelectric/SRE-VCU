@@ -23,63 +23,32 @@
 
 
 struct _CanManager {
-    //AVLNode* incomingTree;
-    //AVLNode* outgoingTree;
 
     ubyte1 canMessageLimit;
     
-    //These are our four FIFO queues.  All messages should come/go through one of these queues.
-    //Functions shall have a CanChannel enum (see header) parameter.  Direction (send/receive is not
-    //specified by this parameter.  The CAN0/CAN1 is selected based on the parameter passed in, and 
-    //Read/Write is selected based on the function that is being called (get/send)
-    ubyte1 can0_busSpeed;
-    ubyte1 can0_readHandle;
-    ubyte1 can0_read_messageLimit;
-    ubyte1 can0_writeHandle;
-    ubyte1 can0_write_messageLimit;
-
-    ubyte1 can1_busSpeed;
-    ubyte1 can1_readHandle;
-    ubyte1 can1_read_messageLimit;
-    ubyte1 can1_writeHandle;
-    ubyte1 can1_write_messageLimit;
+    ubyte1 busSpeed[CAN_CHANNELS];
+    ubyte1 readHandle[CAN_CHANNELS];
+    ubyte1 read_messageLimit[CAN_CHANNELS];
+    ubyte1 writeHandle[CAN_CHANNELS];
+    ubyte1 write_messageLimit[CAN_CHANNELS];
     
-    IO_ErrorType ioErr_can0_Init;
-    IO_ErrorType ioErr_can1_Init;
+    IO_ErrorType ioErr_Init[CAN_CHANNELS];
 
-    IO_ErrorType ioErr_can0_fifoInit_R;
-    IO_ErrorType ioErr_can0_fifoInit_W;
-    IO_ErrorType ioErr_can1_fifoInit_R;
-    IO_ErrorType ioErr_can1_fifoInit_W;
+    IO_ErrorType ioErr_fifoInit_R[CAN_CHANNELS];
+    IO_ErrorType ioErr_fifoInit_W[CAN_CHANNELS];
 
-    IO_ErrorType ioErr_can0_read;
-    IO_ErrorType ioErr_can0_write;
-    IO_ErrorType ioErr_can1_read;
-    IO_ErrorType ioErr_can1_write;
+    IO_ErrorType ioErr_read[CAN_CHANNELS];
+    IO_ErrorType ioErr_write[CAN_CHANNELS];
 
     ubyte4 sendDelayus;
 
-
-    //WARNING: These values are not initialized - be careful to only access
-    //pointers that have been previously assigned
-    //AVLNode* canMessageHistory[0x7FF];
     AVLNode* canMessageHistory[0x7FF];
-    //Needs to change to the extended CAN limit
 };
 
-CanManager* CanManager_new(ubyte2 can0_busSpeed, ubyte1 can0_read_messageLimit, ubyte1 can0_write_messageLimit
-                         , ubyte2 can1_busSpeed, ubyte1 can1_read_messageLimit, ubyte1 can1_write_messageLimit
-                         , ubyte4 defaultSendDelayus) //ubyte4 defaultMinSendDelay, ubyte4 defaultMaxSendDelay)
+CanManager* CanManager_new(ubyte2 busSpeed[CAN_CHANNELS], ubyte1 read_messageLimit[CAN_CHANNELS], ubyte1 write_messageLimit[CAN_CHANNELS], ubyte4 defaultSendDelayus) //ubyte4 defaultMinSendDelay, ubyte4 defaultMaxSendDelay)
 {
     CanManager* me = (CanManager*)malloc(sizeof(struct _CanManager));
 
-    //me->sm = serialMan;
-    //SerialManager_send(me->sm, "CanManager's reference to SerialManager was created.\n");
-    
-    //create can history data structure (AVL tree?)
-    //me->incomingTree = NULL;
-    //me->outgoingTree = NULL;
-    //Need to change to extended CAN limit
     for (ubyte4 id = 0; id <= 0x7FF; id++)
     {
         me->canMessageHistory[id] = 0;
@@ -87,93 +56,45 @@ CanManager* CanManager_new(ubyte2 can0_busSpeed, ubyte1 can0_read_messageLimit, 
 
     me->sendDelayus = defaultSendDelayus;
 
-    //Activate the CAN channels --------------------------------------------------
-    me->ioErr_can0_Init = IO_CAN_Init(IO_CAN_CHANNEL_0, can0_busSpeed, 0, 0, 0);
-    me->ioErr_can1_Init = IO_CAN_Init(IO_CAN_CHANNEL_1, can1_busSpeed, 0, 0, 0);
+    for (int i=0; i < 2; ++ i){
+        //Activate the CAN channels --------------------------------------------------
+        me->ioErr_Init[i] = IO_CAN_Init(IO_CAN_CHANNEL_0+i, busSpeed[i], 0, 0, 0);
 
-    //Configure the FIFO queues
-    //This specifies: The handle names for the queues
-    //, which channel the queue belongs to
-    //, the # of messages (or maximum count?)
-    //, the direction of the queue (in/out)
-    //, the frame size
-    IO_CAN_ConfigFIFO(&me->can0_readHandle, IO_CAN_CHANNEL_0, can0_read_messageLimit, IO_CAN_MSG_READ, IO_CAN_STD_FRAME, 0, 0);
-    IO_CAN_ConfigFIFO(&me->can0_writeHandle, IO_CAN_CHANNEL_0, can0_write_messageLimit, IO_CAN_MSG_WRITE, IO_CAN_STD_FRAME, 0, 0);
-    IO_CAN_ConfigFIFO(&me->can1_readHandle, IO_CAN_CHANNEL_1, can1_read_messageLimit, IO_CAN_MSG_READ, IO_CAN_STD_FRAME, 0, 0); //Only change for CAN1 Read for IMU
-    IO_CAN_ConfigFIFO(&me->can1_writeHandle, IO_CAN_CHANNEL_1, can1_write_messageLimit, IO_CAN_MSG_WRITE, IO_CAN_STD_FRAME, 0, 0);
+        //Configure the FIFO queues
+        //This specifies: The handle names for the queues
+        //, which channel the queue belongs to
+        //, the # of messages (or maximum count?)
+        //, the direction of the queue (in/out)
+        //, the frame size
+        IO_CAN_ConfigFIFO(&me->readHandle[i], IO_CAN_CHANNEL_0 + i, read_messageLimit[i], IO_CAN_MSG_READ, IO_CAN_STD_FRAME, 0, 0);
+        IO_CAN_ConfigFIFO(&me->writeHandle[i], IO_CAN_CHANNEL_0 + i, write_messageLimit[i], IO_CAN_MSG_WRITE, IO_CAN_STD_FRAME, 0, 0);
 
-    //Assume read/write at error state until used
-    me->ioErr_can0_read = IO_E_CAN_BUS_OFF;
-    me->ioErr_can0_write = IO_E_CAN_BUS_OFF;
-    me->ioErr_can1_read = IO_E_CAN_BUS_OFF;
-    me->ioErr_can1_write = IO_E_CAN_BUS_OFF;
-
+        //Assume read/write at error state until used
+        me->ioErr_read[i] = IO_E_CAN_BUS_OFF;
+        me->ioErr_write[i] = IO_E_CAN_BUS_OFF;
+    }
     //-------------------------------------------------------------------
     //Define default messages
     //-------------------------------------------------------------------
+    ubyte2 messageID[CAN_CHANNELS] = {0x500,0x515};
 
-    ubyte2 messageID;
-    //Outgoing ----------------------------
-    messageID = 0x184;  //Inverter FL 1 Command Message
-    me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0; // us (microseconds)
-    me->canMessageHistory[messageID]->timeBetweenMessages_Max = 8000; 
-    me->canMessageHistory[messageID]->required = TRUE;
-    for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
-    IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
-
-    messageID = 0x185;  //Inverter FR 2 Command Message
-    me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
-    me->canMessageHistory[messageID]->timeBetweenMessages_Max = 8000;
-    me->canMessageHistory[messageID]->required = TRUE;
-    for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
-    IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
-
-    messageID = 0x188;  //Inverter RL 1 Command Message
-    me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
-    me->canMessageHistory[messageID]->timeBetweenMessages_Max = 8000;
-    me->canMessageHistory[messageID]->required = TRUE;
-    for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
-    IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
-
-    messageID = 0x189;  //Inverter RR 2 Command Message
-    me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
-    me->canMessageHistory[messageID]->timeBetweenMessages_Max = 8000;
-    me->canMessageHistory[messageID]->required = TRUE;
-    for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
-    IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
-
-    for (messageID = 0x500; messageID <= 0x515; messageID++)
-    {
-        me->canMessageHistory[messageID]->timeBetweenMessages_Min = 50000;
-        me->canMessageHistory[messageID]->timeBetweenMessages_Max = 250000;
-        me->canMessageHistory[messageID]->required = TRUE;
-        for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
-        IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
+    for (ubyte1 number = 0; messageID[0]+ number < messageID[1]; ++number){
+        me->canMessageHistory[messageID[0] + number]->timeBetweenMessages_Min = 50000;
+        me->canMessageHistory[messageID[0] + number]->timeBetweenMessages_Max = 250000;
+        me->canMessageHistory[messageID[0] + number]->required = TRUE;
+        for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID[0] + number]->data[i] = 0; }
+        IO_RTC_StartTime(&me->canMessageHistory[messageID[0] + number]->lastMessage_timeStamp);
     }
 
-    /*
+    ubyte2 amkMessageID[4] = {184,185,188,189};
 
-    messageID = 0x623;  //BMS faults
-    me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
-    me->canMessageHistory[messageID]->timeBetweenMessages_Max = 5000000;
-    me->canMessageHistory[messageID]->required = TRUE;
-    for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
-    IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
-
-    messageID = 0x623;  //BMS faults
-    me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
-    me->canMessageHistory[messageID]->timeBetweenMessages_Max = 5000000;
-    me->canMessageHistory[messageID]->required = TRUE;
-    for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
-    IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
-
-    messageID = 0x629;  //BMS details
-    me->canMessageHistory[messageID]->timeBetweenMessages_Min = 0;
-    me->canMessageHistory[messageID]->timeBetweenMessages_Max = 1000000;
-    me->canMessageHistory[messageID]->required = TRUE;
-    for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[messageID]->data[i] = 0; }
-    IO_RTC_StartTime(&me->canMessageHistory[messageID]->lastMessage_timeStamp);
-    */
+    for(ubyte1 number = 0; number < 4; ++number){
+        me->canMessageHistory[amkMessageID[number]]->timeBetweenMessages_Min = 0; // us (microseconds)
+        me->canMessageHistory[amkMessageID[number]]->timeBetweenMessages_Max = 8000; 
+        me->canMessageHistory[amkMessageID[number]]->required = TRUE;
+        for (ubyte1 i = 0; i <= 7; i++) { me->canMessageHistory[amkMessageID[number]]->data[i] = 0; }
+        IO_RTC_StartTime(&me->canMessageHistory[amkMessageID[number]]->lastMessage_timeStamp);
+    }
 
     return me;
 }
@@ -238,15 +159,7 @@ IO_ErrorType CanManager_send(CanManager* me, CanChannel channel, IO_CAN_DATA_FRA
             ubyte1 oldData = lastMessage->data[dataPosition];
             ubyte1 newData = canMessages[messagePosition].data[dataPosition];
             //if any data byte is changed, then probably want to send the message
-            if (oldData == newData)
-            {
-                //data has not changed.  No action required (DO NOT SET)
-                //dataChanged = FALSE;
-            }
-            else
-            {
-                dataChanged = TRUE; //ONLY MODIFY IF CHANGED
-            }
+            dataChanged = (oldData == newData) ? FALSE : TRUE; //Only want to send if dataChanged is true
         }//end checking each byte in message
 
         //----------------------------------------------------------------------------
@@ -292,22 +205,16 @@ IO_ErrorType CanManager_send(CanManager* me, CanChannel channel, IO_CAN_DATA_FRA
     if (messagesToSendCount > 0)
     {
         //Send the messages to send to the appropriate FIFO queue
-        sendResult = IO_CAN_WriteFIFO((channel == CAN0_HIPRI) ? me->can0_writeHandle : me->can1_writeHandle, messagesToSend, messagesToSendCount);
-        *((channel == CAN0_HIPRI) ? &me->ioErr_can0_write : &me->ioErr_can1_write) = sendResult;
+        sendResult = IO_CAN_WriteFIFO((channel == CAN0_HIPRI) ? me->writeHandle[0] : me->writeHandle[1], messagesToSend, messagesToSendCount);
+        *((channel == CAN0_HIPRI) ? &me->ioErr_write[0] : &me->ioErr_write[1]) = sendResult;
 
         //Update the outgoing message tree with message sent timestamps
-        if ((channel == CAN0_HIPRI ? me->ioErr_can0_write : me->ioErr_can1_write) == IO_E_OK)
+        if ((channel == CAN0_HIPRI ? me->ioErr_write[0] : me->ioErr_write[1]) == IO_E_OK)
         {
             //Loop through the messages that we sent...
-            ///////////AVLNode* messageToUpdate;
             for (messagePosition = 0; messagePosition < messagesToSendCount; messagePosition++)
             {
-                //...find the message ID in the outgoing message tree again (big inefficiency here)...
-                //////////messageToUpdate = AVL_find(me->outgoingTree, messagesToSend[messagePosition].id);
-
-                //and update the message sent timestamp
-                /////////////IO_RTC_GetTimeUS(messageToUpdate->lastMessage_timeStamp); //Update the timestamp for when the message was last sent
-                //IO_RTC_GetTimeUS(me->canMessageHistory[messagesToSend[messagePosition].id]->lastMessage_timeStamp);
+                // update the message sent timestamp
                 IO_RTC_StartTime(&me->canMessageHistory[messagesToSend[messagePosition].id]->lastMessage_timeStamp);
             }
         }
@@ -321,14 +228,14 @@ IO_ErrorType CanManager_send(CanManager* me, CanChannel channel, IO_CAN_DATA_FRA
 ****************************************************************************/
 void CanManager_read(CanManager *me, CanChannel channel, InstrumentCluster *ic, BatteryManagementSystem *bms, SafetyChecker *sc, _DAQSensors *d1, _DriveInverter *inv1, _DriveInverter *inv2)
 {
-    IO_CAN_DATA_FRAME canMessages[(channel == CAN0_HIPRI ? me->can0_read_messageLimit : me->can1_read_messageLimit)];
+    IO_CAN_DATA_FRAME canMessages[(channel == CAN0_HIPRI ? me->read_messageLimit[0] : me->read_messageLimit[1])];
     ubyte1 canMessageCount;  //FIFO queue only holds 128 messages max
 
     //Read messages from hi/lopri channel 
-    *(channel == CAN0_HIPRI ? &me->ioErr_can0_read : &me->ioErr_can1_read) =
-    IO_CAN_ReadFIFO((channel == CAN0_HIPRI ? me->can0_readHandle : me->can1_readHandle)
+    *(channel == CAN0_HIPRI ? &me->ioErr_read[0] : &me->ioErr_read[1]) =
+    IO_CAN_ReadFIFO((channel == CAN0_HIPRI ? me->readHandle[0] : me->readHandle[0])
                     , canMessages
-                    , (channel == CAN0_HIPRI ? me->can0_read_messageLimit : me->can1_read_messageLimit)
+                    , (channel == CAN0_HIPRI ? me->read_messageLimit[0] : me->read_messageLimit[0])
                     , &canMessageCount);
 
     //Determine message type based on ID
@@ -457,7 +364,7 @@ void CanManager_read(CanManager *me, CanChannel channel, InstrumentCluster *ic, 
 
 ubyte1 CanManager_getReadStatus(CanManager* me, CanChannel channel)
 {
-    return (channel == CAN0_HIPRI) ? me->ioErr_can0_read : me->ioErr_can1_read;
+    return (channel == CAN0_HIPRI) ? me->ioErr_read[0] : me->ioErr_read[1];
 }
 
 
@@ -485,26 +392,17 @@ void canOutput_sendSensorMessages(CanManager* me)
 //----------------------------------------------------------------------------
 void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressureSensor* bps, InstrumentCluster* ic, BatteryManagementSystem* bms, SafetyChecker* sc, _DriveInverter *inv1, _DriveInverter *inv2)
 {
-    IO_CAN_DATA_FRAME canMessages[me->can0_write_messageLimit];
+    IO_CAN_DATA_FRAME canMessages[me->write_messageLimit[0]];
     ubyte1 errorCount;
-    float4 tempPedalPercent;   //Pedal percent float (a decimal between 0 and 1
-    ubyte1 tps0Percent;  //Pedal percent int   (a number from 0 to 100)
-    ubyte1 tps1Percent;
     ubyte2 canMessageCount = 0;
     ubyte2 canMessageID = 0x500;
     ubyte1 byteNum;
 
-    TorqueEncoder_getIndividualSensorPercent(tps, 0, &tempPedalPercent); //borrow the pedal percent variable
-    tps0Percent = 0xFF * tempPedalPercent;
-    TorqueEncoder_getIndividualSensorPercent(tps, 1, &tempPedalPercent);
-    tps1Percent = 0xFF * (tempPedalPercent);
-    //tps1Percent = 0xFF * (1 - tempPedalPercent);  //OLD: flipped over pedal percent (this value for display in CAN only)
-
+    ubyte1 tps0Percent = 0xFF * tps->tps0_percent;  //Pedal percent int   (a number from 0 to 100)
+    ubyte1 tps1Percent = 0xFF * tps->tps1_percent;
     ubyte1 throttlePercent = 0xFF * tps->travelPercent;
-
-    BrakePressureSensor_getPedalTravel(bps, &errorCount, &tempPedalPercent); //getThrottlePercent(TRUE, &errorCount);
-    ubyte1 brakePercent = 0xFF * tempPedalPercent;
-
+    ubyte1 brakePercent = 0xFF * bps->percent;
+    
     //500: TPS 0
     canMessageCount++;
     byteNum = 0;
@@ -828,7 +726,7 @@ void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressu
 
 void canOutput_sendDebugMessage1(CanManager *me, TorqueEncoder *tps, BrakePressureSensor *bps, InstrumentCluster *ic, BatteryManagementSystem *bms, SafetyChecker *sc, _DAQSensors *d1, _DriveInverter *inv1, _DriveInverter *inv2)
 {
-    IO_CAN_DATA_FRAME canMessages[me->can1_write_messageLimit]; 
+    IO_CAN_DATA_FRAME canMessages[me->write_messageLimit[1]]; 
     ubyte1 errorCount;
     float4 tempPedalPercent;   //Pedal percent float (a decimal between 0 and 1
     ubyte1 tps0Percent;  //Pedal percent int   (a number from 0 to 100)
@@ -844,7 +742,7 @@ void canOutput_sendDebugMessage1(CanManager *me, TorqueEncoder *tps, BrakePressu
     canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
     canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv1->AMK_bInverterOn << 0) | (inv1->AMK_bDcOn << 1) | (inv1->AMK_bEnable << 2) | (inv1->AMK_bErrorReset << 3));
     canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
-    canMessages[canMessageCount - 1].data[2] = inv1->AMK_TorqueSetpoint;
+    canMessages[canMessageCount - 1].data[CAN_CHANNELS] = inv1->AMK_TorqueSetpoint;
     canMessages[canMessageCount - 1].data[3] = inv1->AMK_TorqueSetpoint >> 8;
     canMessages[canMessageCount - 1].data[4] = inv1->AMK_TorqueLimitPositiv;
     canMessages[canMessageCount - 1].data[5] = inv1->AMK_TorqueLimitPositiv >> 8;
@@ -859,14 +757,14 @@ void canOutput_sendDebugMessage1(CanManager *me, TorqueEncoder *tps, BrakePressu
     canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
     canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv2->AMK_bInverterOn << 0) | (inv2->AMK_bDcOn << 1) | (inv2->AMK_bEnable << 2) | (inv2->AMK_bErrorReset << 3));
     canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
-    canMessages[canMessageCount - 1].data[2] = inv2->AMK_TorqueSetpoint;
+    canMessages[canMessageCount - 1].data[CAN_CHANNELS] = inv2->AMK_TorqueSetpoint;
     canMessages[canMessageCount - 1].data[3] = inv2->AMK_TorqueSetpoint >> 8;
     canMessages[canMessageCount - 1].data[4] = inv2->AMK_TorqueLimitPositiv;
     canMessages[canMessageCount - 1].data[5] = inv2->AMK_TorqueLimitPositiv >> 8;
     canMessages[canMessageCount - 1].data[6] = inv2->AMK_TorqueLimitNegativ;
     canMessages[canMessageCount - 1].data[7] = inv2->AMK_TorqueLimitNegativ >> 8;
     canMessages[canMessageCount - 1].length = 8;
-    
+
     //Inverter 3 RL Command Message
     canMessageCount++;
     canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
@@ -874,7 +772,7 @@ void canOutput_sendDebugMessage1(CanManager *me, TorqueEncoder *tps, BrakePressu
     canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
     canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv1->AMK_bInverterOn << 0) | (inv1->AMK_bDcOn << 1) | (inv1->AMK_bEnable << 2) | (inv1->AMK_bErrorReset << 3));
     canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
-    canMessages[canMessageCount - 1].data[2] = inv1->AMK_TorqueSetpoint;
+    canMessages[canMessageCount - 1].data[CAN_CHANNELS] = inv1->AMK_TorqueSetpoint;
     canMessages[canMessageCount - 1].data[3] = inv1->AMK_TorqueSetpoint >> 8;
     canMessages[canMessageCount - 1].data[4] = inv1->AMK_TorqueLimitPositiv;
     canMessages[canMessageCount - 1].data[5] = inv1->AMK_TorqueLimitPositiv >> 8;
@@ -889,7 +787,7 @@ void canOutput_sendDebugMessage1(CanManager *me, TorqueEncoder *tps, BrakePressu
     canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
     canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv2->AMK_bInverterOn << 0) | (inv2->AMK_bDcOn << 1) | (inv2->AMK_bEnable << 2) | (inv2->AMK_bErrorReset << 3));
     canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
-    canMessages[canMessageCount - 1].data[2] = inv2->AMK_TorqueSetpoint;
+    canMessages[canMessageCount - 1].data[CAN_CHANNELS] = inv2->AMK_TorqueSetpoint;
     canMessages[canMessageCount - 1].data[3] = inv2->AMK_TorqueSetpoint >> 8;
     canMessages[canMessageCount - 1].data[4] = inv2->AMK_TorqueLimitPositiv;
     canMessages[canMessageCount - 1].data[5] = inv2->AMK_TorqueLimitPositiv >> 8;
@@ -918,3 +816,71 @@ void canOutput_sendDebugMessage1(CanManager *me, TorqueEncoder *tps, BrakePressu
     //IO_CAN_WriteFIFO(canFifoHandle_LoPri_Write, canMessages, canMessageCount);  
 
 }
+
+/*
+// pseudocode for standard can message creation (pointer held in struct of member who's data is being reported)
+    // want to ignore lines where data = 0 (incase of combined CAN message from multiple struct. Individual bit flags should not be combined over mutiple structs, therefore, no workaround is made for this scenario.)
+// canManager simply has a list of id's to update, direct references struct member's can message fo addition to FIFO queue
+
+//me->lastvalid keeps track of last obtainMessageAddress() pointer
+IO_CAN_DATA_FRAME * canManager_obtainMessageAddress(CanManager* me, ubyte4 canID){
+
+    for(ubyte1 i = 0; i < me->lastvalid; ++i){
+        if(me->canMessages0[i].id = canID)
+        {   return &me->canMessages0[i]; }
+    }
+    if(me->lastvalid < me->write_messageLimit[0]){
+        ++me->lastvalid;
+        me->canMessages0[me->lastvalid].id = canID;
+        return &me->canMessages0[me->lastvalid];
+    }
+    return NULL;
+}
+
+IO_CAN_DATA_FRAME canManager_fillMessage(IO_CAN_DATA_FRAME* canMessage, ubyte1 data, ubyte1 byte){
+
+    for(ubyte1 i = 0; i < 7; ++i){
+        if(canMessage.data[i] != 0){    
+        canMessage.data[i] = data[i];
+        }
+    }
+}
+
+Could also remove the copy of the data[i], but would have to have individual copied implementations for the same process of checking if a byte is being used by someone else. Maybe come up with a way to avoid both things?
+//
+//
+//
+void canManager_buildMessageLine0(CanManager* me){
+    
+    // me->lastvalid <= me->write_messageLimit[0];
+
+    for( ubyte1 i = 0; i < me->lastvalid; ++i){
+        // filling out all default values before messages are sent
+        me->canMessages0[i].id_format = IO_CAN_STD_FRAME;
+        me->canMessages0[i].length = 8;
+    }
+
+}
+
+//implementation for using
+TPS tps_init(){
+    ...
+    tps->canMessage = canManager_obtainMessageAddress(can0, 0x500);
+    ...
+}
+
+tps_update(TPS* tps){
+    ...
+    Sensor_TPS0.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_07, &Sensor_TPS0.sensorValue, &Sensor_TPS0.fresh);
+    canManager_fillMessage(tps->canMessage, tps->sensorValue0, 2);
+    canManager_fillMessage(tps->canMessage, (tps->sensorValue0 >> 8), 3);
+    ...
+}
+
+void main(){
+    ...
+    canOutput_buildMessageLine0(CanManager* me);
+    canManager_send(canManager, CAN0_HIPRI, canManager->canMessages0H, canManager->lastvalid);  //Send messages to CAN0 (no more canOutput_sendDebugMessage0/1)
+    ...
+}
+*/
