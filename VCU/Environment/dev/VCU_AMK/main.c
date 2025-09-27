@@ -404,8 +404,8 @@ void main(void)
         //canOutput_sendMCUControl(mcm0, FALSE);
 
         //Send debug data
-        canOutput_sendDebugMessage0(canMan, tps, bps, ic0, bms, sc, invFL, invFR);
-        canOutput_sendDebugMessage1(canMan, tps, bps, ic0, bms, sc, d1, invRL, invRR);
+        canOutput_sendDebugMessage0(canMan, tps, bps, ic0, bms, sc);
+        canOutput_sendDebugMessage1(canMan, invFL, invFR, invRL, invRR);
         //canOutput_sendSensorMessages();
         //canOutput_sendStatusMessages(mcm0);
 

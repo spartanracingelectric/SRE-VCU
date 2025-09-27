@@ -724,16 +724,11 @@ void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressu
 
 }
 
-void canOutput_sendDebugMessage1(CanManager *me, TorqueEncoder *tps, BrakePressureSensor *bps, InstrumentCluster *ic, BatteryManagementSystem *bms, SafetyChecker *sc, _DAQSensors *d1, _DriveInverter *inv1, _DriveInverter *inv2)
+void canOutput_sendDebugMessage1(CanManager *me, _DriveInverter *inv1, _DriveInverter *inv2, _DriveInverter *inv3, _DriveInverter *inv4)
 {
     IO_CAN_DATA_FRAME canMessages[me->write_messageLimit[1]]; 
-    ubyte1 errorCount;
-    float4 tempPedalPercent;   //Pedal percent float (a decimal between 0 and 1
-    ubyte1 tps0Percent;  //Pedal percent int   (a number from 0 to 100)
-    ubyte1 tps1Percent;
     ubyte2 canMessageCount = 0;
-    ubyte2 canMessageID = 0x500;
-    ubyte1 byteNum;
+
 
     //Inverter 1 FL Command Message
     canMessageCount++;
@@ -742,7 +737,7 @@ void canOutput_sendDebugMessage1(CanManager *me, TorqueEncoder *tps, BrakePressu
     canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
     canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv1->AMK_bInverterOn << 0) | (inv1->AMK_bDcOn << 1) | (inv1->AMK_bEnable << 2) | (inv1->AMK_bErrorReset << 3));
     canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
-    canMessages[canMessageCount - 1].data[CAN_CHANNELS] = inv1->AMK_TorqueSetpoint;
+    canMessages[canMessageCount - 1].data[2] = inv1->AMK_TorqueSetpoint;
     canMessages[canMessageCount - 1].data[3] = inv1->AMK_TorqueSetpoint >> 8;
     canMessages[canMessageCount - 1].data[4] = inv1->AMK_TorqueLimitPositiv;
     canMessages[canMessageCount - 1].data[5] = inv1->AMK_TorqueLimitPositiv >> 8;
@@ -757,7 +752,7 @@ void canOutput_sendDebugMessage1(CanManager *me, TorqueEncoder *tps, BrakePressu
     canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
     canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv2->AMK_bInverterOn << 0) | (inv2->AMK_bDcOn << 1) | (inv2->AMK_bEnable << 2) | (inv2->AMK_bErrorReset << 3));
     canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
-    canMessages[canMessageCount - 1].data[CAN_CHANNELS] = inv2->AMK_TorqueSetpoint;
+    canMessages[canMessageCount - 1].data[2] = inv2->AMK_TorqueSetpoint;
     canMessages[canMessageCount - 1].data[3] = inv2->AMK_TorqueSetpoint >> 8;
     canMessages[canMessageCount - 1].data[4] = inv2->AMK_TorqueLimitPositiv;
     canMessages[canMessageCount - 1].data[5] = inv2->AMK_TorqueLimitPositiv >> 8;
@@ -770,14 +765,14 @@ void canOutput_sendDebugMessage1(CanManager *me, TorqueEncoder *tps, BrakePressu
     canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
     canMessages[canMessageCount - 1].id = 0x188;
     canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
-    canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv1->AMK_bInverterOn << 0) | (inv1->AMK_bDcOn << 1) | (inv1->AMK_bEnable << 2) | (inv1->AMK_bErrorReset << 3));
+    canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv3->AMK_bInverterOn << 0) | (inv3->AMK_bDcOn << 1) | (inv3->AMK_bEnable << 2) | (inv3->AMK_bErrorReset << 3));
     canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
-    canMessages[canMessageCount - 1].data[CAN_CHANNELS] = inv1->AMK_TorqueSetpoint;
-    canMessages[canMessageCount - 1].data[3] = inv1->AMK_TorqueSetpoint >> 8;
-    canMessages[canMessageCount - 1].data[4] = inv1->AMK_TorqueLimitPositiv;
-    canMessages[canMessageCount - 1].data[5] = inv1->AMK_TorqueLimitPositiv >> 8;
-    canMessages[canMessageCount - 1].data[6] = inv1->AMK_TorqueLimitNegativ;
-    canMessages[canMessageCount - 1].data[7] = inv1->AMK_TorqueLimitNegativ >> 8;
+    canMessages[canMessageCount - 1].data[2] = inv3->AMK_TorqueSetpoint;
+    canMessages[canMessageCount - 1].data[3] = inv3->AMK_TorqueSetpoint >> 8;
+    canMessages[canMessageCount - 1].data[4] = inv3->AMK_TorqueLimitPositiv;
+    canMessages[canMessageCount - 1].data[5] = inv3->AMK_TorqueLimitPositiv >> 8;
+    canMessages[canMessageCount - 1].data[6] = inv3->AMK_TorqueLimitNegativ;
+    canMessages[canMessageCount - 1].data[7] = inv3->AMK_TorqueLimitNegativ >> 8;
     canMessages[canMessageCount - 1].length = 8;
 
     //Inverter 4 RR Command Message
@@ -785,30 +780,29 @@ void canOutput_sendDebugMessage1(CanManager *me, TorqueEncoder *tps, BrakePressu
     canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
     canMessages[canMessageCount - 1].id = 0x189;
     canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
-    canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv2->AMK_bInverterOn << 0) | (inv2->AMK_bDcOn << 1) | (inv2->AMK_bEnable << 2) | (inv2->AMK_bErrorReset << 3));
+    canMessages[canMessageCount - 1].data[1] = (ubyte1)((inv4->AMK_bInverterOn << 0) | (inv4->AMK_bDcOn << 1) | (inv4->AMK_bEnable << 2) | (inv4->AMK_bErrorReset << 3));
     canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
-    canMessages[canMessageCount - 1].data[CAN_CHANNELS] = inv2->AMK_TorqueSetpoint;
-    canMessages[canMessageCount - 1].data[3] = inv2->AMK_TorqueSetpoint >> 8;
-    canMessages[canMessageCount - 1].data[4] = inv2->AMK_TorqueLimitPositiv;
-    canMessages[canMessageCount - 1].data[5] = inv2->AMK_TorqueLimitPositiv >> 8;
-    canMessages[canMessageCount - 1].data[6] = inv2->AMK_TorqueLimitNegativ;
-    canMessages[canMessageCount - 1].data[7] = inv2->AMK_TorqueLimitNegativ >> 8;
+    canMessages[canMessageCount - 1].data[2] = inv4->AMK_TorqueSetpoint;
+    canMessages[canMessageCount - 1].data[3] = inv4->AMK_TorqueSetpoint >> 8;
+    canMessages[canMessageCount - 1].data[4] = inv4->AMK_TorqueLimitPositiv;
+    canMessages[canMessageCount - 1].data[5] = inv4->AMK_TorqueLimitPositiv >> 8;
+    canMessages[canMessageCount - 1].data[6] = inv4->AMK_TorqueLimitNegativ;
+    canMessages[canMessageCount - 1].data[7] = inv4->AMK_TorqueLimitNegativ >> 8;
     canMessages[canMessageCount - 1].length = 8;
 
     //50B: AMK VCU Debug (3/4 Inverters)
     canMessageCount++;
-    byteNum = 0;
     canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
     canMessages[canMessageCount - 1].id = 0x50B;
-    canMessages[canMessageCount - 1].data[byteNum++] = inv1->startUpStage;
-    canMessages[canMessageCount - 1].data[byteNum++] = inv2->startUpStage;
-    canMessages[canMessageCount - 1].data[byteNum++] = 0;
-    canMessages[canMessageCount - 1].data[byteNum++] = 0;
-    canMessages[canMessageCount - 1].data[byteNum++] = 0;
-    canMessages[canMessageCount - 1].data[byteNum++] = 0;
-    canMessages[canMessageCount - 1].data[byteNum++] = 0;
-    canMessages[canMessageCount - 1].data[byteNum++] = 0;
-    canMessages[canMessageCount - 1].length = byteNum;
+    canMessages[canMessageCount - 1].data[0] = inv1->startUpStage | inv2->startUpStage << 4 ;
+    canMessages[canMessageCount - 1].data[1] = inv3->startUpStage | inv4->startUpStage << 4 ;
+    canMessages[canMessageCount - 1].data[2] = 0;
+    canMessages[canMessageCount - 1].data[3] = 0;
+    canMessages[canMessageCount - 1].data[4] = 0;
+    canMessages[canMessageCount - 1].data[5] = 0;
+    canMessages[canMessageCount - 1].data[6] = 0;
+    canMessages[canMessageCount - 1].data[7] = 0;
+    canMessages[canMessageCount - 1].length = 8;
 
     //Place the can messsages into the FIFO queue ---------------------------------------------------
     //IO_CAN_WriteFIFO(canFifoHandle_HiPri_Write, canMessages, canMessageCount);  //Important: Only transmit one message (the MCU message)
