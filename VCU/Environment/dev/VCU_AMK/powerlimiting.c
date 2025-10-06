@@ -1,8 +1,6 @@
 #include <stdlib.h>
-#include <stdlib.h>
 #include <math.h>
 #include "powerlimiting.h"
-#include "motorController.h"
 
 PowerLimiting* PowerLimiting_new(float targetPower){
     PowerLimiting* powerlimiting = (PowerLimiting*)malloc(sizeof(PowerLimiting));
@@ -13,13 +11,13 @@ PowerLimiting* PowerLimiting_new(float targetPower){
     return powerlimiting;
 }
 
-void PowerLimiting_limitPower(PowerLimiting* pl, MotorController* mcm, TorqueEncoder* tps){
+void PowerLimiting_limitPower(PowerLimiting* pl, _DriveInverter* mcu, TorqueEncoder* tps){
+    
     pl->pid->controllerMaxima = (tps->travelPercent * 231);
-    float processVariable = MCM_getDCCurrent(mcm);
-    float targetValue = pl->targetPower / MCM_getDCVoltage(mcm);
-    float outputVariable = MCM_getCommandedTorque(mcm);
+    float processVariable = mcu->AMK_TorqueCurrent + mcu->AMK_MagnetizingCurrent;
+    float targetValue = pl->targetPower /*/ mcu->voltage*/;
+    float outputVariable = mcu->AMK_TorqueSetpoint;
     float torqueRequest = PID_computeOutput(pl->pid, targetValue, processVariable, outputVariable);
-
-    sbyte2 torqueDeciNM = torqueRequest * 10;
-    MCM_set_powerlimitingTorqueCommand(mcm,torqueDeciNM);
+    //Sets 
+    // mcu->AMK_TorqueSetpoint = (sbyte2)torqueRequest;
 }

@@ -4,13 +4,13 @@
 
 #include "IO_Driver.h"
 #include "pid.h"
-
+#include "AMKdrive.h"
 typedef struct {
     PID_Controller* pid;
     float targetPower;
 } PowerLimiting;
 
 PowerLimiting* PowerLimiting_new(float targetPower);
-void PowerLimiting_limitPower(PowerLimiting* pl, MotorController* mcm, TorqueEncoder* tps);
+void PowerLimiting_limitPower(PowerLimiting* pl, _DriveInverter* mcu, TorqueEncoder* tps);
 
 #endif

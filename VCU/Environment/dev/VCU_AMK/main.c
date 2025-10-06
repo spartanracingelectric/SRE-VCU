@@ -215,6 +215,10 @@ void main(void)
     _DriveInverter *invFR = AmkDriver_new(FRONT_RIGHT);
     _DriveInverter *invRL = AmkDriver_new(REAR_LEFT);
     _DriveInverter *invRR = AmkDriver_new(REAR_RIGHT);
+    //creating array of pointers & pointer to said array for easy access
+    _DriveInverter *inverterPairs[4] = {invFL,invFR,invRL,invRR};
+    _DriveInverter** drivetrain = inverterPairs;
+
     InstrumentCluster *ic0 = InstrumentCluster_new(0x702);
     TorqueEncoder *tps = TorqueEncoder_new(bench);
     BrakePressureSensor *bps = BrakePressureSensor_new();
