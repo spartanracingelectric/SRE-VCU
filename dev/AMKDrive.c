@@ -143,7 +143,7 @@ void DI_calculateInverterControl(_DriveInverter* me, Sensor *HVILTermSense, Torq
             if (HVILTermSense->sensorValue == TRUE && timestamp_Precharge == 0){
                 IO_RTC_StartTime(&timestamp_Precharge);
             } 
-            if(HVILTermSense->sensorValue == TRUE && IO_RTC_GetTimeUS(timestamp_Precharge) >= 10000000 && d1->DetectionPCB == 1){ // After 10 Seconds // Added Integration for DetectionPCB
+            if(HVILTermSense->sensorValue == TRUE){ //} && IO_RTC_GetTimeUS(timestamp_Precharge) >= 10000000){ // After 10 Seconds // Added Integration for DetectionPCB
                 me->AMK_bInverterOn = FALSE;
                 me->AMK_bDcOn = TRUE;
                 me->AMK_bEnable = FALSE;
