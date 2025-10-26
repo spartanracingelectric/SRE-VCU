@@ -249,24 +249,32 @@ void CanManager_read(CanManager *me, CanChannel channel, InstrumentCluster *ic, 
         //This is to ensure better debug between the two busses
         //-------------------------------------------------------------------------
         case 0x283:
-        case 0x285:
             //Inverter FL 1 (CAN0)
             DI_parseCanMessage(inv1, &canMessages[currMessage]);
             break;
+        case 0x285:
+
+            break;
         case 0x284:
-        case 0x286:
             //Inverter FR 1 (CAN0)
             DI_parseCanMessage(inv2, &canMessages[currMessage]);
             break;
+        case 0x286:
+
+            break;
         case 0x287:
-        case 0x289:
             //Inverter RL 1 (CAN1)
             DI_parseCanMessage(inv1, &canMessages[currMessage]);
             break;
+        case 0x289:
+
+            break;
         case 0x288:
-        case 0x290:
             //Inverter RR 1 (CAN1)
             DI_parseCanMessage(inv2, &canMessages[currMessage]);
+            break;
+        case 0x290:
+
             break;
         
         //-------------------------------------------------------------------------
@@ -439,7 +447,7 @@ void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressu
     canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
     canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
     canMessages[canMessageCount - 1].data[byteNum++] = brakePercent; //This should be bps0Percent, but for now bps0Percent = brakePercent
-    canMessages[canMessageCount - 1].data[byteNum++] = 0;
+    canMessages[canMessageCount - 1].data[byteNum++] = Sensor_EcoButton.sensorValue;
     canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_value;
     canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_value >> 8;
     canMessages[canMessageCount - 1].data[byteNum++] = bps->bps0_calibMin;
