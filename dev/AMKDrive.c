@@ -143,7 +143,7 @@ void DI_calculateInverterControl(_DriveInverter* me, Sensor *HVILTermSense, Torq
             if (HVILTermSense->sensorValue == TRUE && timestamp_Precharge == 0){
                 IO_RTC_StartTime(&timestamp_Precharge);
             } 
-            if(HVILTermSense->sensorValue == TRUE){ //} && IO_RTC_GetTimeUS(timestamp_Precharge) >= 10000000){ // After 10 Seconds // Added Integration for DetectionPCB
+            if(HVILTermSense->sensorValue == TRUE ){// && IO_RTC_GetTimeUS(timestamp_Precharge) >= 10000000){ // After 10 Seconds // Added Integration for DetectionPCB
                 me->AMK_bInverterOn = FALSE;
                 me->AMK_bDcOn = TRUE;
                 me->AMK_bEnable = FALSE;
@@ -212,6 +212,8 @@ void DI_calculateInverterControl(_DriveInverter* me, Sensor *HVILTermSense, Torq
             me->AMK_bEnable = TRUE;
             me->AMK_TorqueLimitPositiv = 21 * 10; // SRE-7 Update: 21Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
             me->AMK_TorqueLimitNegativ = 0; //SRE-7 Update: Make -21 for Regen
+            // make better please
+            me->AMK_TorqueSetpoint = tps->tps0_percent * me->AMK_TorqueLimitPositiv; //Commanded Torque based on TPS %
             if(me->AMK_bError == TRUE || HVILTermSense->sensorValue == FALSE){
                 me->startUpStage = RELAY_ON_SENDING_CAN; 
             }

@@ -226,16 +226,16 @@ IO_ErrorType CanManager_send(CanManager* me, CanChannel channel, IO_CAN_DATA_FRA
 /*****************************************************************************
 * read
 ****************************************************************************/
-void CanManager_read(CanManager *me, CanChannel channel, InstrumentCluster *ic, BatteryManagementSystem *bms, SafetyChecker *sc, _DAQSensors *d1, _DriveInverter *inv1, _DriveInverter *inv2)
+void CanManager_read(CanManager *me, CanChannel channel, InstrumentCluster *ic, BatteryManagementSystem *bms, SafetyChecker *sc, _DAQSensors *d1, _DriveInverter *inv1, _DriveInverter *inv2, _DriveInverter *inv3, _DriveInverter *inv4)
 {
     IO_CAN_DATA_FRAME canMessages[(channel == CAN0_HIPRI ? me->read_messageLimit[0] : me->read_messageLimit[1])];
     ubyte1 canMessageCount;  //FIFO queue only holds 128 messages max
 
     //Read messages from hi/lopri channel 
     *(channel == CAN0_HIPRI ? &me->ioErr_read[0] : &me->ioErr_read[1]) =
-    IO_CAN_ReadFIFO((channel == CAN0_HIPRI ? me->readHandle[0] : me->readHandle[0])
+    IO_CAN_ReadFIFO((channel == CAN0_HIPRI ? me->readHandle[0] : me->readHandle[1])
                     , canMessages
-                    , (channel == CAN0_HIPRI ? me->read_messageLimit[0] : me->read_messageLimit[0])
+                    , (channel == CAN0_HIPRI ? me->read_messageLimit[0] : me->read_messageLimit[1])
                     , &canMessageCount);
 
     //Determine message type based on ID
@@ -264,14 +264,14 @@ void CanManager_read(CanManager *me, CanChannel channel, InstrumentCluster *ic, 
             break;
         case 0x287:
             //Inverter RL 1 (CAN1)
-            DI_parseCanMessage(inv1, &canMessages[currMessage]);
+            DI_parseCanMessage(inv3, &canMessages[currMessage]);
             break;
         case 0x289:
 
             break;
         case 0x288:
             //Inverter RR 1 (CAN1)
-            DI_parseCanMessage(inv2, &canMessages[currMessage]);
+            DI_parseCanMessage(inv4, &canMessages[currMessage]);
             break;
         case 0x290:
 

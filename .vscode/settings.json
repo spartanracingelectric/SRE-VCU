@@ -6,6 +6,8 @@
         "io_rtc.h": "c",
         "math.h": "c",
         "pid.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "daqsensors.h": "c",
+        "torqueencoder.h": "c"
     }
 }

@@ -267,8 +267,8 @@ void main(void)
 
         //Pull messages from CAN FIFO and update our object representations.
         //IMU DAQ will be sending to CAN1 so CAN0 is written incase there is necessity for it to be on that bus
-        CanManager_read(canMan, CAN0_HIPRI, ic0, bms, sc, d1, invFL, invFR);
-        CanManager_read(canMan, CAN1_LOPRI, ic0, bms, sc, d1, invRL, invRR);
+        CanManager_read(canMan, CAN0_HIPRI, ic0, bms, sc, d1, invFL, invFR, invRL, invRR);
+        CanManager_read(canMan, CAN1_LOPRI, ic0, bms, sc, d1, invFL, invFR, invRL, invRR);
         /*switch (CanManager_getReadStatus(canMan, CAN0_HIPRI))
         {
             case IO_E_OK: SerialManager_send(serialMan, "IO_E_OK: everything fine\n"); break;
