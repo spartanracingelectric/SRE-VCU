@@ -36,7 +36,7 @@
 #include "initializations.h"
 #include "sensors.h"
 #include "canManager.h"
-#include "AMKdrive.h"
+#include "powertrainControl.h"
 #include "instrumentCluster.h"
 #include "readyToDriveSound.h"
 #include "torqueEncoder.h"
@@ -211,13 +211,7 @@ void main(void)
     // 75 Nm
     //MotorController *mcm0 = MotorController_new(0xA0, FORWARD, 750, 5, 10); //CAN addr, direction, torque limit x10 (100 = 10Nm)
     //MCM_setRegenMode(mcm0, REGENMODE_OFF);
-    _DriveInverter *invFL = AmkDriver_new(FRONT_LEFT);
-    _DriveInverter *invFR = AmkDriver_new(FRONT_RIGHT);
-    _DriveInverter *invRL = AmkDriver_new(REAR_LEFT);
-    _DriveInverter *invRR = AmkDriver_new(REAR_RIGHT);
-    //creating array of pointers & pointer to said array for easy access
-    _DriveInverter *inverterPairs[4] = {invFL,invFR,invRL,invRR};
-    _DriveInverter** drivetrain = inverterPairs;
+    _Powertrain *powertrain = Powertrain_new();
 
     InstrumentCluster *ic0 = InstrumentCluster_new(0x702);
     TorqueEncoder *tps = TorqueEncoder_new(bench);
@@ -361,17 +355,6 @@ void main(void)
         //MCM_setRegenMode(mcm0, REGENMODE_FORMULAE); // TODO: Read regen mode from DCU CAN message - Issue #96
         // MCM_readTCSSettings(mcm0, &Sensor_TCSSwitchUp, &Sensor_TCSSwitchDown, &Sensor_TCSKnob);
         //MCM_calculateCommands(mcm0, tps, bps);
-
-        if(AMK_Mode == 0){
-            DI_calculateCommands(invFL, tps, bps);
-            DI_calculateCommands(invFR, tps, bps);
-            DI_calculateCommands(invRL, tps, bps);
-            DI_calculateCommands(invRR, tps, bps);
-        } else {
-            DI_calculateCommands(invRL, tps, bps);
-            DI_calculateCommands(invRR, tps, bps);
-        }
-
         //SRE-7 Update: Torque Vectoring Calculation can go here
 
         SafetyChecker_update(sc, bms, tps, bps, &Sensor_HVILTerminationSense, &Sensor_LVBattery);
@@ -392,6 +375,7 @@ void main(void)
         //MCM_relayControl(mcm0, &Sensor_HVILTerminationSense);
 
         //MCM_inverterControl(mcm0, tps, bps, rtds);
+        void Powertrain_controlVehicle(_Powertrain* me, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds, _DAQSensors *d1);
 
         DI_calculateInverterControl(invFL, &Sensor_HVILTerminationSense, tps, bps, rtds, d1);
         DI_calculateInverterControl(invFR, &Sensor_HVILTerminationSense, tps, bps, rtds, d1);

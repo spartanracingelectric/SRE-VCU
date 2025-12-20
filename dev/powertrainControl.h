@@ -1,12 +1,14 @@
 /*****************************************************************************
- * AMKDrive.h - Drive Inverter (DI)
+ * powertrainControl.h 
+ * Formerly (AMKDrive.h - Drive Inverter (DI))
  * Initial Author: Shinika Balasundar
+ * Additional Author: Shaun Gilmore
  ******************************************************************************
  * Calculated initial Torque to AMKs, Sends values to AMKs, and parses messages from AMKs
  ****************************************************************************/
 
-#ifndef _AMKDRIVE_H
-#define _AMKDRIVE_H
+#ifndef _POWERTRAINCONTROL_H
+#define _POWERTRAINCONTROL_H
 
 /***** Standard includes *****/
 #include <stdlib.h> //Needed for malloc
@@ -21,11 +23,14 @@
 #include "readyToDriveSound.h"
 #include "daqSensors.h"
 
-// Base CAN message ID for "setpoint" message - outgoing to inverter
+
+
+// Base CAN message ID for outgoing "send" message to inverter
 #define DI_BASE_CAN_ID_OUTGOING 0x183
-// Base CAN message ID for both "actual" messages - incoming from inverter
-// Note that the address for "Actual2" is calculated as this ID + 2 (plus offset)
+// Base CAN message ID for both incoming "recieve" messages  from inverter
 #define DI_BASE_CAN_ID_INCOMING 0x282
+// Note that the address for "recieve2" is calculated as recieve ID + 2 (plus offset)
+#define DI_BASE_CAN_ID_INCOMING2 (DI_BASE_CAN_ID_INCOMING + 2)
 
 //----------------------------------------------------------------------------
 // DI_Location_Address - This maps physical location to CAN ID offset (AMK calls this "node address").
@@ -55,39 +60,75 @@ typedef struct _DriveInverter {
     ubyte2 canIdOutgoing;   // Calculated CAN ID for "setpoint" message
     ubyte2 canIdIncoming;   // Calculated CAN ID for "Actual1" message, also used for "Actual2" message
 
-    int startUpStage;
+    ubyte1 startUpStage;
 
     // Setpoints (commands, outgoing: 0x183 + offset)
-    bool AMK_bInverterOn;
-    bool AMK_bDcOn;
-    bool AMK_bEnable;
-    bool AMK_bErrorReset;
-    sbyte2 AMK_TorqueSetpoint;
-    sbyte2 AMK_TorqueLimitPositiv;
-    sbyte2 AMK_TorqueLimitNegativ;
+    bool AMK_InverterOn_send;
+    bool AMK_DcOn_send;
+    bool AMK_Enable_send;
+    bool AMK_ErrorReset_send;
+    sbyte2 AMK_TorqueRequest_send;
+    sbyte2 AMK_TorqueLimitPositive_send;
+    sbyte2 AMK_TorqueLimitNegative_send;
 
     // Actual Values 1 (incoming: 0x282 + offset)
-    bool AMK_bSystemReady;
-    bool AMK_bError;
-    bool AMK_bWarn;
-    bool AMK_bQuitDcOn;
-    bool AMK_bDcOnVal;
-    bool AMK_bQuitInverterOnVal;
-    bool AMK_bInverterOnVal;
-    bool AMK_bDerating;
-    float4 AMK_ActualVelocity;  // RPM (SRE-7 Update: May Need Multiplier)
-    float4 AMK_TorqueCurrent;
-    float4 AMK_MagnetizingCurrent;
+    bool AMK_SystemReady_recieve;
+    bool AMK_Error_recieve;
+    bool AMK_Warn_recieve;
+    bool AMK_QuitDcOn_recieve;
+    bool AMK_DcOn_recieve;
+    bool AMK_QuitInverterOn_recieve;
+    bool AMK_InverterOn_recieve;
+    bool AMK_Derating_recieve;
+    float4 AMK_ActualVelocity_recieve;  // RPM (SRE-7 Update: May Need Multiplier)
+    float4 AMK_TorqueCurrentRaw_recieve;
+    float4 AMK_MagnetizingCurrentRaw_recieve;
 
+    float4 AMK_TorqueCurrent_recieve;
+    float4 AMK_MagnetizingCurrent_recieve;
     // Actual Values 2 (incoming: 0x284 + offset)
-    float4 AMK_TempMotor;       // 0.1degC
-    float4 AMK_TempInverter;    // 0.1degC
-    ubyte2 AMK_ErrorInfo;       
-    float4 AMK_TorqueFeedback;        // Nm
+    float4 AMK_TempMotor_recieve;       // 0.1degC
+    float4 AMK_TempInverter_recieve;    // 0.1degC
+    ubyte2 AMK_ErrorInfo_recieve;       
+    float4 AMK_TorqueFeedback_recieve;        // Nm
+    // Read Page 81 of the datasheet to understand why this is important. https://drive.google.com/file/d/1NLSmcrIAneiVMK4Zg_w86_FE9XNZCwvJ/view?usp=drive_link
+    float4 AMK_ID110;
+    ubyte2 AMK_TorqueMultiplier;
 
 } _DriveInverter;
 
-_DriveInverter* AmkDriver_new(DI_Location_Address location_address);
+typedef enum _PowertrainMode {
+    DISABLED = 0,
+    FWD = 1,
+    RWD = 2,
+    AWD = 3,
+    TorqueVectoring = 4,
+    //Novelty Modes
+    Drift = 5
+} PowertrainMode;
+
+typedef struct _Powertrain {
+    PowertrainMode powertrainMode;
+    // Code Convention: Motors stored in following order - [FL,FR,RL,RR]
+    _DriveInverter* motor[4];
+ 
+    /*
+    Due to potential gear ratio (GR) modifications, 
+    vehicle control algorithms should focus on maximizing wheel torque, 
+    then working backwards to calculate motor torque.
+
+    This should ensure GR changes are accounted for when changing car setups.
+    */
+    ubyte2 wheelTorque_Nm;
+    float4 gearRatio_Front;
+    float4 gearRatio_Rear;
+    ubyte1 tireDiameter_in;
+    ubyte2 motorTorque_Nm;
+
+
+} _Powertrain;
+
+_DriveInverter* DriveInverter_new(DI_Location_Address location_address);
 
 void DI_calculateInverterControl(_DriveInverter* Idv, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds, _DAQSensors *d1);
 
@@ -97,6 +138,9 @@ void DI_parseCanMessage(_DriveInverter* Idv, IO_CAN_DATA_FRAME* diCanMessage);
 
 void DI_commandTorque(_DriveInverter* Idv, sbyte2 newTorque);
 
-sbyte2 DI_getCommandedTorque(_DriveInverter* Idv);
+
+_Powertrain* Powertrain_new();
+
+void Powertrain_controlVehicle(_Powertrain* me, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds, _DAQSensors *d1);
 
 #endif

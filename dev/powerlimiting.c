@@ -14,9 +14,9 @@ PowerLimiting* PowerLimiting_new(float targetPower){
 void PowerLimiting_limitPower(PowerLimiting* pl, _DriveInverter* mcu, TorqueEncoder* tps){
     
     pl->pid->controllerMaxima = (tps->travelPercent * 231);
-    float processVariable = mcu->AMK_TorqueCurrent + mcu->AMK_MagnetizingCurrent;
+    float processVariable = sqrt( mcu->AMK_TorqueCurrent_recieve * mcu->AMK_TorqueCurrent_recieve + mcu->AMK_MagnetizingCurrent_recieve * mcu->AMK_MagnetizingCurrent_recieve );
     float targetValue = pl->targetPower /*/ mcu->voltage*/;
-    float outputVariable = mcu->AMK_TorqueSetpoint;
+    float outputVariable = mcu->AMK_TorqueRequest_send;
     float torqueRequest = PID_computeOutput(pl->pid, targetValue, processVariable, outputVariable);
     //Sets 
     // mcu->AMK_TorqueSetpoint = (sbyte2)torqueRequest;
