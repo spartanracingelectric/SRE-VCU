@@ -80,90 +80,89 @@ enum InverterStatus {
     TORQUE_REQUEST_ACTIVE = 6
 };
 
-void DI_calculateCommands(_DriveInverter* me, TorqueEncoder *tps, BrakePressureSensor *bps){
-    me->AMK_TorqueRequest_send = tps->tps0_percent * me->AMK_TorqueLimitPositive_send; //Commanded Torque based on TPS %
-}
 
-void DI_calculateInverterControl(_DriveInverter* me, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds, _DAQSensors *d1){
-    if(me->AMK_Error_recieve == TRUE){
-        me->startUpStage = RELAY_OFF;
-        me->AMK_InverterOn_send = FALSE;
-        me->AMK_DcOn_send = FALSE;
-        me->AMK_Enable_send = FALSE;
-        me->AMK_ErrorReset_send = TRUE;
-        me->AMK_TorqueRequest_send = 0;
-        me->AMK_TorqueLimitPositive_send = 0;
-        me->AMK_TorqueLimitNegative_send = 0; 
+
+void DI_calculateInverterControl(_Powertrain *powertrain, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds, _DAQSensors *d1){
+    for(ubyte1 i = 0; i < 4; ++i){
+        if(powertrain->motor[i]->AMK_Error_recieve == TRUE){
+            powertrain->motor[i]->startUpStage = RELAY_OFF;
+            powertrain->motor[i]->AMK_InverterOn_send = FALSE;
+            powertrain->motor[i]->AMK_DcOn_send = FALSE;
+            powertrain->motor[i]->AMK_Enable_send = FALSE;
+            powertrain->motor[i]->AMK_ErrorReset_send = TRUE;
+            powertrain->motor[i]->AMK_TorqueRequest_send = 0;
+            powertrain->motor[i]->AMK_TorqueLimitPositive_send = 0;
+            powertrain->motor[i]->AMK_TorqueLimitNegative_send = 0; 
+        }
+        switch (powertrain->motor[i]->startUpStage){ 
+            case RELAY_OFF:
+                if(Sensor_RTDButton.sensorValue == FALSE){
+                    IO_DO_Set(IO_DO_00, TRUE);
+                    powertrain->motor[i]->startUpStage = RELAY_ON_SENDING_CAN;
+                } else {
+                    IO_DO_Set(IO_DO_00, FALSE);
+                    powertrain->motor[i]->startUpStage = RELAY_OFF;
+                }
+            break;
+            //MCM relay on, we can now start sending safe CAN powertrain->motor[i]ssages
+            case RELAY_ON_SENDING_CAN:
+                powertrain->motor[i]->AMK_InverterOn_send = FALSE;
+                powertrain->motor[i]->AMK_DcOn_send = FALSE;
+                powertrain->motor[i]->AMK_Enable_send = FALSE;
+                powertrain->motor[i]->AMK_ErrorReset_send = FALSE;
+                powertrain->motor[i]->AMK_TorqueRequest_send = 0;
+                powertrain->motor[i]->AMK_TorqueLimitPositive_send = 0;
+                powertrain->motor[i]->AMK_TorqueLimitNegative_send = 0; 
+                if(powertrain->motor[i]->AMK_SystemReady_recieve == TRUE && powertrain->motor[i]->AMK_Error_recieve == FALSE){ 
+                    powertrain->motor[i]->startUpStage = PRECHARGE_DC_ENABLE;
+                }
+            break;
+            //Precharge needs to have occured to now send the new powertrain->motor[i]ssage 
+            case PRECHARGE_DC_ENABLE:
+                if(HVILTermSense->sensorValue == TRUE){ // && 'precharge good'
+                    powertrain->motor[i]->AMK_DcOn_send = TRUE;
+                }  
+
+                if(powertrain->motor[i]->AMK_DcOn_recieve == TRUE && powertrain->motor[i]->AMK_QuitDcOn_recieve == TRUE){
+                    powertrain->motor[i]->startUpStage = DRIVER_ENABLE;
+                    //Main contactor close code here (look at old MCM relay logic)
+                    //Open precharge relay code here (look at old MCM relay logic)
+                }
+            break;
+            case DRIVER_ENABLE: 
+                if(Sensor_RTDButton.sensorValue == TRUE && tps->calibrated == TRUE /*Uncompowertrain->motor[i]nt in the future: && tps->travelPercent < .05*/){
+                    powertrain->motor[i]->AMK_Enable_send = TRUE;
+                    powertrain->motor[i]->startUpStage = READY_TO_DRIVE_INVERTER_ON;
+                }
+            break;
+            case READY_TO_DRIVE_INVERTER_ON:
+                if(Sensor_RTDButton.sensorValue == FALSE && powertrain->motor[i]->AMK_Enable_send == TRUE /*Add in brakes being pressed*/){
+                    powertrain->motor[i]->AMK_InverterOn_send = TRUE;
+                }
+                if(powertrain->motor[i]->AMK_InverterOn_recieve == TRUE && powertrain->motor[i]->AMK_QuitInverterOn_recieve == TRUE){
+                    RTDS_setVolume(rtds, 1, 1500000);
+                    powertrain->motor[i]->startUpStage = TORQUE_LIMIT_SET;
+                } 
+            break;
+            case TORQUE_LIMIT_SET:
+                powertrain->motor[i]->AMK_TorqueLimitPositive_send = 210; // 25Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
+                powertrain->motor[i]->AMK_TorqueLimitNegative_send = 0;
+                if(powertrain->motor[i]->AMK_Error_recieve == FALSE){
+                    powertrain->motor[i]->startUpStage = TORQUE_REQUEST_ACTIVE;
+                }
+            break;
+            case TORQUE_REQUEST_ACTIVE:
+                if(powertrain->motor[i]->AMK_Error_recieve == TRUE || HVILTermSense->sensorValue == FALSE){
+                    powertrain->motor[i]->startUpStage = RELAY_ON_SENDING_CAN; 
+                }
+            break;
+
+            default:
+            //We lost track of the sequence
+            powertrain->motor[i]->startUpStage = RELAY_OFF;
+            break;
+        }
     }
-    switch (me->startUpStage){ 
-        case RELAY_OFF:
-            if(Sensor_RTDButton.sensorValue == FALSE){
-                IO_DO_Set(IO_DO_00, TRUE);
-                me->startUpStage = RELAY_ON_SENDING_CAN;
-            } else {
-                IO_DO_Set(IO_DO_00, FALSE);
-                me->startUpStage = RELAY_OFF;
-            }
-        break;
-        //MCM relay on, we can now start sending safe CAN messages
-        case RELAY_ON_SENDING_CAN:
-            me->AMK_InverterOn_send = FALSE;
-            me->AMK_DcOn_send = FALSE;
-            me->AMK_Enable_send = FALSE;
-            me->AMK_ErrorReset_send = FALSE;
-            me->AMK_TorqueRequest_send = 0;
-            me->AMK_TorqueLimitPositive_send = 0;
-            me->AMK_TorqueLimitNegative_send = 0; 
-            if(me->AMK_SystemReady_recieve == TRUE && me->AMK_Error_recieve == FALSE){ 
-                me->startUpStage = PRECHARGE_DC_ENABLE;
-            }
-        break;
-        //Precharge needs to have occured to now send the new message 
-        case PRECHARGE_DC_ENABLE:
-            if(HVILTermSense->sensorValue == TRUE){ // && 'precharge good'
-                me->AMK_DcOn_send = TRUE;
-            }  
-
-            if(me->AMK_DcOn_recieve == TRUE && me->AMK_QuitDcOn_recieve == TRUE){
-                me->startUpStage = DRIVER_ENABLE;
-                //Main contactor close code here (look at old MCM relay logic)
-                //Open precharge relay code here (look at old MCM relay logic)
-            }
-        break;
-        case DRIVER_ENABLE: 
-            if(Sensor_RTDButton.sensorValue == TRUE && tps->calibrated == TRUE /*Uncomment in the future: && tps->travelPercent < .05*/){
-                me->AMK_Enable_send = TRUE;
-                me->startUpStage = READY_TO_DRIVE_INVERTER_ON;
-            }
-        break;
-        case READY_TO_DRIVE_INVERTER_ON:
-            if(Sensor_RTDButton.sensorValue == FALSE && me->AMK_Enable_send == TRUE /*Add in brakes being pressed*/){
-                me->AMK_InverterOn_send = TRUE;
-            }
-            if(me->AMK_InverterOn_recieve == TRUE && me->AMK_QuitInverterOn_recieve == TRUE){
-                RTDS_setVolume(rtds, 1, 1500000);
-                me->startUpStage = TORQUE_LIMIT_SET;
-            } 
-        break;
-        case TORQUE_LIMIT_SET:
-            me->AMK_TorqueLimitPositive_send = 210; // 25Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
-            me->AMK_TorqueLimitNegative_send = 0;
-            if(me->AMK_Error_recieve == FALSE){
-                me->startUpStage = TORQUE_REQUEST_ACTIVE;
-            }
-        break;
-        case TORQUE_REQUEST_ACTIVE:
-            DI_calculateCommands(me,tps,bps);
-            if(me->AMK_Error_recieve == TRUE || HVILTermSense->sensorValue == FALSE){
-                me->startUpStage = RELAY_ON_SENDING_CAN; 
-            }
-        break;
-
-        default:
-        //We lost track of the sequence
-        me->startUpStage = RELAY_OFF;
-        break;
-     }
 }  
 
 void DI_parseCanMessage(_DriveInverter* me, IO_CAN_DATA_FRAME* diCanMessage){
@@ -245,9 +244,45 @@ _Powertrain* Powertrain_new(){
 }
 
 void Powertrain_controlVehicle(_Powertrain* me, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds, _DAQSensors *d1){
+    DI_calculateInverterControl(me, &Sensor_HVILTerminationSense, tps, bps, rtds, d1);
+    Powertrain_calculateTorqueCommands(me, tps, bps);
+}
 
-    DI_calculateInverterControl(me->motor[0], &Sensor_HVILTerminationSense, tps, bps, rtds, d1);
-    DI_calculateInverterControl(me->motor[1], &Sensor_HVILTerminationSense, tps, bps, rtds, d1);
-    DI_calculateInverterControl(me->motor[2], &Sensor_HVILTerminationSense, tps, bps, rtds, d1);
-    DI_calculateInverterControl(me->motor[3], &Sensor_HVILTerminationSense, tps, bps, rtds, d1);
+void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, BrakePressureSensor *bps){
+    for(ubyte1 i = 0; i < 4; ++i){
+        switch (me->motor[i]->startUpStage){
+            case DISABLED:
+                me->motor[i]->AMK_TorqueRequest_send = 0;
+                break;
+            case FWD:
+                if(i < 2){
+                    me->motor[i]->AMK_TorqueRequest_send = tps->tps0_percent * me->motor[i]->AMK_TorqueLimitPositive_send; //Commanded Torque based on TPS %
+                }
+                else{
+                    me->motor[i]->AMK_TorqueRequest_send = 0;
+                }
+                break;
+            case RWD:
+                if(i > 2){
+                    me->motor[i]->AMK_TorqueRequest_send = tps->tps0_percent * me->motor[i]->AMK_TorqueLimitPositive_send; //Commanded Torque based on TPS %
+                }
+                else{
+                    me->motor[i]->AMK_TorqueRequest_send = 0;
+                }
+                break;
+            case AWD:
+                me->motor[i]->AMK_TorqueRequest_send = tps->tps0_percent * me->motor[i]->AMK_TorqueLimitPositive_send; //Commanded Torque based on TPS %
+                break;
+            case TorqueVectoring:
+                //Controls stuff & fuinction calls    
+                me->motor[i]->AMK_TorqueRequest_send = tps->tps0_percent * me->motor[i]->AMK_TorqueLimitPositive_send; //Commanded Torque based on TPS %
+                break;
+            case Drift: // Disabling mode for now
+                me->motor[i]->AMK_TorqueRequest_send = 0;
+                break;
+
+            default:
+                me->motor[i]->AMK_TorqueRequest_send = tps->tps0_percent * me->motor[i]->AMK_TorqueLimitPositive_send; //Commanded Torque based on TPS %
+        }
+    }
 }

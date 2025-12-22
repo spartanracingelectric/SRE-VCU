@@ -130,7 +130,7 @@ typedef struct _Powertrain {
 
 _DriveInverter* DriveInverter_new(DI_Location_Address location_address);
 
-void DI_calculateInverterControl(_DriveInverter* Idv, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds, _DAQSensors *d1);
+void DI_calculateInverterControl(_Powertrain *powertrain, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds, _DAQSensors *d1);
 
 void DI_calculateCommands(_DriveInverter* Idv, TorqueEncoder *tps, BrakePressureSensor *bps);
 
