@@ -143,4 +143,8 @@ _Powertrain* Powertrain_new();
 
 void Powertrain_controlVehicle(_Powertrain* me, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds, _DAQSensors *d1);
 
+void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, BrakePressureSensor *bps);
+
+void Powertrain_TorqueVectoring(_Powertrain *me, TorqueEncoder *tps, BrakePressureSensor *bps, _DAQSensors *d1);
+
 #endif

@@ -245,12 +245,17 @@ _Powertrain* Powertrain_new(){
 
 void Powertrain_controlVehicle(_Powertrain* me, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds, _DAQSensors *d1){
     DI_calculateInverterControl(me, &Sensor_HVILTerminationSense, tps, bps, rtds, d1);
-    Powertrain_calculateTorqueCommands(me, tps, bps);
+    if(me->powertrainMode != TorqueVectoring){
+        Powertrain_calculateTorqueCommands(me, tps, bps);
+    }
+    else if(me->powertrainMode == TorqueVectoring){
+        Powertrain_TorqueVectoring(me, tps, bps, d1);
+    }
 }
 
 void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, BrakePressureSensor *bps){
     for(ubyte1 i = 0; i < 4; ++i){
-        switch (me->motor[i]->startUpStage){
+        switch (me->powertrainMode){
             case DISABLED:
                 me->motor[i]->AMK_TorqueRequest_send = 0;
                 break;
@@ -285,4 +290,8 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
                 me->motor[i]->AMK_TorqueRequest_send = tps->tps0_percent * me->motor[i]->AMK_TorqueLimitPositive_send; //Commanded Torque based on TPS %
         }
     }
+}
+
+void Powertrain_TorqueVectoring(_Powertrain *me, TorqueEncoder *tps, BrakePressureSensor *bps, _DAQSensors *d1){
+    // TV goes here
 }
