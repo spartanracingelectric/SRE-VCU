@@ -36,7 +36,7 @@
 #include "initializations.h"
 #include "sensors.h"
 #include "canManager.h"
-#include "AMKdrive.h"
+#include "powertrainControl.h"
 #include "instrumentCluster.h"
 #include "readyToDriveSound.h"
 #include "torqueEncoder.h"
@@ -211,13 +211,7 @@ void main(void)
     // 75 Nm
     //MotorController *mcm0 = MotorController_new(0xA0, FORWARD, 750, 5, 10); //CAN addr, direction, torque limit x10 (100 = 10Nm)
     //MCM_setRegenMode(mcm0, REGENMODE_OFF);
-    _DriveInverter *invFL = AmkDriver_new(FRONT_LEFT);
-    _DriveInverter *invFR = AmkDriver_new(FRONT_RIGHT);
-    _DriveInverter *invRL = AmkDriver_new(REAR_LEFT);
-    _DriveInverter *invRR = AmkDriver_new(REAR_RIGHT);
-    //creating array of pointers & pointer to said array for easy access
-    _DriveInverter *inverterPairs[4] = {invFL,invFR,invRL,invRR};
-    _DriveInverter** drivetrain = inverterPairs;
+    _Powertrain *powertrain = Powertrain_new();
 
     InstrumentCluster *ic0 = InstrumentCluster_new(0x702);
     TorqueEncoder *tps = TorqueEncoder_new(bench);
@@ -267,8 +261,8 @@ void main(void)
 
         //Pull messages from CAN FIFO and update our object representations.
         //IMU DAQ will be sending to CAN1 so CAN0 is written incase there is necessity for it to be on that bus
-        CanManager_read(canMan, CAN0_HIPRI, ic0, bms, sc, d1, invFL, invFR, invRL, invRR);
-        CanManager_read(canMan, CAN1_LOPRI, ic0, bms, sc, d1, invFL, invFR, invRL, invRR);
+        CanManager_read(canMan, CAN0_HIPRI, ic0, bms, sc, d1, powertrain);
+        CanManager_read(canMan, CAN1_LOPRI, ic0, bms, sc, d1, powertrain);
         /*switch (CanManager_getReadStatus(canMan, CAN0_HIPRI))
         {
             case IO_E_OK: SerialManager_send(serialMan, "IO_E_OK: everything fine\n"); break;
@@ -351,7 +345,7 @@ void main(void)
             StateObserver //choose driver command or ctrl law
         */
 
-        CoolingSystem_calculations(cs, invFL->AMK_TempInverter, invFR->AMK_TempMotor, BMS_getHighestCellTemp_degC(bms), &Sensor_HVILTerminationSense); // SRE-7 Update: Needs to be updated in future to cool based on inverters. 
+        CoolingSystem_calculations(cs, powertrain->motor[0]->AMK_TempInverter_recieve, powertrain->motor[0]->AMK_TempInverter_recieve, BMS_getHighestCellTemp_degC(bms), &Sensor_HVILTerminationSense); // SRE-7 Update: Needs to be updated in future to cool based on inverters. 
         //CoolingSystem_calculations(cs, 20, 20, 20);
         CoolingSystem_enactCooling(cs); //This belongs under outputs but it doesn't really matter for cooling
 
@@ -361,17 +355,6 @@ void main(void)
         //MCM_setRegenMode(mcm0, REGENMODE_FORMULAE); // TODO: Read regen mode from DCU CAN message - Issue #96
         // MCM_readTCSSettings(mcm0, &Sensor_TCSSwitchUp, &Sensor_TCSSwitchDown, &Sensor_TCSKnob);
         //MCM_calculateCommands(mcm0, tps, bps);
-
-        if(AMK_Mode == 0){
-            DI_calculateCommands(invFL, tps, bps);
-            DI_calculateCommands(invFR, tps, bps);
-            DI_calculateCommands(invRL, tps, bps);
-            DI_calculateCommands(invRR, tps, bps);
-        } else {
-            DI_calculateCommands(invRL, tps, bps);
-            DI_calculateCommands(invRR, tps, bps);
-        }
-
         //SRE-7 Update: Torque Vectoring Calculation can go here
 
         SafetyChecker_update(sc, bms, tps, bps, &Sensor_HVILTerminationSense, &Sensor_LVBattery);
@@ -380,7 +363,7 @@ void main(void)
         /*  Output Adjustments by Safety Checker   */
         /*******************************************/
         //Make sure to change for temp values etc
-        SafetyChecker_reduceTorque(sc, bms, invFL, invFR, invRL, invRR);
+        SafetyChecker_reduceTorque(sc, bms, powertrain);
 
         /*******************************************/
         /*              Enact Outputs              */
@@ -392,11 +375,7 @@ void main(void)
         //MCM_relayControl(mcm0, &Sensor_HVILTerminationSense);
 
         //MCM_inverterControl(mcm0, tps, bps, rtds);
-
-        DI_calculateInverterControl(invFL, &Sensor_HVILTerminationSense, tps, bps, rtds, d1);
-        DI_calculateInverterControl(invFR, &Sensor_HVILTerminationSense, tps, bps, rtds, d1);
-        DI_calculateInverterControl(invRL, &Sensor_HVILTerminationSense, tps, bps, rtds, d1);
-        DI_calculateInverterControl(invRR, &Sensor_HVILTerminationSense, tps, bps, rtds, d1);
+        Powertrain_controlVehicle(powertrain, &Sensor_HVILTerminationSense, tps, bps, rtds, d1);
 
         IO_ErrorType err = 0;
         //Comment out to disable shutdown board control
@@ -408,8 +387,8 @@ void main(void)
         //canOutput_sendMCUControl(mcm0, FALSE);
 
         //Send debug data
-        canOutput_sendDebugMessage0(canMan, tps, bps, ic0, bms, sc, invFL, invFR);
-        canOutput_sendDebugMessage1(canMan, invFL, invFR, invRL, invRR);
+        canOutput_sendDebugMessage0(canMan, tps, bps, ic0, bms, sc, powertrain);
+        canOutput_sendDebugMessage1(canMan, powertrain);
         //canOutput_sendSensorMessages();
         //canOutput_sendStatusMessages(mcm0);
 
