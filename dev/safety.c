@@ -572,7 +572,7 @@ ubyte4 SafetyChecker_getNotices(SafetyChecker *me)
     return (me->notices);
 }
 
-void SafetyChecker_reduceTorque(SafetyChecker *me, BatteryManagementSystem *bms, _DriveInverter *in1, _DriveInverter *in2, _DriveInverter *in3, _DriveInverter *in4)
+void SafetyChecker_reduceTorque(SafetyChecker *me, BatteryManagementSystem *bms, _Powertrain * powertrain)
 {
     float4 multiplier = 1;
     //float4 tempMultiplier = 1;
@@ -609,7 +609,7 @@ void SafetyChecker_reduceTorque(SafetyChecker *me, BatteryManagementSystem *bms,
 
     //If any AMK motor runs into issues we want to set them all to 0 to prevent driver spin
 
-    if(in1->AMK_bError == TRUE || in2->AMK_bError == TRUE || in3->AMK_bError == TRUE || in4->AMK_bError == TRUE)
+    if(powertrain->motor[0]->AMK_Error_recieve == TRUE || powertrain->motor[1]->AMK_Error_recieve == TRUE || powertrain->motor[2]->AMK_Error_recieve == TRUE || powertrain->motor[3]->AMK_Error_recieve == TRUE)
     {
         multiplier = 0;
     }
@@ -684,10 +684,10 @@ void SafetyChecker_reduceTorque(SafetyChecker *me, BatteryManagementSystem *bms,
     }
 
     //MCM_commands_setTorqueDNm(mcm, MCM_commands_getTorque(mcm) * multiplier);
-    DI_commandTorque(in1, DI_getCommandedTorque(in1) * multiplier);
-    DI_commandTorque(in2, DI_getCommandedTorque(in1) * multiplier);
-    DI_commandTorque(in3, DI_getCommandedTorque(in1) * multiplier);
-    DI_commandTorque(in4, DI_getCommandedTorque(in1) * multiplier); 
+    powertrain->motor[0]->AMK_TorqueRequest_send = powertrain->motor[0]->AMK_TorqueRequest_send * multiplier;
+    powertrain->motor[1]->AMK_TorqueRequest_send = powertrain->motor[1]->AMK_TorqueRequest_send * multiplier;
+    powertrain->motor[2]->AMK_TorqueRequest_send = powertrain->motor[2]->AMK_TorqueRequest_send * multiplier;
+    powertrain->motor[3]->AMK_TorqueRequest_send = powertrain->motor[3]->AMK_TorqueRequest_send * multiplier;
 }
 
 //-------------------------------------------------------------------

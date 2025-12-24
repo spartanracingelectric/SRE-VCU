@@ -621,14 +621,14 @@ void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressu
     byteNum = 0;
     canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
     canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-    canMessages[canMessageCount - 1].data[byteNum++] = 0;
-    canMessages[canMessageCount - 1].data[byteNum++] = 0;
-    canMessages[canMessageCount - 1].data[byteNum++] = 0;
-    canMessages[canMessageCount - 1].data[byteNum++] = 0;
-    canMessages[canMessageCount - 1].data[byteNum++] = 0;
-    canMessages[canMessageCount - 1].data[byteNum++] = 0;
-    canMessages[canMessageCount - 1].data[byteNum++] = 0;
-    canMessages[canMessageCount - 1].data[byteNum++] = 0;
+    canMessages[canMessageCount - 1].data[byteNum++] = powertrain->motor[0]->AMK_TorqueRequest_send;
+    canMessages[canMessageCount - 1].data[byteNum++] = powertrain->motor[0]->AMK_TorqueRequest_send >> 8;
+    canMessages[canMessageCount - 1].data[byteNum++] = powertrain->motor[1]->AMK_TorqueRequest_send;
+    canMessages[canMessageCount - 1].data[byteNum++] = powertrain->motor[1]->AMK_TorqueRequest_send >> 8;
+    canMessages[canMessageCount - 1].data[byteNum++] = powertrain->motor[2]->AMK_TorqueRequest_send;
+    canMessages[canMessageCount - 1].data[byteNum++] = powertrain->motor[2]->AMK_TorqueRequest_send >> 8;
+    canMessages[canMessageCount - 1].data[byteNum++] = powertrain->motor[3]->AMK_TorqueRequest_send;
+    canMessages[canMessageCount - 1].data[byteNum++] = powertrain->motor[3]->AMK_TorqueRequest_send >> 8;
     canMessages[canMessageCount - 1].length = byteNum;
 
     //50B: AMK VCU Debug
@@ -636,14 +636,14 @@ void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressu
     byteNum = 0;
     canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
     canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-    canMessages[canMessageCount - 1].data[byteNum++] = powertrain->motor[0]->startUpStage;
-    canMessages[canMessageCount - 1].data[byteNum++] = powertrain->motor[0]->startUpStage;
+    canMessages[canMessageCount - 1].data[byteNum++] = powertrain->motor[0]->startUpStage | powertrain->motor[1]->startUpStage << 4 ;
+    canMessages[canMessageCount - 1].data[byteNum++] = powertrain->motor[2]->startUpStage | powertrain->motor[3]->startUpStage << 4 ;
     canMessages[canMessageCount - 1].data[byteNum++] = 0;
     canMessages[canMessageCount - 1].data[byteNum++] = 0;
     canMessages[canMessageCount - 1].data[byteNum++] = 0;
     canMessages[canMessageCount - 1].data[byteNum++] = 0;
     canMessages[canMessageCount - 1].data[byteNum++] = 0;
-    canMessages[canMessageCount - 1].data[byteNum++] = 0;
+    canMessages[canMessageCount - 1].data[byteNum++] = 1; //Rough Version Control. Should be updated to proper versioning later.
     canMessages[canMessageCount - 1].length = byteNum;
 
     //50C: SAS (Steering Angle Sensor)
