@@ -59,17 +59,25 @@ void PID_updateSettings(PID_Controller* pid, PID_Settings setting, float input1)
     }
 }
 
+/** @function 
+ * This funciton can be called directly if you want to set up your own feed-forward loop, 
+ * or if the intention of the PID is to directly use the output (no adding to output Variable)
+ * Notably, you will need to add your own anti-windup guardrails
+ * 
+ */
 float PID_computeControlVariable(PID_Controller *pid, float processVariable){
     pid->error = pid->setpoint - processVariable;
     if((abs(pid->error - pid->previousError) > abs(pid->error) || pid->error == 0 ) && pid->clegg == 1){
         pid->totalError = 0;
     }
-    pid->totalError += pid->error * pid->dt;
+    pid->totalError += pid->error * pid->dt; // added before because Ki ( or 1/Ti ) in equ. is multiplied by result of (total error + current error)
     pid->controlVariable = pid->Kp * (pid->error + 1 / pid->Ti * pid->totalError + 1 / pid->Td * (pid->error - pid->previousError) * pid->dt);
     pid->previousError = pid->error;
     return pid->controlVariable;
 }
-
+/** @function
+ * Designed for all-in-one easy calling, no outsourcing of anti-windup behaviors
+ */
 float PID_computeOutput(PID_Controller *pid, float targetValue, float processVariable, float outputVariable){
     pid->setpoint = targetValue;
     pid->output = outputVariable + PID_computeControlVariable(pid, processVariable);
