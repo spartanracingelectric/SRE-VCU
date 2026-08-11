@@ -56,24 +56,23 @@ void sensors_updateSensors(void)
     //Torque Encoders ---------------------------------------------------
     //Sensor_BenchTPS0.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_00, &Sensor_BenchTPS0.sensorValue, &Sensor_BenchTPS0.fresh);
     //Sensor_BenchTPS1.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_01, &Sensor_BenchTPS1.sensorValue, &Sensor_BenchTPS1.fresh);
-    Sensor_TPS0.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_07, &Sensor_TPS0.sensorValue, &Sensor_TPS0.fresh);
+   Sensor_TPS0.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_01, &Sensor_TPS0.sensorValue, &Sensor_TPS0.fresh);  //P140 TPS HI SIG
     Sensor_TPS1.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_06, &Sensor_TPS1.sensorValue, &Sensor_TPS1.fresh);
     //Sensor_TPS0.ioErr_signalGet = IO_PWD_PulseGet(IO_PWM_00, &Sensor_TPS0.sensorValue);
     //Sensor_TPS1.ioErr_signalGet = IO_PWD_PulseGet(IO_PWM_01, &Sensor_TPS1.sensorValue);
 
     //Brake Position Sensor ---------------------------------------------------
-    Sensor_BPS0.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_02, &Sensor_BPS0.sensorValue, &Sensor_BPS0.fresh);
+    Sensor_BPS0.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_07, &Sensor_BPS0.sensorValue, &Sensor_BPS0.fresh);  //P137 BPS F SIG
     Sensor_BPS1.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_03, &Sensor_BPS1.sensorValue, &Sensor_BPS1.fresh);
 
     //TCS Knob 
     //Sensor_TCSKnob.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_04, &Sensor_TCSKnob.sensorValue, &Sensor_TCSKnob.fresh);
 
     //Shock pots ---------------------------------------------------
-    /*IO_ADC_Get(IO_ADC_5V_04, &Sensor_WPS_FL.sensorValue, &Sensor_WPS_FL.fresh);
-    IO_ADC_Get(IO_ADC_5V_05, &Sensor_WPS_FR.sensorValue, &Sensor_WPS_FR.fresh);
-    IO_ADC_Get(IO_ADC_5V_06, &Sensor_WPS_RL.sensorValue, &Sensor_WPS_RL.fresh);
-    IO_ADC_Get(IO_ADC_5V_07, &Sensor_WPS_RR.sensorValue, &Sensor_WPS_RR.fresh);
-    */
+    Sensor_WPS_FL.ioErr_signalGet = IO_ADC_Get(IO_ADC_VAR_07, &Sensor_WPS_FL.sensorValue, &Sensor_WPS_FL.fresh);
+Sensor_WPS_FR.ioErr_signalGet = IO_ADC_Get(IO_ADC_VAR_05, &Sensor_WPS_FR.sensorValue, &Sensor_WPS_FR.fresh);
+Sensor_WPS_RL.ioErr_signalGet = IO_ADC_Get(IO_ADC_VAR_03, &Sensor_WPS_RL.sensorValue, &Sensor_WPS_RL.fresh);
+Sensor_WPS_RR.ioErr_signalGet = IO_ADC_Get(IO_ADC_VAR_01, &Sensor_WPS_RR.sensorValue, &Sensor_WPS_RR.fresh);
    
     //Wheel speed sensors ---------------------------------------------------
     /*
@@ -127,13 +126,11 @@ void sensors_updateSensors(void)
     */
    
     //Switches / Digital ---------------------------------------------------
-    Sensor_RTDButton.ioErr_signalGet = IO_DI_Get(IO_DI_00, &Sensor_RTDButton.sensorValue);
+    Sensor_RTDButton.ioErr_signalGet = IO_DI_Get(IO_DI_04, &Sensor_RTDButton.sensorValue);  //P261 [BE2 SIG-VCU]
     Sensor_EcoButton.ioErr_signalGet = IO_DI_Get(IO_DI_01, &Sensor_EcoButton.sensorValue);
     Sensor_TVButton.ioErr_signalGet = IO_DI_Get(IO_DI_03, &Sensor_TVButton.sensorValue); //USed to be Launch Control Button
     //Sensor_TCSSwitchDown.ioErr_signalGet = IO_DI_Get(IO_DI_03, &Sensor_TCSSwitchDown.sensorValue);
-    Sensor_HVILTerminationSense.ioErr_signalGet = IO_DI_Get(IO_DI_06, &Sensor_HVILTerminationSense.sensorValue);
-
-    Sensor_DRSButton.ioErr_signalGet = IO_DI_Get(IO_DI_04, &Sensor_DRSButton.sensorValue);
+     Sensor_HVILTerminationSense.ioErr_signalGet = IO_DI_Get(IO_DI_07, &Sensor_HVILTerminationSense.sensorValue);  //P253 [TERM VCU]
 
     //Other stuff ---------------------------------------------------
     //Battery voltage (at VCU internal electronics supply input)
@@ -142,8 +139,7 @@ void sensors_updateSensors(void)
     //Steering Angle Sensor
     Sensor_SAS.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_04, &Sensor_SAS.sensorValue, &Sensor_SAS.fresh);
 
-    //DRS Knob
-    Sensor_DRSKnob.ioErr_signalGet = IO_ADC_Get(IO_ADC_VAR_00, &Sensor_DRSKnob.sensorValue, &Sensor_DRSKnob.fresh);
+    //DRS knob (IO_ADC_VAR_00) not read - no init on SRE-7b, VAR_00 is unwired
 }
 
 void Light_set(Light light, float4 percent)
@@ -160,15 +156,15 @@ void Light_set(Light light, float4 percent)
         break;
 
     case Cooling_waterPump:
-        IO_DO_Set(IO_DO_02, power);
+        IO_DO_Set(IO_DO_03, power);   //P131 = PUMP EN SIG -> PDU_A.16
         break;
 
     case Cooling_RadFans:  // Powerpack fan(s)
-        IO_PWM_SetDuty(IO_PWM_02, duty, NULL);
+        IO_DO_Set(IO_DO_04, power);   //P142 = FAN EN SIG -> PDU_A.39 (on/off, P117 PWM not wired)
         break;
 
     case Cooling_batteryFans:
-        IO_DO_Set(IO_DO_04, power);
+        //IO_DO_Set(IO_DO_04, power);  //No separate battery fan output on SRE-7b - P142 is the shared FAN EN SIG, driven by Cooling_RadFans above
         break;
 
         //--------------------------------------------
@@ -178,15 +174,15 @@ void Light_set(Light light, float4 percent)
         break;
 
     case Light_dashEco:
-        IO_DO_Set(IO_ADC_CUR_01, power);
+        IO_DO_Set(IO_ADC_CUR_03, power);   //P107 - not wired on SRE-7b
         break;
 
     case Light_dashError:
-        IO_DO_Set(IO_ADC_CUR_02, power);
+        IO_DO_Set(IO_ADC_CUR_02, power);   //P119 - not wired on SRE-7b
         break;
 
     case Light_dashRTD:
-        IO_DO_Set(IO_ADC_CUR_03, power);
+        IO_DO_Set(IO_ADC_CUR_01, power);   //P108 BE2 LT SIG -> DASH.8
         break;
     }
 }

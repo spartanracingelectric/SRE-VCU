@@ -35,7 +35,7 @@ void RTDS_delete(ReadyToDriveSound *rtds)
 
 void RTDS_setVolume(ReadyToDriveSound *rtds, float4 volumePercent, ubyte4 timeToPlay)
 {
-    IO_PWM_SetDuty(IO_PWM_01, 65535 * volumePercent, NULL);
+    IO_PWM_SetDuty(IO_PWM_03, 65535 * volumePercent, NULL);  //P105 = BE2 ALRT SIG -> DASH.6
     IO_RTC_StartTime(&(rtds->timeStamp_soundStarted));
     rtds->timeToSound = timeToPlay;
 }

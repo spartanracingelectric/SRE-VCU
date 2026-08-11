@@ -394,14 +394,14 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     //===================================================================
     //  IO_ADC_UBAT: 0..40106  (0V..40.106V)
     //-------------------------------------------------------------------
-    if (LVBattery->sensorValue <= 9200) //12730 = 10% SOC but hard to tell under load. 9200 = empty
+    if (LVBattery->sensorValue <= 18400) //24V pack (2x12V): 25460 = 10% SOC but hard to tell under load. 18400 = empty
     {
         me->faults |= F_lvsBatteryVeryLow;
         me->warnings |= W_lvsBatteryLow;
         sprintf(message, "LVS battery %.03fV EXTREMELY LOW!\n", (float4)LVBattery->sensorValue / 1000);
         //SerialManager_send(me->serialMan, message);
     }
-    else if (LVBattery->sensorValue <= 12730) //13100 = Recharge percentage, per Shorai
+    else if (LVBattery->sensorValue <= 25460) //26200 = Recharge percentage, per Shorai (doubled for 24V)
     {
         me->faults &= ~F_lvsBatteryVeryLow;
         me->warnings |= W_lvsBatteryLow;
@@ -410,7 +410,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     }
     else
     {
-        me->warnings &= ~F_lvsBatteryVeryLow;
+        me->faults &= ~F_lvsBatteryVeryLow;
         me->warnings &= ~W_lvsBatteryLow;
         //sprintf(message, "LVS battery %.03fV good.\n", (float4)LVBattery->sensorValue / 1000);
     }

@@ -549,28 +549,28 @@ void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressu
     canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getNotices(sc) >> 8;
     canMessages[canMessageCount - 1].length = byteNum;
 
-    //12v battery
+    //24v LV battery (2x12V in series) - thresholds are the 12V curve doubled
     float4 LVBatterySOC = 0;
-    if (Sensor_LVBattery.sensorValue < 12730)
-        LVBatterySOC = .0 + .1 * getPercent(Sensor_LVBattery.sensorValue, 9200, 12730, FALSE);
-    else if (Sensor_LVBattery.sensorValue < 12866)
-        LVBatterySOC = .1 + .1 * getPercent(Sensor_LVBattery.sensorValue, 12730, 12866, FALSE);
-    else if (Sensor_LVBattery.sensorValue < 12996)
-        LVBatterySOC = .2 + .1 * getPercent(Sensor_LVBattery.sensorValue, 12866, 12996, FALSE);
-    else if (Sensor_LVBattery.sensorValue < 13104)
-        LVBatterySOC = .3 + .1 * getPercent(Sensor_LVBattery.sensorValue, 12996, 13104, FALSE);
-    else if (Sensor_LVBattery.sensorValue < 13116)
-        LVBatterySOC = .4 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13104, 13116, FALSE);
-    else if (Sensor_LVBattery.sensorValue < 13130)
-        LVBatterySOC = .5 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13116, 13130, FALSE);
-    else if (Sensor_LVBattery.sensorValue < 13160)
-        LVBatterySOC = .6 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13130, 13160, FALSE);
-    else if (Sensor_LVBattery.sensorValue < 13270)
-        LVBatterySOC = .7 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13160, 13270, FALSE);
-    else if (Sensor_LVBattery.sensorValue < 13300)
-        LVBatterySOC = .8 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13270, 13300, FALSE);
-    else //if (Sensor_LVBattery.sensorValue < 14340)
-        LVBatterySOC = .9 + .1 * getPercent(Sensor_LVBattery.sensorValue, 13300, 14340, FALSE);
+    if (Sensor_LVBattery.sensorValue < 25460)
+        LVBatterySOC = .0 + .1 * getPercent(Sensor_LVBattery.sensorValue, 18400, 25460, FALSE);
+    else if (Sensor_LVBattery.sensorValue < 25732)
+        LVBatterySOC = .1 + .1 * getPercent(Sensor_LVBattery.sensorValue, 25460, 25732, FALSE);
+    else if (Sensor_LVBattery.sensorValue < 25992)
+        LVBatterySOC = .2 + .1 * getPercent(Sensor_LVBattery.sensorValue, 25732, 25992, FALSE);
+    else if (Sensor_LVBattery.sensorValue < 26208)
+        LVBatterySOC = .3 + .1 * getPercent(Sensor_LVBattery.sensorValue, 25992, 26208, FALSE);
+    else if (Sensor_LVBattery.sensorValue < 26232)
+        LVBatterySOC = .4 + .1 * getPercent(Sensor_LVBattery.sensorValue, 26208, 26232, FALSE);
+    else if (Sensor_LVBattery.sensorValue < 26260)
+        LVBatterySOC = .5 + .1 * getPercent(Sensor_LVBattery.sensorValue, 26232, 26260, FALSE);
+    else if (Sensor_LVBattery.sensorValue < 26320)
+        LVBatterySOC = .6 + .1 * getPercent(Sensor_LVBattery.sensorValue, 26260, 26320, FALSE);
+    else if (Sensor_LVBattery.sensorValue < 26540)
+        LVBatterySOC = .7 + .1 * getPercent(Sensor_LVBattery.sensorValue, 26320, 26540, FALSE);
+    else if (Sensor_LVBattery.sensorValue < 26600)
+        LVBatterySOC = .8 + .1 * getPercent(Sensor_LVBattery.sensorValue, 26540, 26600, FALSE);
+    else //if (Sensor_LVBattery.sensorValue < 28680)
+        LVBatterySOC = .9 + .1 * getPercent(Sensor_LVBattery.sensorValue, 26600, 28680, TRUE);  //TRUE = clamp, so SOC can't exceed 100% on charge
 
     canMessageCount++;
     byteNum = 0;

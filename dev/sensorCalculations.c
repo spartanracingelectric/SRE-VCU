@@ -42,10 +42,10 @@ double rpm_to_mph(double rpm) {
 
 /*****************************************************************************
 * Shock pot(iometer) functions - FOUR NEEDED
-* FR = Pin150 = Analog Input 4
-* FL = Pin138 = Analog Input 5
-* RR = Pin149 = Analog Input 6
-* RL = Pin137 = Analog Input 7
+* FL = Pin111 = IO_ADC_VAR_07 (Analog Input 7, 0..32V)
+* FR = Pin112 = IO_ADC_VAR_05 (Analog Input 5, 0..32V)
+* RL = Pin113 = IO_ADC_VAR_03 (Analog Input 3, 0..32V)
+* RR = Pin114 = IO_ADC_VAR_01 (Analog Input 1, 0..32V)
 * 0 = ride height
 ****************************************************************************/
 //Input: Ohms
