@@ -31,8 +31,9 @@ void vcu_initializeADC(bool benchMode)
     //Power supplies/outputs
     //----------------------------------------------------------------------------
     //Analog sensor supplies
-    Sensor_TPS1.ioErr_powerSet = IO_POWER_Set(IO_ADC_SENSOR_SUPPLY_0, IO_POWER_ON);  // Pin 136 -> TPS_LO
-    Sensor_TPS0.ioErr_powerSet = IO_POWER_Set(IO_ADC_SENSOR_SUPPLY_2, IO_POWER_ON);  // Pin 147 -> TPS_HI
+    // TPS ground: P134
+    Sensor_TPS0.ioErr_powerSet = IO_POWER_Set(IO_ADC_SENSOR_SUPPLY_0, IO_POWER_ON);  // Pin 136 -> TPS_LO
+    Sensor_TPS1.ioErr_powerSet = IO_POWER_Set(IO_ADC_SENSOR_SUPPLY_1, IO_POWER_ON);  // Pin 135 -> TPS_HI
 
     //Variable power supply
     IO_POWER_Set(IO_SENSOR_SUPPLY_VAR, IO_POWER_14_5_V);    //IO_POWER_Set(IO_PIN_269, IO_POWER_8_5_V);
@@ -40,7 +41,7 @@ void vcu_initializeADC(bool benchMode)
     //Digital/power outputs ---------------------------------------------------
     //Relay power outputs
     IO_DO_Init(IO_DO_00);    IO_DO_Set(IO_DO_00, FALSE); //mcm0 Relay
-    IO_DO_Init(IO_DO_12);    IO_DO_Set(IO_DO_12, FALSE); //VCU-BMS Shutdown Relay
+    IO_DO_Init(IO_DO_01);    IO_DO_Set(IO_DO_01, FALSE); //VCU-BMS Shutdown Relay (P132)
     IO_DO_Init(IO_DO_02);    IO_DO_Set(IO_DO_02, FALSE); //P143 - NO WIRE on SRE-7b. Pump enable is P131 = IO_DO_03.
     IO_DO_Init(IO_DO_03);    IO_DO_Set(IO_DO_03, FALSE); //P131 = PUMP EN SIG -> PDU_A.16 (NOT the fan relay)
     IO_DO_Init(IO_DO_04);    IO_DO_Set(IO_DO_04, FALSE); //P142 = FAN EN SIG -> PDU_A.39
@@ -69,8 +70,9 @@ void vcu_initializeADC(bool benchMode)
     //IO_PWM_SetDuty(IO_PWM_02, .90 * 0xFFFF, NULL); //Pin, 0 - 65535, Feedback Measurement
 
     //Accum fan signal
-    IO_PWM_Init(IO_PWM_04, 100, TRUE, FALSE, 0, FALSE, NULL);
-    IO_PWM_SetDuty(IO_PWM_04, 1.00 * 0xFFFF, NULL);    //Default 100%, build up momentum in fans or whatever? Lol
+    //P116 not wired on SRE-7b
+    //IO_PWM_Init(IO_PWM_04, 100, TRUE, FALSE, 0, FALSE, NULL);
+    //IO_PWM_SetDuty(IO_PWM_04, 1.00 * 0xFFFF, NULL);
 
     //----------------------------------------------------------------------------
     //ADC channels
@@ -87,8 +89,8 @@ void vcu_initializeADC(bool benchMode)
     if (benchMode == TRUE)
     {
         //Redo BPS ratiometric
-        Sensor_TPS0.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_01, IO_ADC_RESISTIVE, 0, 0, 0, NULL);  //P140 TPS HI SIG
-        Sensor_TPS1.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_06, IO_ADC_RESISTIVE, 0, 0, 0, NULL);
+        Sensor_TPS0.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_06, IO_ADC_RESISTIVE, 0, 0, 0, NULL);  //P149 TPS LO SIG
+        Sensor_TPS1.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_01, IO_ADC_RESISTIVE, 0, 0, 0, NULL);  //P140 TPS HI SIG
         Sensor_BPS0.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_07, IO_ADC_RESISTIVE, 0, 0, 0, NULL);  //P137 BPS F SIG
         Sensor_BPS1.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_03, IO_ADC_RESISTIVE, 0, 0, 0, NULL);
     }
@@ -98,10 +100,10 @@ void vcu_initializeADC(bool benchMode)
         //Sensor_TPS0.ioErr_signalInit = IO_PWD_PulseInit(IO_PWM_00, IO_PWD_HIGH_TIME);
         //Sensor_TPS1.ioErr_signalInit = IO_PWD_PulseInit(IO_PWM_01, IO_PWD_HIGH_TIME);
         //Redo BPS ratiometric
-        Sensor_TPS0.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_01, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_2, NULL);  //P140 TPS HI SIG
-        Sensor_TPS1.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_06, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_0, NULL);
-        Sensor_BPS0.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_07, IO_ADC_ABSOLUTE,    0, 0, 0, NULL);
-        Sensor_BPS1.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_03, IO_ADC_ABSOLUTE,    0, 0, 0, NULL);
+        Sensor_TPS0.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_06, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_0, NULL);  //P149 TPS LO SIG
+        Sensor_TPS1.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_01, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_1, NULL);  //P140 TPS HI SIG
+        Sensor_BPS0.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_07, IO_ADC_ABSOLUTE, 0, 0, 0, NULL);  //P137 BPS F SIG
+        Sensor_BPS1.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_03, IO_ADC_ABSOLUTE, 0, 0, 0, NULL);  //P139 BPS R SIG
     }
 
     //Unused
@@ -151,7 +153,8 @@ void vcu_initializeADC(bool benchMode)
     Sensor_RTDButton.ioErr_signalInit = IO_DI_Init(IO_DI_04, IO_DI_PD_10K);     //P261 = BE2 SIG-VCU -> SWC lower-right (simulating RTD). Sourcing switch, so pull DOWN.
      Sensor_EcoButton.ioErr_signalInit = IO_DI_Init(IO_DI_01, IO_DI_PU_10K);     //P256 = CAL BTN SIG -> DASH.7 (calibration button)
     //Sensor_TCSSwitchUp.ioErr_signalInit = IO_DI_Init(IO_DI_02, IO_DI_PU_10K);   //TCS Switch A
-    Sensor_TVButton.ioErr_signalInit = IO_DI_Init(IO_DI_03, IO_DI_PU_10K); // Torque Control Enable Button
+    Sensor_TVButton.ioErr_signalInit = IO_DI_Init(IO_DI_02, IO_DI_PU_10K); // Torque Control Enable Button (P262)
+    Sensor_DRSButton.ioErr_signalInit = IO_DI_Init(IO_DI_03, IO_DI_PU_10K); // P255
     Sensor_HVILTerminationSense.ioErr_signalInit = IO_DI_Init(IO_DI_07, IO_DI_PD_10K); //P253 [TERM VCU], high = HV present. Flagswitch presents voltage when closed, floats when open, so pull DOWN.
 
     //TV and DRS Button may be switched on SRE-7
@@ -175,12 +178,12 @@ void vcu_ADCWasteLoop(void)
         IO_PWM_SetDuty(IO_PWM_03, 0, NULL);
 
         IO_DO_Set(IO_DO_00, FALSE); //False = low
-        IO_DO_Set(IO_DO_12, FALSE); //HVIL shutdown relay
+        IO_DO_Set(IO_DO_01, FALSE); //VCU shutdown signal
 
         //IO_DI (digital inputs) supposed to take 2 cycles before they return valid data
         IO_DI_Get(IO_DI_04, &tempData);
-        IO_DI_Get(IO_DI_05, &tempData);
-        IO_ADC_Get(IO_ADC_5V_00, &tempData, &tempFresh);
+        IO_DI_Get(IO_DI_01, &tempData);
+        IO_ADC_Get(IO_ADC_5V_06, &tempData, &tempFresh);
         IO_ADC_Get(IO_ADC_5V_01, &tempData, &tempFresh);
 
         IO_Driver_TaskEnd();

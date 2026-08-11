@@ -418,13 +418,13 @@ IO_ErrorType BMS_relayControl(BatteryManagementSystem *me)
     if (BMS_getFaultFlags0(me) || BMS_getFaultFlags1(me))
     {
         me->relayState = TRUE;
-        err = IO_DO_Set(IO_DO_12, TRUE); //Drive BMS relay true (HIGH)
+        err = IO_DO_Set(IO_DO_01, TRUE); //VCU pin 132, shutdown signal true (HIGH)
     }
     //There is no fault
     else
     {
         me->relayState = FALSE;
-        err = IO_DO_Set(IO_DO_12, FALSE); //Drive BMS relay false (LOW)
+        err = IO_DO_Set(IO_DO_01, FALSE); //VCU pin 132, shutdown signal false (LOW)
     }
     return err;
 }

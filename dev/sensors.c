@@ -56,8 +56,8 @@ void sensors_updateSensors(void)
     //Torque Encoders ---------------------------------------------------
     //Sensor_BenchTPS0.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_00, &Sensor_BenchTPS0.sensorValue, &Sensor_BenchTPS0.fresh);
     //Sensor_BenchTPS1.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_01, &Sensor_BenchTPS1.sensorValue, &Sensor_BenchTPS1.fresh);
-   Sensor_TPS0.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_01, &Sensor_TPS0.sensorValue, &Sensor_TPS0.fresh);  //P140 TPS HI SIG
-    Sensor_TPS1.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_06, &Sensor_TPS1.sensorValue, &Sensor_TPS1.fresh);
+    Sensor_TPS0.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_06, &Sensor_TPS0.sensorValue, &Sensor_TPS0.fresh);  //P149 TPS LO SIG
+    Sensor_TPS1.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_01, &Sensor_TPS1.sensorValue, &Sensor_TPS1.fresh);  //P140 TPS HI SIG
     //Sensor_TPS0.ioErr_signalGet = IO_PWD_PulseGet(IO_PWM_00, &Sensor_TPS0.sensorValue);
     //Sensor_TPS1.ioErr_signalGet = IO_PWD_PulseGet(IO_PWM_01, &Sensor_TPS1.sensorValue);
 
@@ -70,9 +70,9 @@ void sensors_updateSensors(void)
 
     //Shock pots ---------------------------------------------------
     Sensor_WPS_FL.ioErr_signalGet = IO_ADC_Get(IO_ADC_VAR_07, &Sensor_WPS_FL.sensorValue, &Sensor_WPS_FL.fresh);
-Sensor_WPS_FR.ioErr_signalGet = IO_ADC_Get(IO_ADC_VAR_05, &Sensor_WPS_FR.sensorValue, &Sensor_WPS_FR.fresh);
-Sensor_WPS_RL.ioErr_signalGet = IO_ADC_Get(IO_ADC_VAR_03, &Sensor_WPS_RL.sensorValue, &Sensor_WPS_RL.fresh);
-Sensor_WPS_RR.ioErr_signalGet = IO_ADC_Get(IO_ADC_VAR_01, &Sensor_WPS_RR.sensorValue, &Sensor_WPS_RR.fresh);
+    Sensor_WPS_FR.ioErr_signalGet = IO_ADC_Get(IO_ADC_VAR_05, &Sensor_WPS_FR.sensorValue, &Sensor_WPS_FR.fresh);
+    Sensor_WPS_RL.ioErr_signalGet = IO_ADC_Get(IO_ADC_VAR_03, &Sensor_WPS_RL.sensorValue, &Sensor_WPS_RL.fresh);
+    Sensor_WPS_RR.ioErr_signalGet = IO_ADC_Get(IO_ADC_VAR_01, &Sensor_WPS_RR.sensorValue, &Sensor_WPS_RR.fresh);
    
     //Wheel speed sensors ---------------------------------------------------
     /*
@@ -128,9 +128,9 @@ Sensor_WPS_RR.ioErr_signalGet = IO_ADC_Get(IO_ADC_VAR_01, &Sensor_WPS_RR.sensorV
     //Switches / Digital ---------------------------------------------------
     Sensor_RTDButton.ioErr_signalGet = IO_DI_Get(IO_DI_04, &Sensor_RTDButton.sensorValue);  //P261 [BE2 SIG-VCU]
     Sensor_EcoButton.ioErr_signalGet = IO_DI_Get(IO_DI_01, &Sensor_EcoButton.sensorValue);
-    Sensor_TVButton.ioErr_signalGet = IO_DI_Get(IO_DI_03, &Sensor_TVButton.sensorValue); //USed to be Launch Control Button
-    //Sensor_TCSSwitchDown.ioErr_signalGet = IO_DI_Get(IO_DI_03, &Sensor_TCSSwitchDown.sensorValue);
+    Sensor_TVButton.ioErr_signalGet = IO_DI_Get(IO_DI_02, &Sensor_TVButton.sensorValue); //USed to be Launch Control Button (P262)
      Sensor_HVILTerminationSense.ioErr_signalGet = IO_DI_Get(IO_DI_07, &Sensor_HVILTerminationSense.sensorValue);  //P253 [TERM VCU]
+    Sensor_DRSButton.ioErr_signalGet = IO_DI_Get(IO_DI_03, &Sensor_DRSButton.sensorValue); // P255
 
     //Other stuff ---------------------------------------------------
     //Battery voltage (at VCU internal electronics supply input)

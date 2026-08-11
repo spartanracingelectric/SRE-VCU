@@ -873,7 +873,7 @@ TPS tps_init(){
 
 tps_update(TPS* tps){
     ...
-    Sensor_TPS0.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_07, &Sensor_TPS0.sensorValue, &Sensor_TPS0.fresh);
+    Sensor_TPS0.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_06, &Sensor_TPS0.sensorValue, &Sensor_TPS0.fresh);
     canManager_fillMessage(tps->canMessage, tps->sensorValue0, 2);
     canManager_fillMessage(tps->canMessage, (tps->sensorValue0 >> 8), 3);
     ...
