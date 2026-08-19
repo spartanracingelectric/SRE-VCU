@@ -119,7 +119,7 @@ void DI_calculateInverterControl(_Powertrain *powertrain, Sensor *HVILTermSense,
             break;
             //Precharge needs to have occured to now send the new powertrain->motor[i]ssage 
             case PRECHARGE_DC_ENABLE:
-                if(HVILTermSense->sensorValue == TRUE){ // && 'precharge good'
+                if(HVILTermSense->sensorValue == TRUE){ // TODO: GET THE PRECHARGE BOARD DETECTION HERE
                     powertrain->motor[i]->AMK_DcOn_send = TRUE;
                 }  
 
@@ -136,7 +136,7 @@ void DI_calculateInverterControl(_Powertrain *powertrain, Sensor *HVILTermSense,
                 }
             break;
             case READY_TO_DRIVE_INVERTER_ON:
-                if(Sensor_RTDButton.sensorValue == FALSE && powertrain->motor[i]->AMK_Enable_send == TRUE /*Add in brakes being pressed*/){
+                if(Sensor_RTDButton.sensorValue == FALSE && powertrain->motor[i]->AMK_Enable_send == TRUE /*TODO: Add in brakes being pressed before moving on or maybe the 5 delay but talk to andrew and replace the fake RTD to our BE on*/){ 
                     powertrain->motor[i]->AMK_InverterOn_send = TRUE;
                 }
                 if(powertrain->motor[i]->AMK_InverterOn_recieve == TRUE && powertrain->motor[i]->AMK_QuitInverterOn_recieve == TRUE){
@@ -145,8 +145,8 @@ void DI_calculateInverterControl(_Powertrain *powertrain, Sensor *HVILTermSense,
                 } 
             break;
             case TORQUE_LIMIT_SET:
-                powertrain->motor[i]->AMK_TorqueLimitPositive_send = 210; // 25Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
-                powertrain->motor[i]->AMK_TorqueLimitNegative_send = 0;
+                powertrain->motor[i]->AMK_TorqueLimitPositive_send = 210; // should be max tq 25Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
+                powertrain->motor[i]->AMK_TorqueLimitNegative_send = 0; // some constant for regen
                 if(powertrain->motor[i]->AMK_Error_recieve == FALSE){
                     powertrain->motor[i]->startUpStage = TORQUE_REQUEST_ACTIVE;
                 }
@@ -159,7 +159,7 @@ void DI_calculateInverterControl(_Powertrain *powertrain, Sensor *HVILTermSense,
 
             default:
             //We lost track of the sequence
-            powertrain->motor[i]->startUpStage = RELAY_OFF;
+            powertrain->motor[i]->startUpStage = RELAY_OFF; //lv off (should never happen big oh no)
             break;
         }
     }
@@ -223,7 +223,7 @@ void DI_parseCanMessage(_DriveInverter* me, IO_CAN_DATA_FRAME* diCanMessage){
 
 _Powertrain* Powertrain_new(){
     _Powertrain* me = (_Powertrain*)malloc(sizeof(_Powertrain));
-        me->powertrainMode = TorqueVectoring;
+        me->powertrainMode = AWD;
         // Code Convention: Motors stored in following order - [FL,FR,RL,RR]
         for(ubyte1 i = 0; i < 4; ++i)
         {
@@ -268,7 +268,7 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
                 }
                 break;
             case RWD:
-                if(i > 2){
+                if(i >= 2){
                     me->motor[i]->AMK_TorqueRequest_send = tps->tps0_percent * me->motor[i]->AMK_TorqueLimitPositive_send; //Commanded Torque based on TPS %
                 }
                 else{
