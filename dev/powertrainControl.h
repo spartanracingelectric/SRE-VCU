@@ -111,6 +111,8 @@ typedef struct _Powertrain {
     PowertrainMode powertrainMode;
     // Code Convention: Motors stored in following order - [FL,FR,RL,RR]
     _DriveInverter* motor[4];
+
+    bool rtdsPlayed;
  
     /*
     Due to potential gear ratio (GR) modifications, 

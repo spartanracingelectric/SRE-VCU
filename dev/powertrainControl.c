@@ -2,7 +2,7 @@
  * powertrainControl.c 
  * Formerly (AMKDrive.h - Drive Inverter (DI))
  * Initial Author: Shinika Balasundar
- * Additional Author: Shaun Gilmore
+ * Additional Author: Shaun Gilmore, Akash Karthik
  ******************************************************************************
  * Calculated initial Torque to AMKs, Sends values to AMKs, and parses messages from AMKs
  ****************************************************************************/
@@ -93,16 +93,12 @@ void DI_calculateInverterControl(_Powertrain *powertrain, Sensor *HVILTermSense,
             powertrain->motor[i]->AMK_TorqueRequest_send = 0;
             powertrain->motor[i]->AMK_TorqueLimitPositive_send = 0;
             powertrain->motor[i]->AMK_TorqueLimitNegative_send = 0; 
+            powertrain->rtdsPlayed = FALSE;
         }
         switch (powertrain->motor[i]->startUpStage){ 
             case RELAY_OFF:
-                if(Sensor_RTDButton.sensorValue == FALSE){
-                    IO_DO_Set(IO_DO_00, TRUE);
-                    powertrain->motor[i]->startUpStage = RELAY_ON_SENDING_CAN;
-                } else {
-                    IO_DO_Set(IO_DO_00, FALSE);
-                    powertrain->motor[i]->startUpStage = RELAY_OFF;
-                }
+                IO_DO_Set(IO_DO_00, TRUE);
+                powertrain->motor[i]->startUpStage = RELAY_ON_SENDING_CAN;
             break;
             //MCM relay on, we can now start sending safe CAN powertrain->motor[i]ssages
             case RELAY_ON_SENDING_CAN:
@@ -130,17 +126,21 @@ void DI_calculateInverterControl(_Powertrain *powertrain, Sensor *HVILTermSense,
                 }
             break;
             case DRIVER_ENABLE: 
-                if(Sensor_RTDButton.sensorValue == TRUE && tps->calibrated == TRUE /*Uncompowertrain->motor[i]nt in the future: && tps->travelPercent < .05*/){
+                if(Sensor_RTDButton.sensorValue == FALSE && 
+                    tps->calibrated == TRUE && 
+                    bps->calibrated == TRUE &&
+                    bps->brakesAreOn == TRUE &&
+                    tps->travelPercent < 0.05)
+                {
                     powertrain->motor[i]->AMK_Enable_send = TRUE;
                     powertrain->motor[i]->startUpStage = READY_TO_DRIVE_INVERTER_ON;
                 }
             break;
             case READY_TO_DRIVE_INVERTER_ON:
-                if(Sensor_RTDButton.sensorValue == FALSE && powertrain->motor[i]->AMK_Enable_send == TRUE /*TODO: Add in brakes being pressed before moving on or maybe the 5 delay but talk to andrew and replace the fake RTD to our BE on*/){ 
+                if(powertrain->motor[i]->AMK_Enable_send == TRUE){ 
                     powertrain->motor[i]->AMK_InverterOn_send = TRUE;
                 }
                 if(powertrain->motor[i]->AMK_InverterOn_recieve == TRUE && powertrain->motor[i]->AMK_QuitInverterOn_recieve == TRUE){
-                    RTDS_setVolume(rtds, 1, 1500000);
                     powertrain->motor[i]->startUpStage = TORQUE_LIMIT_SET;
                 } 
             break;
@@ -153,6 +153,7 @@ void DI_calculateInverterControl(_Powertrain *powertrain, Sensor *HVILTermSense,
             break;
             case TORQUE_REQUEST_ACTIVE:
                 if(powertrain->motor[i]->AMK_Error_recieve == TRUE || HVILTermSense->sensorValue == FALSE){
+                    powertrain->rtdsPlayed = FALSE;
                     powertrain->motor[i]->startUpStage = RELAY_ON_SENDING_CAN; 
                 }
             break;
@@ -162,6 +163,23 @@ void DI_calculateInverterControl(_Powertrain *powertrain, Sensor *HVILTermSense,
             powertrain->motor[i]->startUpStage = RELAY_OFF; //lv off (should never happen big oh no)
             break;
         }
+    }
+    bool allInvertersOn = TRUE;
+
+    for(ubyte1 i = 0; i < 4; ++i)
+    {
+        if(powertrain->motor[i]->AMK_InverterOn_recieve == FALSE ||
+        powertrain->motor[i]->AMK_QuitInverterOn_recieve == FALSE)
+        {
+            allInvertersOn = FALSE;
+            break;
+        }
+    }
+
+    if(allInvertersOn == TRUE && powertrain->rtdsPlayed == FALSE)
+    {
+        RTDS_setVolume(rtds, 1, 1500000);
+        powertrain->rtdsPlayed = TRUE;
     }
 }  
 
@@ -224,6 +242,7 @@ void DI_parseCanMessage(_DriveInverter* me, IO_CAN_DATA_FRAME* diCanMessage){
 _Powertrain* Powertrain_new(){
     _Powertrain* me = (_Powertrain*)malloc(sizeof(_Powertrain));
         me->powertrainMode = AWD;
+        me->rtdsPlayed = FALSE;
         // Code Convention: Motors stored in following order - [FL,FR,RL,RR]
         for(ubyte1 i = 0; i < 4; ++i)
         {
@@ -254,6 +273,18 @@ void Powertrain_controlVehicle(_Powertrain* me, Sensor *HVILTermSense, TorqueEnc
 }
 
 void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, BrakePressureSensor *bps){
+    //all four inverters have to be RTD before any torque is allowed
+    for(ubyte1 i = 0; i < 4; ++i)
+    {
+        if(me->motor[i]->startUpStage != TORQUE_REQUEST_ACTIVE)
+        {
+            for(ubyte1 j = 0; j < 4; ++j)
+            {
+                me->motor[j]->AMK_TorqueRequest_send = 0;
+            }
+            return;
+        }
+    }
     for(ubyte1 i = 0; i < 4; ++i){
         switch (me->powertrainMode){
             case DISABLED:
@@ -287,7 +318,8 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
                 break;
 
             default:
-                me->motor[i]->AMK_TorqueRequest_send = tps->tps0_percent * me->motor[i]->AMK_TorqueLimitPositive_send; //Commanded Torque based on TPS %
+                me->motor[i]->AMK_TorqueRequest_send = 0; // no torque if we fail
+                break;
         }
     }
 }
