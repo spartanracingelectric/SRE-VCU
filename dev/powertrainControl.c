@@ -126,7 +126,7 @@ void DI_calculateInverterControl(_Powertrain *powertrain, Sensor *HVILTermSense,
                 }
             break;
             case DRIVER_ENABLE: 
-                if(Sensor_RTDButton.sensorValue == FALSE && 
+                if(Sensor_RTDButton.sensorValue == TRUE && 
                     tps->calibrated == TRUE && 
                     bps->calibrated == TRUE &&
                     bps->brakesAreOn == TRUE &&
