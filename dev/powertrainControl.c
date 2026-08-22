@@ -218,8 +218,7 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
     //all four inverters have to be RTD before any torque is allowed
     if (me->powertrainMode == MVP)
     {
-        float4 fakePercentage = 0.0;
-        fakePercentage = (float4)(Sensor_TPS1.sensorValue - 2150) /(3900.0-2150); // 0-100% of requested current
+        float4 fakePercentage = ((float4)Sensor_TPS1.sensorValue - 2150.0f) / (3900.0f - 2150.0f);
         if (fakePercentage < 0.0)
         {
             fakePercentage = 0.0;
