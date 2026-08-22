@@ -244,7 +244,7 @@ void DI_parseCanMessage(_DriveInverter* me, IO_CAN_DATA_FRAME* diCanMessage){
 
 _Powertrain* Powertrain_new(){
     _Powertrain* me = (_Powertrain*)malloc(sizeof(_Powertrain));
-        me->powertrainMode = AWD;
+        me->powertrainMode = MVP;
         me->rtdsPlayed = FALSE;
         // Code Convention: Motors stored in following order - [FL,FR,RL,RR]
         for(ubyte1 i = 0; i < 4; ++i)

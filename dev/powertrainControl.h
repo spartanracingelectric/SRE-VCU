@@ -108,7 +108,8 @@ typedef enum _PowertrainMode {
     AWD = 3,
     TorqueVectoring = 4,
     //Novelty Modes
-    Drift = 5
+    Drift = 5,
+    MVP = 6
 } PowertrainMode;
 
 typedef struct _Powertrain {
