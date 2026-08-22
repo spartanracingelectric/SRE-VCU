@@ -223,7 +223,7 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
             tps->calibrated == TRUE &&
             bps->calibrated == TRUE &&
             bps->brakesAreOn == FALSE &&
-            tps->travelPercent > 0.05f;
+            tps->travelPercent > 0.50f;
 
         me->motor[2]->current_mA = requestCurrent ? 20000 : 0; // RL
         me->motor[3]->current_mA = requestCurrent ? 20000 : 0; // RR
