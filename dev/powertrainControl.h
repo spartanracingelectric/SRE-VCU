@@ -153,4 +153,6 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
 
 void Powertrain_TorqueVectoring(_Powertrain *me, TorqueEncoder *tps, BrakePressureSensor *bps, _DAQSensors *d1);
 
+void Powertrain_parseCanMessage(_Powertrain* me, IO_CAN_DATA_FRAME* pwCanMessage);
+
 #endif

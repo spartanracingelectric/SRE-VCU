@@ -27,6 +27,8 @@
 extern Sensor Sensor_RTDButton;
 extern Sensor Sensor_HVILTerminationSense;
 
+bool requestCurrent = FALSE;
+
 _DriveInverter* AmkDriver_new(DI_Location_Address location_address)
 {
     _DriveInverter* me = (_DriveInverter*)malloc(sizeof(_DriveInverter));
@@ -218,16 +220,9 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
     //all four inverters have to be RTD before any torque is allowed
     if (me->powertrainMode == MVP)
     {
-        bool requestCurrent =
-            Sensor_HVILTerminationSense.sensorValue == TRUE &&
-            tps->calibrated == TRUE &&
-            bps->calibrated == TRUE &&
-            bps->brakesAreOn == FALSE &&
-            tps->travelPercent > 0.50f;
 
         me->motor[2]->current_mA = requestCurrent ? 20000 : 0; // RL
         me->motor[3]->current_mA = requestCurrent ? 20000 : 0; // RR
-
         return;
     }
 
@@ -283,4 +278,15 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
 
 void Powertrain_TorqueVectoring(_Powertrain *me, TorqueEncoder *tps, BrakePressureSensor *bps, _DAQSensors *d1){
     // TV goes here
+}
+
+void Powertrain_parseCanMessage(_Powertrain* me, IO_CAN_DATA_FRAME* pwCanMessage){
+    if (pwCanMessage->data[0] == 0x00)
+    {
+        requestCurrent = FALSE;
+    }
+    else if (pwCanMessage->data[0] == 0x01)
+    {
+        requestCurrent = TRUE;
+    }
 }

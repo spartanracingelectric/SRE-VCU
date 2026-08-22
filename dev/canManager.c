@@ -340,7 +340,8 @@ void CanManager_read(CanManager *me, CanChannel channel, InstrumentCluster *ic, 
         case 0x63F:
         case 0x640:
         case 0x641:
-
+            Powertrain_parseCanMessage(powertrain, &canMessages[currMessage]);
+            break;
         case 0x629:
             BMS_parseCanMessage(bms, &canMessages[currMessage]);
             break;
@@ -752,7 +753,6 @@ void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain)
 
     // Rear Right: VESC ID 0
     canMessageCount++;
-
     sbyte4 rrCurrent = powertrain->motor[3]->current_mA;
     canMessages[canMessageCount - 1].id_format = IO_CAN_EXT_FRAME;
     canMessages[canMessageCount - 1].id = 0x100;
