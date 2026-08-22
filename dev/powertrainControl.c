@@ -218,15 +218,19 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
     //all four inverters have to be RTD before any torque is allowed
     if (me->powertrainMode == MVP)
     {
-        bool requestCurrent =
-            Sensor_HVILTerminationSense.sensorValue == TRUE &&
-            tps->calibrated == TRUE &&
-            bps->calibrated == TRUE &&
-            bps->brakesAreOn == FALSE &&
-            tps->travelPercent > 0.50f;
+        float4 fakePercentage = 0.0;
+        fakePercentage = (float4)(Sensor_TPS1.sensorValue - 2150) /(3900.0-2150); // 0-100% of requested current
+        if (fakePercentage < 0.0)
+        {
+            fakePercentage = 0.0;
+        }
+        else if (fakePercentage > 1.0)
+        {
+            fakePercentage = 1.0;
+        }
 
-        me->motor[2]->current_mA = requestCurrent ? 20000 : 0; // RL
-        me->motor[3]->current_mA = requestCurrent ? 20000 : 0; // RR
+        me->motor[2]->current_mA = fakePercentage * 75000; // RL
+        me->motor[3]->current_mA = fakePercentage * 75000; // RR
 
         return;
     }

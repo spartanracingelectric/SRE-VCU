@@ -423,7 +423,7 @@ void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressu
     canMessages[canMessageCount - 1].data[byteNum++] = Sensor_TPS0.sensorValue >> 8; //tps->tps0_value >> 8;
     canMessages[canMessageCount - 1].data[byteNum++] = tps->tps0_calibMin;
     canMessages[canMessageCount - 1].data[byteNum++] = tps->tps0_calibMin >> 8;
-    canMessages[canMessageCount - 1].data[byteNum++] = tps->tps0_calibMax;
+    canMessages[canMessageCount - 1].data[byteNum++] = tps->tps0_calibMax; 
     canMessages[canMessageCount - 1].data[byteNum++] = tps->tps0_calibMax >> 8;
     canMessages[canMessageCount - 1].length = byteNum;
 
