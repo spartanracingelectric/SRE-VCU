@@ -95,6 +95,10 @@ typedef struct _DriveInverter {
     float4 AMK_ID110;
     ubyte2 AMK_TorqueMultiplier;
 
+    // custom inverters:
+    sbyte4 current_mA; // current in mA to send to the inverter
+    sbyte4 dutyCycle_send; // duty cycle to send to the inverter
+
 } _DriveInverter;
 
 typedef enum _PowertrainMode {
