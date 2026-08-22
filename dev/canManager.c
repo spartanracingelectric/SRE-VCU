@@ -67,7 +67,8 @@ CanManager* CanManager_new(ubyte2 busSpeed[CAN_CHANNELS], ubyte1 read_messageLim
         //, the direction of the queue (in/out)
         //, the frame size
         IO_CAN_ConfigFIFO(&me->readHandle[i], IO_CAN_CHANNEL_0 + i, read_messageLimit[i], IO_CAN_MSG_READ, IO_CAN_STD_FRAME, 0, 0);
-        IO_CAN_ConfigFIFO(&me->writeHandle[i], IO_CAN_CHANNEL_0 + i, write_messageLimit[i], IO_CAN_MSG_WRITE, IO_CAN_STD_FRAME, 0, 0);
+        IO_CAN_ConfigFIFO(&me->writeHandle[i], IO_CAN_CHANNEL_0 + i, write_messageLimit[i], IO_CAN_MSG_WRITE, (i == 1) ? IO_CAN_EXT_FRAME : IO_CAN_STD_FRAME, 0,
+    0);
 
         //Assume read/write at error state until used
         me->ioErr_read[i] = IO_E_CAN_BUS_OFF;
@@ -734,87 +735,39 @@ void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressu
 
 void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain)
 {
-    IO_CAN_DATA_FRAME canMessages[me->write_messageLimit[1]]; 
+    IO_CAN_DATA_FRAME canMessages[me->write_messageLimit[1]];
     ubyte2 canMessageCount = 0;
 
 
-    //Inverter 1 FL Command Message
+    // Rear Left: VESC ID 1
     canMessageCount++;
-    canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-    canMessages[canMessageCount - 1].id = 0x184;
-    canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
-    canMessages[canMessageCount - 1].data[1] = (ubyte1)((powertrain->motor[0]->AMK_InverterOn_send << 0) | (powertrain->motor[0]->AMK_DcOn_send << 1) | (powertrain->motor[0]->AMK_Enable_send << 2) | (powertrain->motor[0]->AMK_ErrorReset_send << 3));
-    canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
-    canMessages[canMessageCount - 1].data[2] = powertrain->motor[0]->AMK_TorqueRequest_send;
-    canMessages[canMessageCount - 1].data[3] = powertrain->motor[0]->AMK_TorqueRequest_send >> 8;
-    canMessages[canMessageCount - 1].data[4] = powertrain->motor[0]->AMK_TorqueLimitPositive_send;
-    canMessages[canMessageCount - 1].data[5] = powertrain->motor[0]->AMK_TorqueLimitPositive_send >> 8;
-    canMessages[canMessageCount - 1].data[6] = powertrain->motor[0]->AMK_TorqueLimitNegative_send;
-    canMessages[canMessageCount - 1].data[7] = powertrain->motor[0]->AMK_TorqueLimitNegative_send >> 8;
-    canMessages[canMessageCount - 1].length = 8;
+    sbyte4 rlCurrent = powertrain->motor[2]->current_mA;
+    canMessages[canMessageCount - 1].id_format = IO_CAN_EXT_FRAME;
+    canMessages[canMessageCount - 1].id = 0x101;
+    canMessages[canMessageCount - 1].data[0] = (ubyte1)(rlCurrent >> 24);
+    canMessages[canMessageCount - 1].data[1] = (ubyte1)(rlCurrent >> 16);
+    canMessages[canMessageCount - 1].data[2] = (ubyte1)(rlCurrent >> 8);
+    canMessages[canMessageCount - 1].data[3] = (ubyte1)rlCurrent;
+    canMessages[canMessageCount - 1].length = 4;
 
-    //Inverter 2 FR Command Message
+    // Rear Right: VESC ID 0
     canMessageCount++;
-    canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-    canMessages[canMessageCount - 1].id = 0x185;
-    canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
-    canMessages[canMessageCount - 1].data[1] = (ubyte1)((powertrain->motor[1]->AMK_InverterOn_send << 0) | (powertrain->motor[1]->AMK_DcOn_send << 1) | (powertrain->motor[1]->AMK_Enable_send << 2) | (powertrain->motor[1]->AMK_ErrorReset_send << 3));
-    canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
-    canMessages[canMessageCount - 1].data[2] = powertrain->motor[1]->AMK_TorqueRequest_send;
-    canMessages[canMessageCount - 1].data[3] = powertrain->motor[1]->AMK_TorqueRequest_send >> 8;
-    canMessages[canMessageCount - 1].data[4] = powertrain->motor[1]->AMK_TorqueLimitPositive_send;
-    canMessages[canMessageCount - 1].data[5] = powertrain->motor[1]->AMK_TorqueLimitPositive_send >> 8;
-    canMessages[canMessageCount - 1].data[6] = powertrain->motor[1]->AMK_TorqueLimitNegative_send;
-    canMessages[canMessageCount - 1].data[7] = powertrain->motor[1]->AMK_TorqueLimitNegative_send >> 8;
-    canMessages[canMessageCount - 1].length = 8;
 
-    //Inverter 3 RL Command Message
-    canMessageCount++;
-    canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-    canMessages[canMessageCount - 1].id = 0x188;
-    canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
-    canMessages[canMessageCount - 1].data[1] = (ubyte1)((powertrain->motor[2]->AMK_InverterOn_send << 0) | (powertrain->motor[2]->AMK_DcOn_send << 1) | (powertrain->motor[2]->AMK_Enable_send << 2) | (powertrain->motor[2]->AMK_ErrorReset_send << 3));
-    canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
-    canMessages[canMessageCount - 1].data[2] = powertrain->motor[2]->AMK_TorqueRequest_send;
-    canMessages[canMessageCount - 1].data[3] = powertrain->motor[2]->AMK_TorqueRequest_send >> 8;
-    canMessages[canMessageCount - 1].data[4] = powertrain->motor[2]->AMK_TorqueLimitPositive_send;
-    canMessages[canMessageCount - 1].data[5] = powertrain->motor[2]->AMK_TorqueLimitPositive_send >> 8;
-    canMessages[canMessageCount - 1].data[6] = powertrain->motor[2]->AMK_TorqueLimitNegative_send;
-    canMessages[canMessageCount - 1].data[7] = powertrain->motor[2]->AMK_TorqueLimitNegative_send >> 8;
-    canMessages[canMessageCount - 1].length = 8;
+    sbyte4 rrCurrent = powertrain->motor[3]->current_mA;
+    canMessages[canMessageCount - 1].id_format = IO_CAN_EXT_FRAME;
+    canMessages[canMessageCount - 1].id = 0x100;
+    canMessages[canMessageCount - 1].data[0] = (ubyte1)(rrCurrent >> 24);
+    canMessages[canMessageCount - 1].data[1] = (ubyte1)(rrCurrent >> 16);
+    canMessages[canMessageCount - 1].data[2] = (ubyte1)(rrCurrent >> 8);
+    canMessages[canMessageCount - 1].data[3] = (ubyte1)rrCurrent;
+    canMessages[canMessageCount - 1].length = 4;
 
-    //Inverter 4 RR Command Message
-    canMessageCount++;
-    canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-    canMessages[canMessageCount - 1].id = 0x189;
-    canMessages[canMessageCount - 1].data[0] = 0; //ReservedIgnore1
-    canMessages[canMessageCount - 1].data[1] = (ubyte1)((powertrain->motor[3]->AMK_InverterOn_send << 0) | (powertrain->motor[3]->AMK_DcOn_send << 1) | (powertrain->motor[3]->AMK_Enable_send << 2) | (powertrain->motor[3]->AMK_ErrorReset_send << 3));
-    canMessages[canMessageCount - 1].data[1] &= 0x0F;  //ReservedIgnore2
-    canMessages[canMessageCount - 1].data[2] = powertrain->motor[3]->AMK_TorqueRequest_send;
-    canMessages[canMessageCount - 1].data[3] = powertrain->motor[3]->AMK_TorqueRequest_send >> 8;
-    canMessages[canMessageCount - 1].data[4] = powertrain->motor[3]->AMK_TorqueLimitPositive_send;
-    canMessages[canMessageCount - 1].data[5] = powertrain->motor[3]->AMK_TorqueLimitPositive_send >> 8;
-    canMessages[canMessageCount - 1].data[6] = powertrain->motor[3]->AMK_TorqueLimitNegative_send;
-    canMessages[canMessageCount - 1].data[7] = powertrain->motor[3]->AMK_TorqueLimitNegative_send >> 8;
-    canMessages[canMessageCount - 1].length = 8;
-
-    //50B: AMK VCU Debug (3/4 Inverters)
-    canMessageCount++;
-    canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-    canMessages[canMessageCount - 1].id = 0x50B;
-    canMessages[canMessageCount - 1].data[0] = powertrain->motor[0]->startUpStage | powertrain->motor[1]->startUpStage << 4 ;
-    canMessages[canMessageCount - 1].data[1] = powertrain->motor[2]->startUpStage | powertrain->motor[3]->startUpStage << 4 ;
-    canMessages[canMessageCount - 1].data[2] = 0;
-    canMessages[canMessageCount - 1].data[3] = 0;
-    canMessages[canMessageCount - 1].data[4] = 0;
-    canMessages[canMessageCount - 1].data[5] = 0;
-    canMessages[canMessageCount - 1].data[6] = 0;
-    canMessages[canMessageCount - 1].data[7] = 0;
-    canMessages[canMessageCount - 1].length = 8;
 
     //Place the can messsages into the FIFO queue ---------------------------------------------------
     //IO_CAN_WriteFIFO(canFifoHandle_HiPri_Write, canMessages, canMessageCount);  //Important: Only transmit one message (the MCU message)
-    CanManager_send(me, CAN1_LOPRI, canMessages, canMessageCount);  //Send messages to CAN1
+
+    me->ioErr_write[1] = IO_CAN_WriteFIFO(me->writeHandle[1], canMessages, canMessageCount);
+
     //IO_CAN_WriteFIFO(canFifoHandle_LoPri_Write, canMessages, canMessageCount);  
 
 }

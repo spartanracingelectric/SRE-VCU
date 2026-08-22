@@ -95,6 +95,9 @@ typedef struct _DriveInverter {
     float4 AMK_ID110;
     ubyte2 AMK_TorqueMultiplier;
 
+    // custom inverters:
+    sbyte4 current_mA; // current in mA to send to the inverter
+
 } _DriveInverter;
 
 typedef enum _PowertrainMode {
@@ -104,7 +107,8 @@ typedef enum _PowertrainMode {
     AWD = 3,
     TorqueVectoring = 4,
     //Novelty Modes
-    Drift = 5
+    Drift = 5,
+    MVP = 6
 } PowertrainMode;
 
 typedef struct _Powertrain {
