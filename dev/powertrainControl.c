@@ -66,6 +66,7 @@ _DriveInverter* AmkDriver_new(DI_Location_Address location_address)
         me->AMK_ErrorInfo_recieve = 0.0;
         me->AMK_TorqueFeedback_recieve = 0.0; // % 0.1 Nm
         me->current_mA = 0;
+        me->dutyCycle_send = 0;
 
         me->AMK_ID110 = 107200;
     return me;
@@ -214,23 +215,54 @@ void Powertrain_controlVehicle(_Powertrain* me, Sensor *HVILTermSense, TorqueEnc
     }
 }
 
+#define DUTY_CYCLE_STEP  1000
+#define DUTY_CYCLE_MAX   100000
+#define CYCLES_PER_STEP  200
+
 void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, BrakePressureSensor *bps){
     //all four inverters have to be RTD before any torque is allowed
-    if (me->powertrainMode == MVP)
+    static ubyte4 cycleCounter = 0;
+    static sbyte4 dutyCycle = 0;
+    static sbyte4 dutyCycleStep = DUTY_CYCLE_STEP;
+
+    static bool toggle = FALSE;
+    static bool previousEcoButton = TRUE;
+
+    bool ecoButton = Sensor_EcoButton.sensorValue;
+
+    if (previousEcoButton == TRUE && ecoButton == FALSE)
     {
-        float4 fakePercentage = ((float4)Sensor_TPS1.sensorValue - 2150.0f) / (3900.0f - 2150.0f);
-        if (fakePercentage < 0.0)
+        toggle = !toggle;
+        cycleCounter = 0;
+        dutyCycle = 0;
+        dutyCycleStep = DUTY_CYCLE_STEP;
+    }
+
+    previousEcoButton = ecoButton;
+    
+
+    if (me->powertrainMode == MVP && toggle)
+    {
+        cycleCounter++;
+        if (cycleCounter >= CYCLES_PER_STEP)
         {
-            fakePercentage = 0.0;
-        }
-        else if (fakePercentage > 1.0)
-        {
-            fakePercentage = 1.0;
+            cycleCounter = 0;
+            dutyCycle += dutyCycleStep;
+
+            if (dutyCycle >= DUTY_CYCLE_MAX)
+            {
+                dutyCycle = DUTY_CYCLE_MAX;
+                dutyCycleStep = -DUTY_CYCLE_STEP;
+            }
+            else if (dutyCycle <= 0)
+            {
+                dutyCycle = 0;
+                dutyCycleStep = DUTY_CYCLE_STEP;
+            }
         }
 
-        me->motor[2]->current_mA = fakePercentage * 75000; // RL
-        me->motor[3]->current_mA = fakePercentage * 75000; // RR
-
+        me->motor[2]->dutyCycle_send = dutyCycle;  // Rear left
+        me->motor[3]->dutyCycle_send = dutyCycle;  // Rear right
         return;
     }
 
