@@ -45,6 +45,9 @@ void canOutput_sendSensorMessages(CanManager *me);
 void canOutput_sendDebugMessage0(CanManager *me, TorqueEncoder *tps, BrakePressureSensor *bps, InstrumentCluster *ic, BatteryManagementSystem *bms, SafetyChecker *sc, _Powertrain *powertrain);
 void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain);
 
+//Commands the VCU sends to the BMS (currently just the precharge request)
+void canOutput_sendBMSCommands(CanManager *me, BatteryManagementSystem *bms);
+
 ubyte1 CanManager_getReadStatus(CanManager *me, CanChannel channel);
 
 #endif // _CANMANAGER_H is defined

@@ -694,19 +694,6 @@ void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain)
 {
     IO_CAN_DATA_FRAME canMessages[me->write_messageLimit[1]];
     ubyte2 canMessageCount = 0;
-
-    // BMS HVIL TERM
-    canMessageCount++;
-    sbyte4 rlCurrent = powertrain->motor[2]->current_mA;
-    canMessages[canMessageCount - 1].id_format = IO_CAN_EXT_FRAME;
-    canMessages[canMessageCount - 1].id = 0x605;
-    canMessages[canMessageCount - 1].data[0] = Sensor_HVILTerminationSense.sensorValue;
-    canMessages[canMessageCount - 1].data[1] = Sensor_HVILTerminationSense.sensorValue >> 8;
-    canMessages[canMessageCount - 1].data[2] = 0;
-    canMessages[canMessageCount - 1].data[3] = 0;
-    canMessages[canMessageCount - 1].length = 4;
-
-
     // Rear Left: VESC ID 1
     canMessageCount++;
     sbyte4 rlCurrent = powertrain->motor[2]->current_mA;
@@ -735,8 +722,20 @@ void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain)
 
     me->ioErr_write[1] = IO_CAN_WriteFIFO(me->writeHandle[1], canMessages, canMessageCount);
 
-    //IO_CAN_WriteFIFO(canFifoHandle_LoPri_Write, canMessages, canMessageCount);  
+    //IO_CAN_WriteFIFO(canFifoHandle_LoPri_Write, canMessages, canMessageCount);
 
+}
+
+void canOutput_sendBMSCommands(CanManager *me, BatteryManagementSystem *bms)
+{
+    IO_CAN_DATA_FRAME canMessages[1];
+
+    canMessages[0].id_format = IO_CAN_STD_FRAME;
+    canMessages[0].id =0x605;
+    canMessages[0].data[0] = (BMS_getPrechargeRequest(bms) == TRUE) ? 0x01 : 0x00;
+    canMessages[0].length = 1;
+
+    me->ioErr_write[0] = IO_CAN_WriteFIFO(me->writeHandle[0], canMessages, 1);
 }
 
 /*

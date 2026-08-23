@@ -22,6 +22,7 @@
 #include "brakePressureSensor.h"
 #include "readyToDriveSound.h"
 #include "daqSensors.h"
+#include "bms.h"
 
 
 
@@ -111,13 +112,22 @@ typedef enum _PowertrainMode {
     MVP = 6
 } PowertrainMode;
 
+//Ready-to-drive gate for MVP mode. MVP drives the VESCs directly and never runs the
+//AMK startup sequence, so it needs its own arming state.
+typedef enum _MvpArmState {
+    MVP_DISARMED = 0,   //pack not ready - current is forced to zero
+    MVP_READY_TO_ARM,   //pack ready and HV live, waiting on the RTD button
+    MVP_ARMED           //driver armed the car, TPS controls current
+} MvpArmState;
+
 typedef struct _Powertrain {
     PowertrainMode powertrainMode;
     // Code Convention: Motors stored in following order - [FL,FR,RL,RR]
     _DriveInverter* motor[4];
 
     bool rtdsPlayed;
- 
+    MvpArmState armState;
+
     /*
     Due to potential gear ratio (GR) modifications, 
     vehicle control algorithms should focus on maximizing wheel torque, 
@@ -147,9 +157,12 @@ void DI_commandTorque(_DriveInverter* Idv, sbyte2 newTorque);
 
 _Powertrain* Powertrain_new();
 
-void Powertrain_controlVehicle(_Powertrain* me, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds, _DAQSensors *d1);
+void Powertrain_controlVehicle(_Powertrain* me, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds, _DAQSensors *d1, BatteryManagementSystem *bms);
 
 void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, BrakePressureSensor *bps);
+
+//Runs the MVP ready-to-drive gate. Returns TRUE only while the car is armed for torque.
+bool Powertrain_updateArmState(_Powertrain* me, Sensor *HVILTermSense, TorqueEncoder *tps, ReadyToDriveSound *rtds, BatteryManagementSystem *bms);
 
 void Powertrain_TorqueVectoring(_Powertrain *me, TorqueEncoder *tps, BrakePressureSensor *bps, _DAQSensors *d1);
 

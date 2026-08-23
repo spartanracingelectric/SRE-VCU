@@ -201,12 +201,58 @@ _Powertrain* Powertrain_new(){
         me->tireDiameter_in = 16;
         me->motorTorque_Nm = 0;
         me->rtdsPlayed = FALSE;
+        me->armState = MVP_DISARMED;
 
     return me;
 }
+bool Powertrain_updateArmState(_Powertrain* me, Sensor *HVILTermSense, TorqueEncoder *tps, ReadyToDriveSound *rtds, BatteryManagementSystem *bms)
+{
+    bool packReady = (BMS_isAlive(bms) == TRUE)
+                  && (BMS_getFaultFlags(bms) == 0)
+                  && (BMS_getPrechargeComplete(bms) == TRUE);
+    bool hvPresent = (HVILTermSense->sensorValue == TRUE);
 
-void Powertrain_controlVehicle(_Powertrain* me, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds, _DAQSensors *d1){
+    //Anything unsafe drops us all the way back to disarmed
+    if (packReady == FALSE || hvPresent == FALSE || tps->calibrated == FALSE)
+    {
+        me->armState = MVP_DISARMED;
+        me->rtdsPlayed = FALSE;
+        return FALSE;
+    }
+
+    if (me->armState == MVP_DISARMED)
+    {
+        me->armState = MVP_READY_TO_ARM;
+    }
+
+    //RTD button is pulled down, so TRUE means pressed
+    if (me->armState == MVP_READY_TO_ARM
+     && Sensor_RTDButton.sensorValue == TRUE
+     && tps->travelPercent < 0.05)
+    {
+        me->armState = MVP_ARMED;
+
+        if (me->rtdsPlayed == FALSE)
+        {
+            RTDS_setVolume(rtds, 1, 1500000);
+            me->rtdsPlayed = TRUE;
+        }
+    }
+
+    return (me->armState == MVP_ARMED);
+}
+
+void Powertrain_controlVehicle(_Powertrain* me, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds, _DAQSensors *d1, BatteryManagementSystem *bms){
     // DI_calculateInverterControl(me, &Sensor_HVILTerminationSense, tps, bps, rtds, d1);
+
+    //MVP talks to the VESCs directly
+    if(me->powertrainMode == MVP && Powertrain_updateArmState(me, HVILTermSense, tps, rtds, bms) == FALSE){
+        for(ubyte1 i = 0; i < 4; ++i){
+            me->motor[i]->current_mA = 0;
+            me->motor[i]->AMK_TorqueRequest_send = 0;
+        }
+        return;
+    }
 
     if(me->powertrainMode != TorqueVectoring){
         Powertrain_calculateTorqueCommands(me, tps, bps);

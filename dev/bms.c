@@ -68,6 +68,7 @@ struct _BatteryManagementSystem
     ubyte4 timestamp_lastFaultFrame;  //IO_RTC time of last BMS_SAFETY_STATUS received
 
     bool relayState;
+    bool prechargeRequest;  //what the VCU is asking for on BMS_PRECHARGE_COMMAND
 };
 
 BatteryManagementSystem *BMS_new(ubyte2 canMessageBaseID)
@@ -94,6 +95,7 @@ BatteryManagementSystem *BMS_new(ubyte2 canMessageBaseID)
     me->lowestCellTemperature = 0;
 
     me->prechargeComplete = FALSE;
+    me->prechargeRequest = FALSE;
     me->relayState = FALSE;
     me->timestamp_lastFaultFrame = 0;
 
@@ -253,6 +255,37 @@ ubyte1 BMS_getWarningFlags(BatteryManagementSystem *me) {
 bool BMS_getRelayState(BatteryManagementSystem *me) {
     //Return state of shutdown board relay
     return me->relayState;
+}
+
+void BMS_updatePrechargeRequest(BatteryManagementSystem *me, Sensor *HVILTermSense)
+{
+    //////////////////////////////////////////////////////////////////////////
+    // The BMS owns the precharge relay and the contactor. All the VCU does  //
+    // is hold the request TRUE while the pack is healthy, and drop it the   //
+    // moment it isn't - dropping the request opens both on the BMS side.    //
+    //////////////////////////////////////////////////////////////////////////
+
+    //Silent BMS or any pack fault - never ask for HV
+    if (BMS_isAlive(me) == FALSE || BMS_getFaultFlags(me) != 0)
+    {
+        me->prechargeRequest = FALSE;
+    }
+    //HV is NOT present before the contactor closes, so the termination sense cannot gate
+    //the initial request. It only tears the request down if HV disappears after the BMS
+    //already reported precharge complete - that means the shutdown circuit opened on us.
+    else if (me->prechargeComplete == TRUE && HVILTermSense->sensorValue == FALSE)
+    {
+        me->prechargeRequest = FALSE;
+    }
+    else
+    {
+        me->prechargeRequest = TRUE;
+    }
+}
+
+bool BMS_getPrechargeRequest(BatteryManagementSystem *me)
+{
+    return me->prechargeRequest;
 }
 
 ubyte4 BMS_getPackVoltage(BatteryManagementSystem *me)
