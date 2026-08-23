@@ -310,7 +310,7 @@ void main(void)
                 //SerialManager_send(serialMan, "Eco button held 3s - starting calibrations\n");
                 //calibrateTPS(TRUE, 5);
                 TorqueEncoder_startCalibration(tps, 5);
-                BrakePressureSensor_startCalibration(bps, 5);
+                //BrakePressureSensor_startCalibration(bps, 5); //BPS calibration disabled
                 Light_set(Light_dashEco, 1);
                 //DIGITAL OUTPUT 4 for STATUS LED
             }
@@ -327,7 +327,7 @@ void main(void)
         //Every cycle: if the calibration was started and hasn't finished, check the values again
         TorqueEncoder_calibrationCycle(tps, &calibrationErrors); //Todo: deal with calibration errors
         BrakePressureSensor_update(bps, bench);
-        BrakePressureSensor_calibrationCycle(bps, &calibrationErrors);
+        //BrakePressureSensor_calibrationCycle(bps, &calibrationErrors); //BPS calibration disabled
 
         //TractionControl_update(tps, mcm0, wss, daq);
 

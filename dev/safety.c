@@ -175,7 +175,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     {
         me->faults &= ~F_tpsNotCalibrated;
     }
-    bps->calibrated == TRUE; // Remove later with BPS. Dont keep
+    bps->calibrated = TRUE; // Remove later with BPS. Dont keep
     if (bps->calibrated == FALSE)
     {
         //me->faults |= F_bpsNotCalibrated;
