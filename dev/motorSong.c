@@ -4,7 +4,7 @@
  ******************************************************************************
  * Plays a note table through all four motors by toggling a small unipolar
  * command value at the note's frequency, using the same extended-frame
- * command messages the MVP duty ramp uses (0x100-0x103, 4-byte big-endian
+ * command messages the MVP duty ramp uses (0x00-0x03, 4-byte big-endian
  * value). The command averages near zero, so the motors sing rather than
  * spin (an unloaded motor may creep slightly on long notes).
  *
@@ -40,10 +40,10 @@
 #define MOTORSONG_SKIP_TPS_PERCENT 0.10
 
 //Extended-frame CAN IDs for the motor command messages, matching
-//canOutput_sendDebugMessage1. Front IDs are ASSUMED from the rear
-//numbering pattern - confirm against the inverter firmware config.
-//Indexed by powertrain motor index [FL, FR, RL, RR].
-static const ubyte4 motorCanId[4] = { 0x103, 0x102, 0x101, 0x100 };
+//canOutput_sendDebugMessage1 (0x01 = RL, 0x00 = RR). Front IDs are
+//ASSUMED from the rear numbering pattern - confirm against the inverter
+//firmware config. Indexed by powertrain motor index [FL, FR, RL, RR].
+static const ubyte4 motorCanId[4] = { 0x03, 0x02, 0x01, 0x00 };
 
 typedef enum {
     SONG_IDLE = 0,

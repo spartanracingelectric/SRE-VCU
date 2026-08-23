@@ -759,7 +759,7 @@ void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain)
     canMessageCount++;
     sbyte4 flDuty = powertrain->motor[0]->dutyCycle_send;
     canMessages[canMessageCount - 1].id_format = IO_CAN_EXT_FRAME;
-    canMessages[canMessageCount - 1].id = 0x103;
+    canMessages[canMessageCount - 1].id = 0x03;
     canMessages[canMessageCount - 1].data[0] = (ubyte1)(flDuty >> 24);
     canMessages[canMessageCount - 1].data[1] = (ubyte1)(flDuty >> 16);
     canMessages[canMessageCount - 1].data[2] = (ubyte1)(flDuty >> 8);
@@ -770,7 +770,7 @@ void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain)
     canMessageCount++;
     sbyte4 frDuty = powertrain->motor[1]->dutyCycle_send;
     canMessages[canMessageCount - 1].id_format = IO_CAN_EXT_FRAME;
-    canMessages[canMessageCount - 1].id = 0x102;
+    canMessages[canMessageCount - 1].id = 0x02;
     canMessages[canMessageCount - 1].data[0] = (ubyte1)(frDuty >> 24);
     canMessages[canMessageCount - 1].data[1] = (ubyte1)(frDuty >> 16);
     canMessages[canMessageCount - 1].data[2] = (ubyte1)(frDuty >> 8);
