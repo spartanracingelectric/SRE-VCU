@@ -20,17 +20,20 @@
 #include "motorSong.h"
 
 //Peak command value while voicing a note, in the same raw units as the MVP
-//duty ramp (100000 = 100% full scale), i.e. 5% duty - well under the 60%
-//external-power-supply cap enforced on the ramp (DUTY_CYCLE_MAX in
-//powertrainControl.c). BENCH-TUNE THIS: if the motors are silent, raise
-//it (never past DUTY_CYCLE_MAX); if they twitch or get warm fast, lower it.
+//duty ramp (100000 = 100% full scale). 15% duty makes the wheels visibly
+//pulse with the notes (the ~7.5% unipolar mean overcomes drivetrain
+//friction) while staying well under the 60% external-power-supply cap
+//enforced on the ramp (DUTY_CYCLE_MAX in powertrainControl.c).
+//BENCH-TUNE THIS: 5000 was the sing-only (no wheel motion) level - go
+//back down if the supply sags or the motors get warm fast, and never go
+//past DUTY_CYCLE_MAX.
 //Notes toggle between 0 and +MOTORSONG_AMPLITUDE (never negative): the
 //custom inverter firmware has only ever been fed non-negative ramp values,
-//and a negative value misread as unsigned would be a huge command. The
-//small positive mean may make an unloaded motor creep during long notes -
-//if the firmware is confirmed to handle signed values, toggling
-//+/-MOTORSONG_AMPLITUDE instead gives zero mean and twice the volume.
-#define MOTORSONG_AMPLITUDE 5000
+//and a negative value misread as unsigned would be a huge command. If the
+//firmware is confirmed to handle signed values, toggling
+//+/-MOTORSONG_AMPLITUDE instead gives zero mean (sing-only, no pulse)
+//and twice the volume.
+#define MOTORSONG_AMPLITUDE 15000
 
 //Silent tail on every note so repeated notes articulate instead of
 //slurring. Must be shorter than the shortest note in the table.
