@@ -20,11 +20,12 @@
 #include "motorSong.h"
 
 //Peak command value while voicing a note, in the same raw units as the MVP
-//duty ramp (DUTY_CYCLE_MAX = 100000), i.e. 5% of the ramp's maximum.
-//BENCH-TUNE THIS: if the motors are silent, raise it; if they twitch or
-//get warm fast, lower it.
+//duty ramp (100000 = 100% full scale), i.e. 5% duty - well under the 60%
+//external-power-supply cap enforced on the ramp (DUTY_CYCLE_MAX in
+//powertrainControl.c). BENCH-TUNE THIS: if the motors are silent, raise
+//it (never past DUTY_CYCLE_MAX); if they twitch or get warm fast, lower it.
 //Notes toggle between 0 and +MOTORSONG_AMPLITUDE (never negative): the
-//custom inverter firmware has only ever been fed 0..100000 by the ramp,
+//custom inverter firmware has only ever been fed non-negative ramp values,
 //and a negative value misread as unsigned would be a huge command. The
 //small positive mean may make an unloaded motor creep during long notes -
 //if the firmware is confirmed to handle signed values, toggling

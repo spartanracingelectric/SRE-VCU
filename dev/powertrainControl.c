@@ -217,7 +217,7 @@ void Powertrain_controlVehicle(_Powertrain* me, Sensor *HVILTermSense, TorqueEnc
 }
 
 #define DUTY_CYCLE_STEP  1000
-#define DUTY_CYCLE_MAX   100000
+#define DUTY_CYCLE_MAX   60000 // 60% cap - the external power supply can't source more
 #define CYCLES_PER_STEP  200
 
 void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, BrakePressureSensor *bps){
