@@ -695,6 +695,17 @@ void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain)
     IO_CAN_DATA_FRAME canMessages[me->write_messageLimit[1]];
     ubyte2 canMessageCount = 0;
 
+    // BMS HVIL TERM
+    canMessageCount++;
+    sbyte4 rlCurrent = powertrain->motor[2]->current_mA;
+    canMessages[canMessageCount - 1].id_format = IO_CAN_EXT_FRAME;
+    canMessages[canMessageCount - 1].id = 0x605;
+    canMessages[canMessageCount - 1].data[0] = Sensor_HVILTerminationSense.sensorValue;
+    canMessages[canMessageCount - 1].data[1] = Sensor_HVILTerminationSense.sensorValue >> 8;
+    canMessages[canMessageCount - 1].data[2] = 0;
+    canMessages[canMessageCount - 1].data[3] = 0;
+    canMessages[canMessageCount - 1].length = 4;
+
 
     // Rear Left: VESC ID 1
     canMessageCount++;
