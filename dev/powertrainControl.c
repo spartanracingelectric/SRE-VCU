@@ -23,6 +23,7 @@
 #include "sensorCalculations.h"
 #include "readyToDriveSound.h"
 #include "daqSensors.h"
+#include "motorSong.h"
 
 extern Sensor Sensor_RTDButton;
 extern Sensor Sensor_HVILTerminationSense;
@@ -236,13 +237,34 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
         cycleCounter = 0;
         dutyCycle = 0;
         dutyCycleStep = DUTY_CYCLE_STEP;
+
+        if (toggle == FALSE)
+        {
+            //Ramp deactivated: abort any song and re-arm it for the next
+            //activation, and stop streaming the last ramp value
+            MotorSong_cancel();
+            MotorSong_reset();
+            me->motor[2]->dutyCycle_send = 0;
+            me->motor[3]->dutyCycle_send = 0;
+        }
     }
 
     previousEcoButton = ecoButton;
-    
+
 
     if (me->powertrainMode == MVP && toggle)
     {
+        //The warm-up song is the warm-up cycle: the duty ramp waits until
+        //the song finishes (pressing the throttle past 10% skips it)
+        if (MotorSong_hasFinished() == FALSE)
+        {
+            if (MotorSong_isPlaying() == FALSE)
+            {
+                MotorSong_start();
+            }
+            return; //the fast task in motorSong.c voices the song
+        }
+
         cycleCounter++;
         if (cycleCounter >= CYCLES_PER_STEP)
         {

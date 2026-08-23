@@ -223,6 +223,18 @@ IO_ErrorType CanManager_send(CanManager* me, CanChannel channel, IO_CAN_DATA_FRA
     return sendResult;
 }
 
+/*****************************************************************************
+* Immediate send - bypasses the message history filter above (change
+* detection + min-time throttle). Used by the motor song, which needs to
+* stream command frames at audio rate.
+****************************************************************************/
+IO_ErrorType CanManager_sendImmediate(CanManager *me, CanChannel channel, IO_CAN_DATA_FRAME canMessages[], ubyte1 canMessageCount)
+{
+    IO_ErrorType sendResult = IO_CAN_WriteFIFO((channel == CAN0_HIPRI) ? me->writeHandle[0] : me->writeHandle[1], canMessages, canMessageCount);
+    *((channel == CAN0_HIPRI) ? &me->ioErr_write[0] : &me->ioErr_write[1]) = sendResult;
+    return sendResult;
+}
+
 
 /*****************************************************************************
 * read
