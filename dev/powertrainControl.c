@@ -240,12 +240,23 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
 
         if (toggle == FALSE)
         {
-            //Ramp deactivated: abort any song and re-arm it for the next
-            //activation, and stop streaming the last ramp value
-            MotorSong_cancel();
-            MotorSong_reset();
-            me->motor[2]->dutyCycle_send = 0;
-            me->motor[3]->dutyCycle_send = 0;
+            //Ramp deactivated: stop streaming the last ramp value. If the
+            //song was mid-play, this counts as a skip - the crew's escape
+            //hatch, since throttle-skip needs a calibrated TPS the rig may
+            //not have - so the NEXT activation goes straight to the ramp.
+            //A toggle-off after a completed ramp session re-arms the song.
+            if (MotorSong_isPlaying() == TRUE)
+            {
+                MotorSong_cancel();
+            }
+            else
+            {
+                MotorSong_reset();
+            }
+            for (ubyte1 i = 0; i < 4; ++i)
+            {
+                me->motor[i]->dutyCycle_send = 0;
+            }
         }
     }
 
@@ -283,8 +294,10 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
             }
         }
 
-        me->motor[2]->dutyCycle_send = dutyCycle;  // Rear left
-        me->motor[3]->dutyCycle_send = dutyCycle;  // Rear right
+        for (ubyte1 i = 0; i < 4; ++i)
+        {
+            me->motor[i]->dutyCycle_send = dutyCycle;  // all four motors
+        }
         return;
     }
 

@@ -19,11 +19,13 @@
 //Begin playing the song (called when the MVP ramp is activated).
 void MotorSong_start(void);
 
-//Request an abort (e.g. ramp toggled off mid-song). Processed by the fast
-//task, which silences both motors; the song replays on the next activation.
+//Request a skip from a context without CAN access (e.g. ramp toggled off
+//mid-song). Processed by the fast task, which silences the motors and
+//counts the song as finished, so the NEXT activation goes straight to the
+//ramp. MotorSong_reset re-arms it.
 void MotorSong_cancel(void);
 
-//Driver skip: silence both motors and count the song as finished so the
+//Driver skip: silence the motors and count the song as finished so the
 //ramp can engage immediately.
 void MotorSong_skip(CanManager *canMan, _Powertrain *powertrain);
 

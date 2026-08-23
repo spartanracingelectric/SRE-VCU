@@ -2,11 +2,11 @@
  * motorSong.c - Drivetrain warm-up song (VESC/custom-inverter edition)
  * Initial Author: Connor Petri
  ******************************************************************************
- * Plays a note table through the rear motors by toggling a small zero-mean
+ * Plays a note table through all four motors by toggling a small unipolar
  * command value at the note's frequency, using the same extended-frame
- * command messages the MVP duty ramp uses (0x101 = rear left, 0x100 = rear
- * right, 4-byte big-endian value). Net command over a period is zero, so
- * the motors sing without spinning up.
+ * command messages the MVP duty ramp uses (0x100-0x103, 4-byte big-endian
+ * value). The command averages near zero, so the motors sing rather than
+ * spin (an unloaded motor may creep slightly on long notes).
  *
  * Frames go out via CanManager_sendImmediate at toggle edges (audio rate);
  * the 10ms canOutput_sendDebugMessage1 stream stays consistent because the
@@ -23,6 +23,12 @@
 //duty ramp (DUTY_CYCLE_MAX = 100000), i.e. 5% of the ramp's maximum.
 //BENCH-TUNE THIS: if the motors are silent, raise it; if they twitch or
 //get warm fast, lower it.
+//Notes toggle between 0 and +MOTORSONG_AMPLITUDE (never negative): the
+//custom inverter firmware has only ever been fed 0..100000 by the ramp,
+//and a negative value misread as unsigned would be a huge command. The
+//small positive mean may make an unloaded motor creep during long notes -
+//if the firmware is confirmed to handle signed values, toggling
+//+/-MOTORSONG_AMPLITUDE instead gives zero mean and twice the volume.
 #define MOTORSONG_AMPLITUDE 5000
 
 //Silent tail on every note so repeated notes articulate instead of
@@ -32,10 +38,11 @@
 //Driver pressing the throttle past this skips the song.
 #define MOTORSONG_SKIP_TPS_PERCENT 0.10
 
-//Extended-frame CAN IDs for the rear motor command messages, matching
-//canOutput_sendDebugMessage1
-#define MOTORSONG_CAN_ID_REAR_LEFT  0x101
-#define MOTORSONG_CAN_ID_REAR_RIGHT 0x100
+//Extended-frame CAN IDs for the motor command messages, matching
+//canOutput_sendDebugMessage1. Front IDs are ASSUMED from the rear
+//numbering pattern - confirm against the inverter firmware config.
+//Indexed by powertrain motor index [FL, FR, RL, RR].
+static const ubyte4 motorCanId[4] = { 0x103, 0x102, 0x101, 0x100 };
 
 typedef enum {
     SONG_IDLE = 0,
@@ -46,8 +53,7 @@ typedef enum {
 typedef struct {
     ubyte2 freq_Hz;     //0 = rest
     ubyte2 duration_ms;
-    ubyte1 motorIndex;  //voicing motor by powertrain index; only the rears
-                        //exist on this rig, so 0/2 voice RL and 1/3 voice RR
+    ubyte1 motorIndex;  //which motor voices the note: 0=FL 1=FR 2=RL 3=RR
 } SongNote;
 
 //Also sprach Zarathustra - the full Sunrise intro (the 2001 fanfare),
@@ -113,18 +119,12 @@ static ubyte4 timestamp_lastToggle = 0;
 static sbyte1 toggleSign = 1;
 static bool noteSilenced = FALSE;
 
-//Powertrain motor index for a note: 0/2 -> RL (motor[2]), 1/3 -> RR (motor[3])
-static ubyte1 MotorSong_rearIndexForNote(const SongNote *note)
-{
-    return ((note->motorIndex % 2) == 0) ? 2 : 3;
-}
-
-//Send one rear-motor command frame, mirroring canOutput_sendDebugMessage1:
+//Send one motor command frame, mirroring canOutput_sendDebugMessage1:
 //extended frame, 4-byte big-endian signed value
-static void MotorSong_sendCommandFrame(CanManager *canMan, ubyte1 rearIndex, sbyte4 value)
+static void MotorSong_sendCommandFrame(CanManager *canMan, ubyte1 motorIndex, sbyte4 value)
 {
     IO_CAN_DATA_FRAME frame;
-    frame.id = (rearIndex == 2) ? MOTORSONG_CAN_ID_REAR_LEFT : MOTORSONG_CAN_ID_REAR_RIGHT;
+    frame.id = motorCanId[motorIndex];
     frame.id_format = IO_CAN_EXT_FRAME;
     frame.length = 4;
     frame.data[0] = (ubyte1)(value >> 24);
@@ -136,7 +136,7 @@ static void MotorSong_sendCommandFrame(CanManager *canMan, ubyte1 rearIndex, sby
 
 static void MotorSong_silenceAll(CanManager *canMan, _Powertrain *powertrain)
 {
-    for(ubyte1 i = 2; i < 4; ++i){
+    for(ubyte1 i = 0; i < 4; ++i){
         powertrain->motor[i]->dutyCycle_send = 0;
         MotorSong_sendCommandFrame(canMan, i, 0);
     }
@@ -206,15 +206,17 @@ void MotorSong_fastTask(CanManager *canMan, _Powertrain *powertrain)
     }
 
     if(cancelRequested == TRUE){
+        //Cancel counts as a skip: land in FINISHED so the next ramp
+        //activation goes straight to the ramp (MotorSong_reset re-arms)
         MotorSong_silenceAll(canMan, powertrain);
         cancelRequested = FALSE;
-        songState = SONG_IDLE;
+        songState = SONG_FINISHED;
         return;
     }
 
     const SongNote *note = &song[noteIndex];
-    ubyte1 rearIndex = MotorSong_rearIndexForNote(note);
-    _DriveInverter *motor = powertrain->motor[rearIndex];
+    ubyte1 voiceIndex = note->motorIndex;
+    _DriveInverter *motor = powertrain->motor[voiceIndex];
     ubyte4 noteElapsed_us = IO_RTC_GetTimeUS(timestamp_noteStart);
     ubyte4 noteDuration_us = (ubyte4)note->duration_ms * 1000;
 
@@ -222,7 +224,7 @@ void MotorSong_fastTask(CanManager *canMan, _Powertrain *powertrain)
     if(noteElapsed_us >= noteDuration_us){
         if(motor->dutyCycle_send != 0){
             motor->dutyCycle_send = 0;
-            MotorSong_sendCommandFrame(canMan, rearIndex, 0);
+            MotorSong_sendCommandFrame(canMan, voiceIndex, 0);
         }
         noteIndex++;
         if(noteIndex >= MOTORSONG_LENGTH){
@@ -243,18 +245,20 @@ void MotorSong_fastTask(CanManager *canMan, _Powertrain *powertrain)
     {
         if(noteSilenced == FALSE && motor->dutyCycle_send != 0){
             motor->dutyCycle_send = 0;
-            MotorSong_sendCommandFrame(canMan, rearIndex, 0);
+            MotorSong_sendCommandFrame(canMan, voiceIndex, 0);
         }
         noteSilenced = TRUE;
         return;
     }
 
-    //Voice the note: square wave at freq_Hz via alternating command sign
+    //Voice the note: unipolar square wave at freq_Hz, toggling between
+    //0 and +MOTORSONG_AMPLITUDE (see the amplitude comment for why never
+    //negative)
     ubyte4 halfPeriod_us = 500000UL / note->freq_Hz;
     if(IO_RTC_GetTimeUS(timestamp_lastToggle) >= halfPeriod_us){
         IO_RTC_StartTime(&timestamp_lastToggle);
         toggleSign = -toggleSign;
-        motor->dutyCycle_send = (sbyte4)toggleSign * MOTORSONG_AMPLITUDE;
-        MotorSong_sendCommandFrame(canMan, rearIndex, motor->dutyCycle_send);
+        motor->dutyCycle_send = (toggleSign > 0) ? (sbyte4)MOTORSONG_AMPLITUDE : 0;
+        MotorSong_sendCommandFrame(canMan, voiceIndex, motor->dutyCycle_send);
     }
 }
