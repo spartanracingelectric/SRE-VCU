@@ -697,7 +697,6 @@ void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain)
 
     // BMS HVIL TERM
     canMessageCount++;
-    sbyte4 rlCurrent = powertrain->motor[2]->current_mA;
     canMessages[canMessageCount - 1].id_format = IO_CAN_EXT_FRAME;
     canMessages[canMessageCount - 1].id = 0x605;
     canMessages[canMessageCount - 1].data[0] = Sensor_HVILTerminationSense.sensorValue;
