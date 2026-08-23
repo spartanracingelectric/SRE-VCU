@@ -326,7 +326,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     //-------------------------------------------------------------------
 
     //If over voltage fault detected
-    if (BMS_getFaultFlags1(bms) & BMS_CELL_OVER_VOLTAGE_FLAG)
+    if (BMS_getFaultFlags(bms) & BMS_CELL_OVER_VOLTAGE_FLAG)
     {
         //me->faults |= F_bmsOverVoltageFault;
         //SerialManager_send(me->serialMan, "BMS over voltage fault detected.\n");
@@ -337,7 +337,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     }
 
     //If under voltage fault detected
-    if (BMS_getFaultFlags1(bms) & BMS_CELL_UNDER_VOLTAGE_FLAG)
+    if (BMS_getFaultFlags(bms) & BMS_CELL_UNDER_VOLTAGE_FLAG)
     {
         me->faults |= F_bmsUnderVoltageFault;
         //SerialManager_send(me->serialMan, "BMS under voltage fault detected.\n");
@@ -348,7 +348,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     }
 
     //If over temperature fault detected
-    if (BMS_getFaultFlags1(bms) & BMS_CELL_OVER_TEMPERATURE_FLAG)
+    if (BMS_getFaultFlags(bms) & BMS_CELL_OVER_TEMPERATURE_FLAG)
     {
         me->faults |= F_bmsOverTemperatureFault;
         //SerialManager_send(me->serialMan, "BMS over temperature fault detected.\n");
@@ -371,7 +371,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     }
 
     //If any sort of BMS fault detected (assuming 8.3.4 fulfilled by BMS)
-    //if (BMS_getFaultFlags0(bms) || BMS_getFaultFlags1(bms))
+    //if (BMS_getFaultFlags(bms))
     //{
     //    me->faults |= F_anyBmsFault;
     //    SerialManager_send(me->serialMan, "BMS fault detected.\n");
