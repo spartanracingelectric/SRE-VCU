@@ -224,17 +224,17 @@ IO_ErrorType BMS_relayControl(BatteryManagementSystem *me)
     //////////////////////////////////////////////////////////////
     IO_ErrorType err;
     //There is a fault, or the BMS has gone silent (treat silence as fault)
-    if (BMS_getFaultFlags(me) || BMS_isAlive(me) == FALSE)
-    {
-        me->relayState = TRUE;
-        err = IO_DO_Set(IO_DO_01, TRUE); //VCU pin 132, shutdown signal true (HIGH)
-    }
-    else
-    {
-        me->relayState = FALSE;
-        err = IO_DO_Set(IO_DO_01, FALSE); //VCU pin 132, shutdown signal false (LOW)
-    }
-    return err;
+    // if (BMS_getFaultFlags(me) || BMS_isAlive(me) == FALSE)
+    // {
+    //     me->relayState = TRUE;
+    //     err = IO_DO_Set(IO_DO_01, TRUE); //VCU pin 132, shutdown signal true (HIGH)
+    // }
+    // else
+    // {
+    //     me->relayState = FALSE;
+    //     err = IO_DO_Set(IO_DO_01, FALSE); //VCU pin 132, shutdown signal false (LOW)
+    // }
+    // return err;
 }
 
 ubyte1 BMS_getFaultFlags(BatteryManagementSystem *me) {
@@ -259,21 +259,7 @@ bool BMS_getRelayState(BatteryManagementSystem *me) {
 
 void BMS_updatePrechargeRequest(BatteryManagementSystem *me, Sensor *HVILTermSense)
 {
-    //////////////////////////////////////////////////////////////////////////
-    // The BMS owns the precharge relay and the contactor. All the VCU does  //
-    // is hold the request TRUE while the pack is healthy, and drop it the   //
-    // moment it isn't - dropping the request opens both on the BMS side.    //
-    //////////////////////////////////////////////////////////////////////////
-
-    //Silent BMS or any pack fault - never ask for HV
-    if (BMS_isAlive(me) == FALSE || BMS_getFaultFlags(me) != 0)
-    {
-        me->prechargeRequest = FALSE;
-    }
-    //HV is NOT present before the contactor closes, so the termination sense cannot gate
-    //the initial request. It only tears the request down if HV disappears after the BMS
-    //already reported precharge complete - that means the shutdown circuit opened on us.
-    else if (me->prechargeComplete == TRUE && HVILTermSense->sensorValue == FALSE)
+    if (me->prechargeComplete == TRUE && HVILTermSense->sensorValue == FALSE)
     {
         me->prechargeRequest = FALSE;
     }

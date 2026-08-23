@@ -247,7 +247,7 @@ bool Powertrain_updateArmState(_Powertrain* me, Sensor *HVILTermSense, TorqueEnc
 void Powertrain_controlVehicle(_Powertrain* me, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds, _DAQSensors *d1, BatteryManagementSystem *bms){
     // DI_calculateInverterControl(me, &Sensor_HVILTerminationSense, tps, bps, rtds, d1);
 
-    if(me->powertrainMode == MVP && Powertrain_updateArmState(me, HVILTermSense, tps, rtds, bms) == FALSE){
+    if(me->powertrainMode == MVP){
         for(ubyte1 i = 0; i < 4; ++i){
             me->motor[i]->current_mA = 0;
             me->motor[i]->dutyCycle = 0;
