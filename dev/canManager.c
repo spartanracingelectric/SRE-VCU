@@ -751,8 +751,11 @@ void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain)
     ubyte2 canMessageCount = 0;
 
 
-    // Front Left: VESC ID 3 (ASSUMED - follows the rear numbering pattern,
-    // confirm against the inverter firmware config before trusting corners)
+    //2-MOTOR TEST: front inverters (VESC IDs 2/3, ASSUMED from the rear
+    //numbering pattern) are not on the bench - uncomment when they exist.
+    //motorSong.c remaps its front voices onto the rears to match.
+    /*
+    // Front Left: VESC ID 3
     canMessageCount++;
     sbyte4 flDuty = powertrain->motor[0]->dutyCycle_send;
     canMessages[canMessageCount - 1].id_format = IO_CAN_EXT_FRAME;
@@ -763,7 +766,7 @@ void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain)
     canMessages[canMessageCount - 1].data[3] = (ubyte1)flDuty;
     canMessages[canMessageCount - 1].length = 4;
 
-    // Front Right: VESC ID 2 (ASSUMED - see above)
+    // Front Right: VESC ID 2
     canMessageCount++;
     sbyte4 frDuty = powertrain->motor[1]->dutyCycle_send;
     canMessages[canMessageCount - 1].id_format = IO_CAN_EXT_FRAME;
@@ -773,6 +776,7 @@ void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain)
     canMessages[canMessageCount - 1].data[2] = (ubyte1)(frDuty >> 8);
     canMessages[canMessageCount - 1].data[3] = (ubyte1)frDuty;
     canMessages[canMessageCount - 1].length = 4;
+    */
 
     // Rear Left: VESC ID 1
     canMessageCount++;

@@ -215,7 +215,11 @@ void MotorSong_fastTask(CanManager *canMan, _Powertrain *powertrain)
     }
 
     const SongNote *note = &song[noteIndex];
-    ubyte1 voiceIndex = note->motorIndex;
+    //2-MOTOR TEST: fronts aren't on the bench, so their voices remap onto
+    //the rears (0->RL, 1->RR). Delete the remap line when VESC IDs 2/3
+    //exist and the front frames in canOutput_sendDebugMessage1 are
+    //uncommented - the note table already carries real corner assignments.
+    ubyte1 voiceIndex = (note->motorIndex < 2) ? (ubyte1)(note->motorIndex + 2) : note->motorIndex;
     _DriveInverter *motor = powertrain->motor[voiceIndex];
     ubyte4 noteElapsed_us = IO_RTC_GetTimeUS(timestamp_noteStart);
     ubyte4 noteDuration_us = (ubyte4)note->duration_ms * 1000;
