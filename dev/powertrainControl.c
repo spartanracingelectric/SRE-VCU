@@ -68,6 +68,8 @@ _DriveInverter* AmkDriver_new(DI_Location_Address location_address)
         me->AMK_ErrorInfo_recieve = 0.0;
         me->AMK_TorqueFeedback_recieve = 0.0; // % 0.1 Nm
         me->current_mA = 0;
+        me->dutyCycle = 0;
+        me->useDutyCycle = FALSE;
 
         me->AMK_ID110 = 107200;
     return me;
@@ -245,10 +247,11 @@ bool Powertrain_updateArmState(_Powertrain* me, Sensor *HVILTermSense, TorqueEnc
 void Powertrain_controlVehicle(_Powertrain* me, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds, _DAQSensors *d1, BatteryManagementSystem *bms){
     // DI_calculateInverterControl(me, &Sensor_HVILTerminationSense, tps, bps, rtds, d1);
 
-    //MVP talks to the VESCs directly
     if(me->powertrainMode == MVP && Powertrain_updateArmState(me, HVILTermSense, tps, rtds, bms) == FALSE){
         for(ubyte1 i = 0; i < 4; ++i){
             me->motor[i]->current_mA = 0;
+            me->motor[i]->dutyCycle = 0;
+            me->motor[i]->useDutyCycle = FALSE;
             me->motor[i]->AMK_TorqueRequest_send = 0;
         }
         return;
@@ -267,6 +270,7 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
     if (me->powertrainMode == MVP)
     {
         float4 throttlePercent = tps->travelPercent;
+
         if (throttlePercent < 0.0)
         {
             throttlePercent = 0.0;
@@ -276,8 +280,26 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
             throttlePercent = 1.0;
         }
 
-        me->motor[2]->current_mA = (sbyte4)(throttlePercent * 75000); // RL
-        me->motor[3]->current_mA = (sbyte4)(throttlePercent * 75000); // RR
+        if (throttlePercent <= MVP_DUTY_THRESHOLD)
+        {
+            float4 duty = throttlePercent * (MVP_MAX_DUTY / MVP_DUTY_THRESHOLD);
+
+            me->motor[2]->useDutyCycle = TRUE; // RL
+            me->motor[3]->useDutyCycle = TRUE; // RR
+            me->motor[2]->dutyCycle = (sbyte4)(duty * VESC_DUTY_SCALE + 0.5f);
+            me->motor[3]->dutyCycle = (sbyte4)(duty * VESC_DUTY_SCALE + 0.5f);
+            me->motor[2]->current_mA = 0;
+            me->motor[3]->current_mA = 0;
+        }
+        else
+        {
+            me->motor[2]->useDutyCycle = FALSE; // RL
+            me->motor[3]->useDutyCycle = FALSE; // RR
+            me->motor[2]->current_mA = (sbyte4)(throttlePercent * MVP_MAX_CURRENT_mA + 0.5f);
+            me->motor[3]->current_mA = (sbyte4)(throttlePercent * MVP_MAX_CURRENT_mA + 0.5f);
+            me->motor[2]->dutyCycle = 0;
+            me->motor[3]->dutyCycle = 0;
+        }
 
         return;
     }

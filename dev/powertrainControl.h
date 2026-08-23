@@ -49,6 +49,14 @@
 //    6    Rear right    0x189    0x288   0x290
 //----------------------------------------------------------------------------
 
+//----------------------------------------------------------------------------
+// MVP VESC command scaling
+//----------------------------------------------------------------------------
+#define VESC_DUTY_SCALE 100000.0f
+#define MVP_DUTY_THRESHOLD 0.10f
+#define MVP_MAX_DUTY 0.10f
+#define MVP_MAX_CURRENT_mA 75000.0f
+
 typedef enum _DI_Location_Address {
     FRONT_LEFT = 1,
     FRONT_RIGHT = 2,
@@ -98,6 +106,8 @@ typedef struct _DriveInverter {
 
     // custom inverters:
     sbyte4 current_mA; // current in mA to send to the inverter
+    sbyte4 dutyCycle;  // duty in VESC wire units (duty fraction * VESC_DUTY_SCALE)
+    bool useDutyCycle; // TRUE = command duty cycle, FALSE = command current
 
 } _DriveInverter;
 
