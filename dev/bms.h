@@ -61,7 +61,9 @@
 #define BMS_CELL_VOLTAGE_RAW_PER_MV     10      //cells arrive in 100uV incremebts
 #define BMS_PACK_VOLTAGE_MV_PER_RAW     10      //pack voltage arrives in 10mV increments
 
-
+//Fault/warning bits of the BMS_SAFETY_STATUS frame (fault byte 1, warning byte 0)
+//NOTE: the BMS firmware never sets MISMATCH or the PACK_ bits (dead code there) -
+//the VCU must not claim coverage of those conditions
 #define BMS_CELL_OVER_TEMPERATURE_FLAG  0x04
 #define BMS_CELL_MISMATCH_FLAG          0x08
 #define BMS_CELL_UNDER_VOLTAGE_FLAG     0x10
@@ -73,6 +75,7 @@ typedef struct _BatteryManagementSystem BatteryManagementSystem;
 
 BatteryManagementSystem* BMS_new(ubyte2 canMessageBaseID);
 void BMS_parseCanMessage(BatteryManagementSystem* bms, IO_CAN_DATA_FRAME* bmsCanMessage);
+bool BMS_isAlive(BatteryManagementSystem *me);
 
 // BMS COMMANDS //
 

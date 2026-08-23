@@ -58,7 +58,7 @@ static const ubyte4 F_lvsBatteryVeryLow = 0x10000;
 static const ubyte4 F_bmsOverVoltageFault = 0x100000;
 static const ubyte4 F_bmsUnderVoltageFault = 0x200000;
 static const ubyte4 F_bmsOverTemperatureFault = 0x400000;
-//static const ubyte4 F_bmsOtherFault = 0x800000;
+static const ubyte4 F_bmsCommLostFault = 0x800000;
 
 //nibble 7
 static const ubyte4 F_bmsCellMismatchFault = 0x1000000;
@@ -328,10 +328,9 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     //If over voltage fault detected
     if (BMS_getFaultFlags(bms) & BMS_CELL_OVER_VOLTAGE_FLAG)
     {
-        //me->faults |= F_bmsOverVoltageFault;
-        //SerialManager_send(me->serialMan, "BMS over voltage fault detected.\n");
-    }
-    else
+        me->faults |= F_bmsOverVoltageFault;
+    } 
+    else 
     {
         me->faults &= ~(F_bmsOverVoltageFault);
     }
@@ -356,6 +355,15 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     else
     {
         me->faults &= ~(F_bmsOverTemperatureFault);
+    }
+
+    if (BMS_isAlive(bms) == FALSE) 
+    {
+        me->faults |= F_bmsCommLostFault;
+    }
+    else 
+    {
+        me->faults &= ~(F_bmsCommLostFault);
     }
 
     //If mismatch greater than specified mismatch value

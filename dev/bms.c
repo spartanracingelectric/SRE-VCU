@@ -65,6 +65,8 @@ struct _BatteryManagementSystem
     ubyte1 moduleHumidity[BMS_NUM_MODULES];         //6
     ubyte1 moduleDewPoint[BMS_NUM_MODULES];         //7
 
+    ubyte4 timestamp_lastFaultFrame;  //IO_RTC time of last BMS_SAFETY_STATUS received
+
     bool relayState;
 };
 
@@ -77,7 +79,7 @@ BatteryManagementSystem *BMS_new(ubyte2 canMessageBaseID)
     me->canMessageBaseId = canMessageBaseID;
 
     me->warningFlags = 0;
-    me->faultFlags = 0;
+    me->faultFlags = 0xFF; //fail-safe: faulted until the first real safety frame clears it
     me->cellMismatch = 0;
     me->packVoltage = 0;
     me->sumOfCellVoltages = 0;
@@ -93,6 +95,7 @@ BatteryManagementSystem *BMS_new(ubyte2 canMessageBaseID)
 
     me->prechargeComplete = FALSE;
     me->relayState = FALSE;
+    me->timestamp_lastFaultFrame = 0;
 
     for (i = 0; i < BMS_NUM_CELLS; i++) { me->cellVoltage[i] = 0; }
     for (i = 0; i < BMS_NUM_THERMISTORS; i++) { me->cellTemperature[i] = 0; }
@@ -132,6 +135,7 @@ void BMS_parseCanMessage(BatteryManagementSystem *bms, IO_CAN_DATA_FRAME *bmsCan
         bms->cellMismatch       = LE16(data, 2) / BMS_CELL_VOLTAGE_RAW_PER_MV;
         bms->packVoltage        = (ubyte4)LE16(data, 4) * BMS_PACK_VOLTAGE_MV_PER_RAW;
         bms->sumOfCellVoltages  = (ubyte4)LE16(data, 6) * BMS_PACK_VOLTAGE_MV_PER_RAW;
+        IO_RTC_StartTime(&bms->timestamp_lastFaultFrame); //feeds BMS_isAlive
     }
     else if (offset == BMS_STATE_OF_CHARGE)
     {
@@ -197,6 +201,19 @@ void BMS_parseCanMessage(BatteryManagementSystem *bms, IO_CAN_DATA_FRAME *bmsCan
     }
 }
 
+//1s covers the BMS's worst honest burst cadence (~120ms) plus its 500ms
+//silent-drop window (can_skip_flag) without nuisance trips
+#define BMS_RX_TIMEOUT_US 1000000
+
+bool BMS_isAlive(BatteryManagementSystem *me)
+{
+    if (me->timestamp_lastFaultFrame == 0)
+    {
+        return FALSE; //never received a 0x600 since boot
+    }
+    return (IO_RTC_GetTimeUS(me->timestamp_lastFaultFrame) < BMS_RX_TIMEOUT_US);
+}
+
 IO_ErrorType BMS_relayControl(BatteryManagementSystem *me)
 {
     //////////////////////////////////////////////////////////////
@@ -204,8 +221,8 @@ IO_ErrorType BMS_relayControl(BatteryManagementSystem *me)
     // based on AMS fault detection                             //
     //////////////////////////////////////////////////////////////
     IO_ErrorType err;
-    //There is a fault so open up the relay
-    if (BMS_getFaultFlags(me))
+    //There is a fault, or the BMS has gone silent (treat silence as fault)
+    if (BMS_getFaultFlags(me) || BMS_isAlive(me) == FALSE)
     {
         me->relayState = TRUE;
         err = IO_DO_Set(IO_DO_01, TRUE); //VCU pin 132, shutdown signal true (HIGH)
