@@ -4,8 +4,10 @@
  ******************************************************************************
  * The warm-up cycle for the duty-cycle rig: when the Eco button activates
  * the MVP ramp, the song plays through the rear motors first, and the ramp
- * only engages once it finishes. Tones are made by toggling a small
- * zero-mean command value at the note's frequency.
+ * only engages once it finishes. Speed-based tones: pitch comes from
+ * gear-mesh/motor whine tracking motor speed (13:1 gearbox), so each note
+ * is a held duty level, with slew-limited glides and a gentle spin-up
+ * ramp to the first note.
  ****************************************************************************/
 
 #ifndef _MOTORSONG_H
