@@ -45,6 +45,7 @@
 #include "sensorCalculations.h"
 #include "cooling.h"
 #include "daqSensors.h"
+#include "motorSong.h"
 
 //Application Database, needed for TTC-Downloader
 APDB appl_db =
@@ -377,6 +378,9 @@ void main(void)
         //MCM_inverterControl(mcm0, tps, bps, rtds);
         Powertrain_controlVehicle(powertrain, &Sensor_HVILTerminationSense, tps, bps, rtds, d1);
 
+        //Abort/skip checks for the warm-up song (throttle skips, faults abort)
+        MotorSong_safetyUpdate(canMan, powertrain, tps, &Sensor_HVILTerminationSense);
+
         IO_ErrorType err = 0;
         //Comment out to disable shutdown board control
         err = BMS_relayControl(bms);
@@ -400,9 +404,10 @@ void main(void)
         //Task end function for IO Driver - This function needs to be called at the end of every SW cycle
         IO_Driver_TaskEnd();
         //wait until the cycle time is over
-        while (IO_RTC_GetTimeUS(timestamp_mainLoopStart) < 10000) // 1000 = 1ms 
+        while (IO_RTC_GetTimeUS(timestamp_mainLoopStart) < 10000) // 1000 = 1ms
         {
             IO_UART_Task(); //The task function shall be called every SW cycle.
+            MotorSong_fastTask(canMan, powertrain); //Audio-rate torque toggling for the warm-up song
         }
 
     } //end of main loop

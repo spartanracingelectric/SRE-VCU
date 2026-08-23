@@ -23,6 +23,7 @@
 #include "sensorCalculations.h"
 #include "readyToDriveSound.h"
 #include "daqSensors.h"
+#include "motorSong.h"
 
 extern Sensor Sensor_RTDButton;
 extern Sensor Sensor_HVILTerminationSense;
@@ -77,7 +78,8 @@ enum InverterStatus {
     DRIVER_ENABLE = 3,
     READY_TO_DRIVE_INVERTER_ON = 4,
     TORQUE_LIMIT_SET = 5,
-    TORQUE_REQUEST_ACTIVE = 6
+    WARMUP_SONG = 6,
+    TORQUE_REQUEST_ACTIVE = 7
 };
 
 
@@ -92,8 +94,9 @@ void DI_calculateInverterControl(_Powertrain *powertrain, Sensor *HVILTermSense,
             powertrain->motor[i]->AMK_ErrorReset_send = TRUE;
             powertrain->motor[i]->AMK_TorqueRequest_send = 0;
             powertrain->motor[i]->AMK_TorqueLimitPositive_send = 0;
-            powertrain->motor[i]->AMK_TorqueLimitNegative_send = 0; 
+            powertrain->motor[i]->AMK_TorqueLimitNegative_send = 0;
             powertrain->rtdsPlayed = FALSE;
+            MotorSong_reset();
         }
         switch (powertrain->motor[i]->startUpStage){ 
             case RELAY_OFF:
@@ -148,13 +151,23 @@ void DI_calculateInverterControl(_Powertrain *powertrain, Sensor *HVILTermSense,
                 powertrain->motor[i]->AMK_TorqueLimitPositive_send = 210; // should be max tq 25Nm -> Will need to find a way to make this global for the future (make sure correct on CAN)
                 powertrain->motor[i]->AMK_TorqueLimitNegative_send = 0; // some constant for regen
                 if(powertrain->motor[i]->AMK_Error_recieve == FALSE){
-                    powertrain->motor[i]->startUpStage = TORQUE_REQUEST_ACTIVE;
+                    powertrain->motor[i]->startUpStage = WARMUP_SONG;
+                }
+            break;
+            case WARMUP_SONG:
+                //Held here until the warm-up song finishes; the powertrain-level
+                //logic below starts the song and advances all motors together
+                if(powertrain->motor[i]->AMK_Error_recieve == TRUE || HVILTermSense->sensorValue == FALSE){
+                    powertrain->rtdsPlayed = FALSE;
+                    MotorSong_reset();
+                    powertrain->motor[i]->startUpStage = RELAY_ON_SENDING_CAN;
                 }
             break;
             case TORQUE_REQUEST_ACTIVE:
                 if(powertrain->motor[i]->AMK_Error_recieve == TRUE || HVILTermSense->sensorValue == FALSE){
                     powertrain->rtdsPlayed = FALSE;
-                    powertrain->motor[i]->startUpStage = RELAY_ON_SENDING_CAN; 
+                    MotorSong_reset();
+                    powertrain->motor[i]->startUpStage = RELAY_ON_SENDING_CAN;
                 }
             break;
 
@@ -164,24 +177,41 @@ void DI_calculateInverterControl(_Powertrain *powertrain, Sensor *HVILTermSense,
             break;
         }
     }
-    bool allInvertersOn = TRUE;
+    //The warm-up song is the final stage of the cycle: it starts once every
+    //motor has reached WARMUP_SONG (or is already active, after a single-motor
+    //fault recovery), and RTD only completes - buzzer + torque - when it ends.
+    bool allReadyForSong = TRUE;
 
     for(ubyte1 i = 0; i < 4; ++i)
     {
-        if(powertrain->motor[i]->AMK_InverterOn_recieve == FALSE ||
-        powertrain->motor[i]->AMK_QuitInverterOn_recieve == FALSE)
+        if(powertrain->motor[i]->startUpStage < WARMUP_SONG)
         {
-            allInvertersOn = FALSE;
+            allReadyForSong = FALSE;
             break;
         }
     }
 
-    if(allInvertersOn == TRUE && powertrain->rtdsPlayed == FALSE)
+    if(allReadyForSong == TRUE)
     {
-        RTDS_setVolume(rtds, 1, 1500000);
-        powertrain->rtdsPlayed = TRUE;
+        if(MotorSong_isPlaying() == FALSE && MotorSong_hasFinished() == FALSE)
+        {
+            MotorSong_start(powertrain);
+        }
+
+        if(MotorSong_hasFinished() == TRUE)
+        {
+            for(ubyte1 i = 0; i < 4; ++i)
+            {
+                powertrain->motor[i]->startUpStage = TORQUE_REQUEST_ACTIVE;
+            }
+            if(powertrain->rtdsPlayed == FALSE)
+            {
+                RTDS_setVolume(rtds, 1, 1500000);
+                powertrain->rtdsPlayed = TRUE;
+            }
+        }
     }
-}  
+}
 
 void DI_parseCanMessage(_DriveInverter* me, IO_CAN_DATA_FRAME* diCanMessage){
 
@@ -273,6 +303,11 @@ void Powertrain_controlVehicle(_Powertrain* me, Sensor *HVILTermSense, TorqueEnc
 }
 
 void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, BrakePressureSensor *bps){
+    //While the warm-up song is playing it owns the torque requests - the
+    //fast task in motorSong.c writes them between main loop cycles
+    if(MotorSong_isPlaying() == TRUE){
+        return;
+    }
     //all four inverters have to be RTD before any torque is allowed
     for(ubyte1 i = 0; i < 4; ++i)
     {
