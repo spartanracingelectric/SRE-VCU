@@ -696,24 +696,26 @@ void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain)
     ubyte2 canMessageCount = 0;
     // Rear Left: VESC ID 1
     canMessageCount++;
-    sbyte4 rlCurrent = powertrain->motor[2]->current_mA;
+    // sbyte4 rlCurrent = powertrain->motor[2]->current_mA;
+    sbyte4 rlDuty = powertrain->motor[2]->dutyCycle_send;
     canMessages[canMessageCount - 1].id_format = IO_CAN_EXT_FRAME;
-    canMessages[canMessageCount - 1].id = 0x101;
-    canMessages[canMessageCount - 1].data[0] = (ubyte1)(rlCurrent >> 24);
-    canMessages[canMessageCount - 1].data[1] = (ubyte1)(rlCurrent >> 16);
-    canMessages[canMessageCount - 1].data[2] = (ubyte1)(rlCurrent >> 8);
-    canMessages[canMessageCount - 1].data[3] = (ubyte1)rlCurrent;
+    canMessages[canMessageCount - 1].id = 0x001;
+    canMessages[canMessageCount - 1].data[0] = (ubyte1)(rlDuty >> 24);
+    canMessages[canMessageCount - 1].data[1] = (ubyte1)(rlDuty >> 16);
+    canMessages[canMessageCount - 1].data[2] = (ubyte1)(rlDuty >> 8);
+    canMessages[canMessageCount - 1].data[3] = (ubyte1)rlDuty;
     canMessages[canMessageCount - 1].length = 4;
 
     // Rear Right: VESC ID 0
     canMessageCount++;
-    sbyte4 rrCurrent = powertrain->motor[3]->current_mA;
+    // sbyte4 rrCurrent = powertrain->motor[3]->current_mA;
+    sbyte4 rrDuty = powertrain->motor[2]->dutyCycle_send;
     canMessages[canMessageCount - 1].id_format = IO_CAN_EXT_FRAME;
-    canMessages[canMessageCount - 1].id = 0x100;
-    canMessages[canMessageCount - 1].data[0] = (ubyte1)(rrCurrent >> 24);
-    canMessages[canMessageCount - 1].data[1] = (ubyte1)(rrCurrent >> 16);
-    canMessages[canMessageCount - 1].data[2] = (ubyte1)(rrCurrent >> 8);
-    canMessages[canMessageCount - 1].data[3] = (ubyte1)rrCurrent;
+    canMessages[canMessageCount - 1].id = 0x000;
+    canMessages[canMessageCount - 1].data[0] = (ubyte1)(rrDuty >> 24);
+    canMessages[canMessageCount - 1].data[1] = (ubyte1)(rrDuty >> 16);
+    canMessages[canMessageCount - 1].data[2] = (ubyte1)(rrDuty >> 8);
+    canMessages[canMessageCount - 1].data[3] = (ubyte1)rrDuty;
     canMessages[canMessageCount - 1].length = 4;
 
     //Place the can messsages into the FIFO queue ---------------------------------------------------
@@ -734,7 +736,7 @@ void canOutput_sendBMSCommands(CanManager *me, BatteryManagementSystem *bms)
     canMessages[0].data[0] = (BMS_getPrechargeRequest(bms) == TRUE) ? 0x01 : 0x00;
     canMessages[0].length = 1;
 
-    me->ioErr_write[0] = IO_CAN_WriteFIFO(me->writeHandle[0], canMessages, 1);
+    me->ioErr_write[0] = IO_CAN_WriteFIFO(me->writeHandle[1], canMessages, 1);
 }
 
 /*

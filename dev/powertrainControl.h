@@ -106,7 +106,7 @@ typedef struct _DriveInverter {
 
     // custom inverters:
     sbyte4 current_mA; // current in mA to send to the inverter
-    sbyte4 dutyCycle;  // duty in VESC wire units (duty fraction * VESC_DUTY_SCALE)
+    sbyte4 dutyCycle_send;  // duty in VESC wire units (duty fraction * VESC_DUTY_SCALE)
     bool useDutyCycle; // TRUE = command duty cycle, FALSE = command current
 
 } _DriveInverter;
@@ -137,6 +137,7 @@ typedef struct _Powertrain {
 
     bool rtdsPlayed;
     MvpArmState armState;
+    
 
     /*
     Due to potential gear ratio (GR) modifications, 
