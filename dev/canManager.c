@@ -223,6 +223,18 @@ IO_ErrorType CanManager_send(CanManager* me, CanChannel channel, IO_CAN_DATA_FRA
     return sendResult;
 }
 
+/*****************************************************************************
+* Immediate send - bypasses the message history filter above (change
+* detection + min-time throttle). Used by the motor song, which needs to
+* stream command frames at audio rate.
+****************************************************************************/
+IO_ErrorType CanManager_sendImmediate(CanManager *me, CanChannel channel, IO_CAN_DATA_FRAME canMessages[], ubyte1 canMessageCount)
+{
+    IO_ErrorType sendResult = IO_CAN_WriteFIFO((channel == CAN0_HIPRI) ? me->writeHandle[0] : me->writeHandle[1], canMessages, canMessageCount);
+    *((channel == CAN0_HIPRI) ? &me->ioErr_write[0] : &me->ioErr_write[1]) = sendResult;
+    return sendResult;
+}
+
 
 /*****************************************************************************
 * read
@@ -739,11 +751,38 @@ void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain)
     ubyte2 canMessageCount = 0;
 
 
+    //2-MOTOR TEST: front inverters (VESC IDs 2/3, ASSUMED from the rear
+    //numbering pattern) are not on the bench - uncomment when they exist.
+    //motorSong.c remaps its front voices onto the rears to match.
+    /*
+    // Front Left: VESC ID 3
+    canMessageCount++;
+    sbyte4 flDuty = powertrain->motor[0]->dutyCycle_send;
+    canMessages[canMessageCount - 1].id_format = IO_CAN_EXT_FRAME;
+    canMessages[canMessageCount - 1].id = 0x03;
+    canMessages[canMessageCount - 1].data[0] = (ubyte1)(flDuty >> 24);
+    canMessages[canMessageCount - 1].data[1] = (ubyte1)(flDuty >> 16);
+    canMessages[canMessageCount - 1].data[2] = (ubyte1)(flDuty >> 8);
+    canMessages[canMessageCount - 1].data[3] = (ubyte1)flDuty;
+    canMessages[canMessageCount - 1].length = 4;
+
+    // Front Right: VESC ID 2
+    canMessageCount++;
+    sbyte4 frDuty = powertrain->motor[1]->dutyCycle_send;
+    canMessages[canMessageCount - 1].id_format = IO_CAN_EXT_FRAME;
+    canMessages[canMessageCount - 1].id = 0x02;
+    canMessages[canMessageCount - 1].data[0] = (ubyte1)(frDuty >> 24);
+    canMessages[canMessageCount - 1].data[1] = (ubyte1)(frDuty >> 16);
+    canMessages[canMessageCount - 1].data[2] = (ubyte1)(frDuty >> 8);
+    canMessages[canMessageCount - 1].data[3] = (ubyte1)frDuty;
+    canMessages[canMessageCount - 1].length = 4;
+    */
+
     // Rear Left: VESC ID 1
     canMessageCount++;
     sbyte4 rlDuty = powertrain->motor[2]->dutyCycle_send;
     canMessages[canMessageCount - 1].id_format = IO_CAN_EXT_FRAME;
-    canMessages[canMessageCount - 1].id = 0x101;
+    canMessages[canMessageCount - 1].id = 0x01;
     canMessages[canMessageCount - 1].data[0] = (ubyte1)(rlDuty >> 24);
     canMessages[canMessageCount - 1].data[1] = (ubyte1)(rlDuty >> 16);
     canMessages[canMessageCount - 1].data[2] = (ubyte1)(rlDuty >> 8);
@@ -755,7 +794,7 @@ void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain)
 
     sbyte4 rrDuty = powertrain->motor[3]->dutyCycle_send;
     canMessages[canMessageCount - 1].id_format = IO_CAN_EXT_FRAME;
-    canMessages[canMessageCount - 1].id = 0x100;
+    canMessages[canMessageCount - 1].id = 0x00;
     canMessages[canMessageCount - 1].data[0] = (ubyte1)(rrDuty >> 24);
     canMessages[canMessageCount - 1].data[1] = (ubyte1)(rrDuty >> 16);
     canMessages[canMessageCount - 1].data[2] = (ubyte1)(rrDuty >> 8);

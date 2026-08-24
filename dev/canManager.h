@@ -36,6 +36,7 @@ typedef struct _CanMessageNode CanMessageNode;
 //Note: Sum of messageLimits must be < 128 (hardware only does 128 total messages)
 CanManager *CanManager_new(ubyte2 busSpeed[CAN_CHANNELS], ubyte1 read_messageLimit[CAN_CHANNELS], ubyte1 write_messageLimit[CAN_CHANNELS], ubyte4 defaultSendDelayus);
 IO_ErrorType CanManager_send(CanManager *me, CanChannel channel, IO_CAN_DATA_FRAME canMessages[], ubyte1 canMessageCount);
+IO_ErrorType CanManager_sendImmediate(CanManager *me, CanChannel channel, IO_CAN_DATA_FRAME canMessages[], ubyte1 canMessageCount);
 
 //Reads and distributes can messages to their appropriate subsystem objects so they can updates themselves
 void CanManager_read(CanManager *me, CanChannel channel, InstrumentCluster *ic, BatteryManagementSystem *bms, SafetyChecker *sc, _DAQSensors *d1, _Powertrain *powertrain);

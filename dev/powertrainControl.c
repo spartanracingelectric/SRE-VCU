@@ -23,6 +23,7 @@
 #include "sensorCalculations.h"
 #include "readyToDriveSound.h"
 #include "daqSensors.h"
+#include "motorSong.h"
 
 extern Sensor Sensor_RTDButton;
 extern Sensor Sensor_HVILTerminationSense;
@@ -216,7 +217,7 @@ void Powertrain_controlVehicle(_Powertrain* me, Sensor *HVILTermSense, TorqueEnc
 }
 
 #define DUTY_CYCLE_STEP  1000
-#define DUTY_CYCLE_MAX   100000
+#define DUTY_CYCLE_MAX   40000 // 60% cap - the external power supply can't source more
 #define CYCLES_PER_STEP  200
 
 void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, BrakePressureSensor *bps){
@@ -236,13 +237,45 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
         cycleCounter = 0;
         dutyCycle = 0;
         dutyCycleStep = DUTY_CYCLE_STEP;
+
+        if (toggle == FALSE)
+        {
+            //Ramp deactivated: stop streaming the last ramp value. If the
+            //song was mid-play, this counts as a skip - the crew's escape
+            //hatch, since throttle-skip needs a calibrated TPS the rig may
+            //not have - so the NEXT activation goes straight to the ramp.
+            //A toggle-off after a completed ramp session re-arms the song.
+            if (MotorSong_isPlaying() == TRUE)
+            {
+                MotorSong_cancel();
+            }
+            else
+            {
+                MotorSong_reset();
+            }
+            for (ubyte1 i = 0; i < 4; ++i)
+            {
+                me->motor[i]->dutyCycle_send = 0;
+            }
+        }
     }
 
     previousEcoButton = ecoButton;
-    
+
 
     if (me->powertrainMode == MVP && toggle)
     {
+        //The warm-up song is the warm-up cycle: the duty ramp waits until
+        //the song finishes (pressing the throttle past 10% skips it)
+        if (MotorSong_hasFinished() == FALSE)
+        {
+            if (MotorSong_isPlaying() == FALSE)
+            {
+                MotorSong_start();
+            }
+            return; //the fast task in motorSong.c voices the song
+        }
+
         cycleCounter++;
         if (cycleCounter >= CYCLES_PER_STEP)
         {
@@ -261,8 +294,10 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
             }
         }
 
-        me->motor[2]->dutyCycle_send = dutyCycle;  // Rear left
-        me->motor[3]->dutyCycle_send = dutyCycle;  // Rear right
+        for (ubyte1 i = 0; i < 4; ++i)
+        {
+            me->motor[i]->dutyCycle_send = dutyCycle;  // all four motors
+        }
         return;
     }
 
