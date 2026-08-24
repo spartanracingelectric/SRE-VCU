@@ -734,7 +734,7 @@ void canOutput_sendBMSCommands(CanManager *me, BatteryManagementSystem *bms)
     canMessages[0].data[0] = (BMS_getPrechargeRequest(bms) == TRUE) ? 0x01 : 0x00;
     canMessages[0].length = 1;
 
-    me->ioErr_write[0] = IO_CAN_WriteFIFO(me->writeHandle[0], canMessages, 1);
+    me->ioErr_write[0] = IO_CAN_WriteFIFO(me->writeHandle[1], canMessages, 1);
 }
 
 /*

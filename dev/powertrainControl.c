@@ -267,8 +267,8 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
             throttlePercent = 1.0;
         }
 
-        me->motor[2]->current_mA = (sbyte4)(throttlePercent * 75000); // RL
-        me->motor[3]->current_mA = (sbyte4)(throttlePercent * 75000); // RR
+        me->motor[2]->current_mA = (sbyte4)(throttlePercent * 10000); // RL
+        me->motor[3]->current_mA = (sbyte4)(throttlePercent * 10000); // RR
 
     for(ubyte1 i = 0; i < 4; ++i)
     {
