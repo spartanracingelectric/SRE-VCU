@@ -258,7 +258,6 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
     if (me->powertrainMode == MVP)
     {
         float4 throttlePercent = tps->travelPercent;
-
         if (throttlePercent < 0.0)
         {
             throttlePercent = 0.0;
@@ -268,29 +267,8 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
             throttlePercent = 1.0;
         }
 
-        if (throttlePercent <= MVP_DUTY_THRESHOLD)
-        {
-            float4 duty = throttlePercent * (MVP_MAX_DUTY / MVP_DUTY_THRESHOLD);
-
-            me->motor[2]->useDutyCycle = TRUE; // RL
-            me->motor[3]->useDutyCycle = TRUE; // RR
-            me->motor[2]->dutyCycle = (sbyte4)(duty * VESC_DUTY_SCALE + 0.5f);
-            me->motor[3]->dutyCycle = (sbyte4)(duty * VESC_DUTY_SCALE + 0.5f);
-            me->motor[2]->current_mA = 0;
-            me->motor[3]->current_mA = 0;
-        }
-        else
-        {
-            me->motor[2]->useDutyCycle = FALSE; // RL
-            me->motor[3]->useDutyCycle = FALSE; // RR
-            me->motor[2]->current_mA = (sbyte4)(throttlePercent * MVP_MAX_CURRENT_mA + 0.5f);
-            me->motor[3]->current_mA = (sbyte4)(throttlePercent * MVP_MAX_CURRENT_mA + 0.5f);
-            me->motor[2]->dutyCycle = 0;
-            me->motor[3]->dutyCycle = 0;
-        }
-
-        return;
-    }
+        me->motor[2]->current_mA = (sbyte4)(throttlePercent * 75000); // RL
+        me->motor[3]->current_mA = (sbyte4)(throttlePercent * 75000); // RR
 
     for(ubyte1 i = 0; i < 4; ++i)
     {
