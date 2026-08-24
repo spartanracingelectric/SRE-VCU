@@ -166,7 +166,7 @@ void BMS_parseCanMessage(BatteryManagementSystem *bms, IO_CAN_DATA_FRAME *bmsCan
     }
     else if (offset == BMS_PRECHARGE_STATUS)
     {
-        bms->prechargeComplete = (data[0] == 0x01);
+        bms->prechargeComplete = (data[0] == 0x02);
     }
     else if (offset >= BMS_CELL_VOLTAGE_FIRST && offset <= BMS_CELL_VOLTAGE_LAST)
     {
