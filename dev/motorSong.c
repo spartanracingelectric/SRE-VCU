@@ -4,10 +4,9 @@
  ******************************************************************************
  * Speed-based tone engine: on this drivetrain the audible pitch comes from
  * gear-mesh/motor whine, which tracks motor speed, which tracks duty
- * (13:1 gearbox per motor - the motor screams while the wheel turns 13x
+ * (~13:1 gearbox per motor, the motor screams while the wheel turns 13x
  * slower). So each note is a held duty level, pitch proportional to duty,
- * and both rear motors sing in unison. Bench finding: tones are most
- * audible between 15% and 40% duty.
+ * and both rear motors sing in unison.
  *
  * Transitions are slew-rate limited, and the song begins with a slow
  * spin-up ramp to the first note - jumping duty from a standstill (no
@@ -76,60 +75,121 @@ typedef struct {
     ubyte2 duration_ms;
 } SongNote;
 
-//Also sprach Zarathustra - the full Sunrise intro (the 2001 fanfare),
-//down one octave. Three statements of the rising C-G-C fanfare; the
-//answering hits: statement 1 falls major-to-minor (E-Eb), statement 2
-//inverts it (Eb-E), statement 3 rises through E-F into the held G climax.
-//Timpani C-G alternation between statements. In speed mode every note is
-//a duty level and transitions glide, so this plays as a siren-rendition -
-//rests hold the previous pitch and just shape the timing.
-//Total ~16s - the driver can throttle-skip it. Edit freely - this table
-//is the whole song.
+#define ARTICULATION            80
+
+#define SIXTEENTHNOTE           (250 - ARTICULATION)
+#define TRIPLET                 (333 - ARTICULATION)
+#define EIGHTHNOTE              (500 - ARTICULATION)
+#define DOTTEDEIGHTHNOTE        (750 - ARTICULATION)
+#define QUARTERNOTE             (1000 - ARTICULATION)
+#define HALFNOTE                (2000 - ARTICULATION)
+#define DOTTEDHALFNOTE          (3000 - ARTICULATION)
+#define TRIPLEDOTTEDHALFNOTE    (3750 - ARTICULATION)
+#define WHOLENOTE               (4000 - ARTICULATION)
+
+#define G2  98
+#define C3  131
+#define E3  165
+#define F3  175
+#define G3  196
+#define A3  220
+#define B3  247
+#define C4  262
+#define D4  294
+#define Eb4 311
+#define E4  330
+#define F4  349
+#define G4  392
+#define A4  440
+#define B4  494
+#define C5  523
+
+//Also sprach Zarathustra: the full Sunrise intro (2001 A Space Odyssey), down one octave.
 static const SongNote song[] = {
     //Statement 1: C G C, answered major falling to minor
-    { 131, 700 },                    //C3
-    {   0, 120 },
-    { 196, 700 },                    //G3
-    {   0, 120 },
-    { 262, 900 },                    //C4
-    {   0,  80 },
-    { 330, 300 },                    //E4
-    { 311, 500 },                    //Eb4
-    {   0, 200 },
+    {  C3, HALFNOTE             },                    
+    {   0, ARTICULATION         },
+    {  G3, HALFNOTE             },                   
+    {   0, ARTICULATION         },
+
+    {  C4, TRIPLEDOTTEDHALFNOTE },                    
+    {   0, ARTICULATION         },
+    {  E4, SIXTEENTHNOTE        },                    
+    {   0, ARTICULATION         },
+    { Eb4, WHOLENOTE            },                    
+    {   0, ARTICULATION         },
     //Timpani: C G C G
-    { 131, 180 }, {  98, 180 },
-    { 131, 180 }, {  98, 180 },
-    {   0, 250 },
+    { C3, TRIPLET }, {0, ARTICULATION}, { G2, TRIPLET }, {0, ARTICULATION}, { C3, TRIPLET }, {0, ARTICULATION}, 
+    { G2, TRIPLET }, {0, ARTICULATION}, { C3, TRIPLET }, {0, ARTICULATION}, { G2, TRIPLET }, {0, ARTICULATION},
+    { C3, TRIPLET }, {0, ARTICULATION}, { G2, TRIPLET }, {0, ARTICULATION}, { C3, TRIPLET }, {0, ARTICULATION}, 
+    { G2, TRIPLET }, {0, ARTICULATION}, { C3, TRIPLET }, {0, ARTICULATION}, { G2, TRIPLET }, {0, ARTICULATION},
+
     //Statement 2: C G C, answered minor rising to major
-    { 131, 700 },
-    {   0, 120 },
-    { 196, 700 },
-    {   0, 120 },
-    { 262, 900 },
-    {   0,  80 },
-    { 311, 300 },                    //Eb4
-    { 330, 500 },                    //E4
-    {   0, 200 },
+    {  C3, HALFNOTE             },                    
+    {   0, ARTICULATION         },
+    {  G3, HALFNOTE             },                   
+    {   0, ARTICULATION         },
+    {  C4, TRIPLEDOTTEDHALFNOTE },                    
+    {   0, ARTICULATION         },
+    { Eb4, SIXTEENTHNOTE        },                    
+    {   0, ARTICULATION         },
+    {  E4, WHOLENOTE            },                    
+    {   0, ARTICULATION         },
     //Timpani: C G C G
-    { 131, 180 }, {  98, 180 },
-    { 131, 180 }, {  98, 180 },
-    {   0, 250 },
-    //Statement 3: C G C into the full cadence - E F G held, the sunrise
-    { 131, 800 },
-    {   0, 120 },
-    { 196, 800 },
-    {   0, 120 },
-    { 262, 1000 },
-    {   0,  80 },
-    { 330, 350 },                    //E4
-    { 349, 350 },                    //F4
-    { 392, 1400 },                   //G4 - held
-    {   0, 200 },
-    //Timpani finale: C G C G C G C G
-    { 131, 180 }, {  98, 180 },
-    { 131, 180 }, {  98, 180 },
-    { 131, 180 }, {  98, 180 },
-    { 131, 180 }, {  98, 180 },
+    { C3, TRIPLET }, {0, ARTICULATION}, { G2, TRIPLET }, {0, ARTICULATION}, { C3, TRIPLET }, {0, ARTICULATION}, 
+    { G2, TRIPLET }, {0, ARTICULATION}, { C3, TRIPLET }, {0, ARTICULATION}, { G2, TRIPLET }, {0, ARTICULATION},
+    { C3, TRIPLET }, {0, ARTICULATION}, { G2, TRIPLET }, {0, ARTICULATION}, { C3, TRIPLET }, {0, ARTICULATION}, 
+    { G2, TRIPLET }, {0, ARTICULATION}, { C3, TRIPLET }, {0, ARTICULATION}, { G2, TRIPLET }, {0, ARTICULATION},
+
+    //Statement 3: C G C into the full cadence - E F G
+    {  C3, HALFNOTE             },                    
+    {   0, ARTICULATION         },
+    {  G3, HALFNOTE             },                   
+    {   0, ARTICULATION         },
+
+    {  C4, TRIPLEDOTTEDHALFNOTE },                    
+    {   0, ARTICULATION         },
+    {  E4, SIXTEENTHNOTE        },
+    {   0, ARTICULATION         },
+
+    {  A4, WHOLENOTE            },
+    {   0, ARTICULATION         },
+
+    {  A4, SIXTEENTHNOTE        },
+    {   0, ARTICULATION         },
+    {  B4, SIXTEENTHNOTE        },
+    {   0, ARTICULATION         },
+    {  C5, EIGHTHNOTE + HALFNOTE + ARTICULATION},
+    {   0, ARTICULATION         },
+    {  D4, QUARTERNOTE          },
+    {   0, ARTICULATION         },
+
+    {  E4, EIGHTHNOTE           },
+    {   0, ARTICULATION         },
+    {  F4, EIGHTHNOTE           },
+    {   0, ARTICULATION         },
+    {  G4, EIGHTHNOTE           },
+    {   0, ARTICULATION         },
+    {  E4, EIGHTHNOTE           },
+    {   0, ARTICULATION         },
+    {  C4, EIGHTHNOTE           },
+    {   0, ARTICULATION         },
+    {  G3, EIGHTHNOTE           },
+    {   0, ARTICULATION         },
+    {  E3, EIGHTHNOTE           },
+    {   0, ARTICULATION         },
+    {  E3, SIXTEENTHNOTE        },
+    {   0, ARTICULATION         },
+    {  F3, SIXTEENTHNOTE        },
+    {   0, ARTICULATION         },
+    {  G3, HALFNOTE             },
+    {   0, ARTICULATION         },
+    {  A3, HALFNOTE             },
+    {   0, ARTICULATION         },
+    {  B3, HALFNOTE             },
+    {   0, ARTICULATION         },
+    {  C4, WHOLENOTE            },
+    {   0, ARTICULATION         },
 };
 #define MOTORSONG_LENGTH (sizeof(song) / sizeof(song[0]))
 

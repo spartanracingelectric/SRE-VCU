@@ -217,14 +217,19 @@ void Powertrain_controlVehicle(_Powertrain* me, Sensor *HVILTermSense, TorqueEnc
 }
 
 #define DUTY_CYCLE_STEP  1000
-#define DUTY_CYCLE_MAX   60000 // 60% cap - the external power supply can't source more
-#define CYCLES_PER_STEP  200
+#define DUTY_CYCLE_MAX   40000 // 40% cap - the external power supply can't source more
+#define CYCLES_PER_STEP  50
+#define DUTY_RAMP_IN_TARGET       7000
+#define DUTY_RAMP_IN_PER_MS       15
 
 void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, BrakePressureSensor *bps){
     //all four inverters have to be RTD before any torque is allowed
     static ubyte4 cycleCounter = 0;
     static sbyte4 dutyCycle = 0;
     static sbyte4 dutyCycleStep = DUTY_CYCLE_STEP;
+    static bool dutyRampInStarted = FALSE;
+    static bool dutyRampInComplete = FALSE;
+    static ubyte4 timestamp_dutyRampIn = 0;
 
     static bool toggle = FALSE;
     static bool previousEcoButton = TRUE;
@@ -237,6 +242,8 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
         cycleCounter = 0;
         dutyCycle = 0;
         dutyCycleStep = DUTY_CYCLE_STEP;
+        dutyRampInStarted = FALSE;
+        dutyRampInComplete = FALSE;
 
         if (toggle == FALSE)
         {
@@ -276,7 +283,43 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
             return; //the fast task in motorSong.c voices the song
         }
 
+        //Match the song's gentle spin-up slew: once its ramp-out reaches
+        //zero, climb smoothly to 7% before starting the normal duty cycle.
+        if (dutyRampInComplete == FALSE)
+        {
+            if (dutyRampInStarted == FALSE)
+            {
+                dutyRampInStarted = TRUE;
+                IO_RTC_StartTime(&timestamp_dutyRampIn);
+            }
+            else
+            {
+                ubyte4 elapsed_us = IO_RTC_GetTimeUS(timestamp_dutyRampIn);
+                sbyte4 step = DUTY_RAMP_IN_PER_MS * (sbyte4)(elapsed_us / 1000);
+                if (step < DUTY_RAMP_IN_PER_MS)
+                {
+                    step = DUTY_RAMP_IN_PER_MS;
+                }
+
+                IO_RTC_StartTime(&timestamp_dutyRampIn);
+                dutyCycle += step;
+                if (dutyCycle >= DUTY_RAMP_IN_TARGET)
+                {
+                    dutyCycle = DUTY_RAMP_IN_TARGET;
+                    dutyRampInComplete = TRUE;
+                    cycleCounter = 0;
+                }
+            }
+
+            for (ubyte1 i = 0; i < 4; ++i)
+            {
+                me->motor[i]->dutyCycle_send = dutyCycle;
+            }
+            return;
+        }
+
         cycleCounter++;
+
         if (cycleCounter >= CYCLES_PER_STEP)
         {
             cycleCounter = 0;
