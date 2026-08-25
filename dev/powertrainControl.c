@@ -28,6 +28,8 @@
 extern Sensor Sensor_RTDButton;
 extern Sensor Sensor_HVILTerminationSense;
 
+bool requestCurrent = FALSE;
+
 _DriveInverter* AmkDriver_new(DI_Location_Address location_address)
 {
     _DriveInverter* me = (_DriveInverter*)malloc(sizeof(_DriveInverter));
@@ -201,13 +203,48 @@ _Powertrain* Powertrain_new(){
         me->tireDiameter_in = 16;
         me->motorTorque_Nm = 0;
         me->rtdsPlayed = FALSE;
+        me->armState = MVP_DISARMED;
 
     return me;
 }
+bool Powertrain_updateArmState(_Powertrain* me, Sensor *HVILTermSense, TorqueEncoder *tps, ReadyToDriveSound *rtds, BatteryManagementSystem *bms)
+{
+    bool packReady = (BMS_isAlive(bms) == TRUE)
+                  && (BMS_getFaultFlags(bms) == 0)
+                  && (BMS_getPrechargeComplete(bms) == TRUE);
+    bool hvPresent = (HVILTermSense->sensorValue == TRUE);
 
-void Powertrain_controlVehicle(_Powertrain* me, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds, _DAQSensors *d1){
-    // DI_calculateInverterControl(me, &Sensor_HVILTerminationSense, tps, bps, rtds, d1);
+    //Anything unsafe drops us all the way back to disarmed
+    if (packReady == FALSE || hvPresent == FALSE || tps->calibrated == FALSE)
+    {
+        me->armState = MVP_DISARMED;
+        me->rtdsPlayed = FALSE;
+        return FALSE;
+    }
 
+    if (me->armState == MVP_DISARMED)
+    {
+        me->armState = MVP_READY_TO_ARM;
+    }
+
+    //RTD button is pulled down, so TRUE means pressed
+    if (me->armState == MVP_READY_TO_ARM
+     && Sensor_RTDButton.sensorValue == TRUE
+     && tps->travelPercent < 0.05)
+    {
+        me->armState = MVP_ARMED;
+
+        if (me->rtdsPlayed == FALSE)
+        {
+            RTDS_setVolume(rtds, 1, 1500000);
+            me->rtdsPlayed = TRUE;
+        }
+    }
+
+    return (me->armState == MVP_ARMED);
+}
+
+void Powertrain_controlVehicle(_Powertrain* me, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds, _DAQSensors *d1, BatteryManagementSystem *bms){
     if(me->powertrainMode != TorqueVectoring){
         Powertrain_calculateTorqueCommands(me, tps, bps);
     }
@@ -392,6 +429,7 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
                 break;
         }
     }
+}
 }
 
 void Powertrain_TorqueVectoring(_Powertrain *me, TorqueEncoder *tps, BrakePressureSensor *bps, _DAQSensors *d1){
