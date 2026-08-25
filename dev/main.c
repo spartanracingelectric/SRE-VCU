@@ -145,7 +145,10 @@ void main(void)
     //----------------------------------------------------------------------------
     // Check if we're on the bench or not
     //----------------------------------------------------------------------------
-    bool bench;
+    //Must be initialized: IO_DI_Init/IO_DI_Get below are commented out, so an
+    //uninitialized value here would pick the TPS ADC mode (RESISTIVE vs RATIOMETRIC)
+    //at random on every boot. FALSE = car wiring.
+    bool bench = FALSE;
     // IO_DI_Init(IO_DI_06, IO_DI_PD_10K);
     IO_RTC_StartTime(&timestamp_startTime);
     while (IO_RTC_GetTimeUS(timestamp_startTime) < 55555)
@@ -357,13 +360,13 @@ void main(void)
         //MCM_calculateCommands(mcm0, tps, bps);
         //SRE-7 Update: Torque Vectoring Calculation can go here
 
-        SafetyChecker_update(sc, bms, tps, bps, &Sensor_HVILTerminationSense, &Sensor_LVBattery);
+        // SafetyChecker_update(sc, bms, tps, bps, &Sensor_HVILTerminationSense, &Sensor_LVBattery);
 
         /*******************************************/
         /*  Output Adjustments by Safety Checker   */
         /*******************************************/
         //Make sure to change for temp values etc
-        SafetyChecker_reduceTorque(sc, bms, powertrain);
+        // SafetyChecker_reduceTorque(sc, bms, powertrain);
 
         /*******************************************/
         /*              Enact Outputs              */
@@ -374,8 +377,12 @@ void main(void)
         //Handle motor controller startup procedures
         //MCM_relayControl(mcm0, &Sensor_HVILTerminationSense);
 
+        //Decide whether we're asking the BMS for HV before the powertrain looks at
+        //precharge status, so both act on the same view of the pack this cycle
+        BMS_updatePrechargeRequest(bms, &Sensor_HVILTerminationSense);
+
         //MCM_inverterControl(mcm0, tps, bps, rtds);
-        Powertrain_controlVehicle(powertrain, &Sensor_HVILTerminationSense, tps, bps, rtds, d1);
+        Powertrain_controlVehicle(powertrain, &Sensor_HVILTerminationSense, tps, bps, rtds, d1, bms);
 
         IO_ErrorType err = 0;
         //Comment out to disable shutdown board control
@@ -385,6 +392,9 @@ void main(void)
 
         //Drop the sensor readings into CAN (just raw data, not calculated stuff)
         //canOutput_sendMCUControl(mcm0, FALSE);
+
+        //Commands out to the BMS (precharge request)
+        canOutput_sendBMSCommands(canMan, bms);
 
         //Send debug data
         canOutput_sendDebugMessage0(canMan, tps, bps, ic0, bms, sc, powertrain);

@@ -68,6 +68,7 @@ struct _BatteryManagementSystem
     ubyte4 timestamp_lastFaultFrame;  //IO_RTC time of last BMS_SAFETY_STATUS received
 
     bool relayState;
+    bool prechargeRequest;  //what the VCU is asking for on BMS_PRECHARGE_COMMAND
 };
 
 BatteryManagementSystem *BMS_new(ubyte2 canMessageBaseID)
@@ -94,6 +95,7 @@ BatteryManagementSystem *BMS_new(ubyte2 canMessageBaseID)
     me->lowestCellTemperature = 0;
 
     me->prechargeComplete = FALSE;
+    me->prechargeRequest = FALSE;
     me->relayState = FALSE;
     me->timestamp_lastFaultFrame = 0;
 
@@ -164,7 +166,7 @@ void BMS_parseCanMessage(BatteryManagementSystem *bms, IO_CAN_DATA_FRAME *bmsCan
     }
     else if (offset == BMS_PRECHARGE_STATUS)
     {
-        bms->prechargeComplete = (data[0] == 0x01);
+        bms->prechargeComplete = (data[0] == 0x02);
     }
     else if (offset >= BMS_CELL_VOLTAGE_FIRST && offset <= BMS_CELL_VOLTAGE_LAST)
     {
@@ -222,17 +224,17 @@ IO_ErrorType BMS_relayControl(BatteryManagementSystem *me)
     //////////////////////////////////////////////////////////////
     IO_ErrorType err;
     //There is a fault, or the BMS has gone silent (treat silence as fault)
-    if (BMS_getFaultFlags(me) || BMS_isAlive(me) == FALSE)
-    {
-        me->relayState = TRUE;
-        err = IO_DO_Set(IO_DO_01, TRUE); //VCU pin 132, shutdown signal true (HIGH)
-    }
-    else
-    {
-        me->relayState = FALSE;
-        err = IO_DO_Set(IO_DO_01, FALSE); //VCU pin 132, shutdown signal false (LOW)
-    }
-    return err;
+    // if (BMS_getFaultFlags(me) || BMS_isAlive(me) == FALSE)
+    // {
+    //     me->relayState = TRUE;
+    //     err = IO_DO_Set(IO_DO_01, TRUE); //VCU pin 132, shutdown signal true (HIGH)
+    // }
+    // else
+    // {
+    //     me->relayState = FALSE;
+    //     err = IO_DO_Set(IO_DO_01, FALSE); //VCU pin 132, shutdown signal false (LOW)
+    // }
+    // return err;
 }
 
 ubyte1 BMS_getFaultFlags(BatteryManagementSystem *me) {
@@ -253,6 +255,23 @@ ubyte1 BMS_getWarningFlags(BatteryManagementSystem *me) {
 bool BMS_getRelayState(BatteryManagementSystem *me) {
     //Return state of shutdown board relay
     return me->relayState;
+}
+
+void BMS_updatePrechargeRequest(BatteryManagementSystem *me, Sensor *HVILTermSense)
+{
+    if (me->prechargeComplete == TRUE && HVILTermSense->sensorValue == FALSE)
+    {
+        me->prechargeRequest = FALSE;
+    }
+    else
+    {
+        me->prechargeRequest = TRUE;
+    }
+}
+
+bool BMS_getPrechargeRequest(BatteryManagementSystem *me)
+{
+    return me->prechargeRequest;
 }
 
 ubyte4 BMS_getPackVoltage(BatteryManagementSystem *me)

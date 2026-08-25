@@ -15,6 +15,7 @@
 #include <stdint.h>
 
 #include "IO_CAN.h"
+#include "sensors.h"    //Sensor, for the HVIL termination sense passed to the precharge request
 
 //Max mismatch voltage, in volts
 //To determine VCU-side fault
@@ -38,6 +39,9 @@
 
 // BMS Received Messages (VCU --> BMS)
 #define BMS_BALANCE_COMMAND             0x004   //1 byte, data[0]: 1 means balancing is on
+#define BMS_PRECHARGE_COMMAND           0x005   //1 byte, data[0]: 1 means close the precharge relay
+//NOTE: 0x605 belongs to the precharge command. Do not reuse it for debug frames -
+//the BMS acts on it, and it also falls inside the VCU's own BMS receive range
 
 // BMS Transmitted Messages (BMS --> VCU)
 #define BMS_SAFETY_STATUS               0x000   //8 bytes
@@ -81,6 +85,11 @@ bool BMS_isAlive(BatteryManagementSystem *me);
 
 IO_ErrorType BMS_relayControl(BatteryManagementSystem *me);
 bool BMS_getRelayState(BatteryManagementSystem *me);
+
+//Recalculates whether the VCU is asking the BMS to precharge. Call once per main loop,
+//after the CAN read, and before the frame is put on the bus
+void BMS_updatePrechargeRequest(BatteryManagementSystem *me, Sensor *HVILTermSense);
+bool BMS_getPrechargeRequest(BatteryManagementSystem *me);
 
 // Pack level //
 
