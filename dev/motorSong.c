@@ -222,7 +222,7 @@ static void MotorSong_sendDutyFrame(CanManager *canMan, ubyte4 canId, sbyte4 val
     frame.data[1] = (ubyte1)(value >> 16);
     frame.data[2] = (ubyte1)(value >> 8);
     frame.data[3] = (ubyte1)value;
-    CanManager_sendImmediate(canMan, CAN1_LOPRI, &frame, 1);
+    CanManager_sendImmediate(canMan, CAN0_HIPRI, &frame, 1);
 }
 
 //Write the current duty to both rear motors and put it on the bus
@@ -287,10 +287,10 @@ void MotorSong_skip(CanManager *canMan, _Powertrain *powertrain)
 
 void MotorSong_reset(void)
 {
-    if (songState == SONG_FINISHED)
-    {
-        songState = SONG_IDLE;
-    }
+    songState = SONG_IDLE;
+    cancelRequested = FALSE;
+    noteIndex = 0;
+    currentDuty = 0;
 }
 
 bool MotorSong_isPlaying(void)

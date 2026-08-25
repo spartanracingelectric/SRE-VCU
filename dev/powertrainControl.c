@@ -29,6 +29,7 @@ extern Sensor Sensor_RTDButton;
 extern Sensor Sensor_HVILTerminationSense;
 
 bool requestCurrent = FALSE;
+static bool resetDutyCycleState = TRUE;
 
 _DriveInverter* AmkDriver_new(DI_Location_Address location_address)
 {
@@ -245,6 +246,17 @@ bool Powertrain_updateArmState(_Powertrain* me, Sensor *HVILTermSense, TorqueEnc
 }
 
 void Powertrain_controlVehicle(_Powertrain* me, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds, _DAQSensors *d1, BatteryManagementSystem *bms){
+    if(me->powertrainMode == MVP && Powertrain_updateArmState(me, HVILTermSense, tps, rtds, bms) == FALSE){
+        for(ubyte1 i = 0; i < 4; ++i){
+            me->motor[i]->current_mA = 0;
+            me->motor[i]->dutyCycle_send = 0;
+            me->motor[i]->AMK_TorqueRequest_send = 0;
+        }
+        MotorSong_reset();
+        resetDutyCycleState = TRUE;
+        return;
+    }
+
     if(me->powertrainMode != TorqueVectoring){
         Powertrain_calculateTorqueCommands(me, tps, bps);
     }
@@ -272,6 +284,18 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
     static bool previousEcoButton = TRUE;
 
     bool ecoButton = Sensor_EcoButton.sensorValue;
+
+    if (resetDutyCycleState == TRUE)
+    {
+        cycleCounter = 0;
+        dutyCycle = 0;
+        dutyCycleStep = DUTY_CYCLE_STEP;
+        dutyRampInStarted = FALSE;
+        dutyRampInComplete = FALSE;
+        toggle = FALSE;
+        previousEcoButton = ecoButton;
+        resetDutyCycleState = FALSE;
+    }
 
     if (previousEcoButton == TRUE && ecoButton == FALSE)
     {
@@ -429,7 +453,6 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
                 break;
         }
     }
-}
 }
 
 void Powertrain_TorqueVectoring(_Powertrain *me, TorqueEncoder *tps, BrakePressureSensor *bps, _DAQSensors *d1){

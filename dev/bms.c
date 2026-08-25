@@ -222,7 +222,6 @@ IO_ErrorType BMS_relayControl(BatteryManagementSystem *me)
     // Digital output to drive a signal to the Shutdown signal  //
     // based on AMS fault detection                             //
     //////////////////////////////////////////////////////////////
-    IO_ErrorType err;
     //There is a fault, or the BMS has gone silent (treat silence as fault)
     // if (BMS_getFaultFlags(me) || BMS_isAlive(me) == FALSE)
     // {
@@ -235,6 +234,7 @@ IO_ErrorType BMS_relayControl(BatteryManagementSystem *me)
     //     err = IO_DO_Set(IO_DO_01, FALSE); //VCU pin 132, shutdown signal false (LOW)
     // }
     // return err;
+    return IO_E_OK;
 }
 
 ubyte1 BMS_getFaultFlags(BatteryManagementSystem *me) {
@@ -259,7 +259,11 @@ bool BMS_getRelayState(BatteryManagementSystem *me) {
 
 void BMS_updatePrechargeRequest(BatteryManagementSystem *me, Sensor *HVILTermSense)
 {
-    if (me->prechargeComplete == TRUE && HVILTermSense->sensorValue == FALSE)
+    if (BMS_isAlive(me) == FALSE || BMS_getFaultFlags(me) != 0)
+    {
+        me->prechargeRequest = FALSE;
+    }
+    else if (me->prechargeComplete == TRUE && HVILTermSense->sensorValue == FALSE)
     {
         me->prechargeRequest = FALSE;
     }
