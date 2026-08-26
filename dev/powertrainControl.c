@@ -203,45 +203,9 @@ _Powertrain* Powertrain_new(){
         me->tireDiameter_in = 16;
         me->motorTorque_Nm = 0;
         me->rtdsPlayed = FALSE;
-        me->armState = MVP_DISARMED;
+        me->useDutyCycle = FALSE;
 
     return me;
-}
-bool Powertrain_updateArmState(_Powertrain* me, Sensor *HVILTermSense, TorqueEncoder *tps, ReadyToDriveSound *rtds, BatteryManagementSystem *bms)
-{
-    bool packReady = (BMS_isAlive(bms) == TRUE)
-                  && (BMS_getFaultFlags(bms) == 0)
-                  && (BMS_getPrechargeComplete(bms) == TRUE);
-    bool hvPresent = (HVILTermSense->sensorValue == TRUE);
-
-    //Anything unsafe drops us all the way back to disarmed
-    if (packReady == FALSE || hvPresent == FALSE || tps->calibrated == FALSE)
-    {
-        me->armState = MVP_DISARMED;
-        me->rtdsPlayed = FALSE;
-        return FALSE;
-    }
-
-    if (me->armState == MVP_DISARMED)
-    {
-        me->armState = MVP_READY_TO_ARM;
-    }
-
-    //RTD button is pulled down, so TRUE means pressed
-    if (me->armState == MVP_READY_TO_ARM
-     && Sensor_RTDButton.sensorValue == TRUE
-     && tps->travelPercent < 0.05)
-    {
-        me->armState = MVP_ARMED;
-
-        if (me->rtdsPlayed == FALSE)
-        {
-            RTDS_setVolume(rtds, 1, 1500000);
-            me->rtdsPlayed = TRUE;
-        }
-    }
-
-    return (me->armState == MVP_ARMED);
 }
 
 void Powertrain_controlVehicle(_Powertrain* me, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds, _DAQSensors *d1, BatteryManagementSystem *bms){
@@ -258,18 +222,35 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
     if (me->powertrainMode == MVP)
     {
         float4 throttlePercent = tps->travelPercent;
-        if (throttlePercent < 0.0)
+
+        if (throttlePercent < 0.0f)
         {
-            throttlePercent = 0.0;
+            throttlePercent = 0.0f;
         }
-        else if (throttlePercent > 1.0)
+        else if (throttlePercent > 1.0f)
         {
-            throttlePercent = 1.0;
+            throttlePercent = 1.0f;
         }
 
-        me->motor[2]->current_mA = (sbyte4)(throttlePercent * 90000); // RL
-        me->motor[3]->current_mA = (sbyte4)(throttlePercent * 90000); // RR
+        if (throttlePercent < MVP_DUTY_THRESHOLD)
+        {
+            me->useDutyCycle = TRUE;
+            me->motor[2]->dutyCycle = (sbyte4)(throttlePercent * VESC_DUTY_SCALE);
+            me->motor[3]->dutyCycle = (sbyte4)(throttlePercent * VESC_DUTY_SCALE);
+            me->motor[2]->current_mA = 0;
+            me->motor[3]->current_mA = 0;
+        }
+        else
+        {
+            me->useDutyCycle = FALSE;
+            me->motor[2]->current_mA = (sbyte4)(throttlePercent * MVP_MAX_CURRENT_mA);
+            me->motor[3]->current_mA = (sbyte4)(throttlePercent * MVP_MAX_CURRENT_mA);
+            me->motor[2]->dutyCycle = 0;
+            me->motor[3]->dutyCycle = 0;
+        }
 
+        return;
+    }
     for(ubyte1 i = 0; i < 4; ++i)
     {
         if(me->motor[i]->startUpStage != TORQUE_REQUEST_ACTIVE)
@@ -318,7 +299,6 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
                 break;
         }
     }
-}
 }
 
 void Powertrain_TorqueVectoring(_Powertrain *me, TorqueEncoder *tps, BrakePressureSensor *bps, _DAQSensors *d1){

@@ -692,29 +692,53 @@ void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressu
 
 void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain)
 {
-    IO_CAN_DATA_FRAME canMessages[me->write_messageLimit[1]];
+    IO_CAN_DATA_FRAME canMessages[2];
     ubyte2 canMessageCount = 0;
-    // Rear Left: VESC ID 1
-    canMessageCount++;
-    sbyte4 rlCurrent = powertrain->motor[2]->current_mA;
-    canMessages[canMessageCount - 1].id_format = IO_CAN_EXT_FRAME;
-    canMessages[canMessageCount - 1].id = 0x101;
-    canMessages[canMessageCount - 1].data[0] = (ubyte1)(rlCurrent >> 24);
-    canMessages[canMessageCount - 1].data[1] = (ubyte1)(rlCurrent >> 16);
-    canMessages[canMessageCount - 1].data[2] = (ubyte1)(rlCurrent >> 8);
-    canMessages[canMessageCount - 1].data[3] = (ubyte1)rlCurrent;
-    canMessages[canMessageCount - 1].length = 4;
 
-    // Rear Right: VESC ID 0
-    canMessageCount++;
-    sbyte4 rrCurrent = powertrain->motor[3]->current_mA;
-    canMessages[canMessageCount - 1].id_format = IO_CAN_EXT_FRAME;
-    canMessages[canMessageCount - 1].id = 0x100;
-    canMessages[canMessageCount - 1].data[0] = (ubyte1)(rrCurrent >> 24);
-    canMessages[canMessageCount - 1].data[1] = (ubyte1)(rrCurrent >> 16);
-    canMessages[canMessageCount - 1].data[2] = (ubyte1)(rrCurrent >> 8);
-    canMessages[canMessageCount - 1].data[3] = (ubyte1)rrCurrent;
-    canMessages[canMessageCount - 1].length = 4;
+    if (powertrain->useDutyCycle == TRUE)
+    {
+        sbyte4 rlDuty = powertrain->motor[2]->dutyCycle;
+        canMessages[canMessageCount].id_format = IO_CAN_EXT_FRAME;
+        canMessages[canMessageCount].id = 0x01;
+        canMessages[canMessageCount].data[0] = (ubyte1)(rlDuty >> 24);
+        canMessages[canMessageCount].data[1] = (ubyte1)(rlDuty >> 16);
+        canMessages[canMessageCount].data[2] = (ubyte1)(rlDuty >> 8);
+        canMessages[canMessageCount].data[3] = (ubyte1)rlDuty;
+        canMessages[canMessageCount].length = 4;
+        canMessageCount++;
+
+        sbyte4 rrDuty = powertrain->motor[3]->dutyCycle;
+        canMessages[canMessageCount].id_format = IO_CAN_EXT_FRAME;
+        canMessages[canMessageCount].id = 0x00;
+        canMessages[canMessageCount].data[0] = (ubyte1)(rrDuty >> 24);
+        canMessages[canMessageCount].data[1] = (ubyte1)(rrDuty >> 16);
+        canMessages[canMessageCount].data[2] = (ubyte1)(rrDuty >> 8);
+        canMessages[canMessageCount].data[3] = (ubyte1)rrDuty;
+        canMessages[canMessageCount].length = 4;
+        canMessageCount++;
+    }
+    else
+    {
+        sbyte4 rlCurrent = powertrain->motor[2]->current_mA;
+        canMessages[canMessageCount].id_format = IO_CAN_EXT_FRAME;
+        canMessages[canMessageCount].id = 0x101;
+        canMessages[canMessageCount].data[0] = (ubyte1)(rlCurrent >> 24);
+        canMessages[canMessageCount].data[1] = (ubyte1)(rlCurrent >> 16);
+        canMessages[canMessageCount].data[2] = (ubyte1)(rlCurrent >> 8);
+        canMessages[canMessageCount].data[3] = (ubyte1)rlCurrent;
+        canMessages[canMessageCount].length = 4;
+        canMessageCount++;
+
+        sbyte4 rrCurrent = powertrain->motor[3]->current_mA;
+        canMessages[canMessageCount].id_format = IO_CAN_EXT_FRAME;
+        canMessages[canMessageCount].id = 0x100;
+        canMessages[canMessageCount].data[0] = (ubyte1)(rrCurrent >> 24);
+        canMessages[canMessageCount].data[1] = (ubyte1)(rrCurrent >> 16);
+        canMessages[canMessageCount].data[2] = (ubyte1)(rrCurrent >> 8);
+        canMessages[canMessageCount].data[3] = (ubyte1)rrCurrent;
+        canMessages[canMessageCount].length = 4;
+        canMessageCount++;
+    }
 
     //Place the can messsages into the FIFO queue ---------------------------------------------------
     //IO_CAN_WriteFIFO(canFifoHandle_HiPri_Write, canMessages, canMessageCount);  //Important: Only transmit one message (the MCU message)

@@ -55,7 +55,7 @@
 #define VESC_DUTY_SCALE 100000.0f
 #define MVP_DUTY_THRESHOLD 0.10f
 #define MVP_MAX_DUTY 0.10f
-#define MVP_MAX_CURRENT_mA 75000.0f
+#define MVP_MAX_CURRENT_mA 70000.0f
 
 typedef enum _DI_Location_Address {
     FRONT_LEFT = 1,
@@ -122,21 +122,12 @@ typedef enum _PowertrainMode {
     MVP = 6
 } PowertrainMode;
 
-//Ready-to-drive gate for MVP mode. MVP drives the VESCs directly and never runs the
-//AMK startup sequence, so it needs its own arming state.
-typedef enum _MvpArmState {
-    MVP_DISARMED = 0,   //pack not ready - current is forced to zero
-    MVP_READY_TO_ARM,   //pack ready and HV live, waiting on the RTD button
-    MVP_ARMED           //driver armed the car, TPS controls current
-} MvpArmState;
-
 typedef struct _Powertrain {
     PowertrainMode powertrainMode;
     // Code Convention: Motors stored in following order - [FL,FR,RL,RR]
     _DriveInverter* motor[4];
 
     bool rtdsPlayed;
-    MvpArmState armState;
 
     /*
     Due to potential gear ratio (GR) modifications, 
@@ -150,8 +141,7 @@ typedef struct _Powertrain {
     float4 gearRatio_Rear;
     ubyte1 tireDiameter_in;
     ubyte2 motorTorque_Nm;
-
-
+    bool useDutyCycle;
 } _Powertrain;
 
 _DriveInverter* DriveInverter_new(DI_Location_Address location_address);
@@ -170,9 +160,6 @@ _Powertrain* Powertrain_new();
 void Powertrain_controlVehicle(_Powertrain* me, Sensor *HVILTermSense, TorqueEncoder *tps, BrakePressureSensor *bps, ReadyToDriveSound *rtds, _DAQSensors *d1, BatteryManagementSystem *bms);
 
 void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, BrakePressureSensor *bps);
-
-//Runs the MVP ready-to-drive gate. Returns TRUE only while the car is armed for torque.
-bool Powertrain_updateArmState(_Powertrain* me, Sensor *HVILTermSense, TorqueEncoder *tps, ReadyToDriveSound *rtds, BatteryManagementSystem *bms);
 
 void Powertrain_TorqueVectoring(_Powertrain *me, TorqueEncoder *tps, BrakePressureSensor *bps, _DAQSensors *d1);
 
