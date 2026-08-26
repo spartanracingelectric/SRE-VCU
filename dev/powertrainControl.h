@@ -55,7 +55,7 @@
 #define VESC_DUTY_SCALE 100000.0f
 #define MVP_DUTY_THRESHOLD 0.10f
 #define MVP_MAX_DUTY 0.10f
-#define MVP_MAX_CURRENT_mA 70000.0f
+#define MVP_MAX_CURRENT_mA 100000.0f
 
 typedef enum _DI_Location_Address {
     FRONT_LEFT = 1,
