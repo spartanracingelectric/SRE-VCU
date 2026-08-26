@@ -398,7 +398,7 @@ void main(void)
 
         //Send debug data
         canOutput_sendDebugMessage0(canMan, tps, bps, ic0, bms, sc, powertrain);
-        canOutput_sendDebugMessage1(canMan, powertrain);
+        canOutput_sendDebugMessage1(canMan, powertrain, tps);
         //canOutput_sendSensorMessages();
         //canOutput_sendStatusMessages(mcm0);
 

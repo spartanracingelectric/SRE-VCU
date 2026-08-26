@@ -690,12 +690,16 @@ void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressu
 
 }
 
-void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain)
+void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain, TorqueEncoder *tps)
 {
     IO_CAN_DATA_FRAME canMessages[2];
     ubyte2 canMessageCount = 0;
 
-    if (powertrain->useDutyCycle == TRUE)
+    sbyte4 throttlepercent = tps->travelPercent * 100;
+
+    if (throttlepercent != 0){
+
+        if (powertrain->useDutyCycle == TRUE)
     {
         sbyte4 rlDuty = powertrain->motor[2]->dutyCycle;
         canMessages[canMessageCount].id_format = IO_CAN_EXT_FRAME;
@@ -739,7 +743,9 @@ void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain)
         canMessages[canMessageCount].length = 4;
         canMessageCount++;
     }
-
+        
+    }
+   
     //Place the can messsages into the FIFO queue ---------------------------------------------------
     //IO_CAN_WriteFIFO(canFifoHandle_HiPri_Write, canMessages, canMessageCount);  //Important: Only transmit one message (the MCU message)
 
