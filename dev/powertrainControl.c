@@ -241,8 +241,8 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
         else
         {
             me->useDutyCycle = FALSE;
-            me->motor[2]->current_mA = (sbyte4)((22.0f + (throttlePercent - 11.0f) * 0.87f) * 1000.0f);
-            me->motor[3]->current_mA = (sbyte4)((22.0f + (throttlePercent - 11.0f) * 0.87f) * 1000.0f);
+            me->motor[2]->current_mA = (sbyte4)(throttlePercent*125 * 1000.0f);
+            me->motor[3]->current_mA = (sbyte4)(throttlePercent*125 * 1000.0f);
         }
 
         return;

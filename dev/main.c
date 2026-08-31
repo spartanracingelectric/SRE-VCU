@@ -360,7 +360,7 @@ void main(void)
         //MCM_calculateCommands(mcm0, tps, bps);
         //SRE-7 Update: Torque Vectoring Calculation can go here
 
-        // SafetyChecker_update(sc, bms, tps, bps, &Sensor_HVILTerminationSense, &Sensor_LVBattery);
+        SafetyChecker_update(sc, bms, tps, bps, &Sensor_HVILTerminationSense, &Sensor_LVBattery);
 
         /*******************************************/
         /*  Output Adjustments by Safety Checker   */
