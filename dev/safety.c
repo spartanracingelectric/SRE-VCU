@@ -691,11 +691,18 @@ void SafetyChecker_reduceTorque(SafetyChecker *me, BatteryManagementSystem *bms,
         multiplier = 1;
     }
 
-    //MCM_commands_setTorqueDNm(mcm, MCM_commands_getTorque(mcm) * multiplier);
     powertrain->motor[0]->AMK_TorqueRequest_send = powertrain->motor[0]->AMK_TorqueRequest_send * multiplier;
     powertrain->motor[1]->AMK_TorqueRequest_send = powertrain->motor[1]->AMK_TorqueRequest_send * multiplier;
     powertrain->motor[2]->AMK_TorqueRequest_send = powertrain->motor[2]->AMK_TorqueRequest_send * multiplier;
     powertrain->motor[3]->AMK_TorqueRequest_send = powertrain->motor[3]->AMK_TorqueRequest_send * multiplier;
+    powertrain->motor[0]->current_mA = powertrain->motor[0]->current_mA * multiplier;
+    powertrain->motor[1]->current_mA = powertrain->motor[1]->current_mA * multiplier;
+    powertrain->motor[2]->current_mA = powertrain->motor[2]->current_mA * multiplier;
+    powertrain->motor[3]->current_mA = powertrain->motor[3]->current_mA * multiplier;
+    powertrain->motor[0]->dutyCycle = powertrain->motor[0]->dutyCycle * multiplier;
+    powertrain->motor[1]->dutyCycle = powertrain->motor[1]->dutyCycle * multiplier;
+    powertrain->motor[2]->dutyCycle = powertrain->motor[2]->dutyCycle * multiplier;
+    powertrain->motor[3]->dutyCycle = powertrain->motor[3]->dutyCycle * multiplier;
 }
 
 //-------------------------------------------------------------------

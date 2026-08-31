@@ -363,12 +363,6 @@ void main(void)
         SafetyChecker_update(sc, bms, tps, bps, &Sensor_HVILTerminationSense, &Sensor_LVBattery);
 
         /*******************************************/
-        /*  Output Adjustments by Safety Checker   */
-        /*******************************************/
-        //Make sure to change for temp values etc
-        // SafetyChecker_reduceTorque(sc, bms, powertrain);
-
-        /*******************************************/
         /*              Enact Outputs              */
         /*******************************************/
         //MOVE INTO SAFETYCHECKER
@@ -384,9 +378,9 @@ void main(void)
         //MCM_inverterControl(mcm0, tps, bps, rtds);
         Powertrain_controlVehicle(powertrain, &Sensor_HVILTerminationSense, tps, bps, rtds, d1, bms);
 
-        IO_ErrorType err = 0;
-        //Comment out to disable shutdown board control
-        err = BMS_relayControl(bms);
+        SafetyChecker_reduceTorque(sc, bms, powertrain);
+
+        BMS_relayControl(bms);
 
         //CanManager_sendMCMCommandMessage(mcm0, canMan, FALSE);
 

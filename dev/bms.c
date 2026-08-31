@@ -223,18 +223,17 @@ IO_ErrorType BMS_relayControl(BatteryManagementSystem *me)
     // based on AMS fault detection                             //
     //////////////////////////////////////////////////////////////
     IO_ErrorType err;
-    //There is a fault, or the BMS has gone silent (treat silence as fault)
-    // if (BMS_getFaultFlags(me) || BMS_isAlive(me) == FALSE)
-    // {
-    //     me->relayState = TRUE;
-    //     err = IO_DO_Set(IO_DO_01, TRUE); //VCU pin 132, shutdown signal true (HIGH)
-    // }
-    // else
-    // {
-    //     me->relayState = FALSE;
-    //     err = IO_DO_Set(IO_DO_01, FALSE); //VCU pin 132, shutdown signal false (LOW)
-    // }
-    // return err;
+    if (BMS_getFaultFlags(me) || BMS_isAlive(me) == FALSE)
+    {
+        me->relayState = TRUE;
+        err = IO_DO_Set(IO_DO_01, TRUE); //VCU pin 132, shutdown signal true (HIGH)
+    }
+    else
+    {
+        me->relayState = FALSE;
+        err = IO_DO_Set(IO_DO_01, FALSE); //VCU pin 132, shutdown signal false (LOW)
+    }
+    return err;
 }
 
 ubyte1 BMS_getFaultFlags(BatteryManagementSystem *me) {
@@ -259,7 +258,11 @@ bool BMS_getRelayState(BatteryManagementSystem *me) {
 
 void BMS_updatePrechargeRequest(BatteryManagementSystem *me, Sensor *HVILTermSense)
 {
-    if (me->prechargeComplete == TRUE && HVILTermSense->sensorValue == FALSE)
+    if (BMS_getFaultFlags(me) != 0 || BMS_isAlive(me) == FALSE)
+    {
+        me->prechargeRequest = FALSE;
+    }
+    else if (me->prechargeComplete == TRUE && HVILTermSense->sensorValue == FALSE)
     {
         me->prechargeRequest = FALSE;
     }
