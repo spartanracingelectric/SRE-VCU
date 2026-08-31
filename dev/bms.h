@@ -1,11 +1,21 @@
+/*****************************************************************************
+ * bms.h - Battery Management System Parser
+ * Initial Author: Rusty P / Vincent Saw
+ * Additional Author: Akash Karthik
+ ******************************************************************************
+ * Deals with parsing from BMS and coordinating values in between
+ *
+ * Uses 16's BMS
+ ****************************************************************************/
+
 #ifndef _BATTERYMANAGEMENTSYSTEM_H
 #define _BATTERYMANAGEMENTSYSTEM_H
 
 #include <stdio.h>
 #include <stdint.h>
 
-#include "serial.h"
 #include "IO_CAN.h"
+#include "sensors.h"    //Sensor, for the HVIL termination sense passed to the precharge request
 
 //Max mismatch voltage, in volts
 //To determine VCU-side fault
@@ -13,290 +23,101 @@
 #define BMS_MIN_CELL_VOLTAGE_WARNING 3.20f
 #define BMS_MAX_CELL_TEMPERATURE_WARNING 55.0f
 
+// Pack layout
+#define BMS_NUM_MODULES                 8
+#define BMS_CELLS_PER_MODULE            12
+#define BMS_THERMISTORS_PER_MODULE      12
+#define BMS_NUM_CELLS                   (BMS_NUM_MODULES * BMS_CELLS_PER_MODULE)
+#define BMS_NUM_THERMISTORS             (BMS_NUM_MODULES * BMS_THERMISTORS_PER_MODULE)
 
-///////////////////////////////////////////////////////////////////////////////////
-// STAFL BMS CAN PROTOCOL CONSTANTS, offsets from base address                   //
-// Ex: canMessageBaseId + BMS_MASTER_FAULTS = Address 0x(canMessageBaseId+0x002) //
-// CAN Protocol datasheet can be found in:                                       //
-// SRE drive -> SRE Software -> Documentation -> Datasheets -> BMS -> Stafl      //
-///////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+// CAN PROTOCOL CONSTANTS, offsets from base address               //
+// Ex: canMessageBaseId + BMS_CELL_SUMMARY = Address 0x600 + 0x022 //
+/////////////////////////////////////////////////////////////////////
 
-// BMS Base Address
-#define BMS_BASE_ADDRESS                    0x600
+#define BMS_BASE_ADDRESS                0x600
 
 // BMS Received Messages (VCU --> BMS)
-#define BMS_STATE_COMMAND                   0x000   //2 bytes, Control BMS state transition
-#define BMS_CHARGER_COMMAND                 0x008   //4 bytes, Control BMS charging behavior
+#define BMS_BALANCE_COMMAND             0x004   //1 byte, data[0]: 1 means balancing is on
+#define BMS_PRECHARGE_COMMAND           0x005   //1 byte, data[0]: 1 means close the precharge relay
+//NOTE: 0x605 belongs to the precharge command. Do not reuse it for debug frames -
+//the BMS acts on it, and it also falls inside the VCU's own BMS receive range
 
 // BMS Transmitted Messages (BMS --> VCU)
-#define BMS_PACK_SUMMARY_ONE_CAN_ID 0x622
-#define BMS_PACK_SUMMARY_TWO_CAN_ID 0x623
+#define BMS_SAFETY_STATUS               0x000   //8 bytes
+#define BMS_STATE_OF_CHARGE             0x021   //7 bytes
+#define BMS_CELL_SUMMARY                0x022   //6 bytes
+#define BMS_BALANCE_STATUS_1            0x023   //8 bytes, modules 1-4
+#define BMS_BALANCE_STATUS_2            0x024   //8 bytes, modules 5-8
+#define BMS_PRECHARGE_STATUS            0x025   //1 byte
+#define BMS_CELL_VOLTAGE_FIRST          0x030   //8 bytes each, 4 cells per frame
+#define BMS_CELL_VOLTAGE_LAST           (BMS_CELL_VOLTAGE_FIRST + (BMS_NUM_CELLS / 4) - 1)
+#define BMS_CELL_TEMPERATURE_FIRST      0x080   //8 bytes each, 2 frames per module
+#define BMS_CELL_TEMPERATURE_LAST       (BMS_CELL_TEMPERATURE_FIRST + (BMS_NUM_MODULES * 2) - 1)
+#define BMS_LAST_ADDRESS                BMS_CELL_TEMPERATURE_LAST
+
 // BMS Scaling factors
 // X/SCALE
-#define BMS_VOLTAGE_SCALE                   1000    //V*1000, milliVolts to Volts
-#define BMS_CURRENT_SCALE                   1000    //A*1000, milliAmps to Amps
-#define BMS_POWER_SCALE                     BMS_VOLTAGE_SCALE*BMS_CURRENT_SCALE //(V*1000)*(A*1000), microWatts to Watts
-#define BMS_TEMPERATURE_SCALE               10      //degC*10, deciCelsius to Celsius
-#define BMS_PERCENT_SCALE                   10      //%*10, percent*10 to percent
-#define BMS_AMP_HOURS_SCALE                 10      //Ah*10, deciAmpHours to AmpHours
+#define BMS_VOLTAGE_SCALE               1000    //V*1000
+#define BMS_CURRENT_SCALE               1000    //A*1000
+#define BMS_TEMPERATURE_SCALE           10      //degC*10
 
-// BMS Specific Fault Bits/Flags (within faultFlag0 and 1)
-#define BMS_CELL_OVER_VOLTAGE_FLAG          0x01
-#define BMS_CELL_UNDER_VOLTAGE_FLAG         0x02
-#define BMS_CELL_OVER_TEMPERATURE_FLAG      0x04
+#define BMS_CELL_VOLTAGE_RAW_PER_MV     10      //cells arrive in 100uV incremebts
+#define BMS_PACK_VOLTAGE_MV_PER_RAW     10      //pack voltage arrives in 10mV increments
 
-typedef enum {
-	BMS_PACK_SR16,
-	BMS_PACK_SR17,
-} BMSPack;
+//Fault/warning bits of the BMS_SAFETY_STATUS frame (fault byte 1, warning byte 0)
+//NOTE: the BMS firmware never sets MISMATCH or the PACK_ bits (dead code there) -
+//the VCU must not claim coverage of those conditions
+#define BMS_CELL_OVER_TEMPERATURE_FLAG  0x04
+#define BMS_CELL_MISMATCH_FLAG          0x08
+#define BMS_CELL_UNDER_VOLTAGE_FLAG     0x10
+#define BMS_CELL_OVER_VOLTAGE_FLAG      0x20
+#define BMS_PACK_UNDER_VOLTAGE_FLAG     0x40
+#define BMS_PACK_OVER_VOLTAGE_FLAG      0x80
 
-typedef struct _BatteryManagementSystem {
-    ubyte2 canMessageBaseId;
+typedef struct _BatteryManagementSystem BatteryManagementSystem;
 
-    SerialManager *sm;
-
-    //BMS Member Variable format:
-    //byte(s), scaling, add'l comments
-
-    // BMS_MASTER_FAULTS //
-    //ubyte1 reserved;                          //3
-    ubyte1 imminentContactorOpenWarning;        //2
-    ubyte1 faultFlags1;                         //1
-    ubyte1 faultFlags0;                         //0
-
-    // BMS_MASTER_WARNINGS //
-    //ubyte1 reserved;                          //3
-    //ubyte1 reserved;                          //2
-    //ubyte1 reserved;                          //1
-    ubyte1 warningFlags0;                       //0
-
-    // BMS_MASTER_SYSTEM_STATUS //
-    //ubyte1 reserved;                          //7
-    ubyte1 state;                               //6
-    ubyte1 numMonitorBoards;                    //5
-    ubyte1 monitorBoardCommErrFlags;            //4
-    ubyte1 statusFlags1;                        //3
-    ubyte1 statusFlags2;                        //2
-    ubyte1 numFailedThermistors;                //1
-    //ubyte1 reserved;                          //0
-
-    // BMS_PACK_SAFE_OPERATING_ENVELOPE //
-    //ubyte2 reserved;                          //7:6
-    ubyte2 chargerConstVoltageSetPoint;         //5:4
-    ubyte2 maxDischargeCurrentAllowed;          //3:2
-    ubyte2 maxChargeCurrentAllowed;             //1:0
-
-    // BMS_MASTER_LOCAL_BOARD_MEASUREMENTS //
-    sbyte2 boardTemperature;                    //7:6
-    ubyte2 powerInputSense_12V_24V;             //5:4
-    ubyte2 powerInputSense_HVIL;                //3:2
-    ubyte2 internalRailSense_5V;                //1:0
-
-    // BMS_DIGITAL_INPUTS_AND_OUTPUTS //
-    ubyte1 digitalOutputStatus;                 //1
-    ubyte1 digitalInputStatus;                  //0
-
-    // BMS_PACK_LEVEL_MEASUREMENTS_1 //
-    ubyte4 packVoltage;                         //7:4, V*1000
-    sbyte4 packCurrent;                         //3:0, A*1000, charging=positive discharging=negative
-
-    // BMS_PACK_LEVEL_MEASUREMENTS_2 //
-    ubyte2 packStateOfCharge;                   //7:6, %*10
-    ubyte2 packStateOfHealth;                   //5:4, %*10
-    ubyte2 packAmpHoursRemaining;               //3:2, Ah*10
-    //ubyte2 reserved                           //1:0
-
-    // BMS_CELL_VOLTAGE_SUMMARY //
-    ubyte4 highestCellVoltage;                  //7:6, V*1000
-    ubyte2 lowestCellVoltage;                   //5:4, V*1000
-    ubyte2 highestCellVoltagePos;               //3:2, 1-N
-    ubyte2 lowestCellVoltagePos;                //1:0, 1-N
-
-    // BMS_CELL_TEMPERATURE_SUMMARY //
-    sbyte2 highestCellTemperature;              //7:6, degC*10
-    sbyte2 lowestCellTemperature;               //5:4, degC*10
-	sbyte2 averageCellTemperature;
-    ubyte2 highestCellTemperaturePos;           //3:2, 1-N
-    ubyte2 lowestCellTemperaturePos;            //1:0, 1-N
-
-    // BMS_PACK_LEVEL_MEASUREMENTS_3 //
-    ubyte4 sumOfCellVoltages;                   //7:4, V*1000
-    ubyte4 preChargeVoltage;                    //3:0, V*1000
-
-    // BMS_CELL_VOLTAGE_DATA //
-    // Use these variables as temporary buffers for now
-    // Maybe transfer to array in future?
-    ubyte2 cellVoltage_4X_1;                    //7:6, V*1000, X from 0 to 63 (targeted cell group voltage)
-    ubyte2 cellVoltage_4X_2;                    //5:4, V*1000, X from 0 to 63 (targeted cell group voltage)
-    ubyte2 cellVoltage_4X_3;                    //3:2, V*1000, X from 0 to 63 (targeted cell group voltage)
-    ubyte2 cellVoltage_4X_4;                    //1:0, V*1000, X from 0 to 63 (targeted cell group voltage)
-
-    // BMS_CELL_TEMPERATURE_DATA //
-    // Use these variables as temporary buffers for now
-    // Maybe transfer to array in future?
-    ubyte2 cellTemperature_4X_1;                //7:6, degC*10, X from 0 to 63 (targeted cell group voltage)
-    ubyte2 cellTemperature_4X_2;                //5:4, degC*10, X from 0 to 63 (targeted cell group voltage)
-    ubyte2 cellTemperature_4X_3;                //3:2, degC*10, X from 0 to 63 (targeted cell group voltage)
-    ubyte2 cellTemperature_4X_4;                //1:0, degC*10, X from 0 to 63 (targeted cell group voltage)
-
-    // BMS_CELL_SHUNTING_STATUS_1 //
-    //No ubyte8 exists, so we need to split it into two ubyte4
-    ubyte4 cellShuntingStatusArray1_0;          //7:4, , bit0=1 - shunting active for cell 1 | bit31=1 - shunting active for cell 32 
-    ubyte4 cellShuntingStatusArray1_1;          //3:0, , bit0=1 - shunting active for cell 33 | bit31=1 - shunting active for cell 64 
-
-    // BMS_CELL_SHUNTING_STATUS_2 //
-    ubyte4 cellShuntingStatusArray2_0;          //7:4, , bit0=1 - shunting active for cell 65 | bit31=1 - shunting active for cell 96 
-    ubyte4 cellShuntingStatusArray2_1;          //3:0, , bit0=1 - shunting active for cell 97 | bit31=1 - shunting active for cell 128 
-
-    // BMS_CELL_SHUNTING_STATUS_3 //
-    ubyte4 cellShuntingStatusArray3_0;          //7:4, , bit0=1 - shunting active for cell 129 | bit31=1 - shunting active for cell 160 
-    ubyte4 cellShuntingStatusArray3_1;          //3:0, , bit0=1 - shunting active for cell 161 | bit31=1 - shunting active for cell 192
-
-    // BMS_CELL_SHUNTING_STATUS_4 //
-    ubyte4 cellShuntingStatusArray4_0;          //7:4, , bit0=1 - shunting active for cell 193 | bit31=1 - shunting active for cell 224
-    ubyte4 cellShuntingStatusArray4_1;          //3:0, , bit0=1 - shunting active for cell 225 | bit31=1 - shunting active for cell 256 
-
-    // BMS_CONFIGUATION_INFORMATION //
-    //ubyte2 reserved;                          //7:6
-    //ubyte2 reserved;                          //5:4
-    ubyte2 numSeriesCells;                      //3:2
-    ubyte2 numThermistors;                      //1:0
-
-    // BMS_FIRMWARE_VERSION_INFORMATION //
-    //ubyte1 reserved;                          //3
-    ubyte1 fwMajorVerNum;                       //2, , X.0.0
-    ubyte1 fwMinorVerNum;                       //1, , 0.X.0
-    ubyte1 fwRevNum;                            //0, , 0.0.X
-
-    bool relayState;
-
-	BMSPack pack;
-
-    // signed = 2's complement: 0XfFF = -1, 0x00 = 0, 0x01 = 1
-} BatteryManagementSystem;
-
-BatteryManagementSystem *BMS_new(SerialManager *serialMan, ubyte2 canMessageBaseID, BMSPack pack);
+BatteryManagementSystem* BMS_new(ubyte2 canMessageBaseID);
 void BMS_parseCanMessage(BatteryManagementSystem* bms, IO_CAN_DATA_FRAME* bmsCanMessage);
+bool BMS_isAlive(BatteryManagementSystem *me);
 
-// BMS COMMANDS // 
+// BMS COMMANDS //
 
 IO_ErrorType BMS_relayControl(BatteryManagementSystem *me);
 bool BMS_getRelayState(BatteryManagementSystem *me);
 
-// ***NOTE: packCurrent and and packVoltage are SIGNED variables and the return type for BMS_getPower is signed
-sbyte4 BMS_getPower_uW(BatteryManagementSystem* me);                //microWatts (higher resolution)
-sbyte4 BMS_getPower_W(BatteryManagementSystem* me);                 //Watts
-ubyte2 BMS_getPackTemp(BatteryManagementSystem* me);
-sbyte1 BMS_getAvgTemp(BatteryManagementSystem* me);
-ubyte4 BMS_getHighestCellVoltage_mV(BatteryManagementSystem *me);   //Millivolts
-ubyte2 BMS_getLowestCellVoltage_mV(BatteryManagementSystem *me);   //Millivolts
-ubyte1 BMS_getFaultFlags0(BatteryManagementSystem *me);
-ubyte1 BMS_getFaultFlags1(BatteryManagementSystem *me);
-ubyte4 BMS_getPackVoltage_cV(BatteryManagementSystem *me);
-sbyte2 BMS_getHighestCellTemp_degC(BatteryManagementSystem *me);
-sbyte2 BMS_getAverageCellTemp_degC(BatteryManagementSystem *me);
+//Recalculates whether the VCU is asking the BMS to precharge. Call once per main loop,
+//after the CAN read, and before the frame is put on the bus
+void BMS_updatePrechargeRequest(BatteryManagementSystem *me, Sensor *HVILTermSense);
+bool BMS_getPrechargeRequest(BatteryManagementSystem *me);
 
-ubyte1 BMS_getCCL(BatteryManagementSystem* me);
-ubyte1 BMS_getDCL(BatteryManagementSystem* me);
+// Pack level //
 
-typedef enum
-{
-    relayFault = 0x08,
-    contactorK3Status = 0x04,
-    contactorK2Status = 0x02,
-    contactorK1Status = 0x01,
-    faultState = 0x00,
+ubyte1 BMS_getFaultFlags(BatteryManagementSystem *me);
+ubyte1 BMS_getWarningFlags(BatteryManagementSystem *me);
+ubyte4 BMS_getPackVoltage(BatteryManagementSystem *me);             //Millivolts
+ubyte4 BMS_getPackCurrent_mA(BatteryManagementSystem *me);          //Milliamps
+sbyte4 BMS_getPower_W(BatteryManagementSystem *me);                 //Watts
+ubyte1 BMS_getStateOfCharge(BatteryManagementSystem *me);           //Percent
+bool BMS_getPrechargeComplete(BatteryManagementSystem *me);
 
-} systemState;
+// Cell summary //
 
-typedef enum
-{
-    DrivingOffWhilePluggedIn = 0x01,	// Driving off while plugged in
-    InterlockTripped = 0x02,			// Inter-lock is tripped
-    CommuncationFault = 0x04,			// Communication fault with a bank or cell
-    ChargeOverCurrent = 0x08,			// Charge over-current
-    DischargeOverCurrent = 0x10,        // Discharge over-current
-    OverTemperture = 0x20,				// Over-temperature fault
-    UnderVoltage = 0x40,				// Under voltage
-    OverVoltage = 0x80,					// Over voltage
+ubyte2 BMS_getHighestCellVoltage_mV(BatteryManagementSystem *me);
+ubyte2 BMS_getLowestCellVoltage_mV(BatteryManagementSystem *me);
+ubyte2 BMS_getCellMismatch_mV(BatteryManagementSystem *me);
+sbyte2 BMS_getHighestCellTemp_d_degC(BatteryManagementSystem *me);  //deciCelsius
+sbyte2 BMS_getHighestCellTemp_degC(BatteryManagementSystem *me);    //Celsius
+sbyte2 BMS_getLowestCellTemp_degC(BatteryManagementSystem *me);     //Celsius
 
-    // CUSTOM MESSAGES //
+// Per cell and per module, all return 0 if the index is out of range //
 
-    BMSNotDetected = 0x100,
-    InitFailed = 0x200,
-
-} faultOptions;
-
-
-
-typedef enum
-{
-    StoredNoFault = 0x0,						// No fault
-    StoredDrivingOffWhilePluggedIn = 0x01,		// Driving off while plugged in
-    StoredInterockTripped = 0x02,				// Interlock is tripped
-    StoredCommFault = 0x03,						// Communication fault with a bank or cell
-    StoredChargeOverCurrent = 0x04,				// Charge over-current
-    StoredDischargeOverCurrent = 0x05,			// Dishcarge over-current
-    StoredOverTemperture = 0x06,				// Over-temperature fault
-    StoredUnderVoltage = 0x07,					// Under voltage
-    StoredOverVoltage = 0x08,					// Over voltage
-
-    StoredNoBatteryVoltage = 0x09,              // No battery voltage
-    StoredHighVoltageBMinusLeak = 0xA,			// High voltage B- leak to chassis
-    StoredHighVoltageBPlusLeak = 0xB,			// High voltage B+ leak to chassis
-    StoredContactorK1Shorted = 0xC,				// Contactor K1 shorted
-    StoredContactorK2Shorted = 0xD,				// Contactor K2 shorted
-    StoredContactorK3Shorted = 0xE,				// Contactor K3 shorted
-    StoredNoPrecharge = 0xF,					// No precharge
-    StoredOpenK2 = 0x10,						// Open K2
-    StoredExcessivePrechargeTime = 0x11,		// Excessive precharge time
-    StoredEEPROMStackOverflow = 0x12,			// EEPROM stack overflow
-
-} storedFaults;
-
-
-
-typedef enum {
-
-    /*
-     * Using hex to represent each bit position
-     */
-
-    IOFlagPowerFromSource = 0x01,				// There is power from the source
-    IOFlagPowerFromLoad = 0x02,					// There is power from the load
-    IOFlagInterlockedTripped = 0x04,			// The inter-lick is tripped
-    IOFlagHardWireContactorRequest = 0x08,		// There is a hard-wire contactor request
-    IOFlagCANContactorRequest = 0x10,			// There is a CAN contactor request
-    IOFlagHighLimitSet = 0x20,					// The HLIM is set
-    IOFlagLowLimitSet = 0x40,					// The LLIM is set
-    IOFlagFanIsOn = 0x80,						// The fan is on
-
-} IOFlags;
-
-
-
-
-typedef enum LimitCause{
-
-    LimitCauseErrorReadingValue = -1,
-    LimitCauseNone = 0,							// No limit
-    LimitCausePackVoltageTooLow,				// Pack voltage too low
-    LimitCausePackVolageTooHigh,				// Pack voltage too high
-    LimitCauseCellVoltageTooLow,				// Cell voltage too low
-    LimitCauseCellVoltageTooHigh,				// Cell voltage too high
-    LimitCauseTempTooHighToCharge,				// Temperature too high for charging
-    LimitCauseTempTooLowToCharge,				// Temperature too low for charging
-    LimitCauseTempTooHighToDischarge,			// Temperature too high for discharging
-    LimitCauseTempTooLowToDischarge,			// Temperature too low for discharging
-    LimitCauseChargingCurrentPeakTooLong,		// Charging current peak lasting too long
-    LimitCauseDischargingCurrentPeakTooLong,	// Discharging current peak lasted too long
-
-} LimitCause;
-
-#define ERROR_READING_LIMIT_VALUE = -1
-
+ubyte2 BMS_getCellVoltage_mV(BatteryManagementSystem *me, ubyte1 cell);
+ubyte1 BMS_getCellTemp_degC(BatteryManagementSystem *me, ubyte1 thermistor);
+ubyte2 BMS_getBalanceStatus(BatteryManagementSystem *me, ubyte1 module);
+ubyte1 BMS_getModulePressure(BatteryManagementSystem *me, ubyte1 module);
+ubyte1 BMS_getModuleAtmosTemp(BatteryManagementSystem *me, ubyte1 module);
+ubyte1 BMS_getModuleHumidity(BatteryManagementSystem *me, ubyte1 module);
+ubyte1 BMS_getModuleDewPoint(BatteryManagementSystem *me, ubyte1 module);
 
 #endif // _BATTERYMANAGEMENTSYSTEM_H
-
-
-
