@@ -258,17 +258,13 @@ bool BMS_getRelayState(BatteryManagementSystem *me) {
 
 void BMS_updatePrechargeRequest(BatteryManagementSystem *me, Sensor *HVILTermSense)
 {
-    if (BMS_getFaultFlags(me) != 0 || BMS_isAlive(me) == FALSE)
+    me->prechargeRequest = BMS_getFaultFlags(me) == 0
+        && BMS_isAlive(me) == TRUE
+        && HVILTermSense->sensorValue == TRUE;
+
+    if (me->prechargeRequest == FALSE)
     {
-        me->prechargeRequest = FALSE;
-    }
-    else if (me->prechargeComplete == TRUE && HVILTermSense->sensorValue == FALSE)
-    {
-        me->prechargeRequest = FALSE;
-    }
-    else
-    {
-        me->prechargeRequest = TRUE;
+        me->prechargeComplete = FALSE;
     }
 }
 

@@ -31,7 +31,6 @@ extern Sensor Sensor_LVBattery;
 extern Sensor Sensor_BenchTPS0;
 extern Sensor Sensor_BenchTPS1;
 
-extern Sensor Sensor_RTDButton;
 extern Sensor Sensor_EcoButton;
 
 extern Sensor Sensor_DRSButton;
@@ -126,7 +125,6 @@ void sensors_updateSensors(void)
     */
    
     //Switches / Digital ---------------------------------------------------
-    Sensor_RTDButton.ioErr_signalGet = IO_DI_Get(IO_DI_04, &Sensor_RTDButton.sensorValue);  //P261 [BE2 SIG-VCU]
     Sensor_EcoButton.ioErr_signalGet = IO_DI_Get(IO_DI_01, &Sensor_EcoButton.sensorValue);
     Sensor_TVButton.ioErr_signalGet = IO_DI_Get(IO_DI_02, &Sensor_TVButton.sensorValue); //USed to be Launch Control Button (P262)
     Sensor_HVILTerminationSense.ioErr_signalGet = IO_DI_Get(IO_DI_07, &Sensor_HVILTerminationSense.sensorValue);  //P253 [TERM VCU]
