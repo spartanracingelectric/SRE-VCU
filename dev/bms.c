@@ -203,8 +203,6 @@ void BMS_parseCanMessage(BatteryManagementSystem *bms, IO_CAN_DATA_FRAME *bmsCan
     }
 }
 
-//1s covers the BMS's worst honest burst cadence (~120ms) plus its 500ms
-//silent-drop window (can_skip_flag) without nuisance trips
 #define BMS_RX_TIMEOUT_US 1000000
 
 bool BMS_isAlive(BatteryManagementSystem *me)
