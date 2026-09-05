@@ -162,8 +162,6 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     * Faults
     ****************************************************************************/
     //===================================================================
-    // TEMPORARY DEBUG: disable non-BMS VCU safety faults.
-#if 0
     // Get calibration status
     //===================================================================
     //me->faults = 0xFFFF; //Set ALL faults by default.  only clear if truly safe
@@ -328,8 +326,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     //      b. Turn on the AMS Indicator Light (handled by Shutdown circuit)    - Handled by Shutdown Circuit
     //-------------------------------------------------------------------
 
-    // End temporary non-BMS fault disable.
-#endif
+
 
     //If over voltage fault detected
     if (BMS_getFaultFlags(bms) & BMS_CELL_OVER_VOLTAGE_FLAG)
@@ -404,8 +401,6 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     * Warnings
     ****************************************************************************/
     //===================================================================
-    // TEMPORARY DEBUG: disable LV battery and soft-BSPD faults.
-#if 0
     // LVS Battery Check - FAULTS LATCH UNTIL RETURN TO PREVIOUS STAGE
     //===================================================================
     //  IO_ADC_UBAT: 0..40106  (0V..40.106V)
@@ -451,8 +446,6 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     // 40922 = 60227 <-- This discrepancy is because we don't get all of the requested torque 
 
 
-    // End temporary LV/soft-BSPD fault disable.
-#endif
 
     me->softBSPD_bpsHigh = bps->bps0->sensorValue > 1900;
     me->softBSPD_kwHigh = FALSE; //SRE-7 Update: MCM_getPower(mcm) > 4000;
