@@ -45,6 +45,7 @@
 #include "sensorCalculations.h"
 #include "cooling.h"
 #include "daqSensors.h"
+#include "sdiff.h"
 
 //Application Database, needed for TTC-Downloader
 APDB appl_db =
@@ -215,6 +216,7 @@ void main(void)
     //MotorController *mcm0 = MotorController_new(0xA0, FORWARD, 750, 5, 10); //CAN addr, direction, torque limit x10 (100 = 10Nm)
     //MCM_setRegenMode(mcm0, REGENMODE_OFF);
     _Powertrain *powertrain = Powertrain_new();
+    SDiff *sdiff = SDiff_new();
 
     InstrumentCluster *ic0 = InstrumentCluster_new(0x702);
     TorqueEncoder *tps = TorqueEncoder_new(bench);
@@ -377,6 +379,15 @@ void main(void)
 
         //MCM_inverterControl(mcm0, tps, bps, rtds);
         Powertrain_controlVehicle(powertrain, &Sensor_HVILTerminationSense, tps, bps, rtds, d1, bms);
+
+        //sdiff: split the rear current by steering angle (t_driver in 0.1 A so it fits the sbyte2)
+        if (powertrain->useDutyCycle == FALSE)
+        {
+            float4 t_driver = powertrain->motor[2]->current_mA / 100.0f;
+            SDiff_Command cmd = s_diff_control(sdiff, (float4)steering_degrees(), t_driver);
+            powertrain->motor[2]->current_mA = (sbyte4)cmd.left * 100;
+            powertrain->motor[3]->current_mA = (sbyte4)cmd.right * 100;
+        }
 
         SafetyChecker_reduceTorque(sc, bms, powertrain);
 

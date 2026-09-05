@@ -14,16 +14,16 @@
 
 #define DEG_TO_RAD 0.01745329252f
 
-// TODO: tune/define these, and set init values when driving and measuring PLS DONT FLASH THIS :(
-#define STEERING_RATIO 0
-#define DELTA_MAX 0 // max steering angle
-#define K_DERATE 0 // how aggro torque will decrease with steering angle
-#define K_INNER 0 // extra derate on inner (unloaded) wheel
-#define F_MIN 0  // minimum torque floor, will cap the baseline torque reduction, 0 < for
+// same numbers as the sim (F-Sim controllers/python/params.yaml), not tuned on car yet
+#define STEERING_RATIO 3.2f
+#define DELTA_MAX 0.4049f // max steering angle, road wheel rad (23.2 deg)
+#define K_DERATE 0.3f // how aggro torque will decrease with steering angle
+#define K_INNER 0.2f // extra derate on inner (unloaded) wheel
+#define F_MIN 0.4f  // minimum torque floor, will cap the baseline torque reduction, 0 < for
     // regen lowk try capping at 0 first then negative later irl
 
-#define DEADBAND 0   // tolerance around center steering position
-#define RATE 0 // max speed on how low the torques can drop for each motor
+#define DEADBAND 0.0175f   // tolerance around center steering position (1 deg)
+#define RATE 4.0f // max speed on how low the torques can drop for each motor
 #define SDIFF_LOOP_PERIOD 0.01f // 10ms off main
 
 static inline float4 clampf(float4 v, float4 lo, float4 hi);
@@ -36,16 +36,16 @@ typedef struct _SDiff {
   float4 g_right_appl; // smoothed right
 } SDiff;
 
-SDiff *SDiff_new(void);
-
-SDiff_Command s_diff_control(SDiff *me, float4 steering_deg, float4 t_driver);
-
 // TODO: see what the custom inverters use idk any docs on that ngl
 // AMK CAN protocol takes 16 bit signed field on bus(not using)
 typedef struct _SDiff_Command {
   sbyte2 left;  // torque request 
   sbyte2 right; // torque request
 } SDiff_Command;
+
+SDiff *SDiff_new(void);
+
+SDiff_Command s_diff_control(SDiff *me, float4 steering_deg, float4 t_driver);
 
 #endif
 

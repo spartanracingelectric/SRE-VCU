@@ -47,6 +47,9 @@ BrakePressureSensor *BrakePressureSensor_new(void)
 
     me->calibrated = FALSE;
     BrakePressureSensor_resetCalibration(me);
+    //bounds were 0/0 here (sensor not read yet) so getPercent div by zero -> brakes always "on"
+    me->bps0_calibMin = 450;
+    me->bps0_calibMax = 4500;
 
     return me;
 }

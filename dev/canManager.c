@@ -49,9 +49,9 @@ CanManager* CanManager_new(ubyte2 busSpeed[CAN_CHANNELS], ubyte1 read_messageLim
 {
     CanManager* me = (CanManager*)malloc(sizeof(struct _CanManager));
 
-    for (ubyte4 id = 0; id <= 0x7FF; id++)
+    for (ubyte4 id = 0; id < 0x7FF; id++)
     {
-        me->canMessageHistory[id] = 0;
+        me->canMessageHistory[id] = (AVLNode*)calloc(1, sizeof(AVLNode)); //was writing through NULL below
     }
 
     me->sendDelayus = defaultSendDelayus;
