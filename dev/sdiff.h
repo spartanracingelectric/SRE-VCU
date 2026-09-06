@@ -15,15 +15,22 @@
 #define DEG_TO_RAD 0.01745329252f
 
 // TODO: tune/define these, and set init values when driving and measuring PLS DONT FLASH THIS :(
-#define STEERING_RATIO 0
-#define DELTA_MAX 0 // max steering angle
-#define K_DERATE 0 // how aggro torque will decrease with steering angle
-#define K_INNER 0 // extra derate on inner (unloaded) wheel
-#define F_MIN 0  // minimum torque floor, will cap the baseline torque reduction, 0 < for
+#define STEERING_RATIO 5.4 //wheel to rack  
+//vaule comes from dylan and the team
+#define DELTA_MAX 25 // max steering angle 
+//vaule comes from dylan and the team
+#define K_DERATE 0.25 // how aggro torque will decrease with steering angle 
+//The total derate is 1 - K_DERATE * delta_norm, so if K_DERATE = 0.25 and delta_norm = 1, then the total derate is 0.75, meaning that the torque will be reduced by 25% at max steering angle.
+#define K_INNER 0.35 // extra derate on inner (unloaded) wheel 
+//inner wheel will be derated by K_INNER * delta_norm, so if K_INNER = 0.35 and delta_norm = 1, then the inner wheel will be derated by 35% at max steering angle.
+#define F_MIN 0.5  // minimum torque floor, will cap the baseline torque reduction, 0 < for //pure safety, 1 < for more aggressive torque vectoring 
+//if F_MIN = 0.5, then the torque will never be reduced below 50% of the original torque, meaning that the torque will be reduced by at most 50% at max steering angle.
     // regen lowk try capping at 0 first then negative later irl
 
-#define DEADBAND 0   // tolerance around center steering position
-#define RATE 0 // max speed on how low the torques can drop for each motor
+#define DEADBAND 1.0   // tolerance around center steering position 
+//if the steering angle is within DEADBAND degrees of center, then the torque will not be reduced, meaning that the torque will be reduced by 0% at center steering angle.
+#define RATE 2 // max speed on how low the torques can drop for each motor 
+//if RATE = 2, then the torque will be reduced by at most 2% per second, meaning that the torque will be reduced by at most 20% in 10 seconds.
 #define SDIFF_LOOP_PERIOD 0.01f // 10ms off main
 
 static inline float4 clampf(float4 v, float4 lo, float4 hi);
