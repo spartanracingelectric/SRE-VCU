@@ -710,8 +710,10 @@ void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain, Torque
     canMessages[canMessageCount].data[3] = (ubyte1)powertrain->motor_rr;
     canMessages[canMessageCount].length = 4;
     canMessageCount++;
-   
 
+    // VESC command IDs are 29-bit (extended) CAN frames.  The regular CAN0
+    // write handle is configured for standard frames, so use the dedicated
+    // extended-frame FIFO configured in CanManager_new().
     me->ioErr_write[0] = IO_CAN_WriteFIFO(me->vescWriteHandle, canMessages, canMessageCount);
 
 }

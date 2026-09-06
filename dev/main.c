@@ -215,10 +215,14 @@ void main(void)
     // ubyte2 tps0_calibMax = 0x9876;  //me->tps0->sensorValue;
     // ubyte2 tps1_calibMin = 0x5432;  //me->tps1->sensorValue;
     // ubyte2 tps1_calibMax = 0xCDEF;  //me->tps1->sensorValue;
-    ubyte2 tps0_calibMin = 400;  //me->tps0->sensorValue;
-    ubyte2 tps0_calibMax = 1400; //me->tps0->sensorValue;
-    ubyte2 tps1_calibMin = 1800; //me->tps1->sensorValue;
-    ubyte2 tps1_calibMax = 4000; //me->tps1->sensorValue;
+    // Use the measured pedal endpoints until calibration persistence is
+    // implemented.  Previously these values were only local variables, so the
+    // TorqueEncoder remained uncalibrated and forced travelPercent to zero.
+    tps->tps0_calibMin = 400;
+    tps->tps0_calibMax = 1400;
+    tps->tps1_calibMin = 1800;
+    tps->tps1_calibMax = 4000;
+    tps->calibrated = TRUE;
 
     /*******************************************/
     /*       PERIODIC APPLICATION CODE         */

@@ -685,10 +685,10 @@ void SafetyChecker_reduceTorque(SafetyChecker *me, BatteryManagementSystem *bms,
         multiplier = 0;
     }
 
-    powertrain->motor_fl = (sbyte4)(powertrain->motor_fl * multiplier);
-    powertrain->motor_fr = (sbyte4)(powertrain->motor_fr * multiplier);
-    powertrain->motor_rl = (sbyte4)(powertrain->motor_rl * multiplier);
-    powertrain->motor_rr = (sbyte4)(powertrain->motor_rr * multiplier);
+    // powertrain->motor_fl = (sbyte4)(powertrain->motor_fl * multiplier);
+    // powertrain->motor_fr = (sbyte4)(powertrain->motor_fr * multiplier);
+    // powertrain->motor_rl = (sbyte4)(powertrain->motor_rl * multiplier);
+    // powertrain->motor_rr = (sbyte4)(powertrain->motor_rr * multiplier);
 }
 
 //-------------------------------------------------------------------
