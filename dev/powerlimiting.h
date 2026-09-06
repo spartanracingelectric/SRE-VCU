@@ -11,6 +11,5 @@ typedef struct {
 } PowerLimiting;
 
 PowerLimiting* PowerLimiting_new(float targetPower);
-void PowerLimiting_limitPower(PowerLimiting* pl, _DriveInverter* mcu, TorqueEncoder* tps);
 
 #endif

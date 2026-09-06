@@ -123,6 +123,7 @@ SafetyChecker *SafetyChecker_new(ubyte2 maxChargeAmps, ubyte2 maxDischargeAmps)
 
     me->faults = 0;
     me->warnings = 0;
+    me->notices = 0;
 
     me->maxAmpsCharge = maxChargeAmps;
     me->maxAmpsDischarge = maxDischargeAmps;
@@ -325,6 +326,8 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     //      b. Turn on the AMS Indicator Light (handled by Shutdown circuit)    - Handled by Shutdown Circuit
     //-------------------------------------------------------------------
 
+
+
     //If over voltage fault detected
     if (BMS_getFaultFlags(bms) & BMS_CELL_OVER_VOLTAGE_FLAG)
     {
@@ -441,6 +444,7 @@ void SafetyChecker_update(SafetyChecker *me, BatteryManagementSystem *bms, Torqu
     // MCM readings <--> REQUESTED torque * rpm / 9.5488
     // 259*158 = 225 * 2556 / 9.5488
     // 40922 = 60227 <-- This discrepancy is because we don't get all of the requested torque 
+
 
 
     me->softBSPD_bpsHigh = bps->bps0->sensorValue > 1900;
@@ -608,21 +612,6 @@ void SafetyChecker_reduceTorque(SafetyChecker *me, BatteryManagementSystem *bms,
         multiplier = 0;
     }
     
-    // If HVIL is open, we must command 0 torque before opening the motor controller relay
-    if ((me->notices & N_HVILTermSenseLost) > 0)
-    {
-       multiplier = 0;
-       //SerialManager_send(me->serialMan, "HVIL term sense low\n");
-    }
-
-    //If any AMK motor runs into issues we want to set them all to 0 to prevent driver spin
-
-    if(powertrain->motor[0]->AMK_Error_recieve == TRUE || powertrain->motor[1]->AMK_Error_recieve == TRUE || powertrain->motor[2]->AMK_Error_recieve == TRUE || powertrain->motor[3]->AMK_Error_recieve == TRUE)
-    {
-        multiplier = 0;
-    }
-    
-
     //-------------------------------------------------------------------
     // Other limits (% reduction) - set torque to the lowest of all these
     // IMPORTANT: Be aware of direction-sensitive situations (accel/regen)
@@ -691,18 +680,15 @@ void SafetyChecker_reduceTorque(SafetyChecker *me, BatteryManagementSystem *bms,
         multiplier = 1;
     }
 
-    powertrain->motor[0]->AMK_TorqueRequest_send = powertrain->motor[0]->AMK_TorqueRequest_send * multiplier;
-    powertrain->motor[1]->AMK_TorqueRequest_send = powertrain->motor[1]->AMK_TorqueRequest_send * multiplier;
-    powertrain->motor[2]->AMK_TorqueRequest_send = powertrain->motor[2]->AMK_TorqueRequest_send * multiplier;
-    powertrain->motor[3]->AMK_TorqueRequest_send = powertrain->motor[3]->AMK_TorqueRequest_send * multiplier;
-    powertrain->motor[0]->current_mA = powertrain->motor[0]->current_mA * multiplier;
-    powertrain->motor[1]->current_mA = powertrain->motor[1]->current_mA * multiplier;
-    powertrain->motor[2]->current_mA = powertrain->motor[2]->current_mA * multiplier;
-    powertrain->motor[3]->current_mA = powertrain->motor[3]->current_mA * multiplier;
-    powertrain->motor[0]->dutyCycle = powertrain->motor[0]->dutyCycle * multiplier;
-    powertrain->motor[1]->dutyCycle = powertrain->motor[1]->dutyCycle * multiplier;
-    powertrain->motor[2]->dutyCycle = powertrain->motor[2]->dutyCycle * multiplier;
-    powertrain->motor[3]->dutyCycle = powertrain->motor[3]->dutyCycle * multiplier;
+    if ((me->notices & N_HVILTermSenseLost) > 0)
+    {
+        multiplier = 0;
+    }
+
+    // powertrain->motor_fl = (sbyte4)(powertrain->motor_fl * multiplier);
+    // powertrain->motor_fr = (sbyte4)(powertrain->motor_fr * multiplier);
+    // powertrain->motor_rl = (sbyte4)(powertrain->motor_rl * multiplier);
+    // powertrain->motor_rr = (sbyte4)(powertrain->motor_rr * multiplier);
 }
 
 //-------------------------------------------------------------------

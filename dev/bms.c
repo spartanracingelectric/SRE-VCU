@@ -203,8 +203,6 @@ void BMS_parseCanMessage(BatteryManagementSystem *bms, IO_CAN_DATA_FRAME *bmsCan
     }
 }
 
-//1s covers the BMS's worst honest burst cadence (~120ms) plus its 500ms
-//silent-drop window (can_skip_flag) without nuisance trips
 #define BMS_RX_TIMEOUT_US 1000000
 
 bool BMS_isAlive(BatteryManagementSystem *me)
@@ -258,17 +256,13 @@ bool BMS_getRelayState(BatteryManagementSystem *me) {
 
 void BMS_updatePrechargeRequest(BatteryManagementSystem *me, Sensor *HVILTermSense)
 {
-    if (BMS_getFaultFlags(me) != 0 || BMS_isAlive(me) == FALSE)
+    me->prechargeRequest = BMS_getFaultFlags(me) == 0
+        && BMS_isAlive(me) == TRUE
+        && HVILTermSense->sensorValue == TRUE;
+
+    if (me->prechargeRequest == FALSE)
     {
-        me->prechargeRequest = FALSE;
-    }
-    else if (me->prechargeComplete == TRUE && HVILTermSense->sensorValue == FALSE)
-    {
-        me->prechargeRequest = FALSE;
-    }
-    else
-    {
-        me->prechargeRequest = TRUE;
+        me->prechargeComplete = FALSE;
     }
 }
 

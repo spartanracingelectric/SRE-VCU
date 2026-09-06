@@ -14,7 +14,7 @@
 
 #include "IO_Driver.h" //Includes datatypes, constants, etc - probably should be included in every c file
 #include "IO_ADC.h"
-#include "IO_PWM.h"
+#include "IO_RTC.h"
 #include "IO_CAN.h"
 #include "IO_DIO.h"
 
@@ -59,11 +59,6 @@ void vcu_initializeADC(bool benchMode)
     // IO_POWER_Set (IO_SENSOR_SUPPLY_VAR, IO_POWER_14_5_V);
 
     //Digital PWM outputs ---------------------------------------------------
-    // RTD Sound (dash alertor)
-    IO_PWM_Init(IO_PWM_03, 750, TRUE, FALSE, 0, FALSE, NULL);   //P105 = BE2 ALRT SIG -> DASH.6
-    IO_PWM_SetDuty(IO_PWM_03, 0, NULL);
-    //IO_PWM_01 = P106, NOT WIRED on SRE-7b
-    
     // Rad Fans (SR-14 and above) - P117 NOT WIRED on SRE-7b, and the PDU's PWM fan input (PDU_B.35/B.36) was never built.
     // Fans are on/off via IO_DO_04 (P142 = FAN EN SIG -> PDU_A.39) in Light_set() instead.
     //IO_PWM_Init(IO_PWM_02, 100, TRUE, FALSE, 0, FALSE, NULL); //Pin, Frequency Hz, Boolean for pos polarity, current measurement enabled bool, weird other pin (current), no diagram margin, not safety critical
@@ -150,12 +145,11 @@ void vcu_initializeADC(bool benchMode)
     //----------------------------------------------------------------------------
     //Switches
     //----------------------------------------------------------------------------
-    Sensor_RTDButton.ioErr_signalInit = IO_DI_Init(IO_DI_04, IO_DI_PD_10K);     //P261 = BE2 SIG-VCU -> SWC lower-right (simulating RTD). Sourcing switch, so pull DOWN.
-     Sensor_EcoButton.ioErr_signalInit = IO_DI_Init(IO_DI_01, IO_DI_PU_10K);     //P256 = CAL BTN SIG -> DASH.7 (calibration button)
+    Sensor_EcoButton.ioErr_signalInit = IO_DI_Init(IO_DI_01, IO_DI_PU_10K);     //P256 = CAL BTN SIG -> DASH.7 (calibration button)
     //Sensor_TCSSwitchUp.ioErr_signalInit = IO_DI_Init(IO_DI_02, IO_DI_PU_10K);   //TCS Switch A
     Sensor_TVButton.ioErr_signalInit = IO_DI_Init(IO_DI_02, IO_DI_PU_10K); // Torque Control Enable Button (P262)
     Sensor_DRSButton.ioErr_signalInit = IO_DI_Init(IO_DI_03, IO_DI_PU_10K); // P255
-    Sensor_HVILTerminationSense.ioErr_signalInit = IO_DI_Init(IO_DI_07, IO_DI_PD_10K); //P253 [TERM VCU], high = HV present. Flagswitch presents voltage when closed, floats when open, so pull DOWN.
+    Sensor_HVILTerminationSense.ioErr_signalInit = IO_DI_Init(IO_DI_07, IO_DI_PD_10K); //P253 [TERM VCU], flag switch presents voltage when closed.
 
     //TV and DRS Button may be switched on SRE-7
 
@@ -175,13 +169,10 @@ void vcu_ADCWasteLoop(void)
     {
         IO_Driver_TaskBegin();
 
-        IO_PWM_SetDuty(IO_PWM_03, 0, NULL);
-
         IO_DO_Set(IO_DO_00, FALSE); //False = low
         IO_DO_Set(IO_DO_01, FALSE); //VCU shutdown signal
 
         //IO_DI (digital inputs) supposed to take 2 cycles before they return valid data
-        IO_DI_Get(IO_DI_04, &tempData);
         IO_DI_Get(IO_DI_01, &tempData);
         IO_ADC_Get(IO_ADC_5V_06, &tempData, &tempFresh);
         IO_ADC_Get(IO_ADC_5V_01, &tempData, &tempFresh);
@@ -209,7 +200,6 @@ Sensor Sensor_LVBattery;
 
 Sensor Sensor_TCSKnob;
 
-Sensor Sensor_RTDButton;
 Sensor Sensor_EcoButton;
 Sensor Sensor_HVILTerminationSense;
 Sensor Sensor_TVButton;

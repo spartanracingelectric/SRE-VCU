@@ -438,23 +438,21 @@ BO_ 1281 VCU_TPS1: 8 VCU
 
 BO_ 1282 VCU_BPS: 8 VCU
 SG_ BrakePercent0FF : 0|8@1+ (0.392156862746,0) [0|100.00000000023] "%" VCU
+SG_ EcoButton : 8|1@1+ (1,0) [0|1] "" VCU
 SG_ BPS0Voltage : 16|16@1+ (0.001,0) [0|65.535] "V" VCU
 SG_ BPS0CalibMin : 32|16@1+ (0.001,0) [0|65.535] "V" VCU
 SG_ BPS0CalibMax : 48|16@1+ (0.001,0) [0|65.535] "V" VCU
 
-BO_ 1284 UNUSED: 8 VCU
- SG_ VCU_WSS_FL : 0|16@1+ (1,0) [0|32767] "RPM" VCU
- SG_ VCU_WSS_FR : 16|16@1+ (1,0) [0|32767] "RPM" VCU
- SG_ VCU_WSS_RL : 32|16@1+ (1,0) [0|32767] "RPM" VCU
- SG_ VCU_WSS_RR : 48|16@1+ (1,0) [0|32767] "RPM" VCU
+BO_ 1283 VCU_WSS_Debug: 8 VCU
+ SG_ VCU_WSS_FL : 0|16@1+ (1,0) [0|65535] "mm/s" VCU
+ SG_ VCU_WSS_FR : 16|16@1+ (1,0) [0|65535] "mm/s" VCU
+ SG_ VCU_WSS_RL : 32|16@1+ (1,0) [0|65535] "mm/s" VCU
+ SG_ VCU_WSS_RR : 48|16@1+ (1,0) [0|65535] "mm/s" VCU
 
-BO_ 1285 UNUSED: 8 VCU
- SG_ VCU_WSS_FL_S : 0|16@1+ (1,0) [0|32767] "RPM" VCU
- SG_ VCU_WSS_FR_S : 16|16@1+ (1,0) [0|32767] "RPM" VCU
- SG_ VCU_WSS_RL_S : 32|16@1+ (1,0) [0|32767] "RPM" VCU
- SG_ VCU_WSS_RR_S : 48|16@1+ (1,0) [0|32767] "RPM" VCU
+BO_ 1284 VCU_SAS: 8 VCU
+ SG_ SAS_Voltage : 0|16@1+ (0.001,0) [0|5] "V" VCU
 
-BO_ 1286 VCU_Safety_Checker: 8 VCU
+BO_ 1285 VCU_Safety_Checker: 8 VCU
  SG_ VCU_FAULT_TPS_OutOfRange : 0|1@1+ (1,0) [0|1] "" VCU
  SG_ VCU_FAULT_BPS_OutOfRange : 1|1@1+ (1,0) [0|1] "" VCU
  SG_ VCU_FAULT_TPS_PowerFailure : 2|1@1+ (1,0) [0|1] "" VCU
@@ -467,26 +465,27 @@ BO_ 1286 VCU_Safety_Checker: 8 VCU
  SG_ VCU_FAULT_TPSBPS_Implausible : 10|1@1+ (1,0) [0|1] "" VCU
  SG_ VCU_FAULT_BSPD_SoftFault : 12|1@1+ (1,0) [0|1] "" VCU
  SG_ VCU_FAULT_LVS_BatteryEmpty : 16|1@1+ (1,0) [0|1] "" VCU
+ SG_ VCU_FAULT_BMS_OverVoltage : 20|1@1+ (1,0) [0|1] "" VCU
+ SG_ VCU_FAULT_BMS_UnderVoltage : 21|1@1+ (1,0) [0|1] "" VCU
+ SG_ VCU_FAULT_BMS_OverTemperature : 22|1@1+ (1,0) [0|1] "" VCU
+ SG_ VCU_FAULT_BMS_CommunicationLost : 23|1@1+ (1,0) [0|1] "" VCU
+ SG_ VCU_FAULT_BMS_CellMismatch : 24|1@1+ (1,0) [0|1] "" VCU
  SG_ VCU_WARNING_LVS_BatteryLow : 32|1@1+ (1,0) [0|1] "" VCU
+ SG_ VCU_WARNING_BMS_OverVoltage : 40|1@1+ (1,0) [0|1] "" VCU
+ SG_ VCU_WARNING_BMS_UnderVoltage : 41|1@1+ (1,0) [0|1] "" VCU
+ SG_ VCU_WARNING_BMS_OverTemperature : 42|1@1+ (1,0) [0|1] "" VCU
  SG_ VCU_WARNING_HVIL_OverrideEn : 38|1@1+ (1,0) [0|1] "" VCU
  SG_ VCU_WARNING_SAFETY_BypassEn : 39|1@1+ (1,0) [0|1] "" VCU
  SG_ VCU_NOTICE_HVIL_TermSenseLost : 48|1@1+ (1,0) [0|1] "" VCU
  SG_ VCU_NOTICE_BMS_Over75kW : 52|1@1+ (1,0) [0|1] "" VCU
  SG_ VCU_NOTICE_MCM_Over75kW : 53|1@1+ (1,0) [0|1] "" VCU
 
-BO_ 1287 Low_Voltage: 8 DAQ
+BO_ 1286 Low_Voltage: 8 DAQ
  SG_ Voltage : 0|16@1+ (0.001,0) [0|20] "V" VCU
+ SG_ StateOfCharge : 16|8@1+ (1,0) [0|100] "%" VCU
 
-BO_ 1288 VCU_Regen_Settings: 8 VCU
- SG_ VCU_MCM_RegenMode : 0|8@1+ (1,0) [0|255] "" VCU
- SG_ VCU_MCM_MaxTorqueNm : 16|8@1+ (1,0) [0|255] "Nm" VCU
- SG_ VCU_MCM_RegenTorqueLimitNm : 24|8@1+ (1,0) [0|255] "Nm" VCU
- SG_ VCU_MCM_RegenTorqueZeroPedal : 32|8@1+ (1,0) [0|255] "Nm" VCU
- SG_ VCU_MCM_RegenAPPSMaxCoasting : 48|8@1+ (1,0) [0|255] "" VCU
- SG_ VCU_MCM_RegenBPSMaxRegen : 56|8@1+ (1,0) [0|255] "" VCU
-
-BO_ 1289 MCM_RTD_HVIL: 8 VCU
- SG_ HVIL_Active : 0|16@1+ (1,0) [0|20] "" VCU
+BO_ 1287 MCM_RTD_HVIL: 8 VCU
+ SG_ HVIL_Active : 0|1@1+ (1,0) [0|1] "" VCU
 
 BO_ 1290 Torque_Vectoring: 8 mcm
  SG_ TorqueSetpoint : 0|16@1- (0.01,0) [-5|5] "%Nm" Vector__XXX
@@ -506,20 +505,12 @@ BO_ 1292 DRS_SAS: 8 DAQ
  SG_ DRS_Enable : 16|8@1+ (1,0) [0|1] "Enable" VCU
  SG_ DRS_Mode : 24|8@1+ (1,0) [0|3] "Selection" VCU
 
-BO_ 1294 VCU_BMS_Debug_1: 8 VCU
- SG_ VCU_BMS_FaultFlags0 : 0|8@1+ (1,0) [0|255] "" VCU
- SG_ VCU_BMS_FaultFlags1 : 8|8@1+ (1,0) [0|255] "" VCU
+BO_ 1288 VCU_BMS_Debug: 8 VCU
+ SG_ VCU_BMS_FaultFlags : 0|8@1+ (1,0) [0|255] "" VCU
+ SG_ VCU_BMS_WarningFlags : 8|8@1+ (1,0) [0|255] "" VCU
  SG_ VCU_BMS_ShutdownRelayState : 16|8@1+ (1,0) [0|255] "" VCU
- SG_ VCU_BMS_ShutdownRelayIOErr : 24|16@1+ (1,0) [0|255] "" VCU
+ SG_ VCU_BMS_HighestCellTemp_dC : 24|16@1- (0.1,0) [-3276.8|3276.7] "C" VCU
 
-BO_ 1295 VCU_BMS_Debug_2: 8 VCU
- SG_ VCU_BMS_HighestCellVoltage : 0|16@1+ (1,0) [0|255] "V" VCU
- SG_ VCU_BMS_LowestCellVoltage : 16|16@1+ (1,0) [0|255] "V" VCU
- SG_ VCU_BMS_HighestCellTemp_dC : 32|16@1- (1,0) [-32768|32767] "C" VCU
-
-BO_ 1296 VCU_80kW_Debug: 8 VCU
- SG_ VCU_MCM_Power : 0|32@1+ (1,0) [0|1000000] "W" VCU
- SG_ VCU_Safety_Checker_Notices : 32|32@1+ (1,0) [0|1000000] "" VCU
 
 BO_ 1536 BMS_State_Command: 2 VCU
  SG_ BMS_State_Request : 0|8@1+ (1,0) [0|4] "" Vector__XXX
@@ -832,8 +823,12 @@ CM_ BO_ 192 "Motor Controller Command Messages";
 CM_ BO_ 1280 "Throttle Position Sensor 0 Value";
 CM_ BO_ 1281 "Throttle Position Sensor 1 Value";
 CM_ BO_ 1282 "Brake Pressure Sensor Value";
-CM_ BO_ 1283 "Wheel Speed Sensor Value";
-CM_ BO_ 1286 "VCU Safety Messages";
+CM_ BO_ 1283 "VCU wheel-speed debug frame";
+CM_ BO_ 1284 "VCU steering-angle sensor";
+CM_ BO_ 1285 "VCU Safety Messages";
+CM_ BO_ 1286 "24 V low-voltage battery and SOC";
+CM_ BO_ 1287 "HVIL termination sense";
+CM_ BO_ 1288 "VCU BMS debug";
 CM_ BO_ 1568 "BMS Status and Fault Message";
 CM_ BO_ 1571 "Accumulator Pack Voltage and Current"; 
 CM_ BO_ 1572 "Accumulator Load Voltage and Current"; 

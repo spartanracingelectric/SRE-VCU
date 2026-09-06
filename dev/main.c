@@ -38,7 +38,6 @@
 #include "canManager.h"
 #include "powertrainControl.h"
 #include "instrumentCluster.h"
-#include "readyToDriveSound.h"
 #include "torqueEncoder.h"
 #include "brakePressureSensor.h"
 #include "safety.h"
@@ -107,7 +106,6 @@ extern Sensor Sensor_BPS1;
 extern Sensor Sensor_SAS;
 extern Sensor Sensor_TCSKnob;
 
-extern Sensor Sensor_RTDButton;
 extern Sensor Sensor_TEMP_BrakingSwitch;
 extern Sensor Sensor_EcoButton;
 
@@ -202,18 +200,6 @@ void main(void)
 
     //0 is for MANUAL DRS and 1 is for AUTO DRS
     ubyte1 pot_DRS_LC = 0; 
-
-    //0 is for AWD, 1 is for RWD
-    ubyte1 AMK_Mode = 0;
-
-    ReadyToDriveSound *rtds = RTDS_new();
-    //BatteryManagementSystem* bms = BMS_new();
-
-    // 240 Nm
-    //MotorController *mcm0 = MotorController_new(serialMan, 0xA0, FORWARD, 2400, 5, 10); //CAN addr, direction, torque limit x10 (100 = 10Nm)
-    // 75 Nm
-    //MotorController *mcm0 = MotorController_new(0xA0, FORWARD, 750, 5, 10); //CAN addr, direction, torque limit x10 (100 = 10Nm)
-    //MCM_setRegenMode(mcm0, REGENMODE_OFF);
     _Powertrain *powertrain = Powertrain_new();
 
     InstrumentCluster *ic0 = InstrumentCluster_new(0x702);
@@ -229,10 +215,14 @@ void main(void)
     // ubyte2 tps0_calibMax = 0x9876;  //me->tps0->sensorValue;
     // ubyte2 tps1_calibMin = 0x5432;  //me->tps1->sensorValue;
     // ubyte2 tps1_calibMax = 0xCDEF;  //me->tps1->sensorValue;
-    ubyte2 tps0_calibMin = 400;  //me->tps0->sensorValue;
-    ubyte2 tps0_calibMax = 1400; //me->tps0->sensorValue;
-    ubyte2 tps1_calibMin = 1800; //me->tps1->sensorValue;
-    ubyte2 tps1_calibMax = 4000; //me->tps1->sensorValue;
+    // Use the measured pedal endpoints until calibration persistence is
+    // implemented.  Previously these values were only local variables, so the
+    // TorqueEncoder remained uncalibrated and forced travelPercent to zero.
+    tps->tps0_calibMin = 400;
+    tps->tps0_calibMax = 1400;
+    tps->tps1_calibMin = 1800;
+    tps->tps1_calibMax = 4000;
+    tps->calibrated = TRUE;
 
     /*******************************************/
     /*       PERIODIC APPLICATION CODE         */
@@ -332,75 +322,40 @@ void main(void)
         BrakePressureSensor_update(bps, bench);
         //BrakePressureSensor_calibrationCycle(bps, &calibrationErrors); //BPS calibration disabled
 
-        //TractionControl_update(tps, mcm0, wss, daq);
-
-        //Update WheelSpeed and interpolate
-        //WheelSpeeds_update(wss, TRUE);
-
-        //SRE-7 Update: slip ratio calculation can go here with PID update
-
-        //DataAquisition_update(); //includes accelerometer
-        //TireModel_update()
-        //ControlLaw_update();
-        /*
-        ControlLaw //Tq command
-            TireModel //used by control law -> read from WSS, accelerometer
-            StateObserver //choose driver command or ctrl law
-        */
-
-        CoolingSystem_calculations(cs, powertrain->motor[0]->AMK_TempInverter_recieve, powertrain->motor[0]->AMK_TempInverter_recieve, BMS_getHighestCellTemp_degC(bms), &Sensor_HVILTerminationSense); // SRE-7 Update: Needs to be updated in future to cool based on inverters. 
-        //CoolingSystem_calculations(cs, 20, 20, 20);
         CoolingSystem_enactCooling(cs); //This belongs under outputs but it doesn't really matter for cooling
-
-        //Assign motor controls to MCM command message
-        //motorController_setCommands(rtds);
-        //DOES NOT set inverter command or rtds flag
-        //MCM_setRegenMode(mcm0, REGENMODE_FORMULAE); // TODO: Read regen mode from DCU CAN message - Issue #96
-        // MCM_readTCSSettings(mcm0, &Sensor_TCSSwitchUp, &Sensor_TCSSwitchDown, &Sensor_TCSKnob);
-        //MCM_calculateCommands(mcm0, tps, bps);
-        //SRE-7 Update: Torque Vectoring Calculation can go here
 
         SafetyChecker_update(sc, bms, tps, bps, &Sensor_HVILTerminationSense, &Sensor_LVBattery);
 
         /*******************************************/
         /*              Enact Outputs              */
         /*******************************************/
-        //MOVE INTO SAFETYCHECKER
-        //SafetyChecker_setErrorLight(sc);
-        Light_set(Light_dashError, (SafetyChecker_getFaults(sc) == 0) ? 0 : 1);
-        //Handle motor controller startup procedures
-        //MCM_relayControl(mcm0, &Sensor_HVILTerminationSense);
 
-        //Decide whether we're asking the BMS for HV before the powertrain looks at
-        //precharge status, so both act on the same view of the pack this cycle
+        Light_set(Light_dashError, (SafetyChecker_getFaults(sc) == 0) ? 0 : 1);
+
         BMS_updatePrechargeRequest(bms, &Sensor_HVILTerminationSense);
 
-        //MCM_inverterControl(mcm0, tps, bps, rtds);
-        Powertrain_controlVehicle(powertrain, &Sensor_HVILTerminationSense, tps, bps, rtds, d1, bms);
+        bool driveEnabled = Sensor_HVILTerminationSense.sensorValue == TRUE
+            && BMS_getPrechargeComplete(bms) == TRUE
+            && SafetyChecker_allSafe(sc) == TRUE;
+
+        Powertrain_calculateTorqueCommands(powertrain, tps, bps);
 
         SafetyChecker_reduceTorque(sc, bms, powertrain);
 
+        canOutput_sendDebugMessage1(canMan, powertrain, tps);
+
         BMS_relayControl(bms);
-
-        //CanManager_sendMCMCommandMessage(mcm0, canMan, FALSE);
-
-        //Drop the sensor readings into CAN (just raw data, not calculated stuff)
-        //canOutput_sendMCUControl(mcm0, FALSE);
 
         //Commands out to the BMS (precharge request)
         canOutput_sendBMSCommands(canMan, bms);
 
         //Send debug data
         canOutput_sendDebugMessage0(canMan, tps, bps, ic0, bms, sc, powertrain);
-        canOutput_sendDebugMessage1(canMan, powertrain, tps);
-        //canOutput_sendSensorMessages();
-        //canOutput_sendStatusMessages(mcm0);
+
 
         //----------------------------------------------------------------------------
         // Task management stuff (end)
         //----------------------------------------------------------------------------
-        RTDS_shutdownHelper(rtds); //Stops the RTDS from playing if the set time has elapsed
-
         //Task end function for IO Driver - This function needs to be called at the end of every SW cycle
         IO_Driver_TaskEnd();
         //wait until the cycle time is over
