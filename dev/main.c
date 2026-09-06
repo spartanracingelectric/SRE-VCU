@@ -340,14 +340,6 @@ void main(void)
 
         Powertrain_calculateTorqueCommands(powertrain, tps, bps);
 
-        if (driveEnabled == FALSE)
-        {
-            powertrain->motor_fl = 0;
-            powertrain->motor_fr = 0;
-            powertrain->motor_rl = 0;
-            powertrain->motor_rr = 0;
-        }
-
         SafetyChecker_reduceTorque(sc, bms, powertrain);
 
         canOutput_sendDebugMessage1(canMan, powertrain, tps);
