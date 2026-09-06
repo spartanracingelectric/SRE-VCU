@@ -38,14 +38,14 @@ typedef struct _SDiff {
 
 SDiff *SDiff_new(void);
 
-SDiff_Command s_diff_control(SDiff *me, float4 steering_deg, float4 t_driver);
-
 // TODO: see what the custom inverters use idk any docs on that ngl
 // AMK CAN protocol takes 16 bit signed field on bus(not using)
 typedef struct _SDiff_Command {
   sbyte2 left;  // torque request 
   sbyte2 right; // torque request
 } SDiff_Command;
+
+SDiff_Command s_diff_control(SDiff *me, float4 steering_deg, float4 t_driver);
 
 #endif
 
