@@ -295,6 +295,10 @@ void CanManager_read(CanManager *me, CanChannel channel, InstrumentCluster *ic, 
             DAQ_parseCanMessage(d1, &canMessages[currMessage]);
             break;
 
+        case 0x600:
+            BMS_parseCanMessage(bms, &canMessages[currMessage]);
+            break;
+
         case 0x702:
             //Need Updating: IC_parseCanMessage(ic, mcm, &canMessages[currMessage]);
             break;
