@@ -14,16 +14,16 @@
 
 #define DEG_TO_RAD 0.01745329252f
 
-// same numbers as the sim (F-Sim controllers/python/params.yaml), not tuned on car yet
-#define STEERING_RATIO 3.2f
-#define DELTA_MAX 0.4049f // max steering angle, road wheel rad (23.2 deg)
-#define K_DERATE 0.3f // how aggro torque will decrease with steering angle
-#define K_INNER 0.2f // extra derate on inner (unloaded) wheel
-#define F_MIN 0.4f  // minimum torque floor, will cap the baseline torque reduction, 0 < for
+// TODO: tune/define these, and set init values when driving and measuring PLS DONT FLASH THIS :(
+#define STEERING_RATIO 5.4f //wheel to rack | vaule comes from dylan and the team
+#define DELTA_MAX 2.0f // max steering angle, road wheel rad | vaule comes from dylan and the team
+#define K_DERATE 0.25f // how aggro torque will decrease with steering angle
+#define K_INNER 0.35f // extra derate on inner (unloaded) wheel
+#define F_MIN 0.5f  // minimum torque floor, will cap the baseline torque reduction, 0 < for
     // regen lowk try capping at 0 first then negative later irl
 
-#define DEADBAND 0.0175f   // tolerance around center steering position (1 deg)
-#define RATE 4.0f // max speed on how low the torques can drop for each motor
+#define DEADBAND 1.0f   // tolerance around center steering position
+#define RATE 1.0f // max speed on how low the torques can drop for each motor
 #define SDIFF_LOOP_PERIOD 0.01f // 10ms off main
 
 static inline float4 clampf(float4 v, float4 lo, float4 hi);
