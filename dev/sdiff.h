@@ -29,8 +29,15 @@
 
 #define DEADBAND 1.0   // tolerance around center steering position 
 //if the steering angle is within DEADBAND degrees of center, then the torque will not be reduced, meaning that the torque will be reduced by 0% at center steering angle.
-#define RATE 2 // max speed on how low the torques can drop for each motor 
-//if RATE = 2, then the torque will be reduced by at most 2% per second, meaning that the torque will be reduced by at most 20% in 10 seconds.
+#define RATE 1.0f // max speed on how low the torques can drop for each motor 
+
+/*
+slew rate of the torque multipliers, in multiplier units per second (NOT percent)
+step per 10ms loop = RATE * SDIFF_LOOP_PERIOD = 0.01, so at full lock the shared factor
+reaches 0.75 in 0.25s, the inner wheel reaches 0.65 in 0.35s, and the F_MIN floor of 0.5 in 0.5s.
+Applies in both directions, so torque comes back at the same rate when straightening out.
+*/
+
 #define SDIFF_LOOP_PERIOD 0.01f // 10ms off main
 
 static inline float4 clampf(float4 v, float4 lo, float4 hi);
