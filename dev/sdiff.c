@@ -1,6 +1,6 @@
 /*****************************************************************************
  * sdiff.c - Software Differential Revision(Pre-Torque Vectoring)
- * Initial Author: Andy Van, Sellab Ahmadzai
+ * Initial Author: Andy Van, Sellab Ahmadzai, Akash Karthik
  ******************************************************************************
  * Removes torque from inhub motors to mimic a differential
  *
