@@ -59,7 +59,12 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
     {
         //Software differential: derates the inside wheel based on steering angle.
         //s_diff_control returns commands in the same units it was handed (mA here).
-        SDiff_Command sdiffCommand = s_diff_control(sdiff, (float4)steering_degrees(), (float4)baseCommand);
+        sbyte4 sas_deg;
+        if (steering_degrees(&sas_deg) == FALSE)
+        {
+            sas_deg = 0;
+        }
+        SDiff_Command sdiffCommand = s_diff_control(sdiff, (float4)sas_deg, (float4)baseCommand);
         me->motor_rl = sdiffCommand.left;
         me->motor_rr = sdiffCommand.right;
     }

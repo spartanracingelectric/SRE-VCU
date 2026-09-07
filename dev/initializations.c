@@ -100,12 +100,7 @@ void vcu_initializeADC(bool benchMode)
         Sensor_BPS0.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_07, IO_ADC_ABSOLUTE, 0, 0, 0, NULL);  //P137 BPS F SIG
         Sensor_BPS1.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_03, IO_ADC_ABSOLUTE, 0, 0, 0, NULL);  //P139 BPS R SIG
     }
-
-    //Unused
-    //IO_ADC_ChannelInit(IO_ADC_5V_03, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_0, NULL);
-
-    //SAS (Steering Angle Sensor)
-    Sensor_SAS.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_04, IO_ADC_ABSOLUTE, 0, 0, 0, NULL);  //P150 SAS SIG
+    Sensor_SAS.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_5V_04, IO_ADC_RATIOMETRIC, 0, 0, IO_ADC_SENSOR_SUPPLY_0, NULL);  //P150 SAS SIG
 
     //DRS
     Sensor_WPS_FL.ioErr_signalInit = IO_ADC_ChannelInit(IO_ADC_VAR_07, IO_ADC_ABSOLUTE, IO_ADC_RANGE_30V, 0, 0, NULL);

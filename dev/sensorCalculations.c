@@ -19,7 +19,8 @@
 *
 ******************************************************************************
 * Revision history:
-* 2015-11-16 - Rusty Pedrosa - 
+* 2015-11-16 - Rusty Pedrosa
+* 2026-09-06 - Akash Karthik
 *****************************************************************************/
 
 //VCU/C headers
@@ -61,16 +62,31 @@ double rpm_to_mph(double rpm) {
  * Output: Degrees
  * **************************************************************************/
 
-sbyte4 steering_degrees(){
-    sbyte4 min_voltage = 960;
-    sbyte4 max_voltage = 2560;
-    sbyte4 min_angle = -90;
-    sbyte4 max_angle = 90;
+bool steering_degrees(sbyte4 *deg_out)
+{
+    sbyte4 mv = (sbyte4)Sensor_SAS.sensorValue;
+    sbyte4 deg;
+    *deg_out = 0;
+    if ((Sensor_SAS.ioErr_signalGet != IO_E_OK) || (Sensor_SAS.fresh == FALSE))
+    {
+        return FALSE;
+    }
+    if ((mv < (SAS_DIAG_LOW_MV - SAS_DIAG_MARGIN_MV)) ||
+        (mv > (SAS_DIAG_HIGH_MV + SAS_DIAG_MARGIN_MV)))
+    {
+        return FALSE;
+    }
 
-    sbyte4 voltage_range = max_voltage - min_voltage;
-    sbyte4 angle_range = max_angle - min_angle;
-    sbyte4 voltage = Sensor_SAS.sensorValue;
+    deg = ((mv - SAS_CENTER_MV) * 10) / SAS_MV_PER_DEG_X10;
 
-    sbyte4 deg = min_angle + (angle_range * (voltage - min_voltage)) / voltage_range;
-    return deg;
+
+    //if we mounted it backwards then we can just invert the sign
+#if SAS_INVERT
+    deg = -deg;
+#endif
+    if (deg >  SAS_MAX_DEG) { deg =  SAS_MAX_DEG; }
+    if (deg < -SAS_MAX_DEG) { deg = -SAS_MAX_DEG; }
+
+    *deg_out = deg;
+    return TRUE;
 }

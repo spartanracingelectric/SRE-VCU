@@ -24,7 +24,7 @@
 #include "sdiff.h"
 
 //Peak per-motor current request at 100% throttle, in mA (VESC "set current" scale)
-#define MAX_MOTOR_CURRENT_MA 125000.0f
+#define MAX_MOTOR_CURRENT_MA 70000.0f
 
 typedef enum _PowertrainMode {
     DISABLED = 0,

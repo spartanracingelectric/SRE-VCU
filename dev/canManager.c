@@ -416,10 +416,13 @@ void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressu
     ubyte2 sdiff_f  = (ubyte2)(SDiff_getSharedMultiplier(sdiff) * 1000);
     ubyte2 sdiff_l = (ubyte2)(SDiff_getLeftMultiplier(sdiff)   * 1000);
     ubyte2 sdiff_r = (ubyte2)(SDiff_getRightMultiplier(sdiff)  * 1000);
+    sbyte4 sdiff_sasDeg;
+    bool sdiff_sasOk = steering_degrees(&sdiff_sasDeg);
     canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
     canMessages[canMessageCount - 1].id = 0x503;
-    canMessages[canMessageCount - 1].data[byteNum++] = SDiff_getToggle(sdiff);
-    canMessages[canMessageCount - 1].data[byteNum++] = (ubyte1)(sbyte1)steering_degrees();
+    canMessages[canMessageCount - 1].data[byteNum++] = (ubyte1)((SDiff_getToggle(sdiff) ? 0x01 : 0x00)
+                                                             | (sdiff_sasOk            ? 0x02 : 0x00));
+    canMessages[canMessageCount - 1].data[byteNum++] = (ubyte1)(sbyte1)sdiff_sasDeg;
     canMessages[canMessageCount - 1].data[byteNum++] = sdiff_f;
     canMessages[canMessageCount - 1].data[byteNum++] = sdiff_f >> 8;
     canMessages[canMessageCount - 1].data[byteNum++] = sdiff_l;
