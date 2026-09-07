@@ -210,7 +210,7 @@ void main(void)
     BatteryManagementSystem *bms = BMS_new(BMS_BASE_ADDRESS);
     CoolingSystem *cs = CoolingSystem_new();
     _DAQSensors *d1 = DAQ_Sensor_new();
-    SDiff *sdiff = SDiff_new(TRUE); //Software differential on/off - only acts in TorqueVectoring mode
+    SDiff *sdiff = SDiff_new(TRUE); //Software differential on/off
 
     // //----------------------------------------------------------------------------
     // ubyte2 tps0_calibMin = 0xABCD;  //me->tps0->sensorValue;
