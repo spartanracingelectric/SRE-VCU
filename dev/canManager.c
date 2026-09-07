@@ -565,7 +565,7 @@ void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain, Torque
     ubyte2 canMessageCount = 0;
 
     canMessages[canMessageCount].id_format = IO_CAN_EXT_FRAME;
-    canMessages[canMessageCount].id = 0x101; //rl motor
+    canMessages[canMessageCount].id = 0x100; //rl motor
     canMessages[canMessageCount].data[0] = (ubyte1)(powertrain->motor_rl >> 24);
     canMessages[canMessageCount].data[1] = (ubyte1)(powertrain->motor_rl >> 16);
     canMessages[canMessageCount].data[2] = (ubyte1)(powertrain->motor_rl >> 8);
@@ -575,7 +575,7 @@ void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain, Torque
 
 
     canMessages[canMessageCount].id_format = IO_CAN_EXT_FRAME;
-    canMessages[canMessageCount].id = 0x100; //rr motor
+    canMessages[canMessageCount].id = 0x101; //rr motor
     canMessages[canMessageCount].data[0] = (ubyte1)(powertrain->motor_rr >> 24);
     canMessages[canMessageCount].data[1] = (ubyte1)(powertrain->motor_rr >> 16);
     canMessages[canMessageCount].data[2] = (ubyte1)(powertrain->motor_rr >> 8);
