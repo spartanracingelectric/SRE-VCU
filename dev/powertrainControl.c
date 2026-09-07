@@ -21,13 +21,15 @@
 #include "brakePressureSensor.h"
 #include "sensorCalculations.h"
 #include "daqSensors.h"
+#include "sdiff.h"
+
 
 extern Sensor Sensor_HVILTerminationSense;
 
 
 _Powertrain* Powertrain_new(){
     _Powertrain* me = (_Powertrain*)malloc(sizeof(_Powertrain));
-        me->powertrainMode = MVP;
+        me->powertrainMode = TorqueVectoring;
         me->motor_fl = 0; // torque
         me->motor_fr = 0;
         me->motor_rl = 0;
@@ -36,9 +38,10 @@ _Powertrain* Powertrain_new(){
 }
 
 
-void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, BrakePressureSensor *bps){
+void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, BrakePressureSensor *bps, SDiff *sdiff){
     //all four inverters have to be RTD before any torque is allowed
     float4 throttlePercent = tps->travelPercent;
+    sbyte4 baseCommand;
 
     if (throttlePercent < 0.0f)
     {
@@ -49,8 +52,22 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
         throttlePercent = 1.0f;
     }
 
-    me->motor_rl = (sbyte4)(throttlePercent*125 * 1000.0f);
-    me->motor_rr = (sbyte4)(throttlePercent*125 * 1000.0f);
+    //Undifferentiated driver request, identical for both rear motors
+    baseCommand = (sbyte4)(throttlePercent * MAX_MOTOR_CURRENT_MA);
+
+    if (me->powertrainMode == TorqueVectoring && sdiff != NULL)
+    {
+        //Software differential: derates the inside wheel based on steering angle.
+        //s_diff_control returns commands in the same units it was handed (mA here).
+        SDiff_Command sdiffCommand = s_diff_control(sdiff, (float4)steering_degrees(), (float4)baseCommand);
+        me->motor_rl = sdiffCommand.left;
+        me->motor_rr = sdiffCommand.right;
+    }
+    else
+    {
+        me->motor_rl = baseCommand;
+        me->motor_rr = baseCommand;
+    }
 
     return;
 

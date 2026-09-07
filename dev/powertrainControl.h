@@ -21,7 +21,10 @@
 #include "brakePressureSensor.h"
 #include "daqSensors.h"
 #include "bms.h"
+#include "sdiff.h"
 
+//Peak per-motor current request at 100% throttle, in mA (VESC "set current" scale)
+#define MAX_MOTOR_CURRENT_MA 125000.0f
 
 typedef enum _PowertrainMode {
     DISABLED = 0,
@@ -47,5 +50,5 @@ typedef struct _Powertrain {
 
 _Powertrain* Powertrain_new();
 
-void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, BrakePressureSensor *bps);
+void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, BrakePressureSensor *bps, SDiff *sdiff);
 #endif

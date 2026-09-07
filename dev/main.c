@@ -44,6 +44,7 @@
 #include "sensorCalculations.h"
 #include "cooling.h"
 #include "daqSensors.h"
+#include "sdiff.h"
 
 //Application Database, needed for TTC-Downloader
 APDB appl_db =
@@ -209,6 +210,7 @@ void main(void)
     BatteryManagementSystem *bms = BMS_new(BMS_BASE_ADDRESS);
     CoolingSystem *cs = CoolingSystem_new();
     _DAQSensors *d1 = DAQ_Sensor_new();
+    SDiff *sdiff = SDiff_new(TRUE); //Software differential on/off - only acts in TorqueVectoring mode
 
     // //----------------------------------------------------------------------------
     // ubyte2 tps0_calibMin = 0xABCD;  //me->tps0->sensorValue;
@@ -338,7 +340,7 @@ void main(void)
             && BMS_getPrechargeComplete(bms) == TRUE
             && SafetyChecker_allSafe(sc) == TRUE;
 
-        Powertrain_calculateTorqueCommands(powertrain, tps, bps);
+        Powertrain_calculateTorqueCommands(powertrain, tps, bps, sdiff);
 
         SafetyChecker_reduceTorque(sc, bms, powertrain);
 
@@ -350,7 +352,7 @@ void main(void)
         canOutput_sendBMSCommands(canMan, bms);
 
         //Send debug data
-        canOutput_sendDebugMessage0(canMan, tps, bps, ic0, bms, sc, powertrain);
+        canOutput_sendDebugMessage0(canMan, tps, bps, ic0, bms, sc, powertrain, sdiff);
 
 
         //----------------------------------------------------------------------------

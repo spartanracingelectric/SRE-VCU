@@ -42,7 +42,7 @@ void CanManager_read(CanManager *me, CanChannel channel, InstrumentCluster *ic, 
 
 void canOutput_sendSensorMessages(CanManager *me);
 //void canOutput_sendMCUControl(CanManager* me, MotorController* mcm, bool sendEvenIfNoChanges);
-void canOutput_sendDebugMessage0(CanManager *me, TorqueEncoder *tps, BrakePressureSensor *bps, InstrumentCluster *ic, BatteryManagementSystem *bms, SafetyChecker *sc, _Powertrain *powertrain);
+void canOutput_sendDebugMessage0(CanManager *me, TorqueEncoder *tps, BrakePressureSensor *bps, InstrumentCluster *ic, BatteryManagementSystem *bms, SafetyChecker *sc, _Powertrain *powertrain, SDiff *sdiff);
 void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain, TorqueEncoder *tps);
 
 //Commands the VCU sends to the BMS (currently just the precharge request)
