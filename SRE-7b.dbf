@@ -7,12 +7,12 @@
 [BUSMASTER_VERSION] [3.2.2]
 [NUMBER_OF_MESSAGES] 61
 
-[START_MSG] RR,256,0,1,1,S,8
-[START_SIGNALS] VCU_RR_Current,32,1,0,I,199999991,0,+,0,0.001,A,,VCU
+[START_MSG] VCU_RR_Motor,256,4,1,0,X,VCU
+[START_SIGNALS] VCU_RR_Current,32,4,0,I,2147483,-2147483,0,0,0.001,A,,
 [END_MSG]
 
-[START_MSG] RL,257,0,1,1,S,8
-[START_SIGNALS] VCU_RL_Current,32,1,0,U,199999991,0,1,0,0.001,A,,VCU
+[START_MSG] VCU_RL_Motor,257,4,1,0,X,VCU
+[START_SIGNALS] VCU_RL_Current,32,4,0,I,2147483,-2147483,0,0,0.001,A,,
 [END_MSG]
 
 [START_MSG] VCU_TPS0,1280,8,5,1,S,VCU
@@ -91,10 +91,10 @@
 [END_MSG]
 
 [START_MSG] Torque_Vectoring,1290,8,4,1,S,mcm
-[START_SIGNALS] TorqueSetpoint,16,1,0,I,500,-500,1,0,0.01,%Nm,,
-[START_SIGNALS] TorqueSetpoint,16,3,0,I,500,-500,1,0,0.01,%Nm,,
-[START_SIGNALS] TorqueSetpoint,16,5,0,I,500,-500,1,0,0.01,%Nm,,
-[START_SIGNALS] TorqueSetpoint,16,7,0,I,500,-500,1,0,0.01,%Nm,,
+[START_SIGNALS] TorqueSetpoint_Inverter1,16,1,0,I,500,-500,1,0,0.01,%Nm,,
+[START_SIGNALS] TorqueSetpoint_Inverter2,16,3,0,I,500,-500,1,0,0.01,%Nm,,
+[START_SIGNALS] TorqueSetpoint_Inverter3,16,5,0,I,500,-500,1,0,0.01,%Nm,,
+[START_SIGNALS] TorqueSetpoint_Inverter4,16,7,0,I,500,-500,1,0,0.01,%Nm,,
 [END_MSG]
 
 [START_MSG] AMK_VCU_Debug,1291,8,4,1,S,mcm
@@ -534,6 +534,8 @@ VCU "Vehicle Control Unit or Master System Controller";
 1788 S "Sent every 1 second";
 1788 S "Sent every 1 second";
 1572 S "Sent every 100ms";
+256 X "VESC CAN_PACKET_SET_CURRENT (packet id 1) to controller 0 = RR. 29-bit extended frame, payload is int32 motor current in mA, MSB first.";
+257 X "VESC CAN_PACKET_SET_CURRENT (packet id 1) to controller 1 = RL. 29-bit extended frame, payload is int32 motor current in mA, MSB first.";
 [END_DESC_MSG]
 
 [START_DESC_SIG]

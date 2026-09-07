@@ -27,7 +27,7 @@
 // TODO: tune/define these, and set init values when driving and measuring PLS DONT FLASH THIS :(
 #define STEERING_RATIO 5.4 //wheel to rack | vaule comes from dylan and the team
 #define DELTA_MAX 2 // max road wheel angle, DEGREES | vaule comes from dylan and the team
-#define K_DERATE 0.25 // how aggro torque will decrease with steering angle 
+#define K_DERATE 0 // how aggro torque will decrease with steering angle 
 #define K_INNER 0.35 // extra derate on inner (unloaded) wheel 
 #define F_MIN 0.5  // minimum torque floor, will cap the baseline torque reduction, 0 < for 
 #define DEADBAND 1.0

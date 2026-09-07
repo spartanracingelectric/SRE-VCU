@@ -224,7 +224,7 @@ void main(void)
     tps->tps0_calibMax = 1400;
     tps->tps1_calibMin = 1800;
     tps->tps1_calibMax = 4000;
-    tps->calibrated = TRUE;
+    // tps->calibrated = TRUE;
 
     /*******************************************/
     /*       PERIODIC APPLICATION CODE         */
@@ -336,16 +336,12 @@ void main(void)
 
         BMS_updatePrechargeRequest(bms, &Sensor_HVILTerminationSense);
 
-        bool driveEnabled = Sensor_HVILTerminationSense.sensorValue == TRUE
-            && BMS_getPrechargeComplete(bms) == TRUE
-            && SafetyChecker_allSafe(sc) == TRUE;
-
-        Powertrain_calculateTorqueCommands(powertrain, tps, bps, sdiff);
-
-        SafetyChecker_reduceTorque(sc, bms, powertrain);
-
-        canOutput_sendDebugMessage1(canMan, powertrain, tps);
-
+        if (tps->calibrated == TRUE)
+        {
+            Powertrain_calculateTorqueCommands(powertrain, tps, bps, sdiff);
+            SafetyChecker_reduceTorque(sc, bms, powertrain);
+            canOutput_sendDebugMessage1(canMan, powertrain, tps);
+        }
         BMS_relayControl(bms);
 
         //Commands out to the BMS (precharge request)
