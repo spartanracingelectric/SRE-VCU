@@ -39,7 +39,7 @@ _Powertrain* Powertrain_new(){
 
 
 void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, BrakePressureSensor *bps, SDiff *sdiff){
-    //all four inverters have to be RTD before any torque is allowed
+
     float4 throttlePercent = tps->travelPercent;
     sbyte4 baseCommand;
 
@@ -51,14 +51,10 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
     {
         throttlePercent = 1.0f;
     }
-
-    //Undifferentiated driver request, identical for both rear motors
     baseCommand = (sbyte4)(throttlePercent * MAX_MOTOR_CURRENT_MA);
 
     if (me->powertrainMode == TorqueVectoring && sdiff != NULL)
     {
-        //Software differential: derates the inside wheel based on steering angle.
-        //s_diff_control returns commands in the same units it was handed (mA here).
         sbyte4 sas_deg;
         if (steering_degrees(&sas_deg) == FALSE)
         {
