@@ -250,63 +250,13 @@ void CanManager_read(CanManager *me, CanChannel channel, InstrumentCluster *ic, 
         //Inverters (Inverter FL and FR are together CAN0 and Inverter RL and RR are together CAN1) 
         //This is to ensure better debug between the two busses
         //-------------------------------------------------------------------------
-        case 0x283:
-            //Inverter FL 1 (CAN0)
-            // DI_parseCanMessage(powertrain->motor[0], &canMessages[currMessage]);
-            break;
-        case 0x285:
-
-            break;
-        case 0x284:
-            //Inverter FR 1 (CAN0)
-            // DI_parseCanMessage(powertrain->motor[1], &canMessages[currMessage]);
-            break;
-        case 0x286:
-
-            break;
-        case 0x287:
-            //Inverter RL 1 (CAN1)
-            // DI_parseCanMessage(powertrain->motor[2], &canMessages[currMessage]);
-            break;
-        case 0x289:
-
-            break;
-        case 0x288:
-            //Inverter RR 1 (CAN1)
-            // DI_parseCanMessage(powertrain->motor[3], &canMessages[currMessage]);
-            break;
-        case 0x290:
-
+        case 0x005:
+            Powertrain_ParseCanMessage(powertrain, &canMessages[currMessage]);
             break;
         
-        //-------------------------------------------------------------------------
-        //IMU from DAQ
-        //-------------------------------------------------------------------------
-        case 0x400:
-            DAQ_parseCanMessage(d1, &canMessages[currMessage]);
-            break;
-        case 0x401:
-            DAQ_parseCanMessage(d1, &canMessages[currMessage]);
-            break;
-        case 0x402:
-            DAQ_parseCanMessage(d1, &canMessages[currMessage]);
-            break;
-        case 0x403:
-            DAQ_parseCanMessage(d1, &canMessages[currMessage]);
-            break;
-
+        
         case 0x600:
             BMS_parseCanMessage(bms, &canMessages[currMessage]);
-            break;
-
-        case 0x702:
-            //Need Updating: IC_parseCanMessage(ic, mcm, &canMessages[currMessage]);
-            break;
-        case 0x703:
-            //Need Updating: IC_parseCanMessage(ic, mcm, &canMessages[currMessage]);
-            break;
-        case 0x704:
-            //Need Updating: IC_parseCanMessage(ic, mcm, &canMessages[currMessage]);
             break;
       
         //-------------------------------------------------------------------------
@@ -318,8 +268,6 @@ void CanManager_read(CanManager *me, CanChannel channel, InstrumentCluster *ic, 
             break;
             //default:
         }
-
-        //Parse IMU here
     }
     //IO_CAN_WriteFIFO(me->can1_writeHandle, canMessages, messagesReceived);
     //IO_CAN_WriteMsg(canFifoHandle_LoPri_Write, canMessages);
@@ -694,20 +642,20 @@ void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain, Torque
 
     canMessages[canMessageCount].id_format = IO_CAN_EXT_FRAME;
     canMessages[canMessageCount].id = 0x101; //rl motor
-    canMessages[canMessageCount].data[0] = (ubyte1)(powertrain->motor_rl >> 24);
-    canMessages[canMessageCount].data[1] = (ubyte1)(powertrain->motor_rl >> 16);
-    canMessages[canMessageCount].data[2] = (ubyte1)(powertrain->motor_rl >> 8);
-    canMessages[canMessageCount].data[3] = (ubyte1)powertrain->motor_rl;
+    canMessages[canMessageCount].data[0] = (ubyte1)(powertrain->motor[MOTOR_RL].commandCurrent_mA >> 24);
+    canMessages[canMessageCount].data[1] = (ubyte1)(powertrain->motor[MOTOR_RL].commandCurrent_mA >> 16);
+    canMessages[canMessageCount].data[2] = (ubyte1)(powertrain->motor[MOTOR_RL].commandCurrent_mA >> 8);
+    canMessages[canMessageCount].data[3] = (ubyte1)powertrain->motor[MOTOR_RL].commandCurrent_mA;
     canMessages[canMessageCount].length = 4;
     canMessageCount++;
 
 
     canMessages[canMessageCount].id_format = IO_CAN_EXT_FRAME;
     canMessages[canMessageCount].id = 0x100; //rr motor
-    canMessages[canMessageCount].data[0] = (ubyte1)(powertrain->motor_rr >> 24);
-    canMessages[canMessageCount].data[1] = (ubyte1)(powertrain->motor_rr >> 16);
-    canMessages[canMessageCount].data[2] = (ubyte1)(powertrain->motor_rr >> 8);
-    canMessages[canMessageCount].data[3] = (ubyte1)powertrain->motor_rr;
+    canMessages[canMessageCount].data[0] = (ubyte1)(powertrain->motor[MOTOR_RR].commandCurrent_mA >> 24);
+    canMessages[canMessageCount].data[1] = (ubyte1)(powertrain->motor[MOTOR_RR].commandCurrent_mA >> 16);
+    canMessages[canMessageCount].data[2] = (ubyte1)(powertrain->motor[MOTOR_RR].commandCurrent_mA >> 8);
+    canMessages[canMessageCount].data[3] = (ubyte1)powertrain->motor[MOTOR_RR].commandCurrent_mA;
     canMessages[canMessageCount].length = 4;
     canMessageCount++;
 

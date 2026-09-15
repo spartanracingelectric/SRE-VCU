@@ -1,5 +1,5 @@
 /*****************************************************************************
- * powertrainControl.h 
+ * powertrainControl.h
  * Formerly (AMKDrive.h - Drive Inverter (DI))
  * Author: Akash Karthik
  ******************************************************************************
@@ -22,6 +22,24 @@
 #include "daqSensors.h"
 #include "bms.h"
 
+#define MOTOR_COUNT 4
+#define MOTOR_CAN_ID_UNASSIGNED 0xFFU
+
+typedef enum _MotorIndex {
+    MOTOR_FL = 0,
+    MOTOR_FR = 1,
+    MOTOR_RL = 2,
+    MOTOR_RR = 3
+} MotorIndex;
+
+typedef struct _Motor {
+    ubyte1 canId;
+    ubyte2 voltage_dV;
+    sbyte2 current_dA;
+    sbyte4 rpm;
+    sbyte4 commandCurrent_mA;
+} Motor;
+
 
 typedef enum _PowertrainMode {
     DISABLED = 0,
@@ -37,11 +55,7 @@ typedef enum _PowertrainMode {
 typedef struct _Powertrain {
     PowertrainMode powertrainMode;
 
-    // Torque commands to each motor in mA (signed)
-    sbyte4 motor_fl;
-    sbyte4 motor_fr;
-    sbyte4 motor_rl;
-    sbyte4 motor_rr;
+    Motor motor[MOTOR_COUNT];
 
 } _Powertrain;
 
