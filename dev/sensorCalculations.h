@@ -117,10 +117,31 @@ double rpm_to_mph(double rpm);
 
 /****************************************************************************
  * Steering Angle Sensor (SAS)
- * Input: Voltage
- * Output: Degrees
+ * Vishay Spectrol 981HE-0-B-4-W-A-1F16 (datasheet doc 57103)
+ *   0    = continuous rotation, NO mechanical stops -> the output wraps
+ *          90% -> 10% at the marked "0 position".  Keep that wrap out of
+ *          steering travel by clocking the coupler (see SAS_CENTER_MV).
+ *   B    = +/-0.5% linearity = +/-1.8 deg of shaft accuracy
+ *   4    = 360 deg electrical angle -> 4000 mV / 360 deg = 11.111 mV/deg
+ *   W    = wires: yellow GND, red signal, green Vcc
+ *   A    = analog CW: output RISES clockwise, and CW at the wheel is a RIGHT
+ *          turn - but sdiff.c wants positive = LEFT.  Hence SAS_INVERT.
+ *   1F16 = 6.35 mm flatted D-shaft, so there is a coupler in the drive;
+ *          SAS_MV_PER_DEG_X10 below assumes that coupler is 1:1.
+ *
+ * Input:  Sensor_SAS.sensorValue, mV (0..5000) from IO_ADC_Get
+ * Output: steering WHEEL degrees, positive = LEFT turn, clamped to SAS_MAX_DEG
  * **************************************************************************/
-sbyte4 steering_degrees();
+#define SAS_DIAG_LOW_MV       500
+#define SAS_DIAG_HIGH_MV     4500
+#define SAS_DIAG_MARGIN_MV     50   //widens acceptance a little for ADC tolerance
+
+#define SAS_CENTER_MV        2500   //TODO measure after re-clocking
+#define SAS_MV_PER_DEG_X10    111   //4000 mV / 360 deg = 11.111, assumes a 1:1 coupler
+#define SAS_MAX_DEG            90   //TODO measure actual lock-to-lock
+#define SAS_INVERT              1   //1 = negate, 0 = pass through
+
+bool steering_degrees(sbyte4 *deg_out);
 
 /*****************************************************************************
 * Doppler speed sensor functions

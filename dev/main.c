@@ -44,6 +44,7 @@
 #include "sensorCalculations.h"
 #include "cooling.h"
 #include "daqSensors.h"
+#include "sdiff.h"
 
 //Application Database, needed for TTC-Downloader
 APDB appl_db =
@@ -209,6 +210,7 @@ void main(void)
     BatteryManagementSystem *bms = BMS_new(BMS_BASE_ADDRESS);
     CoolingSystem *cs = CoolingSystem_new();
     _DAQSensors *d1 = DAQ_Sensor_new();
+    SDiff *sdiff = SDiff_new(TRUE); //Software differential on/off
 
     // //----------------------------------------------------------------------------
     // ubyte2 tps0_calibMin = 0xABCD;  //me->tps0->sensorValue;
@@ -222,7 +224,7 @@ void main(void)
     tps->tps0_calibMax = 1400;
     tps->tps1_calibMin = 1800;
     tps->tps1_calibMax = 4000;
-    tps->calibrated = TRUE;
+    // tps->calibrated = TRUE;
 
     /*******************************************/
     /*       PERIODIC APPLICATION CODE         */
@@ -335,23 +337,19 @@ void main(void)
 
         BMS_updatePrechargeRequest(bms, &Sensor_HVILTerminationSense);
 
-        bool driveEnabled = Sensor_HVILTerminationSense.sensorValue == TRUE
-            && BMS_getPrechargeComplete(bms) == TRUE
-            && SafetyChecker_allSafe(sc) == TRUE;
-
-        Powertrain_calculateTorqueCommands(powertrain, tps, bps);
-
-        SafetyChecker_reduceTorque(sc, bms, powertrain);
-
-        canOutput_sendDebugMessageEXT(canMan, powertrain, tps);
-
+        if (tps->calibrated == TRUE)
+        {
+            Powertrain_calculateTorqueCommands(powertrain, tps, bps, sdiff);
+            SafetyChecker_reduceTorque(sc, bms, powertrain);
+            canOutput_sendDebugMessageEXT(canMan, powertrain, tps);
+        }
         BMS_relayControl(bms);
 
         //Commands out to the BMS (precharge request)
         canOutput_sendBMSCommands(canMan, bms);
 
         //Send debug data
-        canOutput_sendDebugMessage0(canMan, tps, bps, ic0, bms, sc, powertrain);
+        canOutput_sendDebugMessage0(canMan, tps, bps, ic0, bms, sc, powertrain, sdiff);
 
 
         //----------------------------------------------------------------------------

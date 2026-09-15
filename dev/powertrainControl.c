@@ -21,10 +21,10 @@
 #include "brakePressureSensor.h"
 #include "sensorCalculations.h"
 #include "daqSensors.h"
+#include "sdiff.h"
+
 
 extern Sensor Sensor_HVILTerminationSense;
-
-#define MAX_CURRENT_MA 125000
 
 // helper fucntions so we can read data that takes up multiple bytes in the data array (BE means big endian for all of yall)
 static ubyte2 Powertrain_readU16BE(const ubyte1* data)
@@ -47,7 +47,7 @@ _Powertrain* Powertrain_new(){
     _Powertrain* me = (_Powertrain*)malloc(sizeof(_Powertrain));
     ubyte1 motorIndex;
 
-        me->powertrainMode = MVP;
+        me->powertrainMode = TorqueVectoring;
 
         for (motorIndex = 0; motorIndex < MOTOR_COUNT; motorIndex++)
         {
@@ -107,17 +107,36 @@ void Powertrain_ParseCanMessage(_Powertrain* me, IO_CAN_DATA_FRAME* canMessage){
 }
 
 
-void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, BrakePressureSensor *bps){
+void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, BrakePressureSensor *bps, SDiff *sdiff){
     float4 throttlePercent = tps->travelPercent;
+    sbyte4 baseCommand;
+
     if (throttlePercent < 0.0f)
         throttlePercent = 0.0f;
     else if (throttlePercent > 1.0f)
         throttlePercent = 1.0f;
-    
-    sbyte4 driverRequestedCurrent_mA = (sbyte4)(throttlePercent * MAX_CURRENT_MA);
 
-    me->motor[MOTOR_RL].commandCurrent_mA = driverRequestedCurrent_mA;
-    me->motor[MOTOR_RR].commandCurrent_mA = driverRequestedCurrent_mA;
+    baseCommand = (sbyte4)(throttlePercent * MAX_MOTOR_CURRENT_MA);
+
+    if (me->powertrainMode == TorqueVectoring && sdiff != NULL)
+    {
+        sbyte4 sas_deg;
+        SDiff_Command sdiffCommand;
+
+        if (steering_degrees(&sas_deg) == FALSE)
+        {
+            sas_deg = 0;
+        }
+
+        sdiffCommand = s_diff_control(sdiff, (float4)sas_deg, (float4)baseCommand);
+        me->motor[MOTOR_RL].commandCurrent_mA = sdiffCommand.left;
+        me->motor[MOTOR_RR].commandCurrent_mA = sdiffCommand.right;
+    }
+    else
+    {
+        me->motor[MOTOR_RL].commandCurrent_mA = baseCommand;
+        me->motor[MOTOR_RR].commandCurrent_mA = baseCommand;
+    }
 
     return;
 

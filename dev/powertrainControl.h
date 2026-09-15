@@ -21,9 +21,11 @@
 #include "brakePressureSensor.h"
 #include "daqSensors.h"
 #include "bms.h"
+#include "sdiff.h"
 
 #define MOTOR_COUNT 4
 #define MOTOR_CAN_ID_UNASSIGNED 0xFFU
+#define MAX_MOTOR_CURRENT_MA 70000.0f
 
 typedef enum _MotorIndex {
     MOTOR_FL = 0,
@@ -39,7 +41,6 @@ typedef struct _Motor {
     sbyte4 rpm;
     sbyte4 commandCurrent_mA;
 } Motor;
-
 
 typedef enum _PowertrainMode {
     DISABLED = 0,
@@ -62,5 +63,5 @@ typedef struct _Powertrain {
 _Powertrain* Powertrain_new();
 
 void Powertrain_ParseCanMessage(_Powertrain* me, IO_CAN_DATA_FRAME* canMessage);
-void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, BrakePressureSensor *bps);
+void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, BrakePressureSensor *bps, SDiff *sdiff);
 #endif
