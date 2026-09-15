@@ -34,11 +34,7 @@ static ubyte2 Powertrain_readU16BE(const ubyte1* data)
 
 static sbyte4 Powertrain_readS32BE(const ubyte1* data)
 {
-    ubyte4 value = ((ubyte4)data[0] << 24)
-                 | ((ubyte4)data[1] << 16)
-                 | ((ubyte4)data[2] << 8)
-                 | (ubyte4)data[3];
-
+    ubyte4 value = ((ubyte4)data[0] << 24) | ((ubyte4)data[1] << 16) | ((ubyte4)data[2] << 8) | (ubyte4)data[3];
     return (sbyte4)value;
 }
 
@@ -47,9 +43,9 @@ _Powertrain* Powertrain_new(){
     _Powertrain* me = (_Powertrain*)malloc(sizeof(_Powertrain));
     ubyte1 motorIndex;
 
-        me->powertrainMode = TorqueVectoring;
+    me->powertrainMode = TorqueVectoring;
 
-        for (motorIndex = 0; motorIndex < MOTOR_COUNT; motorIndex++)
+    for (motorIndex = 0; motorIndex < MOTOR_COUNT; motorIndex++)
         {
             me->motor[motorIndex].canId = MOTOR_CAN_ID_UNASSIGNED;
             me->motor[motorIndex].voltage_V = 0;
@@ -57,9 +53,8 @@ _Powertrain* Powertrain_new(){
             me->motor[motorIndex].rpm = 0;
             me->motor[motorIndex].commandCurrent_mA = 0;
         }
-
-        me->motor[MOTOR_RL].canId = 1;
-        me->motor[MOTOR_RR].canId = 0;
+    me->motor[MOTOR_RL].canId = 1;
+    me->motor[MOTOR_RR].canId = 0;
     return me;
 }
 
@@ -115,8 +110,8 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
         throttlePercent = 0.0f;
     else if (throttlePercent > 1.0f)
         throttlePercent = 1.0f;
-
-    baseCommand = (sbyte4)(throttlePercent * MAX_MOTOR_CURRENT_MA);
+    else if(throttlePercent >= 0.01f)
+        baseCommand = (sbyte4)((throttlePercent - 0.01f) * MAX_MOTOR_CURRENT_MA + 7000);
 
     if (me->powertrainMode == TorqueVectoring && sdiff != NULL)
     {
