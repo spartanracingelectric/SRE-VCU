@@ -135,8 +135,9 @@ double rpm_to_mph(double rpm);
 #define SAS_DIAG_LOW_MV       500
 #define SAS_DIAG_HIGH_MV     4500
 #define SAS_DIAG_MARGIN_MV     50   //widens acceptance a little for ADC tolerance
+#define SAS_OUTPUT_SPAN_MV   (SAS_DIAG_HIGH_MV - SAS_DIAG_LOW_MV)
 
-#define SAS_CENTER_MV        2500   //TODO measure after re-clocking
+#define SAS_CENTER_MV        1500   //TODO measure after re-clocking
 #define SAS_MV_PER_DEG_X10    111   //4000 mV / 360 deg = 11.111, assumes a 1:1 coupler
 #define SAS_MAX_DEG            90   //TODO measure actual lock-to-lock
 #define SAS_INVERT              1   //1 = negate, 0 = pass through

@@ -65,6 +65,7 @@ double rpm_to_mph(double rpm) {
 bool steering_degrees(sbyte4 *deg_out)
 {
     sbyte4 mv = (sbyte4)Sensor_SAS.sensorValue;
+    sbyte4 delta_mv;
     sbyte4 deg;
     *deg_out = 0;
     if ((Sensor_SAS.ioErr_signalGet != IO_E_OK) || (Sensor_SAS.fresh == FALSE))
@@ -77,7 +78,17 @@ bool steering_degrees(sbyte4 *deg_out)
         return FALSE;
     }
 
-    deg = ((mv - SAS_CENTER_MV) * 10) / SAS_MV_PER_DEG_X10;
+    delta_mv = mv - SAS_CENTER_MV;
+    if (delta_mv > (SAS_OUTPUT_SPAN_MV / 2))
+    {
+        delta_mv -= SAS_OUTPUT_SPAN_MV;
+    }
+    else if (delta_mv < -(SAS_OUTPUT_SPAN_MV / 2))
+    {
+        delta_mv += SAS_OUTPUT_SPAN_MV;
+    }
+
+    deg = (delta_mv * 10) / SAS_MV_PER_DEG_X10;
 
 
     //if we mounted it backwards then we can just invert the sign
