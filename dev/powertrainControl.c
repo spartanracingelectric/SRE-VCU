@@ -24,18 +24,34 @@
 
 extern Sensor Sensor_HVILTerminationSense;
 
+#define MAX_CURRENT_MA 125000
+
+// helper fucntions so we can read data that takes up multiple bytes in the data array (BE means big endian for all of yall)
+static ubyte2 Powertrain_readU16BE(const ubyte1* data)
+{
+    return ((ubyte2)data[0] << 8) | (ubyte2)data[1];
+}
+
+static sbyte4 Powertrain_readS32BE(const ubyte1* data)
+{
+    ubyte4 value = ((ubyte4)data[0] << 24)
+                 | ((ubyte4)data[1] << 16)
+                 | ((ubyte4)data[2] << 8)
+                 | (ubyte4)data[3];
+
+    return (sbyte4)value;
+}
 
 
 _Powertrain* Powertrain_new(){
     _Powertrain* me = (_Powertrain*)malloc(sizeof(_Powertrain));
     ubyte1 motorIndex;
-    ubyte4 maxCurrent_mA = 125000; //125A * 1000
 
         me->powertrainMode = MVP;
 
         for (motorIndex = 0; motorIndex < MOTOR_COUNT; motorIndex++)
         {
-            me->motor[motorIndex].canId = MOTOR_VESC_ID_UNASSIGNED;
+            me->motor[motorIndex].canId = MOTOR_CAN_ID_UNASSIGNED;
             me->motor[motorIndex].voltage_dV = 0;
             me->motor[motorIndex].current_dA = 0;
             me->motor[motorIndex].rpm = 0;
@@ -49,13 +65,42 @@ _Powertrain* Powertrain_new(){
 
 void Powertrain_ParseCanMessage(_Powertrain* me, IO_CAN_DATA_FRAME* canMessage){
     ubyte1 motorIndex;
+    ubyte1 vescId = (ubyte1)(canMessage->id & 0xFF);
+    ubyte1 packetId = (ubyte1)((canMessage->id >> 8) & 0xFF);
+
     for (motorIndex = 0; motorIndex < MOTOR_COUNT; motorIndex++)
     {
-        if (me->motor[motorIndex].canId == canMessage->id)
+        if ((me->motor[motorIndex].canId != MOTOR_CAN_ID_UNASSIGNED)
+         && (me->motor[motorIndex].canId == vescId))
         {
-            me->motor[motorIndex].voltage_dV = (canMessage->data[0] << 8) | canMessage->data[1];
-            me->motor[motorIndex].current_dA = (canMessage->data[2] << 8) | canMessage->data[3];
-            me->motor[motorIndex].rpm = (canMessage->data[4] << 24) | (canMessage->data[5] << 16) | (canMessage->data[6] << 8) | canMessage->data[7];
+            switch (packetId)
+            {
+                case 9U:
+                    if (canMessage->length >= 4)
+                    {
+                        // dividing by 5 cause the vesc sends eRPM and with 5 pole pairs we get rpm by dividing by 5
+                        me->motor[motorIndex].rpm = Powertrain_readS32BE(&canMessage->data[0]) / 5; 
+                    }
+                    break;
+
+                case 16U:
+                    if (canMessage->length >= 6)
+                    {
+                        me->motor[motorIndex].current_dA = (sbyte2)Powertrain_readU16BE(&canMessage->data[4]);
+                    }
+                    break;
+
+                case 27U:
+                    if (canMessage->length >= 6)
+                    {
+                        me->motor[motorIndex].voltage_dV = Powertrain_readU16BE(&canMessage->data[4]);
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+
             break;
         }
     }
@@ -69,7 +114,7 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
     else if (throttlePercent > 1.0f)
         throttlePercent = 1.0f;
     
-    sbyte4 driverRequestedCurrent_mA = throttlePercent * maxCurrent_mA;
+    sbyte4 driverRequestedCurrent_mA = (sbyte4)(throttlePercent * MAX_CURRENT_MA);
 
     me->motor[MOTOR_RL].commandCurrent_mA = driverRequestedCurrent_mA;
     me->motor[MOTOR_RR].commandCurrent_mA = driverRequestedCurrent_mA;

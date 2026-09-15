@@ -61,5 +61,6 @@ typedef struct _Powertrain {
 
 _Powertrain* Powertrain_new();
 
+void Powertrain_ParseCanMessage(_Powertrain* me, IO_CAN_DATA_FRAME* canMessage);
 void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, BrakePressureSensor *bps);
 #endif

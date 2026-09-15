@@ -255,6 +255,7 @@ void main(void)
         //Pull messages from CAN FIFO and update our object representations.
         //IMU DAQ will be sending to CAN1 so CAN0 is written incase there is necessity for it to be on that bus
         CanManager_read(canMan, CAN0_HIPRI, ic0, bms, sc, d1, powertrain);
+        CanManager_read_EXT(canMan, powertrain);
         CanManager_read(canMan, CAN1_LOPRI, ic0, bms, sc, d1, powertrain);
         /*switch (CanManager_getReadStatus(canMan, CAN0_HIPRI))
         {
@@ -342,7 +343,7 @@ void main(void)
 
         SafetyChecker_reduceTorque(sc, bms, powertrain);
 
-        canOutput_sendDebugMessage1(canMan, powertrain, tps);
+        canOutput_sendDebugMessageEXT(canMan, powertrain, tps);
 
         BMS_relayControl(bms);
 

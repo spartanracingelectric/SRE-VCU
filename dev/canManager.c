@@ -21,7 +21,7 @@
 #include "sensorCalculations.h"
 #include "daqSensors.h"
 
-
+#define VESC_READ_FIFO_SIZE 6
 struct _CanManager {
 
     ubyte1 canMessageLimit;
@@ -30,6 +30,7 @@ struct _CanManager {
     ubyte1 readHandle[CAN_CHANNELS];
     ubyte1 read_messageLimit[CAN_CHANNELS];
     ubyte1 writeHandle[CAN_CHANNELS];
+    ubyte1 vescReadHandle;
     ubyte1 vescWriteHandle;
     ubyte1 write_messageLimit[CAN_CHANNELS];
     
@@ -40,6 +41,9 @@ struct _CanManager {
 
     IO_ErrorType ioErr_read[CAN_CHANNELS];
     IO_ErrorType ioErr_write[CAN_CHANNELS];
+
+    IO_ErrorType ioErr_fifoInit_VESC_R;
+    IO_ErrorType ioErr_read_VESC;
 
     ubyte4 sendDelayus;
 
@@ -58,6 +62,9 @@ CanManager* CanManager_new(ubyte2 busSpeed[CAN_CHANNELS], ubyte1 read_messageLim
     me->sendDelayus = defaultSendDelayus;
 
     for (int i=0; i < 2; ++ i){
+        me->read_messageLimit[i] = read_messageLimit[i];
+        me->write_messageLimit[i] = write_messageLimit[i];
+
         //Activate the CAN channels --------------------------------------------------
         me->ioErr_Init[i] = IO_CAN_Init(IO_CAN_CHANNEL_0+i, busSpeed[i], 0, 0, 0);
 
@@ -75,6 +82,8 @@ CanManager* CanManager_new(ubyte2 busSpeed[CAN_CHANNELS], ubyte1 read_messageLim
         me->ioErr_write[i] = IO_E_CAN_BUS_OFF;
     }
 
+    me->ioErr_fifoInit_VESC_R = IO_CAN_ConfigFIFO(&me->vescReadHandle, IO_CAN_CHANNEL_0, VESC_READ_FIFO_SIZE, IO_CAN_MSG_READ, IO_CAN_EXT_FRAME, 0, 0);
+    me->ioErr_read_VESC = IO_E_CAN_BUS_OFF;
     IO_CAN_ConfigFIFO(&me->vescWriteHandle, IO_CAN_CHANNEL_0, 2, IO_CAN_MSG_WRITE, IO_CAN_EXT_FRAME, 0, 0);
 
     return me;
@@ -246,15 +255,7 @@ void CanManager_read(CanManager *me, CanChannel channel, InstrumentCluster *ic, 
         // Seperate based on CAN message
         switch (canMessages[currMessage].id)
         {
-        //-------------------------------------------------------------------------
-        //Inverters (Inverter FL and FR are together CAN0 and Inverter RL and RR are together CAN1) 
-        //This is to ensure better debug between the two busses
-        //-------------------------------------------------------------------------
-        case 0x005:
-            Powertrain_ParseCanMessage(powertrain, &canMessages[currMessage]);
-            break;
-        
-        
+
         case 0x600:
             BMS_parseCanMessage(bms, &canMessages[currMessage]);
             break;
@@ -271,6 +272,38 @@ void CanManager_read(CanManager *me, CanChannel channel, InstrumentCluster *ic, 
     }
     //IO_CAN_WriteFIFO(me->can1_writeHandle, canMessages, messagesReceived);
     //IO_CAN_WriteMsg(canFifoHandle_LoPri_Write, canMessages);
+}
+
+void CanManager_read_EXT(CanManager *me, _Powertrain *powertrain)
+{
+    IO_CAN_DATA_FRAME canMessages[VESC_READ_FIFO_SIZE];
+    ubyte1 canMessageCount = 0U;
+    ubyte1 currMessage;
+    ubyte1 packetId;
+
+    me->ioErr_read_VESC = IO_CAN_ReadFIFO(me->vescReadHandle, canMessages, VESC_READ_FIFO_SIZE, &canMessageCount);
+
+    if ((me->ioErr_read_VESC != IO_E_OK) && (me->ioErr_read_VESC != IO_E_CAN_FIFO_FULL))
+    {
+        return;
+    }
+
+    for (currMessage = 0U; currMessage < canMessageCount; currMessage++)
+    {
+        packetId = (ubyte1)((canMessages[currMessage].id >> 8) & 0xFFU);
+
+        switch (packetId)
+        {
+            case 9U:
+            case 16U:
+            case 27U:
+                Powertrain_ParseCanMessage(powertrain, &canMessages[currMessage]);
+                break;
+
+            default:
+                break;
+        }
+    }
 }
 
 ubyte1 CanManager_getReadStatus(CanManager* me, CanChannel channel)
@@ -635,7 +668,7 @@ void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressu
 
 }
 
-void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain, TorqueEncoder *tps)
+void canOutput_sendDebugMessageEXT(CanManager *me, _Powertrain *powertrain, TorqueEncoder *tps)
 {
     IO_CAN_DATA_FRAME canMessages[2];
     ubyte2 canMessageCount = 0;
@@ -662,7 +695,7 @@ void canOutput_sendDebugMessage1(CanManager *me, _Powertrain *powertrain, Torque
     // VESC command IDs are 29-bit (extended) CAN frames.  The regular CAN0
     // write handle is configured for standard frames, so use the dedicated
     // extended-frame FIFO configured in CanManager_new().
-    me->ioErr_write[0] = IO_CAN_WriteFIFO(me->writeHandle[0], canMessages, 2);
+    me->ioErr_write[0] = IO_CAN_WriteFIFO(me->vescWriteHandle, canMessages, 2);
 
 }
 
