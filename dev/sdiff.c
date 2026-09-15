@@ -98,14 +98,14 @@ SDiff_Command s_diff_control(SDiff *me, float4 steering_deg,
   }
 
   // slew limit torque
-  me->f_applied = slew(me->f_applied, f, RATE);
-  me->g_left_appl = slew(me->g_left_appl, g_left, RATE);
-  me->g_right_appl = slew(me->g_right_appl, g_right, RATE);
+  // me->f_applied = slew(me->f_applied, f, RATE);
+  // me->g_left_appl = slew(me->g_left_appl, g_left, RATE);
+  // me->g_right_appl = slew(me->g_right_appl, g_right, RATE);
 
   // TESTING WITH NO SLEW
-  // me->f_applied = f;
-  // me->g_left_appl = g_left;
-  // me->g_right_appl = g_right;
+  me->f_applied = f;
+  me->g_left_appl = g_left;
+  me->g_right_appl = g_right;
 
   mult_left  = clampf(me->f_applied * me->g_left_appl,  0.0f, 1.0f);
   mult_right = clampf(me->f_applied * me->g_right_appl, 0.0f, 1.0f);

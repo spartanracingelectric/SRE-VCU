@@ -51,7 +51,19 @@ void Powertrain_calculateTorqueCommands(_Powertrain* me, TorqueEncoder *tps, Bra
     {
         throttlePercent = 1.0f;
     }
-    baseCommand = (sbyte4)(throttlePercent * MAX_MOTOR_CURRENT_MA);
+
+    if(throttlePercent < 0.01f)
+    {
+        me->motor_fl = 0;
+        me->motor_fr = 0;
+        me->motor_rl = 0;
+        me->motor_rr = 0;
+        return;
+    }
+
+    else if(throttlePercent >= 0.01f) {
+        baseCommand = (sbyte4)((throttlePercent - 0.01f) * MAX_MOTOR_CURRENT_MA + 7000);
+    }
 
     if (me->powertrainMode == TorqueVectoring && sdiff != NULL)
     {
