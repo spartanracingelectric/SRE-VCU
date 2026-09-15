@@ -52,8 +52,8 @@ _Powertrain* Powertrain_new(){
         for (motorIndex = 0; motorIndex < MOTOR_COUNT; motorIndex++)
         {
             me->motor[motorIndex].canId = MOTOR_CAN_ID_UNASSIGNED;
-            me->motor[motorIndex].voltage_dV = 0;
-            me->motor[motorIndex].current_dA = 0;
+            me->motor[motorIndex].voltage_V = 0;
+            me->motor[motorIndex].current_A = 0;
             me->motor[motorIndex].rpm = 0;
             me->motor[motorIndex].commandCurrent_mA = 0;
         }
@@ -75,25 +75,25 @@ void Powertrain_ParseCanMessage(_Powertrain* me, IO_CAN_DATA_FRAME* canMessage){
         {
             switch (packetId)
             {
-                case 9U:
+                case 9:
                     if (canMessage->length >= 4)
                     {
                         // dividing by 5 cause the vesc sends eRPM and with 5 pole pairs we get rpm by dividing by 5
-                        me->motor[motorIndex].rpm = Powertrain_readS32BE(&canMessage->data[0]) / 5; 
+                        me->motor[motorIndex].rpm = (sbyte2)(Powertrain_readS32BE(&canMessage->data[0]) / 5);
                     }
                     break;
 
-                case 16U:
+                case 16:
                     if (canMessage->length >= 6)
                     {
-                        me->motor[motorIndex].current_dA = (sbyte2)Powertrain_readU16BE(&canMessage->data[4]);
+                        me->motor[motorIndex].current_A = (sbyte2)(Powertrain_readU16BE(&canMessage->data[4])/10); // dividing by 10 cause we get it in deciAMps
                     }
                     break;
-
-                case 27U:
+                    
+                case 27:
                     if (canMessage->length >= 6)
                     {
-                        me->motor[motorIndex].voltage_dV = Powertrain_readU16BE(&canMessage->data[4]);
+                        me->motor[motorIndex].voltage_V = (sbyte2)(Powertrain_readU16BE(&canMessage->data[4])/10); // dividing by 10 cause we get it in deciVolts
                     }
                     break;
 

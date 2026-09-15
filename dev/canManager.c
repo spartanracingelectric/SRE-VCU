@@ -277,7 +277,7 @@ void CanManager_read(CanManager *me, CanChannel channel, InstrumentCluster *ic, 
 void CanManager_read_EXT(CanManager *me, _Powertrain *powertrain)
 {
     IO_CAN_DATA_FRAME canMessages[VESC_READ_FIFO_SIZE];
-    ubyte1 canMessageCount = 0U;
+    ubyte1 canMessageCount = 0;
     ubyte1 currMessage;
     ubyte1 packetId;
 
@@ -288,15 +288,15 @@ void CanManager_read_EXT(CanManager *me, _Powertrain *powertrain)
         return;
     }
 
-    for (currMessage = 0U; currMessage < canMessageCount; currMessage++)
+    for (currMessage = 0; currMessage < canMessageCount; currMessage++)
     {
-        packetId = (ubyte1)((canMessages[currMessage].id >> 8) & 0xFFU);
+        packetId = (ubyte1)((canMessages[currMessage].id >> 8) & 0xFF);
 
         switch (packetId)
         {
-            case 9U:
-            case 16U:
-            case 27U:
+            case 9:
+            case 16:
+            case 27:
                 Powertrain_ParseCanMessage(powertrain, &canMessages[currMessage]);
                 break;
 
@@ -514,20 +514,31 @@ void canOutput_sendDebugMessage0(CanManager* me, TorqueEncoder* tps, BrakePressu
     canMessages[canMessageCount - 1].data[byteNum++] = 0;
     canMessages[canMessageCount - 1].length = byteNum;
 
-    //0x509 or 1289: unused
+    //0x509 or 1289: Rear Left Motor Status
     canMessageCount++;
     byteNum = 0;
     canMessages[canMessageCount - 1].id = 0x509;
     canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
-    canMessages[canMessageCount - 1].data[byteNum++] = 
-    canMessages[canMessageCount - 1].data[byteNum++] = 
-    canMessages[canMessageCount - 1].data[byteNum++] = 
-    canMessages[canMessageCount - 1].data[byteNum++] = 
-    canMessages[canMessageCount - 1].data[byteNum++] =
-    canMessages[canMessageCount - 1].data[byteNum++] = 
-    canMessages[canMessageCount - 1].data[byteNum++] = 
+    canMessages[canMessageCount - 1].data[byteNum++] = powertrain ->motor[MOTOR_RL].current_A;
+    canMessages[canMessageCount - 1].data[byteNum++] = powertrain ->motor[MOTOR_RL].current_A >> 8;
+    canMessages[canMessageCount - 1].data[byteNum++] = powertrain ->motor[MOTOR_RL].voltage_V;
+    canMessages[canMessageCount - 1].data[byteNum++] = powertrain ->motor[MOTOR_RL].voltage_V >> 8;
+    canMessages[canMessageCount - 1].data[byteNum++] = powertrain ->motor[MOTOR_RL].rpm;
+    canMessages[canMessageCount - 1].data[byteNum++] = powertrain ->motor[MOTOR_RL].rpm >> 8;
     canMessages[canMessageCount - 1].length = byteNum;
 
+    //0x510 or 1290: Rear Right Motor Status
+    canMessageCount++;
+    byteNum = 0;
+    canMessages[canMessageCount - 1].id = 0x510;
+    canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+    canMessages[canMessageCount - 1].data[byteNum++] = powertrain ->motor[MOTOR_RR].current_A;
+    canMessages[canMessageCount - 1].data[byteNum++] = powertrain ->motor[MOTOR_RR].current_A >> 8;
+    canMessages[canMessageCount - 1].data[byteNum++] = powertrain ->motor[MOTOR_RR].voltage_V;
+    canMessages[canMessageCount - 1].data[byteNum++] = powertrain ->motor[MOTOR_RR].voltage_V >> 8;
+    canMessages[canMessageCount - 1].data[byteNum++] = powertrain ->motor[MOTOR_RR].rpm;
+    canMessages[canMessageCount - 1].data[byteNum++] = powertrain ->motor[MOTOR_RR].rpm >> 8;
+    canMessages[canMessageCount - 1].length = byteNum;
 
 
     //----------------------------------------------------------------------------

@@ -36,8 +36,8 @@ typedef enum _MotorIndex {
 
 typedef struct _Motor {
     ubyte1 canId;
-    ubyte2 voltage_dV;
-    sbyte2 current_dA;
+    ubyte2 voltage_V;
+    sbyte2 current_A;
     sbyte4 rpm;
     sbyte4 commandCurrent_mA;
 } Motor;
